@@ -45,7 +45,7 @@ class GopherEntry:
             return
 
         self.size = statval[6]          # Only set this if it's not a dir.
-        mimetype, encoding = mimetypes.guess_type(self.selector)
+        mimetype, encoding = mimetypes.guess_type(self.selector, strict = 0)
         if mimetype:
             self.mimetype = mimetype
         if encoding:

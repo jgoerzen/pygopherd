@@ -5,3 +5,5 @@ Figure out when we need to add the + on gopher0 menus:
 
  * Always except when linking to external servers?
    (So that clients don't try to use gopher0 right off the bat with them)
+
+Detect if mime.types path is bad.

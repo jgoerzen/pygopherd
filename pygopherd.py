@@ -28,7 +28,7 @@ import mimetypes
 
 config = ConfigParser()
 config.read("pygopherd.conf")
-mimetypes.init(config.get("serving", "mimetypes"))
+mimetypes.init([config.get("serving", "mimetypes")])
 
 class GopherRequestHandler(SocketServer.StreamRequestHandler):
     def handle(self):
