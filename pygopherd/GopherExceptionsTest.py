@@ -56,12 +56,3 @@ class GopherExceptionsTestCase(unittest.TestCase):
             self.assertEquals(str(e),
                               "'TEST STRING' does not exist")
 
-        try:
-            handler = testutil.gettestinghandler(StringIO("../\n"),
-                                                 StringIO(),
-                                                 self.config)
-            self.fail("Exception was not raised")
-        except FileNotFound, e:
-            self.assertEquals(str(e),
-                              "'../' does not exist (Request may not contain ./, ../, or //)")
-

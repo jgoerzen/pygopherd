@@ -1,6 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: serve up gopherspace via http
-# $Id: http.py,v 1.16 2002/04/15 14:37:22 jgoerzen Exp $
+# $Id: http.py,v 1.17 2002/04/15 19:03:01 jgoerzen Exp $
 # Copyright (C) 2002 John Goerzen
 # <jgoerzen@complete.org>
 #
@@ -74,7 +74,7 @@ class HTTPProtocol(BaseGopherProtocol):
             self.wfile.write("Content-Type: " + mimetype + "\n\n")
             if self.requestparts[0] == 'GET':
                 if handler.isdir():
-                    self.writedir(handler.getdirlist())
+                    self.writedir(self.entry, handler.getdirlist())
                 else:
                     handler.write(self.wfile)
         except GopherExceptions.FileNotFound, e:
@@ -87,18 +87,13 @@ class HTTPProtocol(BaseGopherProtocol):
         retstr = '<TR><TD>'
         url = None
         # Decision time....
-        print "Selector", entry.getselector()
         if re.match('(/|)URL:', entry.getselector()):
-            print "Opt 1"
             # It's a plain URL.  Make it that.
             url = re.match('(/|)URL:(.+)$', entry.getselector()).group(2)
-            print "URL:", url
         elif (not entry.gethost()) and (not entry.getport()):
-            print "Opt 2"
             # It's a link to our own server.  Make it as such.  (relative)
             url = urllib.quote(entry.getselector())
         else:
-            print "Opt 3"
             # Link to a different server.  Make it a gopher URL.
             url = entry.geturl(self.server.server_name, 70)
 

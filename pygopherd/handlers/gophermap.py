@@ -84,12 +84,7 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
                 entries.append(entry)
             else:                       # Info line
                 line = line.strip()
-                entry = gopherentry.GopherEntry('fake', self.config)
-                entry.name = line
-                entry.host = '(NULL)'
-                entry.port = 0
-                entry.type = 'i'
-                entries.append(entry)
+                entries.append(gopherentry.getinfoentry(line))
 
     def isdir(self):
         return 1

@@ -20,7 +20,7 @@
 import SocketServer
 import re
 import os, stat, os.path, mimetypes
-from pygopherd import handlers, GopherExceptions, logger
+from pygopherd import handlers, GopherExceptions, logger, gopherentry
 from pygopherd.handlers import HandlerMultiplexer
 
 class BaseGopherProtocol:
@@ -77,7 +77,7 @@ class BaseGopherProtocol:
             self.entry = handler.getentry()
             handler.prepare()
             if handler.isdir():
-                self.writedir(handler.getdirlist())
+                self.writedir(self.entry, handler.getdirlist())
             else:
                 handler.write(self.wfile)
         except GopherExceptions.FileNotFound, e:
@@ -96,19 +96,40 @@ class BaseGopherProtocol:
                                                self, self.config)
         return self.handler
 
-    def writedir(self, dirlist):
+    def writedir(self, entry, dirlist):
         """Called to render a directory.  Generally called by self.handle()"""
 
-        startstr = self.renderdirstart(self.gethandler())
+        startstr = self.renderdirstart(entry)
         if startstr != None:
             self.wfile.write(startstr)
 
+        abstractopt = self.config.get("pygopherd", "abstract_entries")
+        doabstracts = abstractopt == 'always' or \
+                      (abstractopt == 'unsupported' and
+                       not self.groksabstract())
+
+        if self.config.getboolean("pygopherd", "abstract_headers"):
+            self.wfile.write(self.renderabstract(entry.getea('ABSTRACT', '')))
+
         for direntry in dirlist:
             self.wfile.write(self.renderobjinfo(direntry))
+            if doabstracts:
+                abstract = self.renderabstract(direntry.getea('ABSTRACT'))
+                if abstract:
+                    self.wfile.write(abstract)
 
-        endstr = self.renderdirend(self.gethandler())
+        endstr = self.renderdirend(entry)
         if endstr != None:
             self.wfile.write(endstr)
+
+    def renderabstract(self, abstractstring):
+        if not abstractstring:
+            return ''
+        retval = ''
+        for line in abstractstring.splitlines():
+            absentry = gopherentry.getinfoentry(line, self.config)
+            retval += self.renderobjinfo(absentry)
+        return retval
 
     def renderdirstart(self, entry):
         """Renders the start of a directory.  Most protocols will not need
@@ -126,3 +147,8 @@ class BaseGopherProtocol:
         MUST BE OVERRIDDEN."""
         return None
 
+    def groksabstract(self):
+        """Returns true if this protocol understands abstracts natively;
+        false otherwise."""
+        return 0
+    

@@ -125,12 +125,13 @@ class GopherEntry:
         self.mtime = self.mtime or statval[8]
         self.name = self.name or os.path.basename(self.selector)
 
-        self.handleeaext()
-
         if stat.S_ISDIR(statval[0]):
             self.type = self.type or '1'
             self.mimetype = self.mimetype or 'application/gopher-menu'
+            self.handleeaext(self.fspath + '/') # Add the / so we get /.abs
             return
+
+        self.handleeaext(self.fspath)
 
         self.size = self.size or statval[6]
 
@@ -159,7 +160,7 @@ class GopherEntry:
                 return maprule[1]
         return '0'
 
-    def handleeaext(self):
+    def handleeaext(self, fspath):
         """Handle getting extended attributes from the filesystem."""
         global eaexts
         if eaexts == None:
@@ -169,7 +170,7 @@ class GopherEntry:
             if self.ea.has_key(blockname):
                 continue
             try:
-                rfile = open(self.fspath + extension, "rt")
+                rfile = open(fspath + extension, "rt")
                 self.setea(blockname, "\n".join(
                            [x.strip() for x in rfile.readlines(20480)]))
             except IOError:
@@ -304,3 +305,10 @@ class GopherEntry:
     def setea(self, name, value):
         self.ea[name] = value
 
+def getinfoentry(text, config):
+    entry = GopherEntry('fake', config)
+    entry.name = text
+    entry.host = '(NULL)'
+    entry.port = 0
+    entry.type = 'i'
+    return entry

@@ -67,7 +67,7 @@ class GopherPlusProtocol(GopherProtocol):
                 handler.prepare()
                 self.wfile.write("+" + str(self.entry.getsize(-2)) + "\r\n")
                 if handler.isdir():
-                    self.writedir(handler.getdirlist())
+                    self.writedir(self.entry, handler.getdirlist())
                 else:
                     handler.write(self.wfile)
         except GopherExceptions.FileNotFound, e:
@@ -155,6 +155,9 @@ class GopherPlusProtocol(GopherProtocol):
         self.wfile.write("1 ")
         self.wfile.write(self.config.get("protocols.gopherp.GopherPlusProtocol", "admin"))
         self.wfile.write("\r\n" + msg + "\r\n")
+
+    def groksabstract(self):
+        return 1
 
 class URLGopherPlus(GopherPlusProtocol):
     def getsupportedblocknames(self):
