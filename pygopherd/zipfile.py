@@ -285,7 +285,7 @@ class ZipReader:
         """Open the ZIP file with mode read "r", write "w" or append "a"."""
         self.debug = 0  # Level of printing: 0 through 3
         self.locationmap = {}           # Map to location of central dir header
-        self.directorymap = {'': {}}
+        self.directorymap = {}
 
         # Check if we were passed a file-like object
         if type(file) in _STRING_TYPES:
@@ -339,29 +339,12 @@ class ZipReader:
 
             self.locationmap[filename] = self.start_dir + total
             components = filename.split('/')
-            l = len(components)
-            self._registerdirectorymap(l, components, self.start_dir + total)
-            if l > 1:
-                self._registerdirectorymap(l - 1, components[:-1], -1)
+            self.directorymap['/'.join(filename.split('/')[:-1])] = 1
             # Skip past the other stuff.
             total = (total + 46 + centdir[_CD_FILENAME_LENGTH]
                      + centdir[_CD_EXTRA_FIELD_LENGTH]
                      + centdir[_CD_COMMENT_LENGTH])
             fp.seek(self.start_dir + total, 0)
-
-    def _registerdirectorymap(self, l, components, dest):
-        if l < 2:
-            dname = ''
-            fname = components[0]
-        else:
-            dname = '/'.join(components[:-1])
-            fname = components[-1]
-        if not len(fname):
-            return
-        if self.directorymap.has_key(dname):
-            self.directorymap[dname][fname] = dest
-        else:
-            self.directorymap[dname] = {fname: dest}
 
     def namelist(self):
         """Return a list of file names in the archive."""

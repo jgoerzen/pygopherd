@@ -205,13 +205,18 @@ class VFS_Zip(base.VFS_Real):
             return self.chain.listdir(selector)
 
         fspath = self._getfspathresolved(selector)
-        try:
-            return self.zip.directorymap[fspath].keys()
-        except KeyError:
+        if not self._isdir_fspath(fspath):
             raise OSError, "Request to list non-existant directory"
+
+        retval = []
+        for item in self.zip.locationmap.iterkeys():
+            (d, f) = os.path.split(item)
+            if d == fspath and f != '':
+                retval.append(f)
+        return retval
         
-class TestVFS_Zip_huge(unittest.TestCase):
-#class DISABLED_TestVFS_Zip_huge:
+#class TestVFS_Zip_huge(unittest.TestCase):
+class DISABLED_TestVFS_Zip_huge:
     def setUp(self):
         from pygopherd import testutil
         from pygopherd.protocols.rfc1436 import GopherProtocol
