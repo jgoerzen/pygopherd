@@ -83,7 +83,11 @@ class UMNDirHandler(DirHandler):
                     direntry = direntrytry
                     break
             if direntry:                # It matches!
-                self.mergeentries(direntry, linkentry)
+                if linkentry.gettype() == 'X':
+                    # It's special code to hide something.
+                    self.fileentries.remove(direntry)
+                else:
+                    self.mergeentries(direntry, linkentry)
             else:
                 # No match -- add to the directory.
                 self.fileentries.append(linkentry)
@@ -94,14 +98,18 @@ class UMNDirHandler(DirHandler):
                 setattr(old, field, getattr(new, field))
 
 
-    def prep_entrieshook(self, file, fileentry):
+    def prep_entriesappend(self, file, fileentry):
         """Overridden to process .cap files."""
         capfilename = self.fsbase + '/.cap/' + file
         if os.path.isfile(capfilename):
             capinfo = self.processLinkFile(capfilename,
                                            fileentry.getselector())
             if len(capinfo) >= 1:       # We handle one and only one entry.
-                self.mergeentries(fileentry, capinfo[0])
+                if capinfo[0].gettype() == 'X':
+                    return
+                else:
+                    self.mergeentries(fileentry, capinfo[0])
+        DirHandler.prep_entriesappend(self, file, fileentry)
 
     def processLinkFile(self, filename, capfilepath = None):
         linkentries = []
