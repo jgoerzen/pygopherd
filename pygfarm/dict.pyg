@@ -282,6 +282,11 @@ class Match(PYGMain):
         matchlist = unique([x.getword() for x in matches])
         matchlist.sort(matchsort)
 
+        self.entries.append(getinfoentry("%d matches for '%s' (%s)" % \
+                                         (len(matchlist),
+                                          self.commandargs[1],
+                                          self.commandargs[0]), self.config))
+        
         for matchword in matchlist:
             selector = self.genargsselector("/%s/DEFINE/%s" % \
                                             (self.dbname, matchword))

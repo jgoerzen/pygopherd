@@ -1,3 +1,11 @@
+pygopherd (0.9.11) unstable; urgency=low
+
+  * Added support for searches in HTTP handler.
+  * Added pygfarm package and a PYG.
+  * Many bugfixes.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 18 Apr 2002 12:23:09 -0500
+
 pygopherd (0.9.10) unstable; urgency=low
 
   * Added handling of abstracts and other extended attributes.
