@@ -20,11 +20,11 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
         """Handle Gopher+ request."""
         self.handlemethod = None
         if self.requestlist[1][0] == '+':
-            self.handlemethod == 'documentonly'
+            self.handlemethod = 'documentonly'
         elif self.requestlist[1] == '!':
-            self.handlemethod == 'infoonly'
+            self.handlemethod = 'infoonly'
         elif self.requestlist[1][0] == '$':
-            self.handlemethod == 'gopherplusdir'
+            self.handlemethod = 'gopherplusdir'
 
         handler = self.gethandler()
         self.entry = handler.getentry()
@@ -33,8 +33,8 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
             self.wfile.write("+-2\r\n")
             self.wfile.write(self.renderobjinfo(self.entry))
         else:
-            self.wfile.write("+" + self.entry.getsize(-2) + "\r\n")
-            self.entry.write(self, self.wfile)
+            self.wfile.write("+" + str(self.entry.getsize(-2)) + "\r\n")
+            handler.write(self.wfile)
 
     def renderobjinfo(self, entry):
         if entry.getmimetype() == 'application/gopher-menu':

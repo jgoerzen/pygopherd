@@ -13,4 +13,5 @@ class GopherProtocol(protocols.base.BaseGopherProtocol):
                entry.getname() + "\t" + \
                entry.getselector() + "\t" + \
                entry.gethost(default = self.server.server_name) + "\t" + \
-               str(entry.getport(default = self.server.server_port)) + "\r\n"
+               str(entry.getport(default = self.server.server_port)) + \
+               "\t+\r\n"
