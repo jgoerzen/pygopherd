@@ -39,10 +39,25 @@ class WAPProtocol(HTTPProtocol):
                                  "waptop")
         self.waptop = waptop
         if self.requestparts[1].startswith(waptop):
+            # If it starts with waptop, *guaranteed* to be wap.
             self.requestparts[1] = self.requestparts[1][len(waptop):]
             return 1
-        else:
+
+        # See if we can auto-detect a WAP browser.
+        if not self.httpheaders.has_key('accept'):
             return 0
+
+        if not re.search('[, ]text/vnd.wap.wml', self.httpheaders['accept']):
+            return 0
+
+        # By now, we know that it lists WML in accept.  Let's try a few
+        # more things.
+
+        for tryitem in ['x-wap-profile', 'x-up-devcap-max-pdu']:
+            if self.httpheaders.has_key(tryitem):
+                return 1
+
+        return 0
 
     def adjustmimetype(self, mimetype):
         self.needsconversion = 0

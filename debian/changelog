@@ -1,3 +1,9 @@
+pygopherd (2.0.1) unstable; urgency=low
+
+  * Oops, a stray print was left over.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat, 23 Aug 2003 15:04:19 -0500
+
 pygopherd (2.0.0) unstable; urgency=low
 
   * New feature: WAP/WMP support!

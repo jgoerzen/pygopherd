@@ -28,7 +28,6 @@ import cgi
 class HTTPProtocol(BaseGopherProtocol):
     def canhandlerequest(self):
         self.requestparts = map(lambda arg: arg.strip(), self.request.split(" "))
-        print self.requestparts
         return len(self.requestparts) == 3 and \
                (self.requestparts[0] == 'GET' or self.requestparts[0] == 'HEAD') and \
                self.requestparts[2][0:5] == 'HTTP/'
@@ -39,8 +38,17 @@ class HTTPProtocol(BaseGopherProtocol):
                                                 "iconmapping"))
 
         # Slurp up remaining lines.
-        while len(self.rfile.readline().strip()):
-            pass
+        self.httpheaders = {}
+        while 1:
+            line = self.rfile.readline()
+            if not len(line):
+                break
+            line = line.strip()
+            if not len(line):
+                continue
+            splitline = line.split(':', 1)
+            if len(splitline) == 2:
+                self.httpheaders[splitline[0].lower()] = splitline[1]
 
         splitted = self.requestparts[1].split('?')
         self.selector = splitted[0]
