@@ -79,13 +79,7 @@ class VFS_Zip(base.VFS_Real):
 
         return selector
     
-    def getfspath(self, selector):
-        if self._needschain(selector):
-            return self.chain.getfspath(selector)
-
-        if selector.endswith('/subdir/2'):
-            raise NotImplementedError, 'DEBUG'
-
+    def _transformlink(self, selector):
         while (not self._needschain(selector)) and \
                   self._islinkname(selector):
             linkdest = self._readlink(selector)
@@ -95,8 +89,23 @@ class VFS_Zip(base.VFS_Real):
                 selector = os.path.dirname(selector) + '/' + linkdest
                 selector = os.path.normpath(selector)
 
+        return selector
+        
 
-        return self._getfspathfinal(selector)
+    def getfspath(self, selector):
+        if self._needschain(selector):
+            return self.chain.getfspath(selector)
+
+        # Build from the bottom up.
+        components = selector.split('/')
+        newselector = '/'
+
+        for item in components:
+            newselector = os.path.join(newselector, item)
+            newselector = self._transformlink(newselector)
+
+        newselector = os.path.normpath(newselector)
+        return self._getfspathfinal(newselector)
 
     def stat(self, selector):
         if self._needschain(selector):
