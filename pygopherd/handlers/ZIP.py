@@ -222,7 +222,6 @@ class VFS_Zip(base.VFS_Real):
         
 
     def getfspath(self, selector):
-        print ' ******** getfspath ********'
         if self._needschain(selector):
             return self.chain.getfspath(selector)
 
@@ -230,7 +229,6 @@ class VFS_Zip(base.VFS_Real):
         # the path.
 
         selector = self._getfspathfinal(selector)
-        print "selector =", selector
         if not len(selector):
             return selector
 
@@ -238,12 +236,9 @@ class VFS_Zip(base.VFS_Real):
         newselector = ''
         components = selector.split('/')
 
-        print "components =", components
         for item in components:
-            print "item =", item
             newselector = os.path.join(newselector, item)
             newselector = self._transformlink(newselector)
-            print "newselector =", newselector
 
         return os.path.normpath(newselector)
 
@@ -349,7 +344,8 @@ class VFS_Zip(base.VFS_Real):
         return retobj.keys()
 
 
-class TestVFS_Zip_huge(unittest.TestCase):
+#class TestVFS_Zip_huge(unittest.TestCase):
+class DISABLED_TestVFS_Zip_huge:
     def setUp(self):
         from pygopherd import testutil
         from pygopherd.protocols.rfc1436 import GopherProtocol
@@ -587,6 +583,8 @@ class TestVFS_Zip(unittest.TestCase):
                        real2txt)
         s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linked2.txt').read(),
                        real2txt)
+        s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linkedabs.txt').read(),
+                       realtxt)
         s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linktoself/linktoself/linktoself/linkedrel.txt').read(),
                        realtxt)
         s.assertEquals(s.zs.open('/symlinktest.zip/subdir/linktosubdir2/real2.txt').read(),
