@@ -21,6 +21,7 @@ import SocketServer
 import re
 import os, stat, os.path, mimetypes
 from pygopherd import protocols, handlers, gopherentry
+import pygopherd.pipe
 from stat import *
 
 class FileHandler(handlers.base.BaseHandler):
@@ -45,3 +46,29 @@ class FileHandler(handlers.base.BaseHandler):
             wfile.write(string)
         self.rfile.close()
         self.rfile = None
+
+decompressors = None
+
+class CompressedFileHandler(FileHandler):
+    def canhandlerequest(self):
+        return FileHandler.canhandlerequest(self) and \
+               self.getentry().getencoding()
+    
+    def write(self, wfile):
+        global decompressors
+        if decompressors == None:
+            decompressors = \
+                eval(self.config.get("handlers.file.CompressedFileHandler",
+                                     "decompressors"))
+        if decompressors.has_key(self.getentry().getencoding()):
+            decompprog = decompressors[self.getentry().getencoding()]
+            pygopherd.pipe.pipedata_unix(decompprog, [decompprog],
+                                         childstdin = self.rfile,
+                                         childstdout = wfile,
+                                         pathsearch = 1)
+            self.rfile.close()
+            self.rfile = None
+        else:
+            FileHandler.write(self, wfile)
+
+    

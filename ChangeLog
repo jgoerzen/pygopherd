@@ -1,3 +1,53 @@
+2002-04-10 14:18  jgoerzen
+
+	* pygopherd/: __init__.py, pipe.py: Added pipe.py
+
+2002-04-10 14:18  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/file.py,
+	pygopherd/handlers/scriptexec.py: Added many features: The
+	CompressedFileHandler Pipe support etc
+
+2002-04-10 13:38  jgoerzen
+
+	* pygopherd/: fileext.py, handlers/UMN.py: Moved some functionality
+	from UMN.py to fileext.py
+
+2002-04-10 13:34  jgoerzen
+
+	* pygopherd.py, conf/pygopherd.conf, pygopherd/__init__.py,
+	pygopherd/fileext.py, pygopherd/handlers/UMN.py,
+	pygopherd/handlers/dir.py: Added smart file extension stripping for
+	UMN dir.
+
+2002-04-10 12:15  jgoerzen
+
+	* debian/changelog, debian/examples, debian/postinst,
+	debian/postrm, debian/postrm.ex, pygopherd/handlers/UMN.py: Added
+	code to strip off an extension in UMN Dirhandler.  Other Debian
+	enhancements.
+
+2002-04-10 12:03  jgoerzen
+
+	* examples/gophermap: Updated pygopher'd path.
+
+2002-04-10 11:27  jgoerzen
+
+	* debian/control: Final preparation for release of 0.9.0
+
+2002-04-10 11:23  jgoerzen
+
+	* pygopherd.py, debian/init.d: Updated, minor bugfixes.
+
+2002-04-10 11:18  jgoerzen
+
+	* pygopherd.py, debian/init.d, pygopherd/handlers/gophermap.py:
+	Miscellaneous other fixes.
+
+2002-04-10 11:07  jgoerzen
+
+	* ChangeLog: Updated.
+
 2002-04-10 11:07  jgoerzen
 
 	* pygopherd.py: Renamed mimetypes -> mimetypesfiles -- was

@@ -1,5 +1,5 @@
 # pygopherd -- Gopher-based protocol server in Python
-# module: directory marker
+# module: Execute children in a pipe.
 # Copyright (C) 2002 John Goerzen
 # <jgoerzen@complete.org>
 #
@@ -17,5 +17,31 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-__all__ = ['handlers', 'protocols', 'GopherExceptions', 'gopherentry',
-           'logger', 'fileext', 'pipe']
+import os, sys
+
+# Later we will check sys.platform
+
+def pipedata_unix(file, args, environ = os.environ,
+                  childstdin = None,
+                  childstdout = None,
+                  childstderr = None,
+                  pathsearch = 0):
+    pid = os.fork()
+    if pid:
+        # Parent.
+        os.waitpid(pid, 0)
+        return
+    else:
+        # Child.
+        if childstdin:
+            os.dup2(childstdin.fileno(), 0)
+        if childstdout:
+            os.dup2(childstdout.fileno(), 1)
+        if childstderr:
+            os.dup2(childstderr.fileno(), 2)
+        if pathsearch:
+            os.execvpe(file, args, environ)
+        else:
+            os.execve(file, args, environ)
+
+pipedata = pipedata_unix
