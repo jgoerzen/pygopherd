@@ -18,4 +18,4 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 __all__ = ['base', 'dir', 'file', 'url', 'gophermap',
-           'UMN', 'html', 'mbox', 'vfolder']
+           'UMN', 'html', 'mbox', 'vfolder', 'pyg']

@@ -17,20 +17,21 @@ class VirtualFolder(BaseHandler):
         self.selectorreal = None
         self.selectorargs = None
 
-        if statresult:
-            # Stat succeeded?  Can't be anything fake here.
-            self.selectorreal = self.selector
-        elif self.selector.index("?"):
+        if self.selector.find("?") != -1:
             i = self.selector.index("?")
             self.selectorreal = self.selector[0:i]
             self.selectorargs = self.selector[i+1:]
+            # Now, retry the stat with the real selector.
+            self.statresult = None
+            try:
+                self.statresult = os.stat(self.getrootpath() + '/' +
+                                          self.selectorreal)
+            except OSError:
+                pass
         else:
             # Best guess.
             self.selectorreal = self.selector
 
-        # Now, retry the stat with the real selector.
-
-        self.statresult = os.stat(self.getrootpath() + '/' + self.selectorreal)
 
     def genargsselector(self, args):
         """Returns a string representing a full selector to this resource, with

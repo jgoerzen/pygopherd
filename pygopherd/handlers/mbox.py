@@ -23,24 +23,15 @@ import re
 import os, stat, os.path, mimetypes
 from pygopherd import protocols, handlers, gopherentry
 from pygopherd.handlers.vfolder import VirtualFolder
-from mailbox import UnixMailbox
+from mailbox import UnixMailbox, Maildir
 from stat import *
 
-class FolderHandler(VirtualFolder):
-    def canhandlerequest(self):
-        """Figure out if this is a handleable request."""
-        
-        if not S_ISREG(self.statresult[ST_MODE]):
-            return 0
-        try:
-            fd = open(self.getfspath(), "rt")
-            startline = fd.readline()
-            fd.close()
-            
-            return re.match(UnixMailbox._fromlinepattern, startline)
-        except IOError:
-            return 0
 
+###########################################################################
+# Basic mailbox support
+###########################################################################
+
+class FolderHandler(VirtualFolder):
     def getentry(self):
         ## Return my own entry.
         if not self.entry:
@@ -52,10 +43,6 @@ class FolderHandler(VirtualFolder):
             self.entry.setgopherpsupport(0)
         return self.entry
 
-    def prepare(self):
-        self.rfile = open(self.getfspath(), "rt")
-        self.mbox = UnixMailbox(self.rfile)
-
     def write(self, wfile):
         startstr = self.protocol.renderdirstart(self.entry)
         if (startstr):
@@ -66,7 +53,7 @@ class FolderHandler(VirtualFolder):
             message = self.mbox.next()
             if not message:
                 break
-            handler = MessageHandler(self.genargsselector("/MBOX-MESSAGE/" + \
+            handler = MessageHandler(self.genargsselector(self.getargflag() + \
                                      str(count)), self.protocol, self.config,
                                      None)
             wfile.write(self.protocol.renderobjinfo(handler.getentry(message)))
@@ -83,12 +70,13 @@ class MessageHandler(VirtualFolder):
         result."""
         if not self.selectorargs:
             return 0
-        msgnum = re.search('^/MBOX-MESSAGE/(\d+)$', self.selectorargs)
+        msgnum = re.search('^' + self.getargflag() + '(\d+)$',
+                           self.selectorargs)
         if not msgnum:
             return 0
         self.msgnum = int(msgnum.group(1))
         self.message = None
-        return self.statresult and S_ISREG(self.statresult[ST_MODE])
+        return 1
 
     def getentry(self, message = None):
         """Set the message if called from, eg, the dir handler.  Saves
@@ -114,8 +102,7 @@ class MessageHandler(VirtualFolder):
     def getmessage(self):
         if self.message:
             return self.message
-        fd = open(self.getfspath(), "rt")
-        mbox = UnixMailbox(fd)
+        mbox = self.openmailbox()
         message = None
         for x in range(self.msgnum):
             message = mbox.next()
@@ -139,4 +126,67 @@ class MessageHandler(VirtualFolder):
             wfile.write(string)
         self.rfile.close()
         self.rfile = None
+
+###########################################################################
+# Unix MBOX support
+###########################################################################
+
+class MBoxFolderHandler(FolderHandler):
+    def canhandlerequest(self):
+        """Figure out if this is a handleable request."""
+
+        if self.selectorargs:
+            return 0
+        
+        if not S_ISREG(self.statresult[ST_MODE]):
+            return 0
+        try:
+            fd = open(self.getfspath(), "rt")
+            startline = fd.readline()
+            fd.close()
+            
+            return re.match(UnixMailbox._fromlinepattern, startline)
+        except IOError:
+            return 0
+
+    def prepare(self):
+        self.rfile = open(self.getfspath(), "rt")
+        self.mbox = UnixMailbox(self.rfile)
+
+    def getargflag(self):
+        return "/MBOX-MESSAGE/"
+
+class MBoxMessageHandler(MessageHandler):
+    def getargflag(self):
+        return "/MBOX-MESSAGE/"
+
+    def openmailbox(self):
+        fd = open(self.getfspath(), "rt")
+        return UnixMailbox(fd)
+
+###########################################################################
+# Maildir support
+###########################################################################
+
+class MaildirFolderHandler(FolderHandler):
+    def canhandlerequest(self):
+        if self.selectorargs:
+            return 0
+        if not S_ISDIR(self.statresult[ST_MODE]):
+            return 0
+        return os.path.isdir(self.getfspath() + "/new") and \
+               os.path.isdir(self.getfspath() + "/cur")
+
+    def prepare(self):
+        self.mbox = Maildir(self.getfspath())
+
+    def getargflag(self):
+        return "/MAILDIR-MESSAGE/"
+
+class MaildirMessageHandler(MessageHandler):
+    def getargflag(self):
+        return "/MAILDIR-MESSAGE/"
+
+    def openmailbox(self):
+        return Maildir(self.getfspath())
 
