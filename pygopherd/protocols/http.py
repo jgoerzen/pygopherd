@@ -76,10 +76,7 @@ class HTTPProtocol(BaseGopherProtocol):
                 mtime = time.strftime("%a, %d %b %Y %H:%M:%S GMT", gmtime)
                 self.wfile.write("Last-Modified: " + mtime + "\n")
             mimetype = self.entry.getmimetype()
-            if mimetype == None:
-                mimetype = 'text/plain'
-            if mimetype == 'application/gopher-menu':
-                mimetype = 'text/html'
+            mimetype = self.adjustmimetype(mimetype)
             self.wfile.write("Content-Type: " + mimetype + "\n\n")
             if self.requestparts[0] == 'GET':
                 if handler.isdir():
@@ -91,6 +88,14 @@ class HTTPProtocol(BaseGopherProtocol):
         except IOError, e:
             GopherExceptions.log(e, self, None)
             self.filenotfound(e[1])
+
+    def adjustmimetype(self, mimetype):
+        if mimetype == None:
+            return 'text/plain'
+        if mimetype == 'application/gopher-menu':
+            return 'text/html'
+        return mimetype
+        
 
     def renderobjinfo(self, entry):
         url = None
@@ -106,7 +111,9 @@ class HTTPProtocol(BaseGopherProtocol):
             url = entry.geturl(self.server.server_name, 70)
 
         # OK.  Render.
+        return self.getrenderstr(entry, url)
 
+    def getrenderstr(self, entry, url):
         retstr = '<TR><TD>'
         retstr += self.getimgtag(entry)
         retstr += "</TD>\n<TD>&nbsp;"

@@ -1,3 +1,9 @@
+pygopherd (1.99.6) unstable; urgency=low
+
+  * New feature: WAP/WMP support!
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat, 23 Aug 2003 12:00:48 -0500
+
 pygopherd (1.99.5) unstable; urgency=low
 
   * Introduced new "inode-like" caching system for ZIP files.
