@@ -19,10 +19,17 @@ set -e
 
 
 case "$1" in
-       purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+       purge|remove)
 
+       echo "Removing old .pyc files."
+       # Clean up .pyc and .class files left around.
+       rm -fr /usr/lib/python2.2/site-packages/pygopherd || true
 
         ;;
+
+    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+        true
+    ;;
 
     *)
         echo "postrm called with unknown argument \`$1'" >&2

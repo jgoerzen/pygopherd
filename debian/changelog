@@ -1,6 +1,6 @@
 pygopherd (0.9.0) unstable; urgency=low
 
-  * Initial Release.
+  * Initial Release.  Closes: #142221.
 
  -- John Goerzen <jgoerzen@complete.org>  Wed, 10 Apr 2002 08:58:31 -0500
 

@@ -70,9 +70,17 @@ class UMNDirHandler(DirHandler):
             return 0                    # Parent returned 0, do the same.
 
     def prep_entriesappend(self, file, fileentry):
-        """Overridden to process .cap files.  This is called by the
+        """Overridden to process .cap files and modify extensions.
+        This is called by the
         parent's prepare to append an entry to the list.  Here, we check
         to see if there's a .cap file right before adding it."""
+
+        if isinstance(fileentry, handlers.file.FileHandler):
+            i = fileentry.getname().find(".")
+            if i != -1:
+                # If there's an extension, strip it off.
+                fileentry.setname(fileentry.getname()[0:i])
+        
         capfilename = self.fsbase + '/.cap/' + file
         
         try:
