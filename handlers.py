@@ -1,26 +1,10 @@
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols
+import os, stat, os.path, mimetypes, protocols, handlers
 
 class GopherRequestHandler(SocketServer.StreamRequestHandler):
     def handle(self):
         request = self.rfile.readline()
-
-        requestparts = request.split("\t")
-        for i in range(0, len(requestparts)):
-            requestparts[i] = requestparts[i].strip()
-
-        if re.match('\./', requestparts[0]):    # Weed out ./ and ../
-            return
-        if re.match('//', requestparts[0]):     # Weed out //
-            return
-
-        if len(requestparts[0]) and requestparts[0][-1] == '/':
-                requestparts[0] = requestparts[0][0:-1]
-        if len(requestparts[0]) == 0 or requestparts[0][0] != '/':
-            requestparts[0] = '/' + requestparts[0]
-
-        path = self.server.config.get("serving", "root") + requestparts[0]
 
         protos = [protocols.GopherPlusProtocol, protocols.GopherProtocol]
         for protocol in protos:
