@@ -198,6 +198,9 @@ class VFS_Zip(base.VFS_Real):
         else:
             candidates = filter(lambda x: x.startswith(fspath + '/'), self.members)
 
+        if not len(candidates):
+            raise OSError, "listdir called on invalid directory %s" % selector
+
         # OK, now chop off the fspath part.
         candidates = [x[len(fspath):] for x in candidates]
 
@@ -222,6 +225,7 @@ class TestVFS_Zip(unittest.TestCase):
         s.real = base.VFS_Real(s.config)
         s.z = VFS_Zip(s.config, s.real, '/testdata.zip')
         s.z2 = VFS_Zip(s.config, s.real, '/testdata2.zip')
+        s.zs = VFS_Zip(s.config, s.real, '/symlinktest.zip')
 
     def test_listdir(s):
         m1 = s.z.listdir('/testdata.zip')
@@ -300,6 +304,119 @@ class TestVFS_Zip(unittest.TestCase):
         assert s.z2.exists('/testdata2.zip/pygopherd')
         assert not s.z2.exists('/testdata.zip/pygopherd')
 
+    def test_symlinkexists(s):
+        assert s.zs.exists('/symlinktest.zip/real.txt')
+        assert s.zs.exists('/symlinktest.zip/linked.txt')
+        assert s.zs.exists('/symlinktest.zip/subdir/linktosubdir2')
+
+    def test_symlinkgetfspath(s):
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip'), '')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/real.txt'), 'real.txt')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir'), 'subdir')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir2/real2.txt'),
+                                      'subdir2/real2.txt')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linked.txt'),
+                                      'real.txt')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir'),
+                                      'subdir')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir/linked2.txt'),
+                                      'subdir2/real2.txt')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir/linked2.txt'),
+                                      'subdir2/real2.txt')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir/linkedabs.txt'),
+                                      'real.txt')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir/linktoself'),
+                                      'subdir')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir/linktosubdir2'),
+                                      'subdir2')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir/linkedrel.txt'),
+                                      'real.txt')
+
+    def test_islinkname(s):
+        assert not s.zs._islinkname('/symlinktest.zip/real.txt')
+        assert not s.zs._islinkname('/symlinktest.zip/nonexistant')
+        assert s.zs._islinkname('/symlinktest.zip/linktosubdir')
+        assert s.zs._islinkname('/symlinktest.zip/subdir/linkedrel.txt')
+
+    def test_symlink_listdir(s):
+        m1 = s.zs.listdir('/symlinktest.zip')
+        m1.sort()
+
+        s.assertEquals(m1, ['linked.txt', 'linktosubdir', 'real.txt',
+                            'subdir', 'subdir2'])
+
+        tm2 = ['linked2.txt', 'linkedabs.txt', 'linkedrel.txt', 'linktoself',
+               'linktosubdir2']
+        m2 = s.zs.listdir('/symlinktest.zip/subdir')
+        m2.sort()
+        s.assertEquals(m2, tm2)
+
+        m2 = s.zs.listdir('/symlinktest.zip/linktosubdir')
+        m2.sort()
+        s.assertEquals(m2, tm2)
+
+        s.assertRaises(OSError, s.zs.listdir, '/symlinktest.zip/nonexistant')
+        s.assertRaises(OSError, s.zs.listdir, '/symlinktest.zip/real.txt')
+        s.assertRaises(OSError, s.zs.listdir, '/symlinktest.zip/linktosubdir/linkedrel.txt')
+
+        m2 = s.zs.listdir('/symlinktest.zip/linktosubdir/linktoself/linktoself')
+        
+        m2.sort()
+        s.assertEquals(m2, tm2)
+
+        m3 = s.zs.listdir('/symlinktest.zip/linktosubdir/linktoself/linktosubdir2')
+        s.assertEquals(m3, ['real2.txt'])
+        
+    def test_symlink_open(s):
+        realtxt = "Test.\n"
+        real2txt = "asdf\n"
+
+        # Establish basis for tests is correct.
+        
+        s.assertEquals(s.zs.open('/symlinktest.zip/real.txt').read(),
+                       realtxt)
+        s.assertEquals(s.zs.open('/symlinktest.zip/subdir2/real2.txt').read(),
+                       real2txt)
+
+        # Now, run the tests.
+        s.assertEquals(s.zs.open('/symlinktest.zip/subdir/linked2.txt').read(),
+                       real2txt)
+        s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linked2.txt').read(),
+                       real2txt)
+        s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linktoself/linktoself/linktoself/linkedrel.txt').read(),
+                       realtxt)
+        s.assertEquals(s.zs.open('/symlinktest.zip/subdir/linktosubdir2/real2.txt').read(),
+                       real2txt)
+
+        s.assertRaises(IOError, s.zs.open, '/symlinktest.zip')
+        s.assertRaises(IOError, s.zs.open, '/symlinktest.zip/subdir')
+        s.assertRaises(IOError, s.zs.open, '/symlinktest.zip/linktosubdir')
+        s.assertRaises(IOError, s.zs.open, '/symlinktest.zip/subdir/linktoself')
+        s.assertRaises(IOError, s.zs.open, '/symlinktest.zip/linktosubdir/linktoself/linktosubdir2')
+
+    def test_symlink_isdir(s):
+        assert s.zs.isdir('/symlinktest.zip/subdir')
+        assert s.zs.isdir('/symlinktest.zip/linktosubdir')
+        assert not s.zs.isdir('/symlinktest.zip/linked.txt')
+        assert not s.zs.isdir('/symlinktest.zip/real.txt')
+
+        assert s.zs.isdir('/symlinktest.zip/subdir/linktoself')
+        assert s.zs.isdir('/symlinktest.zip/subdir/linktosubdir2')
+        assert s.zs.isdir('/symlinktest.zip/linktosubdir/linktoself/linktosubdir2')
+        assert not s.zs.isdir('/symlinktest.zip/nonexistant')
+        assert not s.zs.isdir('/symlinktest.zip/subdir/linkedrel.txt')
+        assert s.zs.isdir('/symlinktest.zip')
+
+    def test_symlink_isfile(s):
+        assert s.zs.isfile('/symlinktest.zip/real.txt')
+        assert not s.zs.isfile('/symlinktest.zip')
+        assert not s.zs.isfile('/symlinktest.zip/subdir')
+        assert not s.zs.isfile('/symlinktest.zip/linktosubdir')
+        assert s.zs.isfile('/symlinktest.zip/linktosubdir/linkedrel.txt')
+        assert s.zs.isfile('/symlinktest.zip/linktosubdir/linked2.txt')
+        assert s.zs.isfile('/symlinktest.zip/subdir/linktoself/linktosubdir2/real2.txt')
+        assert not s.zs.isfile('/symlinktest.zip/subdir/linktoself/linktosubdir2/real.txt')
+        
     def test_open(s):
         s.assertRaises(IOError, s.z.open, '/testdata.zip/pygopherd')
         s.assertRaises(IOError, s.z2.open, '/testdata2.zip/pygopherd')
