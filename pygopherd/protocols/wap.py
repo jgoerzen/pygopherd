@@ -43,6 +43,8 @@ class WAPProtocol(HTTPProtocol):
             self.requestparts[1] = self.requestparts[1][len(waptop):]
             return 1
 
+        self.headerslurp()
+
         # See if we can auto-detect a WAP browser.
         if not self.httpheaders.has_key('accept'):
             return 0

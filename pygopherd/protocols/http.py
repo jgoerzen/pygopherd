@@ -28,15 +28,15 @@ import cgi
 class HTTPProtocol(BaseGopherProtocol):
     def canhandlerequest(self):
         self.requestparts = map(lambda arg: arg.strip(), self.request.split(" "))
-        return len(self.requestparts) == 3 and \
+        canhandle = len(self.requestparts) == 3 and \
                (self.requestparts[0] == 'GET' or self.requestparts[0] == 'HEAD') and \
                self.requestparts[2][0:5] == 'HTTP/'
 
-    def handle(self):
-        self.canhandlerequest()         # To get self.requestparts
-        self.iconmapping = eval(self.config.get("protocols.http.HTTPProtocol",
-                                                "iconmapping"))
-
+    def headerslurp(self):
+        if hasattr(self.rfile, 'pygopherd_http_slurped'):
+            # Already slurped.
+            self.httpheaders = self.rfile.pygopherd_http_slurped
+            return
         # Slurp up remaining lines.
         self.httpheaders = {}
         while 1:
@@ -49,7 +49,14 @@ class HTTPProtocol(BaseGopherProtocol):
             splitline = line.split(':', 1)
             if len(splitline) == 2:
                 self.httpheaders[splitline[0].lower()] = splitline[1]
+        self.rfile.pygopherd_http_slurped = self.httpheaders
 
+    def handle(self):
+        self.canhandlerequest()         # To get self.requestparts
+        self.iconmapping = eval(self.config.get("protocols.http.HTTPProtocol",
+                                                "iconmapping"))
+
+        self.headerslurp()
         splitted = self.requestparts[1].split('?')
         self.selector = splitted[0]
         self.selector = urllib.unquote(self.selector)
