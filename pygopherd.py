@@ -22,7 +22,7 @@
 #
 
 from ConfigParser import ConfigParser
-import socket, os, sys, signal, SocketServer
+import socket, os, sys, SocketServer
 from pygopherd import handlers, protocols
 from pygopherd.protocols import ProtocolMultiplexer
 import mimetypes
