@@ -42,6 +42,54 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
         except IOError, e:
             self.filenotfound(e[1])
 
+    def getsupportedblocknames(self):
+        return ['+INFO', '+ADMIN', '+VIEWS']
+
+    def getallblocks(self, entry):
+        retstr = ''
+        for block in self.getsupportedblocknames():
+            retstr += self.getblock(block, entry)
+        return retstr
+
+    def getblock(self, block, entry):
+        # Incoming block: +VIEWS
+        blockname = block[1:].lower()
+        # Name: views
+        funcname = "get" + blockname
+        # Funcname: getviews
+        func = getattr(self, funcname)
+        return func(entry)
+
+    def getinfo(self, entry):
+        return "+INFO: " + \
+               protocols.rfc1436.GopherProtocol.renderobjinfo(self, entry)
+
+    def getadmin(self, entry):
+        retstr = "+ADMIN:\r\n"
+        retstr += " Admin: "
+        retstr += self.config.get("protocols.gopherp.GopherPlusProtocol",
+                                  "admin")
+        retstr += "\r\n"
+        if entry.getmtime():
+            retstr += " Mod-Date: "
+            retstr += time.ctime(entry.getmtime())
+            m = time.localtime(entry.getmtime())
+            retstr += " <%04d%02d%02d%02d%02d%02d>\r\n" % \
+                      (m[0], m[1], m[2], m[3], m[4], m[5])
+        return retstr
+
+    def getviews(self, entry):
+        retstr = ''
+        if entry.getmimetype():
+            retstr += "+VIEWS:\r\n " + entry.getmimetype()
+            if (entry.getlanguage()):
+                retstr += " " + entry.getlanguage()
+            retstr += ":"
+            if (entry.getsize() != None):
+                retstr += " <%dk>" % (entry.getsize() / 1024)
+            retstr += "\r\n"
+        return retstr
+
     def renderobjinfo(self, entry):
         if entry.getmimetype() == 'application/gopher-menu':
             entry.mimetype = 'application/gopher+-menu'
@@ -54,28 +102,7 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
             retstr += "\t+\r\n"
             return retstr
         else:
-            retstr = "+INFO: " + \
-                     protocols.rfc1436.GopherProtocol.renderobjinfo(self, entry)
-            retstr += "+ADMIN:\r\n"
-            retstr += " Admin: "
-            retstr += self.config.get("protocols.gopherp.GopherPlusProtocol",
-                                      "admin")
-            retstr += "\r\n"
-            if entry.getmtime():
-                retstr += " Mod-Date: "
-                retstr += time.ctime(entry.getmtime())
-                m = time.localtime(entry.getmtime())
-                retstr += " <%04d%02d%02d%02d%02d%02d>\r\n" % \
-                          (m[0], m[1], m[2], m[3], m[4], m[5])
-            if entry.getmimetype():
-                retstr += "+VIEWS:\r\n " + entry.getmimetype()
-                if (entry.getlanguage()):
-                    retstr += " " + entry.getlanguage()
-                retstr += ":"
-                if (entry.getsize() != None):
-                    retstr += " <%dk>" % (entry.getsize() / 1024)
-                retstr += "\r\n"
-            return retstr
+            return self.getallblocks(entry)
 
     def filenotfound(self, msg):
         self.wfile.write("--2\r\n")

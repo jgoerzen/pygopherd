@@ -60,7 +60,7 @@ class BaseGopherProtocol:
             self.filenotfound(e[1])
 
     def filenotfound(self, msg):
-        self.wfile.write("0%s\t\terror.host\t1\r\n" % msg)
+        self.wfile.write("3%s\t\terror.host\t1\r\n" % msg)
 
     def renderobjinfo(self, entry):
         """Renders an object's info according to the protocol.  Returns
