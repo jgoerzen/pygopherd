@@ -338,16 +338,24 @@ class ZipReader:
             filename = fp.read(centdir[_CD_FILENAME_LENGTH])
 
             self.locationmap[filename] = self.start_dir + total
-            self._registerdirectorymap(filename, self.start_dir + total)
-            self._registerdirectorymap(os.path.dirname(filename), -1)
+            components = filename.split('/')
+            l = len(components)
+            self._registerdirectorymap(l, components, self.start_dir + total)
+            if l > 1:
+                self._registerdirectorymap(l - 1, components[:-1], -1)
             # Skip past the other stuff.
             total = (total + 46 + centdir[_CD_FILENAME_LENGTH]
                      + centdir[_CD_EXTRA_FIELD_LENGTH]
                      + centdir[_CD_COMMENT_LENGTH])
             fp.seek(self.start_dir + total, 0)
 
-    def _registerdirectorymap(self, filename, dest):
-        (dname, fname) = os.path.split(filename)
+    def _registerdirectorymap(self, l, components, dest):
+        if l < 2:
+            dname = ''
+            fname = components[0]
+        else:
+            dname = '/'.join(components[:-1])
+            fname = components[-1]
         if not len(fname):
             return
         if self.directorymap.has_key(dname):

@@ -210,8 +210,8 @@ class VFS_Zip(base.VFS_Real):
         except KeyError:
             raise OSError, "Request to list non-existant directory"
         
-#class TestVFS_Zip_huge(unittest.TestCase):
-class DISABLED_TestVFS_Zip_huge:
+class TestVFS_Zip_huge(unittest.TestCase):
+#class DISABLED_TestVFS_Zip_huge:
     def setUp(self):
         from pygopherd import testutil
         from pygopherd.protocols.rfc1436 import GopherProtocol
