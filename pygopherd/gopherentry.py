@@ -23,6 +23,7 @@ class GopherEntry:
         self.language = None
         self.ctime = None
         self.mtime = None
+        self.num = 0
 
     def populatefromfs(self, fspath):
         self.fspath = fspath
@@ -30,11 +31,17 @@ class GopherEntry:
         if self.populated:
             return
 
+        if not (self.gethost() == None and self.getport() == None and \
+           os.path.exists(self.fspath)):
+            return
+
         statval = os.stat(self.fspath)
         self.populated = 1
 
-        self.ctime = statval[9]
-        self.mtime = statval[8]
+        if self.ctime == None:
+            self.ctime = statval[9]
+        if self.mtime == None:
+            self.mtime = statval[8]
 
         if self.name == None:
             self.name = os.path.basename(self.selector)
@@ -44,11 +51,13 @@ class GopherEntry:
             self.mimetype = 'application/gopher-menu'
             return
 
-        self.size = statval[6]          # Only set this if it's not a dir.
+        if self.size == None:
+            self.size = statval[6]          # Only set this if it's not a dir.
         mimetype, encoding = mimetypes.guess_type(self.selector, strict = 0)
-        if mimetype:
+
+        if mimetype and not self.mimetype:
             self.mimetype = mimetype
-        if encoding:
+        if encoding and not self.encoding:
             self.encoding = encoding
 
         if not self.mimetype:
@@ -65,6 +74,8 @@ class GopherEntry:
         if self.selector == None:
             return default
         return self.selector
+    def setselector(self, arg):
+        self.selector = arg
     def getfspath(self, default = None):
         if self.fspath == None:
             return default
@@ -73,18 +84,26 @@ class GopherEntry:
         if self.type == None:
             return default
         return self.type
+    def settype(self, arg):
+        self.type = arg
     def getname(self, default = None):
         if self.name == None:
             return default
         return self.name
+    def setname(self, arg):
+        self.name = arg
     def gethost(self, default = None):
         if self.host == None:
             return default
         return self.host
+    def sethost(self, arg):
+        self.host = arg
     def getport(self, default = None):
         if self.port == None:
             return default
         return self.port
+    def setport(self, arg):
+        self.port = arg
     def getmimetype(self, default = None):
         if self.mimetype == None:
             return default
@@ -116,3 +135,7 @@ class GopherEntry:
         retval += urllib.quote('%s%s' % (self.gettype(), self.getselector()))
         return retval
 
+    def getnum(self):
+        return self.num
+    def setnum(self, arg):
+        self.num = arg
