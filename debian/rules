@@ -71,7 +71,7 @@ binary-indep: build install
 	dh_testroot
 #	dh_installdebconf	
 	dh_installdocs
-	mv debian/pygopherd/usr/bin/pygopherd.py \
+	mv debian/pygopherd/usr/bin/pygopherd \
 		debian/pygopherd/usr/sbin/pygopherd
 	rm debian/pygopherd/etc/pygopherd/mime.types
 	cp pygfarm/*.pyg debian/pygfarm/usr/share/pygfarm
