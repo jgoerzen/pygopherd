@@ -4,6 +4,7 @@
 
 import struct, os, time
 import binascii
+from StringIO import StringIO
 
 try:
     import zlib # We may need its compression method
@@ -166,6 +167,246 @@ if os.sep != "/":
 else:
     def _normpath(path):
         return path
+
+
+###########################################################################
+###########################################################################
+###########################################################################
+# New ZipReader class
+
+
+class ZipReader:
+    """ Class with methods to open, read, close, list zip files.
+
+    z = ZipFile(file)
+
+    file: Either the path to the file, or a file-like object.
+          If it is a path, the file will be opened and closed by ZipFile.
+    """
+
+    fp = None                   # Set here since __del__ checks it
+
+    def __init__(self, file):
+        """Open the ZIP file with mode read "r", write "w" or append "a"."""
+        self.debug = 0  # Level of printing: 0 through 3
+        self.locationmap = {}           # Map to location of central dir header
+        self.compression = compression  # Method of compression
+
+        # Check if we were passed a file-like object
+        if isinstance(file, basestring):
+            self._filePassed = 0
+            self.filename = file
+            self.fp = open(file, 'rb')
+        else:
+            self._filePassed = 1
+            self.fp = file
+            self.filename = getattr(file, 'name', None)
+
+
+        self._GetContents()
+
+    def _GetContents(self):
+        """Read the directory, making sure we close the file if the format
+        is bad."""
+        try:
+            self._RealGetContents()
+        except BadZipfile:
+            if not self._filePassed:
+                self.fp.close()
+                self.fp = None
+            raise
+
+    def _RealGetContents(self):
+        """Read in the table of contents for the ZIP file."""
+        fp = self.fp
+        endrec = _EndRecData(fp)
+        if not endrec:
+            raise BadZipfile, "File is not a zip file"
+        if self.debug > 1:
+            print endrec
+        size_cd = endrec[5]             # bytes in central directory
+        offset_cd = endrec[6]   # offset of central directory
+        self.comment = endrec[8]        # archive comment
+        # endrec[9] is the offset of the "End of Central Dir" record
+        x = endrec[9] - size_cd
+        # "concat" is zero, unless zip was concatenated to another file
+        concat = x - offset_cd
+        self.concat = concat
+        if self.debug > 2:
+            print "given, inferred, offset", offset_cd, x, concat
+        # self.start_dir:  Position of start of central directory
+        self.start_dir = offset_cd + concat
+        fp.seek(self.start_dir, 0)
+        total = 0
+        while total < size_cd:
+            centdir = self._getcentdir() # Reads 46 bytes
+            filename = fp.read(centdir[_CD_FILENAME_LENGTH])
+
+            self.locationmap{filename} = self.start_dir + total
+            # Skip past the other stuff.
+            total = (total + 46 + centdir[_CD_FILENAME_LENGTH]
+                     + centdir[_CD_EXTRA_FIELD_LENGTH]
+                     + centdir[_CD_COMMENT_LENGTH])
+            fp.seek(self.start_dir + total, 0)
+
+    def namelist(self):
+        """Return a list of file names in the archive."""
+        return self.locationmap.keys()
+
+    def infolist(self):
+        """Return a list of class ZipInfo instances for files in the
+        archive."""
+        return [self.getinfo(x) for x in self.locationmap.iterkeys()]
+
+    def printdir(self):
+        """Print a table of contents for the zip file."""
+        print "%-46s %19s %12s" % ("File Name", "Modified    ", "Size")
+        for name in self.locationmap.iterkeys():
+            zinfo = self.getinfo(name)
+            date = "%d-%02d-%02d %02d:%02d:%02d" % zinfo.date_time
+            print "%-46s %s %12d" % (zinfo.filename, date, zinfo.file_size)
+
+    def testzip(self):
+        """Read all the files and check the CRC."""
+        for name in self.locationmap.iterkeys():
+            try:
+                self.read(name)       # Check CRC-32
+            except:
+                return name
+
+    def getinfo(self, name):
+        """Return the instance of ZipInfo given 'name'."""
+        return self._getinfofrompos(self.locationmap[name])
+
+    def _getcentdir(self):
+        """Read central directory info from an ALREADY-SEEKED fp!"""
+        centdir = self.fp.read(46)
+        if centdir[0:4] != stringCentralDir:
+            raise BadZipfile, "Bad magic number for central directory"
+        centdir = struct.unpack(structCentralDir, centdir)
+        if self.debug > 2:
+            print centdir
+        return centdir
+
+    def _getinfofrompos(self, location):
+        fp = self.fp
+        fp.seek(location, 0)
+        centdir = self._getcentdir()
+        filename = fp.read(centdir[_CD_FILENAME_LENGTH])
+        # Create ZipInfo instance to store file information
+        x = ZipInfo(filename)
+        x.extra = fp.read(centdir[_CD_EXTRA_FIELD_LENGTH])
+        x.comment = fp.read(centdir[_CD_COMMENT_LENGTH])
+        total = (total + centdir[_CD_FILENAME_LENGTH]
+                 + centdir[_CD_EXTRA_FIELD_LENGTH]
+                 + centdir[_CD_COMMENT_LENGTH])
+        x.header_offset = centdir[_CD_LOCAL_HEADER_OFFSET] + self.concat
+        # file_offset must be computed below...
+        (x.create_version, x.create_system, x.extract_version, x.reserved,
+            x.flag_bits, x.compress_type, t, d,
+            x.CRC, x.compress_size, x.file_size) = centdir[1:12]
+        x.volume, x.internal_attr, x.external_attr = centdir[15:18]
+        # Convert date/time code to (year, month, day, hour, min, sec)
+        x.date_time = ( (d>>9)+1980, (d>>5)&0xF, d&0x1F,
+                                 t>>11, (t>>5)&0x3F, (t&0x1F) * 2 )
+
+        # And now, read the info from the file's header.
+
+        data = x
+        fp.seek(data.header_offset, 0)
+        fheader = fp.read(30)
+        if fheader[0:4] != stringFileHeader:
+            raise BadZipfile, "Bad magic number for file header"
+        fheader = struct.unpack(structFileHeader, fheader)
+        # file_offset is computed here, since the extra field for
+        # the central directory and for the local file header
+        # refer to different fields, and they can have different
+        # lengths
+        data.file_offset = (data.header_offset + 30
+                            + fheader[_FH_FILENAME_LENGTH]
+                            + fheader[_FH_EXTRA_FIELD_LENGTH])
+        fname = fp.read(fheader[_FH_FILENAME_LENGTH])
+        if fname != data.filename:
+            raise RuntimeError, \
+                  'File name in directory "%s" and header "%s" differ.' % (
+                      data.filename, fname)
+
+        return data
+
+    def read(self, name):
+        fd = StringIO()
+        fd = self.copyto(name, fd)
+        return fd.getvalue()
+
+    def _copy(self, srcfd, destfd, size):
+        copied = 0
+        while copied < size:
+            data = srcfd.read(min(4096, size - copied))
+            destfd.write(data)
+            copied += len(data)
+
+    def copyto(self, name, fd):
+        """Copy the contents of the named file to the given descriptor."""
+        if not self.fp:
+            raise RuntimeError, \
+                  "Attempt to read ZIP archive that was already closed"
+        zinfo = self.getinfo(name)
+        filepos = self.fp.tell()
+        self.fp.seek(zinfo.file_offset, 0)
+
+        if zinfo.compress_type == ZIP_STORED:
+            self._copy(self.fp, fd, zinfo.compress_size)
+            pass
+        elif zinfo.compress_type == ZIP_DEFLATED:
+            if not zlib:
+                raise RuntimeError, \
+                      "De-compression requires the (missing) zlib module"
+
+
+            bytesread = 0
+            dc = zlib.decompressobj(-15)
+            crc = binascii.crc32("")
+            while bytesread < zinfo.compressed_size:
+                bytes = self.fd.read(min(zinfo.compressed_size, 4096))
+                bytesread += len(bytes)
+                # zlib compress/decompress code by Jeremy Hylton of CNRI
+                output = dc.decompress(bytes)
+                if len(output):
+                    fd.write(output)
+                    crc = binascii.crc32(output)
+            # need to feed in unused pad byte so that zlib won't choke
+            ex = dc.decompress('Z') + dc.flush()
+            if ex:
+                fd.write(ex)
+                crc = binascii.crc32(ex)
+                
+        else:
+            raise BadZipfile, \
+                  "Unsupported compression method %d for file %s" % \
+            (zinfo.compress_type, name)
+        if crc != zinfo.CRC:
+            raise BadZipfile, "Bad CRC-32 for file %s" % name
+        self.fp.seek(filepos, 0)
+        return bytes
+
+    def __del__(self):
+        """Call the "close()" method in case the user forgot."""
+        self.close()
+
+    def close(self):
+        """Close the file, and for mode "w" and "a" write the ending
+        records."""
+        if self.fp is None:
+            return
+        if not self._filePassed:
+            self.fp.close()
+        self.fp = None
+
+
+###########################################################################
+###########################################################################
+###########################################################################
+# Old ZipFile class
 
 
 class ZipFile:
