@@ -37,10 +37,15 @@ class LinkEntry(GopherEntry):
     def __init__(self, selector, config):
         GopherEntry.__init__(self, selector, config)
         self.needsmerge = 0
+        self.needsabspath = 0
     def getneedsmerge(self):
         return self.needsmerge
+    def getneedsabspath(self):
+        return self.needsabspath
     def setneedsmerge(self, arg):
         self.needsmerge = arg
+    def setneedsabspath(self, arg):
+        self.needsabspath = arg
 
 class UMNDirHandler(DirHandler):
     """This module strives to be bug-compatible with UMN gopherd."""
@@ -194,12 +199,13 @@ class UMNDirHandler(DirHandler):
                 pathname = line[5:]
                 if pathname[-1] == '/':
                     pathname = pathname[0:-1]
-                if line[5:7] == './' or line[5:7] == '~/':
+                if len(line) >= 7 and (line[5:7] == './' or line[5:7] == '~/'):
                     # Handle ./: make full path.
                     entry.setselector(self.selectorbase + "/" + pathname[2:])
                     entry.setneedsmerge(1)
-                elif pathname[0] != '/':
-                    entry.setselector(self.selectorbase + "/" + pathname)
+                elif len(pathname) and pathname[0] != '/':
+                    entry.setselector(pathname)
+                    entry.setneedsabspath(1)
                 else:
                     entry.setselector(pathname)
                 done['path'] = 1
@@ -223,6 +229,9 @@ class UMNDirHandler(DirHandler):
             ### FIXME: Handle Abstract, Admin, URL, TTL
 
         if done['path']:
+            if entry.getneedsabspath() and \
+                   entry.gethost() == None and entry.getport() == None:
+                entry.setselector(self.selectorbase + "/" + entry.getselector())
             return (nextstep, entry)
         return (nextstep, None)
 
