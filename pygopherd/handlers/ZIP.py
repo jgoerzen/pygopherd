@@ -29,9 +29,7 @@ class VFS_Zip(base.VFS_Real):
         self.config = config
         self.chain = chain
         self.zipfilename = zipfilename
-        self._initzip()
 
-    def _initzip(self):
         zipfd = self.chain.open(self.zipfilename)
         self.zip = zipfile.ZipFile(zipfd, 'r')
         self.dircache = None
@@ -59,27 +57,52 @@ class VFS_Zip(base.VFS_Real):
                 
         return cur
 
+    def _cachedir_insert(self, cache, file, info):
+        (dir, filename) = os.path.split(file)
+
+        dirlevel = cache
+        for level in dir.split('/'):
+            if level == '':
+                continue
+            if not dirlevel.has_key(level):
+                dirlevel[level] = {}
+            dirlevel = dirlevel[level]
+
+        if len(filename):
+            dirlevel[filename] = info
+
     def _cachedir(self):
         if self.dircache != None:
             return
 
         self.dircache = {}
+        pendinglinks = {}
 
         for (file, info) in self.memberinfo.iteritems():
-            (dir, filename) = os.path.split(file)
-            if dir == '/':
-                dir == ''
+            if self._islinkinfo(info):
+                pendinglinks[file] = self._readlinkfspath(file)
+            else:
+                self._cachedir_insert(self.dircache, file, info)
 
-            dirlevel = self.dircache
-            for level in dir.split('/'):
-                if level == '':
+        startlen = -1
+        while len(pendinglinks) and len(pendinglinks) != startlen:
+            # While we have links pending and we have a different number
+            # pending than last time, continue evaluating.
+            newpendinglinks = {}
+            startlen = len(pendinglinks)
+            for (source, dest) in pendinglinks.iteritems():
+                try:
+                    destobj = self._getcacheentry(dest)
+                except KeyError:
+                    newpendinglinks[source] = dest
                     continue
-                if not dirlevel.has_key(level):
-                    dirlevel[level] = {}
-                dirlevel = dirlevel[level]
 
-            if len(filename):
-                dirlevel[filename] = info
+                self._cachedir_insert(self.dircache, source, destobj)
+
+            pendinglinks = newpendinglinks
+
+            # If they drop off here without being found, then we just consider
+            # it a bad link and attempts to read it will be 404'd.
 
     def _needschain(self, selector):
         return not selector.startswith(self.zipfilename)
@@ -110,9 +133,7 @@ class VFS_Zip(base.VFS_Real):
         return self._islinkfspath(self._getfspathfinal(selector))
 
     def _readlinkfspath(self, fspath):
-        if not self._islinkfspath(fspath):
-            raise ValueError, "Readlinkfspath called on %s which is not a link"
-
+        """It better be a link before you try this!"""
         return self._open(fspath).read()
 
     def _readlink(self, selector):
@@ -139,23 +160,6 @@ class VFS_Zip(base.VFS_Real):
 
         return selector
     
-    def _transformlink(self, fspath):
-        while 1:
-            try:
-                linkdest = self._readlinkfspath(fspath)
-            except ValueError:
-                # It's not a link.
-                return fspath
-            
-            if linkdest.startswith('/'):
-                fspath = os.path.normpath(linkdest)[1:]
-            else:
-                fspath = os.path.join(os.path.dirname(fspath), linkdest)
-                fspath = os.path.normpath(fspath)
-
-        return fspath
-        
-
     def getfspath(self, selector):
         if self._needschain(selector):
             return self.chain.getfspath(selector)
@@ -163,25 +167,13 @@ class VFS_Zip(base.VFS_Real):
         # We can skip the initial part -- it just contains the start of
         # the path.
 
-        selector = self._getfspathfinal(selector)
-        if not len(selector):
-            return selector
-
-        # Build from the bottom up.
-        newselector = ''
-        components = selector.split('/')
-
-        for item in components:
-            newselector = os.path.join(newselector, item)
-            newselector = self._transformlink(newselector)
-
-        return os.path.normpath(newselector)
+        return self._getfspathfinal(selector)
 
     def stat(self, selector):
         if self._needschain(selector):
             return self.chain.stat(selector)
 
-        fspath = self.getfspath(selector)
+        fspath = self._getfspathfinal(selector)
         try:
             zi = self._getcacheentry(fspath)
         except KeyError:
