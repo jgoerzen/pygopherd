@@ -83,19 +83,20 @@ class HTTPProtocol(BaseGopherProtocol):
         retstr = '<TR><TD>'
         url = None
         # Decision time....
-        if (not entry.gethost()) and (not entry.getport()):
+        print "Selector", entry.getselector()
+        if re.match('(/|)URL:', entry.getselector()):
+            print "Opt 1"
+            # It's a plain URL.  Make it that.
+            url = re.match('(/|)URL:(.+)$', entry.getselector()).group(2)
+            print "URL:", url
+        elif (not entry.gethost()) and (not entry.getport()):
+            print "Opt 2"
             # It's a link to our own server.  Make it as such.  (relative)
             url = urllib.quote(entry.getselector())
         else:
+            print "Opt 3"
             # Link to a different server.  Make it a gopher URL.
-            url = 'gopher://%s:%d/%s%s' % \
-                  (urllib.quote(entry.gethost(self.server.server_name)),
-                   entry.getport(70),
-                   urllib.quote(entry.gettype('0')),
-                   urllib.quote(entry.getselector()))
-        if re.match('(/|)URL:', entry.getselector()):
-            # It's a plain URL.  Make it that.
-            url = re.match('(/|)URL:(.+)$', entry.getselector()).group(1)
+            url = entry.geturl(self.server.server_name, 70)
 
         # OK.  Render.
 
