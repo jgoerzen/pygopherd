@@ -24,9 +24,6 @@ class PYGMain(PYGBase):
         if self.searchrequest:
             self.commandargs.append(self.searchrequest)
 
-        print "dbcommand", self.dbcommand
-        print "commandargs", self.commandargs
-            
         if self.dbcommand == 'DEFINE':
             self.__class__ = DefineMenu
         elif self.dbcommand == 'DEFINITION':
@@ -244,6 +241,7 @@ class Definition(PYGMain):
         entry.type = '0'
         entry.mimetype = 'text/plain'
         entry.name = 'Definition for %s' % self.commandargs[0]
+        return entry
 
 class Match(PYGMain):
     def getentry(self):
@@ -282,14 +280,32 @@ class Match(PYGMain):
     def getdirlist(self):
         return self.entries
 
+class DBInfo(PYGMain):
+    def prepare(self):
+        self.conn = dictclient.Connection()
+        self.conn.getdbdescs()
+        self.db = self.conn.getdbobj(self.dbname)
+        self.infotext = self.db.getinfo()
+
+    def write(self, wfile):
+        wfile.write("About %s (%s):\n\n" % (self.dbname, self.db.getdescription()))
+        wfile.write(self.infotext)
+
+    def getentry(self):
+        entry = GopherEntry(self.selector, self.config)
+        entry.type = '0'
+        entry.mimetype = 'text/plain'
+        entry.name = 'Information for %s' % self.dbname
+        return entry
+
 def unique(input):
     """Return a list of the elements in input, but without duplicates.
     Performs a case-insensitive check."""
     retval = []
-    check  = []
+    check  = {}
     for item in input:
-        if not item.lower() in check:
+        if not check.has_key(item.lower()):
             retval.append(item)
-            check.append(item.lower())
+            check[item.lower()] = 1
     return retval
 
