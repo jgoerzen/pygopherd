@@ -197,7 +197,7 @@ class UMNDirHandler(DirHandler):
                 done['name'] = 1
             elif line[0:5] == "Path=":
                 pathname = line[5:]
-                if pathname[-1] == '/':
+                if len(pathname) and pathname[-1] == '/':
                     pathname = pathname[0:-1]
                 if len(line) >= 7 and (line[5:7] == './' or line[5:7] == '~/'):
                     # Handle ./: make full path.
