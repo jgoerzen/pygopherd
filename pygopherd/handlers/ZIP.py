@@ -16,7 +16,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import re, zipfile, time, stat, unittest, os.path, struct
+import re, zipfile, time, stat, unittest, os.path, struct, types, copy
 from StringIO import StringIO
 
 UNX_IFMT = 0170000
@@ -24,14 +24,79 @@ UNX_IFLNK = 0120000
 
 from pygopherd.handlers import base
 
+def GetPicklableZipFile(zipfile, chain, zipfilename, dircache):
+    pzf = copy.copy(zipfile)
+    pzf.fp = None
+    retval = (pzf, chain, zipfilename, dircache)
+
+def UnpickleZipFileObject():
+    """Warning: if read-write ZIPs are ever implemented along with
+    nested zips, this or the above may break.
+
+    Returns a new ZipFile object."""
+
+    
+    
+
 class VFS_Zip(base.VFS_Real):
     def __init__(self, config, chain, zipfilename):
         self.config = config
         self.chain = chain
         self.zipfilename = zipfilename
+        self._initzip()
+
+    def _initzip(self):
+        # For reading from a new Zip file.
         zipfd = self.chain.open(self.zipfilename)
         self.zip = zipfile.ZipFile(zipfd, 'r')
-        self.members = self.zip.namelist()
+        self.dircache = None
+        self._cachedir()
+
+
+        # For reloading an existing one.
+        self.memberinfo = self.zip.NameToInfo
+
+    def _isentryincache(self, fspath):
+        try:
+            self._getcacheentry(fspath)
+            return 1
+        except KeyError:
+            return 0
+
+    def _getcacheentry(self, fspath):
+        cur = self.dircache
+        if fspath == '':
+            return cur
+        for item in fspath.split('/'):
+            if type(cur) != types.DictType:
+                raise KeyError, "Call for %s: couldn't find %s" % (fspath, item)
+            try:
+                cur = cur[item]
+            except KeyError:
+                raise KeyError, "Call for %s: Couldn't find %s" % (fspath, item)
+        return cur
+
+    def _cachedir(self):
+        if self.dircache != None:
+            return
+
+        self.dircache = {}
+
+        for (file, info) in self.memberinfo.iteritems():
+            (dir, filename) = os.path.split(file)
+            if dir == '/':
+                dir == ''
+
+            dirlevel = self.dircache
+            for level in dir.split('/'):
+                if level == '':
+                    continue
+                if not dirlevel.has_key(level):
+                    dirlevel[level] = {}
+                dirlevel = dirlevel[level]
+
+            if len(filename):
+                dirlevel[filename] = info
 
     def _needschain(self, selector):
         return not selector.startswith(self.zipfilename)
@@ -43,15 +108,17 @@ class VFS_Zip(base.VFS_Real):
         return (result & UNX_IFMT) == UNX_IFLNK
 
     def _islinkinfo(self, info):
+        if type(info) == types.DictType:
+            return 0
         return self._islinkattr(info.external_attr)
 
     def _islinkname(self, selector):
         fspath = self._getfspathfinal(selector)
         if not len(fspath):
             return 0
-        if not fspath in self.members:
+        if not self._isentryincache(fspath):
             return 0
-        info = self.zip.getinfo(fspath)
+        info = self._getcacheentry(fspath)
         return self._islinkinfo(info)
 
     def _readlink(self, selector):
@@ -112,19 +179,14 @@ class VFS_Zip(base.VFS_Real):
             return self.chain.stat(selector)
 
         fspath = self.getfspath(selector)
-        isfile = 0
         try:
-            zi = self.zip.getinfo(fspath)
-            isfile = 1
-        except:
-            pass
-
-        if not isfile:
-            direxists = filter(lambda x: x.startswith(fspath), self.members)
-            if not len(direxists):
-                raise OSError, "Entry %s does not exist in %s" %\
-                      (selector, self.zipfilename)
-
+            zi = self._getcacheentry(fspath)
+        except KeyError:
+            raise OSError, "Entry %s does not exist in %s" %\
+                  (selector, self.zipfilename)
+        
+        if type(zi) == types.DictType:
+            # It's a directory.
             return (16877,              # mode
                     0,                  # inode
                     0,                  # device
@@ -167,14 +229,7 @@ class VFS_Zip(base.VFS_Real):
             return self.chain.exists(selector)
 
         fspath = self.getfspath(selector)
-        if fspath in self.members:
-            return 1
-
-        # Special case for directories -- may not appear in the file
-        # themselves.
-
-        direxists = filter(lambda x: x.startswith(fspath), self.members)
-        return len(direxists)
+        return self._isentryincache(fspath)
 
     def _open(self, fspath):
         return StringIO(self.zip.read(fspath))
@@ -193,28 +248,87 @@ class VFS_Zip(base.VFS_Real):
             return self.chain.listdir(selector)
 
         fspath = self.getfspath(selector)
-        if not len(fspath):
-            candidates = self.members
-        else:
-            candidates = filter(lambda x: x.startswith(fspath + '/'), self.members)
+        try:
+            retobj = self._getcacheentry(fspath)
+        except KeyError:
+            raise OSError, "listdir on %s failed: no such file or directory" % selector
 
-        if not len(candidates):
-            raise OSError, "listdir called on invalid directory %s" % selector
+        if type(retobj) != types.DictType:
+            raise OSError, "listdir on %s failed: that is a file, not a directory" % selector
 
-        # OK, now chop off the fspath part.
-        candidates = [x[len(fspath):] for x in candidates]
+        return retobj.keys()
 
-        retval = []
-        for item in candidates:
-            if item.startswith('/'):
-                item = item[1:]
-            slashindex = item.find('/')
-            if slashindex != -1:
-                item = item[:slashindex]
-            if len(item) and not item in retval:
-                retval.append(item)
 
-        return retval
+class TestVFS_Zip_huge(unittest.TestCase):
+    def setUp(self):
+        from pygopherd import testutil
+        from pygopherd.protocols.rfc1436 import GopherProtocol
+        self.config = testutil.getconfig()
+        self.rfile = StringIO("/testfile.txt\n")
+        self.wfile = StringIO()
+        self.logfile = testutil.getstringlogger()
+        self.handler = testutil.gettestinghandler(self.rfile, self.wfile,
+                                                  self.config)
+        self.server = self.handler.server
+        self.proto = GopherProtocol("/testfile.txt\n", self.server,
+                                    self.handler, self.rfile, self.wfile,
+                                    self.config)
+        self.config.set("handlers.ZIP.ZIPHandler", "enabled", 'true')
+        from pygopherd.handlers import HandlerMultiplexer
+        HandlerMultiplexer.handlers = None
+        handlerlist = self.config.get("handlers.HandlerMultiplexer", "handlers")
+        handlerlist = handlerlist.strip()
+        handlerlist = handlerlist[0] + 'ZIP.ZIPHandler, ' + handlerlist[1:]
+        self.config.set("handlers.HandlerMultiplexer", "handlers", handlerlist)
+
+
+    def testlistdir1(self):
+        from pygopherd.protocols.rfc1436 import GopherProtocol
+        self.proto = GopherProtocol("/foo.zip\n",
+                                    self.server,
+                                    self.handler, self.rfile, self.wfile,
+                                    self.config)
+        self.proto.handle()
+
+    def testlistdir2(self):
+        from pygopherd.protocols.rfc1436 import GopherProtocol
+        self.proto = GopherProtocol("/foo.zip/lib\n",
+                                    self.server,
+                                    self.handler, self.rfile, self.wfile,
+                                    self.config)
+        self.proto.handle()
+
+    def testlistdir3(self):
+        from pygopherd.protocols.rfc1436 import GopherProtocol
+        self.proto = GopherProtocol("/foo.zip/lib/dpkg/info\n",
+                                    self.server,
+                                    self.handler, self.rfile, self.wfile,
+                                    self.config)
+        self.proto.handle()
+        
+    def testopen1(self):
+        from pygopherd.protocols.rfc1436 import GopherProtocol
+        self.proto = GopherProtocol("/foo.zip/lib/dpkg/info/dpkg.list\n",
+                                    self.server,
+                                    self.handler, self.rfile, self.wfile,
+                                    self.config)
+        self.proto.handle()
+
+    def testopen2(self):
+        from pygopherd.protocols.rfc1436 import GopherProtocol
+        self.proto = GopherProtocol("/foo.zip/games/bsdgames/snake.log\n",
+                                    self.server,
+                                    self.handler, self.rfile, self.wfile,
+                                    self.config)
+        self.proto.handle()
+
+    def testopen3(self):
+        from pygopherd.protocols.rfc1436 import GopherProtocol
+        self.proto = GopherProtocol("/foo.zip/www/apache2-default/manual/platforms/index.html\n",
+                                    self.server,
+                                    self.handler, self.rfile, self.wfile,
+                                    self.config)
+        self.proto.handle()
 
 class TestVFS_Zip(unittest.TestCase):
     def setUp(s):

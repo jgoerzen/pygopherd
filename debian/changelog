@@ -1,3 +1,9 @@
+pygopherd (1.99.1) unstable; urgency=low
+
+  * Fixed a bug in html handler.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu,  6 Mar 2003 11:26:14 -0600
+
 pygopherd (1.99.0) unstable; urgency=low
 
   * Implemented virtual file system support.

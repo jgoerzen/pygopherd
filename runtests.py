@@ -18,7 +18,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # END OF COPYRIGHT #
 
-import sys
+import sys, profile
 # sys.path.insert("-1", "..")
 
 import unittest
@@ -48,5 +48,5 @@ def suite():
     return suite
 
 if __name__ == '__main__':
-    unittest.main(defaultTest='suite')
+    profile.run("unittest.main(defaultTest='suite')", 'profile.out')
 
