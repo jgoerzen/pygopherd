@@ -137,7 +137,11 @@ class DirHandler(handlers.base.BaseHandler):
         if self.fromcache:
             # Don't resave the cache.
             return
-        fp = open(self.fsbase + "/" + cachefile, "wb")
-        cPickle.dump(self.fileentries, fp, 1)
-        fp.close()
+        try:
+            fp = open(self.fsbase + "/" + cachefile, "wb")
+            cPickle.dump(self.fileentries, fp, 1)
+            fp.close()
+        except IOError:
+            pass
+
     

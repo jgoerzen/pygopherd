@@ -194,12 +194,12 @@ class UMNDirHandler(DirHandler):
                 pathname = line[5:]
                 if pathname[-1] == '/':
                     pathname = pathname[0:-1]
-                # Handle ./: make full path.
                 if line[5:7] == './' or line[5:7] == '~/':
+                    # Handle ./: make full path.
                     entry.setselector(self.selectorbase + "/" + pathname[2:])
                     entry.setneedsmerge(1)
                 elif pathname[0] != '/':
-                    entry.setselector(self.selectorbase + "/" + pathname[1:])
+                    entry.setselector(self.selectorbase + "/" + pathname)
                 else:
                     entry.setselector(pathname)
                 done['path'] = 1
