@@ -145,6 +145,10 @@ class UMNDirHandler(DirHandler):
             if getattr(new, field):
                 setattr(old, field, getattr(new, field))
 
+        for field in new.geteadict().keys():
+            print "Handling ea", field
+            old.setea(field, new.getea(field))
+
     def processLinkFile(self, filename, capfilepath = None):
         """Processes a link file.  If capfilepath is set, it should
         be the equivolent of the Path= in a .names file."""
@@ -219,14 +223,23 @@ class UMNDirHandler(DirHandler):
                 done['port'] = 1
             elif line[0:5] == 'Numb=':
                 entry.setnum(int(line[5:]))
-            elif line[0:9] == 'Abstract=' or \
-                 line[0:6] == 'Admin=' or \
+            elif line[0:9] == 'Abstract=':
+                abstractstr = ""
+                abstractline = line[9:]
+                while len(abstractline) and abstractline[-1] == "\\":
+                    abstractstr += abstractline[0:-1] + "\n"
+                    abstractline = fd.readline().strip()
+                abstractstr += abstractline
+
+                if abstractstr:
+                    entry.setea('ABSTRACT', abstractstr)
+            elif line[0:6] == 'Admin=' or \
                  line[0:4] == 'URL=' or \
                  line[0:4] == 'TTL=':
                 pass
             else:
                 break
-            ### FIXME: Handle Abstract, Admin, URL, TTL
+            ### FIXME: Handle Admin, URL, TTL
 
         if done['path']:
             if entry.getneedsabspath() and \

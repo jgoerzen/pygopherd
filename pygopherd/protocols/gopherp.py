@@ -76,18 +76,33 @@ class GopherPlusProtocol(GopherProtocol):
             GopherExceptions.log(e, self, None)
             self.filenotfound(e[1])
 
-    def getsupportedblocknames(self):
-        return ['+INFO', '+ADMIN', '+VIEWS']
+    def getsupportedblocknames(self, entry):
+        # Return the always-supported values PLUS any extra ones for
+        # this particular entry.
+        return ['+INFO', '+ADMIN', '+VIEWS'] + \
+               ['+' + x for x in entry.geteadict().keys()]
 
     def getallblocks(self, entry):
         retstr = ''
-        for block in self.getsupportedblocknames():
+        for block in self.getsupportedblocknames(entry):
             retstr += self.getblock(block, entry)
         return retstr
 
     def getblock(self, block, entry):
+        # If the entry has the block in its eadict, return that.
+        # Otherwise, do our own thing.
         # Incoming block: +VIEWS
         blockname = block[1:].lower()
+
+        if entry.geteadict().has_key(blockname.upper()):
+            return "+" + blockname.upper() + ":\r\n" + \
+                   ''.join(
+                           [" " + x + "\r\n" for x in \
+                           entry.getea(blockname.upper()).splitlines()]
+                   )
+
+        # Not in there -- look up a custom function.
+        
         # Name: views
         funcname = "get" + blockname + "block"
         # Funcname: getviewsblock
