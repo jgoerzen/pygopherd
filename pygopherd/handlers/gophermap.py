@@ -50,6 +50,9 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
     def write(self, wfile):
         fsbase = self.fsbase
         selectorbase = self.selectorbase
+        startstr = self.protocol.renderdirstart(self.entry)
+        if startstr:
+            wfile.write(startstr)
         while 1:
             line = self.rfile.readline()
             if not line:
@@ -89,5 +92,8 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
                 entry.type = 'i'
                 wfile.write(self.protocol.renderobjinfo(entry))
 
+        endstr = self.protocol.renderdirend(self.entry)
+        if endstr:
+            wfile.write(endstr)
         self.rfile.close()
         self.rfile = None
