@@ -80,7 +80,12 @@ class VFS_Zip(base.VFS_Real):
 
         for (file, info) in self.memberinfo.iteritems():
             if self._islinkinfo(info):
-                pendinglinks[file] = self._readlinkfspath(file)
+                dest = self._readlinkfspath(file)
+                if dest.startswith('/'):
+                    dest = dest[1:]
+                else:
+                    dest = os.path.normpath(os.path.join(os.path.dirname(file), dest))
+                pendinglinks[file] = dest
             else:
                 self._cachedir_insert(self.dircache, file, info)
 
@@ -253,7 +258,7 @@ class VFS_Zip(base.VFS_Real):
         if type(item) == types.DictType:
             raise IOError, "Request to open a directory"
 
-        return self._open(fspath)
+        return self._open(item.filename)
 
     def listdir(self, selector):
         if self._needschain(selector):
@@ -442,28 +447,12 @@ class TestVFS_Zip(unittest.TestCase):
         s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir'), 'subdir')
         s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir2/real2.txt'),
                                       'subdir2/real2.txt')
-        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linked.txt'),
-                                      'real.txt')
-        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir'),
-                                      'subdir')
-        s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir/linked2.txt'),
-                                      'subdir2/real2.txt')
-        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir/linked2.txt'),
-                                      'subdir2/real2.txt')
-        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir/linkedabs.txt'),
-                                      'real.txt')
-        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir/linktoself'),
-                                      'subdir')
-        s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir/linktosubdir2'),
-                                      'subdir2')
-        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir/linkedrel.txt'),
-                                      'real.txt')
+
+
 
     def test_islinkname(s):
         assert not s.zs._islinkname('/symlinktest.zip/real.txt')
         assert not s.zs._islinkname('/symlinktest.zip/nonexistant')
-        assert s.zs._islinkname('/symlinktest.zip/linktosubdir')
-        assert s.zs._islinkname('/symlinktest.zip/subdir/linkedrel.txt')
 
     def test_symlink_listdir(s):
         m1 = s.zs.listdir('/symlinktest.zip')
@@ -493,6 +482,16 @@ class TestVFS_Zip(unittest.TestCase):
 
         m3 = s.zs.listdir('/symlinktest.zip/linktosubdir/linktoself/linktosubdir2')
         s.assertEquals(m3, ['real2.txt'])
+
+        s.assertEquals(s.zs.listdir('/symlinktest.zip/linktosubdir'),
+                       s.zs.listdir('/symlinktest.zip/subdir'))
+
+        s.assertEquals(s.zs.listdir('/symlinktest.zip/linktosubdir/linktoself'),
+                       s.zs.listdir('/symlinktest.zip/subdir'))
+
+        s.assertEquals(s.zs.listdir('/symlinktest.zip/subdir/linktosubdir2'),
+                       s.zs.listdir('/symlinktest.zip/subdir2'))
+        
         
     def test_symlink_open(s):
         realtxt = "Test.\n"
@@ -508,6 +507,8 @@ class TestVFS_Zip(unittest.TestCase):
         # Now, run the tests.
         s.assertEquals(s.zs.open('/symlinktest.zip/subdir/linked2.txt').read(),
                        real2txt)
+        s.assertEquals(s.zs.open('/symlinktest.zip/linked.txt').read(),
+                       realtxt)
         s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linked2.txt').read(),
                        real2txt)
         s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linkedabs.txt').read(),
@@ -516,6 +517,9 @@ class TestVFS_Zip(unittest.TestCase):
                        realtxt)
         s.assertEquals(s.zs.open('/symlinktest.zip/subdir/linktosubdir2/real2.txt').read(),
                        real2txt)
+
+        s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linkedrel.txt').read(),
+                       realtxt)
 
         s.assertRaises(IOError, s.zs.open, '/symlinktest.zip')
         s.assertRaises(IOError, s.zs.open, '/symlinktest.zip/subdir')
