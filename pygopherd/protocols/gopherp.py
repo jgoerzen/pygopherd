@@ -55,16 +55,16 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
         # Incoming block: +VIEWS
         blockname = block[1:].lower()
         # Name: views
-        funcname = "get" + blockname
-        # Funcname: getviews
+        funcname = "get" + blockname + "block"
+        # Funcname: getviewsblock
         func = getattr(self, funcname)
         return func(entry)
 
-    def getinfo(self, entry):
+    def getinfoblock(self, entry):
         return "+INFO: " + \
                protocols.rfc1436.GopherProtocol.renderobjinfo(self, entry)
 
-    def getadmin(self, entry):
+    def getadminblock(self, entry):
         retstr = "+ADMIN:\r\n"
         retstr += " Admin: "
         retstr += self.config.get("protocols.gopherp.GopherPlusProtocol",
@@ -78,7 +78,7 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
                       (m[0], m[1], m[2], m[3], m[4], m[5])
         return retstr
 
-    def getviews(self, entry):
+    def getviewsblock(self, entry):
         retstr = ''
         if entry.getmimetype():
             retstr += "+VIEWS:\r\n " + entry.getmimetype()
@@ -109,3 +109,12 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
         self.wfile.write("1 ")
         self.wfile.write(self.config.get("protocols.gopherp.GopherPlusProtocol", "admin"))
         self.wfile.write("\r\n" + msg + "\r\n")
+
+class URLGopherPlus(GopherPlusProtocol):
+    def getsupportedblocknames(self):
+        return GopherPlusProtocol.getsupportedblocknames(self) + \
+               ['+URL']
+
+    def geturlblock(self, entry):
+        return "+URL: %s\r\n" % entry.geturl(self.server.server_name,
+                                            self.server.server_port)

@@ -1,6 +1,6 @@
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols, handlers
+import os, stat, os.path, mimetypes, protocols, handlers, urllib
 
 class GopherEntry:
     """The entry object for Gopher.  It holds information about each
@@ -110,4 +110,9 @@ class GopherEntry:
             return default
         return self.mtime
     
+    def geturl(self, defaulthost = 'MISSINGHOST', defaultport = 0):
+        retval = 'gopher://%s:%d/' % (self.gethost(defaulthost),
+                                      self.getport(defaultport))
+        retval += urllib.quote('%s%s' % (self.gettype(), self.getselector()))
+        return retval
 
