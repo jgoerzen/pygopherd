@@ -18,15 +18,12 @@ class BaseGopherProtocol:
         config -- a ConfigParser object."""
 
         self.request = request
-        requestparts = request.split("\t")
+        requestparts = map(lambda arg: arg.strip(), request.split("\t"))
         self.rfile = rfile
         self.wfile = wfile
         self.config = config
         self.server = server
         self.requestlist = requestparts
-
-        for i in range(0, len(requestparts)):
-            requestparts[i] = requestparts[i].strip()
 
         self.requestlist = requestparts
         selector = requestparts[0]

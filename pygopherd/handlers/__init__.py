@@ -1,1 +1,1 @@
-__all__ = ['HandlerMultiplexer', 'base', 'dir', 'file', 'url']
+__all__ = ['HandlerMultiplexer', 'base', 'dir', 'file', 'url', 'gophermap']

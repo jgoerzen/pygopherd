@@ -49,11 +49,13 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
             return retstr
         else:
             retstr = "+INFO: " + \
-                     protocols.rfc1436.GopherProtocol.renderobjinfo(self, entry) + \
-                     "+VIEWS:\r\n " + \
-                     entry.getmimetype()
-            if (entry.getlanguage()):
-                retstr += " " + entry.getlanguage()
-            retstr += \
-                   ": <%d>\r\n" % entry.getsize(-2)
+                     protocols.rfc1436.GopherProtocol.renderobjinfo(self, entry)
+            if entry.getmimetype():
+                retstr += "+VIEWS:\r\n " + entry.getmimetype()
+                if (entry.getlanguage()):
+                    retstr += " " + entry.getlanguage()
+                retstr += ":"
+                if (entry.getsize() != None):
+                    retstr += " <%dk>" % (entry.getsize() / 1024)
+                retstr += "\r\n"
             return retstr

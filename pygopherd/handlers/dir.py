@@ -5,7 +5,7 @@ import handlers, handlers.base
 
 class DirHandler(handlers.base.BaseHandler):
     def canhandlerequest(self):
-        """We can handle the request if it's for a file."""
+        """We can handle the request if it's for a directory."""
         return os.path.isdir(self.getfspath())
 
     def getentry(self):

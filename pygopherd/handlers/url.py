@@ -26,8 +26,10 @@ class HTMLURLHandler(handlers.base.BaseHandler):
 
     def write(self, wfile):
         url = self.selector[4:]         # Strip off URL:
+        if self.selector[0] == '/':
+            url = self.selector[5:]
         outdoc = "<HTML><HEAD>\n"
-        outdoc += '<META HTTP-EQUIV="refresh" content="2;URL=%s">' % url
+        outdoc += '<META HTTP-EQUIV="refresh" content="5;URL=%s">' % url
         outdoc += "</HEAD><BODY>\n"
         outdoc += """
         You are following a link from gopher to a website.  You will be

@@ -29,12 +29,15 @@ class BaseHandler:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
         return self.entry
 
+    def getrootpath(self):
+        """Gets the root path."""
+        return self.config.get("pygopherd", "root")
+
     def getfspath(self):
         """Gets the filesystem path corresponding to the selector."""
         if self.fspath:
             return self.fspath
 
-        self.fspath = self.config.get("pygopherd", "root") + \
-                      self.selector
+        self.fspath = self.getrootpath() + self.selector
 
         return self.fspath

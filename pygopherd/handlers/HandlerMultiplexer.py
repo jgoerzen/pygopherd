@@ -1,4 +1,4 @@
-from handlers import file, dir, url
+from handlers import file, dir, url, gophermap
 
 def getHandler(selector, protocol, config):
     h = eval(config.get("handlers.HandlerMultiplexer", "handlers"))
