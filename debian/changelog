@@ -1,3 +1,13 @@
+pygopherd (1.99.0) unstable; urgency=low
+
+  * Implemented virtual file system support.
+  * Implemented VFS_Real, the VFS module for the on-disk filesystem
+    (as was the only option in the past)
+  * Implemented VFS_ZIP, the VFS module for ZIP archives.
+  * New handler ZIP to work with VFS_ZIP.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed,  5 Mar 2003 22:24:43 -0600
+
 pygopherd (1.1.1) unstable; urgency=low
 
   * Added ability to serve up files ending in ".gophermap" as
