@@ -59,24 +59,17 @@ class VFS_Zip(base.VFS_Real):
                 self._createcache(fspath)
                 return 0
 
-            print "Using existing cache"
-            for key in self.dircache.keys():
-                print "%s: %s" % (key, str(self.dircache[key]))
-
             return 1
 
     def _createcache(self, fspath):
         self.dircache = {}
         try:
             self.dbdircache = shelve.open(fspath, 'n')
-            print "Successfully created cache"
         except:
             return 0
 
     def _savecache(self):
-        print "Saving", self.dircache
         for (key, value) in self.dircache.iteritems():
-            print "setting", key, value
             self.dbdircache[key] = value
 
     def _initzip(self):
@@ -138,7 +131,6 @@ class VFS_Zip(base.VFS_Real):
 
             if len(filename):
                 if self._islinkinfo(info):
-                    print "Got link", file
                     symlinkinodes.append({'dirlevel': dirlevel,
                                           'filename': filename,
                                           'pathname': file,
@@ -153,19 +145,16 @@ class VFS_Zip(base.VFS_Real):
             lastsymlinklen = len(symlinkinodes)
             newsymlinkinodes = []
             for item in symlinkinodes:
-                print "Processing symlinkinode", item
                 if item['dest'][0] == '/':
                     dest = item['dest'][1:]
                 else:
                     dest = os.path.join(os.path.dirname(item['pathname']),
                                         item['dest'])
                     dest = os.path.normpath(dest)
-                print "dest is", dest
                 if self._isentryincache(dest):
                     item['dirlevel'][item['filename']] = \
                         self._getcacheinode(dest)
                 else:
-                    print "Failed to insert dest", dest
                     newsymlinkinodes.append(item)
             symlinkinodes = newsymlinkinodes
                                                          
