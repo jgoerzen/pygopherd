@@ -43,11 +43,8 @@ class FolderHandler(Virtual):
             self.entry.setgopherpsupport(0)
         return self.entry
 
-    def write(self, wfile):
-        startstr = self.protocol.renderdirstart(self.entry)
-        if (startstr):
-            wfile.write(startstr)
-
+    def prepare(self):
+        self.entries = []
         count = 1
         while 1:
             message = self.mbox.next()
@@ -56,12 +53,14 @@ class FolderHandler(Virtual):
             handler = MessageHandler(self.genargsselector(self.getargflag() + \
                                      str(count)), self.searchrequest,
                                      self.protocol, self.config, None)
-            wfile.write(self.protocol.renderobjinfo(handler.getentry(message)))
+            self.entries.append(handler.getentry(message))
             count += 1
 
-        endstr = self.protocol.renderdirend(self.entry)
-        if (endstr):
-            wfile.write(endstr)
+    def isdir(self):
+        return 1
+
+    def getdirlist(self):
+        return self.entries
 
 class MessageHandler(Virtual):
     def canhandlerequest(self):

@@ -27,14 +27,14 @@ class PYGHandler(Virtual):
     def getentry(self):
         return self.pygobject.getentry()
 
+    def isdir(self):
+        return self.pygobject.isdir()
+
+    def getdirlist(self):
+        return self.pygobject.getdirlist()
+
     def write(self, wfile):
         self.pygobject.write(wfile)
 
 class PYGBase(Virtual):
     pass
-
-        
-
-    
-
-    

@@ -95,20 +95,13 @@ class DirHandler(handlers.base.BaseHandler):
         self.prep_entries()
         return 1                        # Did something.
 
-    def write(self, wfile):
-        startstr = self.protocol.renderdirstart(self.entry)
-        if (startstr):
-            wfile.write(startstr)
+    def isdir(self):
+        return 1
 
-        for fileentry in self.fileentries:
-            wfile.write(self.protocol.renderobjinfo(fileentry))
-
-        endstr = self.protocol.renderdirend(self.entry)
-        if (endstr):
-            wfile.write(endstr)
+    def getdirlist(self):
         self.savecache()
+        return self.fileentries
 
-            
     def loadcache(self):
         global cachetime, cachefile
         self.fromcache = 0

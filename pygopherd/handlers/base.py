@@ -105,10 +105,28 @@ class BaseHandler:
         pass
 
     def write(self, wfile):
-        """Writes out the request.  Should be overridden."""
-        pass
+        """Writes out the request if isdir() returns false.  You should
+        NOT call write if isdir() returns true!  Should be overridden
+        by files."""
+        if self.isdir():
+            raise Exception, "Attempt to use write for a directory"
 
     def getselector(self):
         """Returns the selector we are handling."""
         return self.selector
 
+    def isdir(self):
+        """Returns true if this handler is handling a directory; false
+        otherwise.  Not valid unless prepare has been called."""
+
+        return 0
+    
+    def getdirlist(self):
+        """Returns a list-like object (list, iterator, tuple, generator, etc)
+        that contains as its elements the gopherentry objects corresponding
+        to each item in the directory.  Valid only if self.isdir() returns
+        true."""
+        if not self.isdir():
+            raise Exception, "Attempt to use getdir for a file."
+        return []
+    

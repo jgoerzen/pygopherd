@@ -47,12 +47,11 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
 
         self.rfile = open(self.fsbase + '/gophermap', 'rb')
 
-    def write(self, wfile):
+        self.entries = []
+
         fsbase = self.fsbase
         selectorbase = self.selectorbase
-        startstr = self.protocol.renderdirstart(self.entry)
-        if startstr:
-            wfile.write(startstr)
+        
         while 1:
             line = self.rfile.readline()
             if not line:
@@ -82,7 +81,7 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
                     # it in for gopher+.
                     if os.path.exists(self.getrootpath() + selector):
                         entry.populatefromfs(self.getrootpath() + selector)
-                wfile.write(self.protocol.renderobjinfo(entry))
+                entries.append(entry)
             else:                       # Info line
                 line = line.strip()
                 entry = gopherentry.GopherEntry('fake', self.config)
@@ -90,10 +89,11 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
                 entry.host = '(NULL)'
                 entry.port = 0
                 entry.type = 'i'
-                wfile.write(self.protocol.renderobjinfo(entry))
+                entries.append(entry)
 
-        endstr = self.protocol.renderdirend(self.entry)
-        if endstr:
-            wfile.write(endstr)
-        self.rfile.close()
-        self.rfile = None
+    def isdir(self):
+        return 1
+
+    def getdirlist(self):
+        return self.entries
+

@@ -1,6 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: serve up gopherspace via http
-# $Id: http.py,v 1.15 2002/04/12 16:39:50 jgoerzen Exp $
+# $Id: http.py,v 1.16 2002/04/15 14:37:22 jgoerzen Exp $
 # Copyright (C) 2002 John Goerzen
 # <jgoerzen@complete.org>
 #
@@ -73,7 +73,10 @@ class HTTPProtocol(BaseGopherProtocol):
                 mimetype = 'text/html'
             self.wfile.write("Content-Type: " + mimetype + "\n\n")
             if self.requestparts[0] == 'GET':
-                handler.write(self.wfile)
+                if handler.isdir():
+                    self.writedir(handler.getdirlist())
+                else:
+                    handler.write(self.wfile)
         except GopherExceptions.FileNotFound, e:
             self.filenotfound(str(e))
         except IOError, e:

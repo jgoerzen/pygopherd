@@ -47,6 +47,8 @@ class GopherEntry:
         self.mtime = None               # Modification date
         self.num = 0                    # Number in menu
         self.gopherpsupport = 0         # Supports gopher+
+        self.ea = {}                    # Extended attributes -- Gopher+
+                                        # Abstract, etc.
 
     def populatefromfs(self, fspath, statval = None):
         """Fills in self with data gleaned from the filesystem.
@@ -270,3 +272,14 @@ class GopherEntry:
         return default
     def setgopherpsupport(self, arg):
         self.gopherpsupport = arg
+
+    def getea(self, name, default = None):
+        if self.ea.has_key(name):
+            return self.ea[name]
+        return default
+
+    def geteadict(self):
+        return self.ea
+
+    def setea(self, name, value):
+        self.ea[name] = value

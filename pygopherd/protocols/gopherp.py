@@ -66,7 +66,10 @@ class GopherPlusProtocol(GopherProtocol):
             else:
                 handler.prepare()
                 self.wfile.write("+" + str(self.entry.getsize(-2)) + "\r\n")
-                handler.write(self.wfile)
+                if handler.isdir():
+                    self.writedir(handler.getdirlist())
+                else:
+                    handler.write(self.wfile)
         except GopherExceptions.FileNotFound, e:
             self.filenotfound(str(e))
         except IOError, e:

@@ -46,6 +46,7 @@ class BaseGopherProtocol:
         self.requesthandler = requesthandler
         self.requestlist = requestparts
         self.searchrequest = None
+        self.handler = None
 
         selector = requestparts[0]
 
@@ -75,7 +76,10 @@ class BaseGopherProtocol:
             self.log(handler)
             self.entry = handler.getentry()
             handler.prepare()
-            handler.write(self.wfile)
+            if handler.isdir():
+                self.writedir(handler.getdirlist())
+            else:
+                handler.write(self.wfile)
         except GopherExceptions.FileNotFound, e:
             self.filenotfound(str(e))
         except IOError, e:
@@ -85,21 +89,40 @@ class BaseGopherProtocol:
     def filenotfound(self, msg):
         self.wfile.write("3%s\t\terror.host\t1\r\n" % msg)
 
-    def renderobjinfo(self, entry):
-        """Renders an object's info according to the protocol.  Returns
-        a string.  A gopher0 server, for instance, would return a dir line."""
-        pass
-
     def gethandler(self):
         """Gets the handler for this object's selector."""
-        return HandlerMultiplexer.getHandler(self.selector, self.searchrequest,
+        if not self.handler:
+            self.handler = HandlerMultiplexer.getHandler(self.selector, self.searchrequest,
                                                self, self.config)
+        return self.handler
+
+    def writedir(self, dirlist):
+        """Called to render a directory.  Generally called by self.handle()"""
+
+        startstr = self.renderdirstart(self.gethandler())
+        if startstr != None:
+            self.wfile.write(startstr)
+
+        for direntry in dirlist:
+            self.wfile.write(self.renderobjinfo(direntry))
+
+        endstr = self.renderdirend(self.gethandler())
+        if endstr != None:
+            self.wfile.write(endstr)
 
     def renderdirstart(self, entry):
         """Renders the start of a directory.  Most protocols will not need
-        this.  Exception might be HTML.  Returns None if not needed."""
+        this.  Exception might be HTML.  Returns None if not needed.
+        Argument should be the entry corresponding to the dir itself."""
         return None
 
     def renderdirend(self, entry):
         """Likewise for the end of a directory."""
         return None
+
+    def renderobjinfo(self, entry):
+        """Renders an object's info according to the protocol.  Returns
+        a string.  A gopher0 server, for instance, would return a dir line.
+        MUST BE OVERRIDDEN."""
+        return None
+
