@@ -64,10 +64,10 @@ class WAPProtocol(HTTPProtocol):
             retstr += '</a>'
         if entry.gettype() == '7':
             retstr += '<do type="accept">\n'
-            retstr += '  <input type="text" name="sr%d" size="30>\n' % \
+            retstr += '  <input type="text" name="sr%d" size="30"/>\n' % \
                       self.postfieldidx
             retstr += '  <go href="%s">\n' % url
-            retstr += '    <postfield name="searchrequest" value="sr%d"/>\n' % \
+            retstr += '    <postfield name="searchrequest" value="$sr%d"/>\n' % \
                       self.postfieldidx
             retstr += '  </go>\n'
             retstr += '</do>\n'
