@@ -16,8 +16,11 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import re, zipfile, time, stat, unittest, os.path
+import re, zipfile, time, stat, unittest, os.path, struct
 from StringIO import StringIO
+
+UNX_IFMT = 0170000
+UNX_IFLNK = 0120000
 
 from pygopherd.handlers import base
 
@@ -33,16 +36,38 @@ class VFS_Zip(base.VFS_Real):
     def _needschain(self, selector):
         return not selector.startswith(self.zipfilename)
 
+    def _islinkattr(self, attr):
+        str = struct.pack('l', attr)
+        str2 = str[2:5] + str[0:2]
+        result = int(struct.unpack('L', str2)[0])
+        return (result & UNX_IFMT) == UNX_IFLNK
+
+    def _islinkinfo(self, info):
+        return self._islinkattr(info.external_attr)
+
+    def _islinkname(self, selector):
+        fspath = self._getfspathfinal(selector)
+        if not len(fspath):
+            return 0
+        if not fspath in self.members:
+            return 0
+        info = self.zip.getinfo(fspath)
+        return self._islinkinfo(info)
+
+    def _readlink(self, selector):
+        if not self._islinkname(selector):
+            raise ValueError, "Readlink called on %s which is not a link"
+
+        retval = self._open(self._getfspathfinal(selector)).read()
+        return retval
+
     def iswritable(self, selector):
         if self._needschain(selector):
             return self.chain.iswritable(selector)
 
         return 0
 
-    def getfspath(self, selector):
-        if self._needschain(selector):
-            return self.chain.getfspath(selector)
-
+    def _getfspathfinal(self, selector):
         # Strip off the filename part.
         selector = selector[len(self.zipfilename):]
 
@@ -53,6 +78,29 @@ class VFS_Zip(base.VFS_Real):
             selector = selector[:-1]
 
         return selector
+    
+    def getfspath(self, selector):
+        if self._needschain(selector):
+            return self.chain.getfspath(selector)
+
+        if selector.endswith('/subdir/2'):
+            raise NotImplementedError, 'DEBUG'
+
+        print selector
+
+        while (not self._needschain(selector)) and \
+                  self._islinkname(selector):
+            linkdest = self._readlink(selector)
+            print "linkdest = %s" % selector
+            if linkdest.startswith('/'):
+                selector = os.path.normpath(linkdest)
+            else:
+                selector = os.path.dirname(selector) + '/' + linkdest
+                selector = os.path.normpath(selector)
+
+
+        print "Calling finalizing on %s" % selector
+        return self._getfspathfinal(selector)
 
     def stat(self, selector):
         if self._needschain(selector):
@@ -123,6 +171,9 @@ class VFS_Zip(base.VFS_Real):
         direxists = filter(lambda x: x.startswith(fspath), self.members)
         return len(direxists)
 
+    def _open(self, fspath):
+        return StringIO(self.zip.read(fspath))
+
     def open(self, selector, *args, **kwargs):
         if self._needschain(selector):
             return apply(self.chain.open, (selector,) + args, kwargs)
@@ -130,14 +181,18 @@ class VFS_Zip(base.VFS_Real):
         if not self.isfile(selector):
             raise IOError, "Request to open %s which is not a file" % selector
 
-        return StringIO(self.zip.read(self.getfspath(selector)))
+        return self._open(self.getfspath(selector))
 
     def listdir(self, selector):
         if self._needschain(selector):
             return self.chain.listdir(selector)
 
         fspath = self.getfspath(selector)
-        candidates = filter(lambda x: x.startswith(fspath), self.members)
+        print "Running listdir for %s" % fspath
+        if not len(fspath):
+            candidates = self.members
+        else:
+            candidates = filter(lambda x: x.startswith(fspath + '/'), self.members)
 
         # OK, now chop off the fspath part.
         candidates = [x[len(fspath):] for x in candidates]

@@ -58,6 +58,7 @@ class DirHandler(base.BaseHandler):
 
         self.fileentries = []
         for file in self.files:
+            print "Examining file %s" % file
             # We look up the appropriate handler for this object, and ask
             # it to give us an entry object.
             handler = handlers.HandlerMultiplexer.\
