@@ -87,7 +87,7 @@ class WAPProtocol(HTTPProtocol):
         if entry.getname() != None:
             thisname = cgi.escape(entry.getname())
         else:
-            thisname = cgi.escape(etry.getselector())
+            thisname = cgi.escape(entry.getselector())
         retstr += thisname
         if not entry.gettype() in ['i', '7']:
             retstr += '</a>'
