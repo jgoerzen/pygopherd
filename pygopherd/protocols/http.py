@@ -1,6 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: serve up gopherspace via http
-# $Id: http.py,v 1.17 2002/04/15 19:03:01 jgoerzen Exp $
+# $Id: http.py,v 1.18 2002/04/16 14:44:32 jgoerzen Exp $
 # Copyright (C) 2002 John Goerzen
 # <jgoerzen@complete.org>
 #
@@ -84,7 +84,6 @@ class HTTPProtocol(BaseGopherProtocol):
             self.filenotfound(e[1])
 
     def renderobjinfo(self, entry):
-        retstr = '<TR><TD>'
         url = None
         # Decision time....
         if re.match('(/|)URL:', entry.getselector()):
@@ -99,7 +98,7 @@ class HTTPProtocol(BaseGopherProtocol):
 
         # OK.  Render.
 
-        retstr += "<TR><TD>"
+        retstr = '<TR><TD>'
         retstr += self.getimgtag(entry)
         retstr += "</TD>\n<TD>&nbsp;"
         if entry.gettype() != 'i':

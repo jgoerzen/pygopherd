@@ -151,6 +151,7 @@ class MBoxFolderHandler(FolderHandler):
     def prepare(self):
         self.rfile = open(self.getfspath(), "rt")
         self.mbox = UnixMailbox(self.rfile)
+        FolderHandler.prepare(self)
 
     def getargflag(self):
         return "/MBOX-MESSAGE/"
@@ -178,6 +179,7 @@ class MaildirFolderHandler(FolderHandler):
 
     def prepare(self):
         self.mbox = Maildir(self.getfspath())
+        FolderHandler.prepare(self)
 
     def getargflag(self):
         return "/MAILDIR-MESSAGE/"

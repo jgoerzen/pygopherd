@@ -146,7 +146,6 @@ class UMNDirHandler(DirHandler):
                 setattr(old, field, getattr(new, field))
 
         for field in new.geteadict().keys():
-            print "Handling ea", field
             old.setea(field, new.getea(field))
 
     def processLinkFile(self, filename, capfilepath = None):
