@@ -7,11 +7,9 @@
 <style-specification-body>
 
 (define (toc-depth nd)
-  2)
-;  (if (string=? (gi nd) (normalize "refentry"))
-;      2
-;      2))
-
+  (if (string=? (gi nd) (normalize "book"))
+      1
+      1))
 (define %generate-article-toc% #t)
 
 ;; Don't split up the doc as much.
@@ -26,7 +24,7 @@
         (normalize "colophon")
         (normalize "setindex")
         (normalize "reference")
-;        (normalize "refentry")
+        (normalize "refentry")
         (normalize "part")
         (normalize "book") ;; just in case nothing else matches...
         (normalize "set")  ;; sets are definitely chunks...

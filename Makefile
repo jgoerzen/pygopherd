@@ -49,9 +49,10 @@ doc/pygopherd.html: doc/pygopherd.sgml
 #doc/pygopherd.ps: doc/pygopherd.8
 #	man -t -l doc/pygopherd.8 > doc/pygopherd.ps
 
-doc/pygopherd.ps: doc/pygopherd.sgml
+doc/pygopherd.ps: doc/pygopherd.sgml doc/book.sgml doc/manpage.sgml
 	docbook-2-ps -q -O -V -O paper-size=Letter -s local=printlocal \
-		doc/pygopherd.sgml
+		doc/book.sgml
+	mv book.ps doc/pygopherd.ps
 
 doc/pygopherd.pdf: doc/pygopherd.ps
 	ps2pdf doc/pygopherd.ps

@@ -1,6 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: TAL file handling.
-# Copyright (C) 2002 John Goerzen
+# Copyright (C) 2002, 2003 John Goerzen
 # <jgoerzen@complete.org>
 #
 #    This program is free software; you can redistribute it and/or modify
@@ -24,7 +24,51 @@ from simpletal import simpleTAL, simpleTALES
 
 from pygopherd.handlers.file import FileHandler
 from pygopherd import gopherentry
-import re
+import re, os.path
+
+class TALLoader:
+    def __init__(self, vfs, path):
+        self.vfs = vfs
+        self.path = path
+
+    def getpath(self):
+        return self.path
+
+    def getparent(self):
+        if self.path == '/':
+            return self
+        else:
+            return self.__class__(self.vfs, os.path.dirname(self.path))
+
+    def getchildrennames(self):
+        return self.vfs.listdir(self.path)
+
+    #def getchildren(self):
+    #    return [self.__class__(self.vfs, os.path.join(self.path, item)) \
+    #            for item in self.getchildrennames()]
+                               
+
+    def __getattr__(self, key):
+        fq = os.path.join(self.path, key)
+        if self.vfs.isfile(fq + ".html.tal"):
+            templateFile = self.vfs.open(fq + ".html.tal")
+            compiled = simpleTAL.compileHTMLTemplate(templateFile)
+            templateFile.close()
+            return compiled
+        elif self.vfs.isdir(fq):
+            return self.__class__(self.vfs, fq)
+        else:
+            raise AttributeError, "Key %s not found in %s" % (key, self.path)
+
+class RecursiveTALLoader(TALLoader):
+    def __getattr__(self, key):
+        if self.path == '/':
+            # Already at the top -- can't recurse.
+            return TALLoader.__getattr__(self, key)
+        try:
+            return TALLoader.__getattr__(self, key)
+        except AttributeError:
+            return self.getparent().__getattr__(self, key)
 
 class TALFileHandler(FileHandler):
     def canhandlerequest(self):
@@ -61,6 +105,15 @@ class TALFileHandler(FileHandler):
         context.addGlobal('talbasename', self.talbasename)
         context.addGlobal('allowpythonpath', self.allowpythonpath)
         context.addGlobal('protocol', self.protocol)
+        context.addGlobal('root', TALLoader(self.vfs, '/'))
+        context.addGlobal('rroot', RecursiveTALLoader(self.vfs, '/'))
+        context.addGlobal('dir', TALLoader(self.vfs,
+                                           os.path.dirname(self.getselector()))
+                          )
+        context.addGlobal('rdir',
+                          RecursiveTALLoader(self.vfs,
+                                             os.path.dirname(self.getselector())))
+
 
         template = simpleTAL.compileHTMLTemplate(rfile)
         rfile.close()
