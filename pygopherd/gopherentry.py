@@ -50,7 +50,7 @@ class GopherEntry:
                                         # Abstract, etc.
 
     def populatefromvfs(self, vfs, selector):
-        self.populatefromfs(self, selector, statval = vfs.stat(selector),
+        self.populatefromfs(selector, statval = vfs.stat(selector),
                             vfs = vfs)
 
     def populatefromfs(self, fspath, statval = None, vfs = None):
@@ -101,6 +101,9 @@ class GopherEntry:
         self.guesstype() will be called to set it."""
         
         self.fspath = fspath
+        if vfs == None:
+            from pygopherd.handlers.base import VFS_Real
+            vfs = VFS_Real(self.config)
 
         if self.populated:
             return
@@ -113,7 +116,7 @@ class GopherEntry:
 
         if not statval:
             try:
-                statval = os.stat(self.fspath)
+                statval = vfs.stat(self.fspath)
             except OSError:
                 return
         

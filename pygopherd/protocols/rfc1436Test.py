@@ -51,6 +51,7 @@ class RFC1436TestCase(unittest.TestCase):
                                     self.config)
         self.proto.handle()
         self.assertEquals(self.wfile.getvalue(), "ZIPonly\n")
+        self.config.set("handlers.ZIP.ZIPHandler", "enabled", "false")
 
     def testhandle_dir_abstracts(self):
         proto = GopherProtocol("", self.server, self.handler, self.rfile,
@@ -73,7 +74,8 @@ class RFC1436TestCase(unittest.TestCase):
 '0testfile\t/testfile.txt\tHOSTNAME\t64777\t+',
 '9testfile.txt.gz\t/testfile.txt.gz\tHOSTNAME\t64777\t+',
 'iThis is the abstract\tfake\t(NULL)\t0',
-'ifor testfile.txt.gz\tfake\t(NULL)\t0']
+'ifor testfile.txt.gz\tfake\t(NULL)\t0',
+'9ziptorture\t/ziptorture.zip\tHOSTNAME\t64777\t+']
         expectedarr = [re.sub('HOSTNAME', self.server.server_name, x) for \
                       x in expectedarr]
         self.assertEquals(len(actualarr), len(expectedarr), str(actualarr))
@@ -98,7 +100,8 @@ class RFC1436TestCase(unittest.TestCase):
               '9testdata\t/testdata.zip\tHOSTNAME\t64777\t+',
               '9testdata2\t/testdata2.zip\tHOSTNAME\t64777\t+',
               '0testfile\t/testfile.txt\tHOSTNAME\t64777\t+',
-              '9testfile.txt.gz\t/testfile.txt.gz\tHOSTNAME\t64777\t+']
+              '9testfile.txt.gz\t/testfile.txt.gz\tHOSTNAME\t64777\t+',
+              '9ziptorture\t/ziptorture.zip\tHOSTNAME\t64777\t+']
         expectedarr = [re.sub('HOSTNAME', self.server.server_name, x) for \
                        x in expectedarr]
         self.assertEquals(len(actualarr), len(expectedarr))

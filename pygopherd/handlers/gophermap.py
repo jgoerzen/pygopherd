@@ -57,7 +57,6 @@ class BuckGophermapHandler(base.BaseHandler):
 
         self.entries = []
 
-        fsbase = self.fsbase
         selectorbase = self.selectorbase
         
         while 1:
@@ -87,7 +86,7 @@ class BuckGophermapHandler(base.BaseHandler):
                 if entry.gethost() == None and entry.getport() == None:
                     # If we're using links on THIS server, try to fill
                     # it in for gopher+.
-                    if self.vfsexists(selector):
+                    if self.vfs.exists(selector):
                         entry.populatefromvfs(self.vfs, selector)
                 self.entries.append(entry)
             else:                       # Info line

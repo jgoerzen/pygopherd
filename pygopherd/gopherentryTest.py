@@ -52,8 +52,8 @@ class GopherEntryTestCase(unittest.TestCase):
         self.assertEntryMatches(conditions, entry, 'testinit')
 
     def testpopulate_basic(self):
-        fspath = self.root + '/testfile.txt'
-        statval = os.stat(fspath)
+        fspath = '/testfile.txt'
+        statval = os.stat(self.root + fspath)
         conditions = {'selector' : '/testfile.txt',
                       'config' : self.config,
                       'fspath' : fspath,
@@ -92,7 +92,7 @@ class GopherEntryTestCase(unittest.TestCase):
         assert entry.gettype() == None
 
     def testpopulate_encoded(self):
-        fspath = self.root + '/testfile.txt.gz'
+        fspath = '/testfile.txt.gz'
         entry = GopherEntry('/testfile.txt.gz', self.config)
         entry.populatefromfs(fspath)
 
@@ -106,12 +106,12 @@ class GopherEntryTestCase(unittest.TestCase):
     def testpopulate_dir(self):
         fspath = self.root + '/'
         entry = GopherEntry('/', self.config)
-        entry.populatefromfs(fspath)
+        entry.populatefromfs('/')
 
         conditions = {
             'selector' : '/',
             'config' : self.config,
-            'fspath' : fspath,
+            'fspath' : '/',
             'type' : '1',
             'name' : '',
             'host' : None,
@@ -154,7 +154,7 @@ class GopherEntryTestCase(unittest.TestCase):
         been set."""
 
         selector = '/testfile.txt'
-        fspath = self.root + selector
+        fspath = selector
 
         entry = GopherEntry(selector, self.config)
         entry.name = 'FAKE NAME'
@@ -196,7 +196,7 @@ class GopherEntryTestCase(unittest.TestCase):
         # More details.
 
         selector = '/testarchive.tgz'
-        fspath = self.root + selector
+        fspath = selector
         entry = GopherEntry(selector, self.config)
         entry.mimetype = 'foo1234'
         entry.encoding = 'bar'
