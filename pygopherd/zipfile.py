@@ -5,6 +5,7 @@
 import struct, os, time, types
 import binascii
 from StringIO import StringIO
+from socket import _fileobject as BaseFileSimulator
 
 _STRING_TYPES = (types.StringType,)
 if hasattr(types, "UnicodeType"):
@@ -172,6 +173,9 @@ else:
     def _normpath(path):
         return path
 
+class FileSimulator(BaseFileSimulator):
+    def close(self):
+        pass
 
 class ZipDecompressor:
     def __init__(self, fd, zinfo):
@@ -188,6 +192,7 @@ class ZipDecompressor:
         elif zinfo.compress_type == ZIP_DEFLATED:
             self.read = self.read_deflated
             self.dc = zlib.decompressobj(-15)
+        self.recv = self.read
 
     def copyto(self, destfd, size = -1):
         copied = 0
@@ -200,7 +205,7 @@ class ZipDecompressor:
 
     def _finalize(self):
         if self.crc != self.zinfo.CRC:
-            raise BadZipFile, "Bad CRC-32 for file %s" % self.zinfo.filename
+            raise BadZipfile, "Bad CRC-32 for file %s" % self.zinfo.filename
 
     def flush(self):
         while self.byteswritten < self.zinfo.file_size:
@@ -214,7 +219,7 @@ class ZipDecompressor:
         if count < 1 or count > self.zinfo.compress_size - self.bytesread:
             count = self.zinfo.compress_size - self.bytesread
         if count < 1:
-            raise EOFError
+            return ''
 
         count = count + self.bytesread
         self.fp.seek(self.zinfo.file_offset + self.bytesread)
@@ -233,7 +238,7 @@ class ZipDecompressor:
         if count < 1 or count > self.zinfo.file_size - self.byteswritten:
             count = self.zinfo.file_size - self.byteswritten
         if count < 1:
-            raise EOFError
+            return ''
 
         count = count
         self.fp.seek(self.zinfo.file_offset + self.bytesread)
@@ -248,11 +253,10 @@ class ZipDecompressor:
                 self.crc = binascii.crc32(result, self.crc)
 
             if self.bytesread == self.zinfo.compress_size:
-                bytes = self.dc.decompress('Z') + dc.flush()
-                result += bytes
-                if len(result):
-                    self.buffer += result
-                    self.crc = binascii.crc32(result, self.crc)
+                bytes = self.dc.decompress('Z') + self.dc.flush()
+                if len(bytes):
+                    self.buffer += bytes
+                    self.crc = binascii.crc32(bytes, self.crc)
                 self._finalize()
 
         retval = self.buffer[:count]
@@ -334,16 +338,22 @@ class ZipReader:
             filename = fp.read(centdir[_CD_FILENAME_LENGTH])
 
             self.locationmap[filename] = self.start_dir + total
-            dname = os.path.dirname(filename)
-            if self.directorymap.has_key(dname):
-                self.directorymap[dname][filename] = self.start_dir + total
-            else:
-                self.directorymap[dname] = {filename: self.start_dir + total}
+            self._registerdirectorymap(filename, self.start_dir + total)
+            self._registerdirectorymap(os.path.dirname(filename), -1)
             # Skip past the other stuff.
             total = (total + 46 + centdir[_CD_FILENAME_LENGTH]
                      + centdir[_CD_EXTRA_FIELD_LENGTH]
                      + centdir[_CD_COMMENT_LENGTH])
             fp.seek(self.start_dir + total, 0)
+
+    def _registerdirectorymap(self, filename, dest):
+        (dname, fname) = os.path.split(filename)
+        if not len(fname):
+            return
+        if self.directorymap.has_key(dname):
+            self.directorymap[dname][fname] = dest
+        else:
+            self.directorymap[dname] = {fname: dest}
 
     def namelist(self):
         """Return a list of file names in the archive."""
@@ -442,7 +452,7 @@ class ZipReader:
             raise RuntimeError, \
                   "Attempt to read ZIP archive that was already closed"
         zinfo = self.getinfo(name)
-        return ZipDecompressor(self.fp, zinfo)
+        return FileSimulator(ZipDecompressor(self.fp, zinfo), None, -1)
 
     def copyto(self, name, fd):
         """Copy the contents of the named file to the given descriptor."""

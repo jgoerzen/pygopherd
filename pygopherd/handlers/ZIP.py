@@ -128,7 +128,7 @@ class VFS_Zip(base.VFS_Real):
         fspath = self._getfspathresolved(selector)
 
         try:
-            zi = self._getinfo(fspath)
+            zi = self._getinfofspath(fspath)
             zt = zi.date_time
             modtime = time.mktime(zt + (0, 0, -1))
             return (33188,                  # mode
