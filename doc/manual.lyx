@@ -25,18 +25,21 @@
 \layout Title
 
 pygopherd: A Multiprotocol Information Server
-\layout Author
+\layout FirstName
 
-John Goerzen
-\layout Author
+John
+\layout Surname
 
-<jgoerzen@complete.org>
+Goerzen
 \layout Date
 
-$Date: 2002/04/05 23:55:50 $
+$Date: 2002/04/06 03:25:26 $
 \layout Part
 
 Introduction
+\layout Chapter
+
+Welcome
 \layout Standard
 
 Welcome to pygopherd.
@@ -103,8 +106,90 @@ Feature list
 \layout Standard
 
 Here are some of pygopherd's features:
+\layout Itemize
+
+Runs on any platform supported by Python 2.2.
+ This includes virtually every past and current flavor of Unix (Linux, *BSD,
+ Solaris, SunOS), Windows, MacOS 9.x and 10.x, and more.
+ Some features may not be available on non-Unix platforms, however.
+\layout Itemize
+
+Runs on any platform supported by Java 1.1 via the Jython Python implementation.
+\layout Itemize
+
+Tunable server types via configuration directive -- forking or threading.
+\layout Itemize
+
+Secure design with support for chrooted execution.
+\layout Itemize
+
+Feature-complete, full implementations of Gopher0 (RFC1436), Gopher+, and
+ HTTP/1.0
+\layout Itemize
+
+Complete support Bucktooth-style gophermap files
+\layout Itemize
+
+Complete support for UMN-type .Links, .names, etc.
+ files AND support for .cap files.
+\layout Itemize
+
+Support for automatically finding the titles of HTML documents for presentation
+ in a directory.
+\layout Itemize
+
+Virtual folder support can present many different types of files as folders.
+ Some examples are:
+\begin_deeper 
+\layout Itemize
+
+Can present any Unix MBOX, MMDF box, MH directory, Maildir directory, or
+ Babyl mailbox as a virtual folder, the contents of which are the messages
+ in the mailbox.
+\layout Itemize
+
+Can use a configurable separator to split a file into multiple parts, the
+ first line of each becoming the name for the virtual folder.
+\end_deeper 
+\layout Itemize
+
+Versatile configuration file format is both extensible and nicely complementary
+ of the module system.
+\layout Itemize
+
+Several options for running external programs to generate dynamic content:
+ UMN-style execution, Bucktooth-style execution, or Pygopher PYG objects.
+\layout Itemize
+
+Protocol-independant, handler-dependant caching.
+ This speeds up time by letting handlers cache dynamically-generated information
+ -- currently used by the two directory handlers.
+ This can improve performance of directories by several orders of magnitude.
+ Because this is a handler cache only, all protocols can share the single
+ cache -- and since the processing time of the protocols is negligable anyway,
+ it works very well.
+\layout Itemize
+
+Autosensing of MIME types and gopher0 item types.
+ Both are completely configurable.
+ MIME type detection is done using a standard mime.types file, and gopher0
+ types are calculated by using a configurable regexp-based MIME-to-gophertype
+ map.
+\layout Itemize
+
+Heavy support of regular expressions in configuration.
+\layout Itemize
+
+ProtocolMultiplexer and HandlerMultiplexer let you choose only those protocols
+ and handlers that you wish your server to support and the order in which
+ they are tried when a request comes in.
+\layout Itemize
+
+Modular architecture permits rapid prototyping of new capabilities.
+\layout Itemize
+
+Full logging via syslog.
 \layout Standard
 
-\layout Author
-
+fpp
 \the_end
