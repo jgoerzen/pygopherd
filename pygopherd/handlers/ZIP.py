@@ -20,8 +20,8 @@ import re, zipfile, time, stat, unittest, os.path, struct, types, copy
 import cPickle, fcntl
 from StringIO import StringIO
 
-UNX_IFMT = 0170000
-UNX_IFLNK = 0120000
+UNX_IFMT = 0170000L
+UNX_IFLNK = 0120000L
 
 from pygopherd.handlers import base
 
@@ -155,9 +155,9 @@ class VFS_Zip(base.VFS_Real):
         return not selector.startswith(self.zipfilename)
 
     def _islinkattr(self, attr):
-        str = struct.pack('l', attr)
+        str = struct.pack('L', attr)
         str2 = str[2:5] + str[0:2]
-        result = int(struct.unpack('L', str2)[0])
+        result = struct.unpack('L', str2)[0]
         return (result & UNX_IFMT) == UNX_IFLNK
 
     def _islinkinfo(self, info):
