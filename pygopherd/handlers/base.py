@@ -58,9 +58,8 @@ class BaseHandler:
         intended to be a short, small, quick check -- usually not even
         looking at the filesystem.  Here is a default.  Returns true
         if the request is secure, false if not.  By default, we eliminate
-        ./, ../, and //"""
-        print "isrequestsecure on", self.selector
-        print "First test result", self.selector.find("./")
+        ./, ../, and //  This is split out from canhandlerequest becase
+        it could be too easy to forget about it there."""
         return (self.selector.find("./") == -1) and \
                (self.selector.find("..") == -1) and \
                (self.selector.find("//") == -1) and \
@@ -110,5 +109,6 @@ class BaseHandler:
         pass
 
     def getselector(self):
+        """Returns the selector we are handling."""
         return self.selector
 
