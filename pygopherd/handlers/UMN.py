@@ -151,6 +151,19 @@ class UMNDirHandler(DirHandler):
         for field in new.geteadict().keys():
             old.setea(field, new.getea(field))
 
+    def sortLinkEntries(self, x, y):
+        """Called by processLinkFile() to sort entries according to the
+        specified number."""
+        xnum = x.getnum()
+        ynum = y.getnum()
+        if xnum == ynum:
+            return 0
+        if xnum == None:
+            return -1
+        if ynum == None:
+            return 1
+        return cmp(xnum, ynum)
+
     def processLinkFile(self, filename, capfilepath = None):
         """Processes a link file.  If capfilepath is set, it should
         be the equivolent of the Path= in a .names file."""
@@ -162,6 +175,7 @@ class UMNDirHandler(DirHandler):
                 linkentries.append(entry)
             if nextstep == 'stop':
                 break
+        linkentries.sort(self.sortLinkEntries)
         return linkentries
         
     def getLinkItem(self, fd, capfilepath = None):
