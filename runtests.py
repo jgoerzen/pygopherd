@@ -26,7 +26,8 @@ import unittest
 from pygopherd import *
 
 def suite():
-    tests = [initializationTest
+    tests = [initializationTest,
+             GopherExceptionsTest
         ]
     suite = unittest.TestSuite()
     for module in tests:

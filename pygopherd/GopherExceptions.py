@@ -22,7 +22,9 @@ from pygopherd import logger
 
 tracebacks = 0
 
-def log(exception, protocol, handler):
+def log(exception, protocol = None, handler = None):
+    """Logs an exception.  It will try to generate a nice-looking string
+    based on the arguments passed in."""
     protostr = 'None'
     handlerstr = 'None'
     ipaddr = 'unknown-address'
