@@ -16,12 +16,14 @@ class PYGMain(PYGBase):
             selector = self.genargsselector("/BROWSE-DB/%s" % name)
             entry = GopherEntry(selector, self.config)
             entry.type = '1'
+            entry.mimetype = 'application/gopher-dir'
             entry.name = desc
             self.entries.append(entry)
 
     def getentry(self):
         entry = GopherEntry(self.selector, self.config)
         entry.type = '1'
+        entry.mimetype = 'application/gopher-dir'
         entry.name = 'Dictionary Search'
         return entry
 
