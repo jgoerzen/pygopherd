@@ -1,0 +1,9 @@
+from pygopherd.handlers.pyg import PYGBase
+import dictclient
+
+class PYGMain(PYGBase):
+    def canhandlerequest(self):
+        return len(self.selectorargs) == 0
+
+    def prepare(self):
+        self.db = 
