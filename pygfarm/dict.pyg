@@ -1,9 +1,34 @@
+import sys
+sys.path.append('/home/jgoerzen/tree/pygopherd/pyg')
 from pygopherd.handlers.pyg import PYGBase
+from pygopherd.gopherentry import GopherEntry
 import dictclient
 
 class PYGMain(PYGBase):
     def canhandlerequest(self):
-        return len(self.selectorargs) == 0
+        return not self.selectorargs    
 
     def prepare(self):
-        self.db = 
+        self.db = dictclient.Connection()
+        self.entries = []
+
+        for name, desc in self.db.getdbdescs().items():
+            selector = self.genargsselector("/BROWSE-DB/%s" % name)
+            entry = GopherEntry(selector, self.config)
+            entry.type = '1'
+            entry.name = desc
+            self.entries.append(entry)
+
+    def getentry(self):
+        entry = GopherEntry(self.selector, self.config)
+        entry.type = '1'
+        entry.name = 'Dictionary Search'
+        return entry
+
+    def isdir(self):
+        return 1
+
+    def getdirlist(self):
+        return self.entries
+
+    
