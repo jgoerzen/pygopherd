@@ -23,7 +23,7 @@
 
 from ConfigParser import ConfigParser
 import socket, os, sys, signal, SocketServer
-from rhandler import GopherRequestHandler
+from handlers import GopherRequestHandler
 import mimetypes
 
 config = ConfigParser()
