@@ -1,3 +1,10 @@
+pygopherd (0.9.4) unstable; urgency=low
+
+  * Moved security handling to the handler base.
+  * Fixed bug in URL handling -- it works now.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri, 12 Apr 2002 11:46:14 -0500
+
 pygopherd (0.9.3) unstable; urgency=low
 
   * Fixed a bug that prevented proper startup.  Fixed a lot of bugs
