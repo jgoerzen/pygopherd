@@ -1,3 +1,9 @@
+pygopherd (2.0.12) unstable; urgency=low
+
+  * Cleaner handling of connection reset by peer
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat, 15 Jan 2005 15:23:38 -0600
+
 pygopherd (2.0.11) unstable; urgency=medium
 
   * Work around a bug that occurs when a type is missing.

@@ -21,7 +21,7 @@ from ConfigParser import ConfigParser
 
 # Import lots of stuff so it's here before chrooting.
 import socket, os, sys, SocketServer, re, stat, os.path, UserDict, tempfile
-import time, atexit
+import time, atexit, errno
 
 from pygopherd import handlers, protocols, GopherExceptions, logger, sighandlers
 from pygopherd.protocols import *
@@ -80,10 +80,14 @@ class GopherRequestHandler(SocketServer.StreamRequestHandler):
                      self.server, self, self.rfile, self.wfile, self.server.config)
         try:
             protohandler.handle()
+        except socket.error e:
+            if not (e[0] in [errno.ECONNREST, errno.EPIPE]):
+                traceback.print_exc()
+            GopherExceptions.log(sys.exc_info()[1], protohandler, None)
         except:
             if GopherExceptions.tracebacks:
                 # Yes, this may be invalid.  Not much else we can do.
-                traceback.print_exc(file = self.wfile)
+                #traceback.print_exc(file = self.wfile)
                 traceback.print_exc()
             GopherExceptions.log(sys.exc_info()[1], protohandler, None)
 
