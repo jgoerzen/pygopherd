@@ -1,3 +1,10 @@
+pygopherd (0.9.3) unstable; urgency=low
+
+  * Fixed a bug that prevented proper startup.  Fixed a lot of bugs
+    with new HTTP code.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 11 Apr 2002 16:41:02 -0500
+
 pygopherd (0.9.2) unstable; urgency=low
 
   * More bugfixes and new testing code.

@@ -1,3 +1,30 @@
+2002-04-11 16:41  jgoerzen
+
+	* debian/changelog, pygopherd/version.py: REVVED FOR RELEASE 0.9.3
+
+2002-04-11 16:41  jgoerzen
+
+	* pygopherd/: version.py, protocols/http.py: More bugfixes.
+
+2002-04-11 16:24  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/testutil.py: Fixed an
+	initialization problem in testutil that could prevent the system
+	from starting up properly.  Fixed URL to gopher downloads in
+	pygopherd.conf.
+
+2002-04-11 16:16  jgoerzen
+
+	* debian/changelog: Fixed e-mail address
+
+2002-04-11 16:15  jgoerzen
+
+	* debian/control: Fixed build-depends.
+
+2002-04-11 16:13  jgoerzen
+
+	* ChangeLog: READY FOR RELEASE 0.9.2
+
 2002-04-11 16:13  jgoerzen
 
 	* Makefile: Updated
