@@ -101,6 +101,13 @@ class Browse(PYGMain):
         for item in intro:
             self.entries.append(getinfoentry(item, self.config))
 
+        selector = self.genargsselector("/%s/DEFINE" % self.dbname)
+        entry = GopherEntry(selector, self.config)
+        entry.type = '7'
+        entry.mimetype = 'application/gopher-dir'
+        entry.name = 'Search This Database'
+        self.entries.append(entry)
+
         if self.dbname != '*':
             selector = self.genargsselector("/%s/DBINFO" % self.dbname)
             entry = GopherEntry(selector, self.config)
@@ -237,6 +244,43 @@ class Definition(PYGMain):
         entry.type = '0'
         entry.mimetype = 'text/plain'
         entry.name = 'Definition for %s' % self.commandargs[0]
+
+class Match(PYGMain):
+    def getentry(self):
+        entry = GopherEntry(self.selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-dir'
+        entry.name = 'Match menu for %s' % self.commandargs[1]
+        return entry
+
+    def prepare(self):
+        self.conn = dictclient.Connection()
+        self.entries = []
+
+        matches = self.conn.match(self.dbname, self.commandargs[0],
+                                  self.commandargs[1])
+        if not len(matches):
+            self.entries.append(getinfoentry("No matches.",
+                                             self.config))
+            return
+
+        matchlist = unique([x.getword() for x in matches])
+        matchlist.sort(matchsort)
+
+        for matchword in matchlist:
+            selector = self.genargsselector("/%s/DEFINE/%s" % \
+                                            (self.dbname, matchword))
+            entry = GopherEntry(selector, self.config)
+            entry.type = '1'
+            entry.mimetype = 'application/gopher-dir'
+            entry.name = matchword
+            self.entries.append(entry)
+
+    def isdir(self):
+        return 1
+
+    def getdirlist(self):
+        return self.entries
 
 def unique(input):
     """Return a list of the elements in input, but without duplicates.
