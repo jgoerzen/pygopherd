@@ -62,24 +62,19 @@ class VFS_Zip(base.VFS_Real):
     # Resolve a link into its final form.
 
     def _resolvelink(self, fspath):
-        print " ******* RESOLVE LINK CALLED", fspath
         zi = None
         newpath = ''
         for component in fspath.split('/'):
             newpath = os.path.join(newpath, component)
             while 1:
-                print "Top of loop; newpath is", newpath
                 try:
                     zi = self.zip.getinfo(newpath)
                 except KeyError:
-                    print "newpath failed getinfo"
                     break
                 if not self._islinkinfo(zi):
-                    print "newpath failed islinkinfo"
                     break
 
                 newlink = self._readlinkfspath(newpath)
-                print "newlink is", newlink
                 if newlink[0] == '/':
                     newpath = os.path.normpath(newlink[1:])
                 else:
