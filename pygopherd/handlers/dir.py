@@ -21,16 +21,17 @@ import SocketServer
 import re
 import os, stat, os.path, mimetypes, protocols, gopherentry
 import handlers, handlers.base
+from stat import *
 
 class DirHandler(handlers.base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a directory."""
-        return os.path.isdir(self.getfspath())
+        return self.statresult and S_ISDIR(self.statresult[ST_MODE])
 
     def getentry(self):
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
-            self.entry.populatefromfs(self.getfspath())
+            self.entry.populatefromfs(self.getfspath(), self.statresult)
         return self.entry
 
     def prep_initfiles(self):

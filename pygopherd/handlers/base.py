@@ -21,9 +21,11 @@ import SocketServer
 import re
 import os, stat, os.path, mimetypes, protocols, handlers, gopherentry
 
+rootpath = None
+
 class BaseHandler:
     """Skeleton handler -- includes commonly-used routines."""
-    def __init__(self, selector, protocol, config):
+    def __init__(self, selector, protocol, config, statresult):
         """Parameters are:
         selector -- requested selector.  The selector must always start
         with a slash and never end with a slash UNLESS it is a one-char
@@ -34,6 +36,7 @@ class BaseHandler:
         self.selector = selector
         self.protocol = protocol
         self.config = config
+        self.statresult = statresult
         self.fspath = None
         self.entry = None
 
@@ -49,8 +52,12 @@ class BaseHandler:
         return self.entry
 
     def getrootpath(self):
+        global rootpath
         """Gets the root path."""
-        return self.config.get("pygopherd", "root")
+        if not rootpath:
+            print "setting root path"
+            rootpath = self.config.get("pygopherd", "root")
+        return rootpath
 
     def getfspath(self):
         """Gets the filesystem path corresponding to the selector."""

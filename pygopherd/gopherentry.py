@@ -21,14 +21,17 @@ import SocketServer
 import re
 import os, stat, os.path, mimetypes, protocols, handlers, urllib
 
-mapping = eval(config.get("GopherEntry", "mapping"))
+mapping = None
 
 class GopherEntry:
     """The entry object for Gopher.  It holds information about each
     Gopher object."""
 
     def __init__(self, selector, config):
+        global mapping
         """Initialize object based on a selector and config."""
+        if not mapping:
+            mapping = eval(config.get("GopherEntry", "mapping"))
         self.selector = selector
         self.config = config
         self.fspath = None
@@ -46,17 +49,24 @@ class GopherEntry:
         self.num = 0
         self.gopherpsupport = 0
 
-    def populatefromfs(self, fspath):
+    def populatefromfs(self, fspath, statval = None):
         self.fspath = fspath
 
         if self.populated:
             return
 
-        if not (self.gethost() == None and self.getport() == None and \
-           os.path.exists(self.fspath)):
+        # Just let the stat catch the IOError rather than testing
+        # for existance here.  Help cut down on the number of syscalls.
+
+        if not (self.gethost() == None and self.getport() == None):
             return
 
-        statval = os.stat(self.fspath)
+        if not statval:
+            try:
+                statval = os.stat(self.fspath)
+            except IOError:
+                return
+        
         self.populated = 1
         self.gopherpsupport = 1         # Indicate gopher+ support for locals.
 

@@ -21,16 +21,17 @@ import SocketServer
 import re
 import os, stat, os.path, mimetypes, protocols, handlers, gopherentry
 import handlers.base
+from stat import *
 
 class FileHandler(handlers.base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a file."""
-        return os.path.isfile(self.getfspath())
+        return self.statresult and S_ISREG(self.statresult[ST_MODE])
 
     def getentry(self):
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
-            self.entry.populatefromfs(self.getfspath())
+            self.entry.populatefromfs(self.getfspath(), self.statresult)
         return self.entry
 
     def prepare(self):

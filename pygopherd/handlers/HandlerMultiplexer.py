@@ -19,12 +19,24 @@
 
 from handlers import file, dir, url, gophermap, UMN, html, mbox
 import GopherExceptions
+import os
+
+handlers = None
+rootpath = None
 
 def getHandler(selector, protocol, config):
-    h = eval(config.get("handlers.HandlerMultiplexer", "handlers"))
+    global handlers, rootpath
+    if not handlers:
+        handlers = eval(config.get("handlers.HandlerMultiplexer", "handlers"))
+        rootpath = config.get("pygopherd", "root")
 
-    for handler in h:
-        htry = handler(selector, protocol, config)
+    for handler in handlers:
+        statresult = None
+        try:
+            statresult = os.stat(rootpath + '/' + selector)
+        except IOError:
+            pass
+        htry = handler(selector, protocol, config, statresult)
         if htry.canhandlerequest():
             return htry
     

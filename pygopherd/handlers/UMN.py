@@ -23,6 +23,7 @@ import os, stat, os.path, mimetypes, protocols, gopherentry, mimetypes
 import handlers, handlers.base
 from gopherentry import GopherEntry
 from handlers.dir import DirHandler
+from stat import *
 
 ###########################################################################
 # UMN Directory handler
@@ -74,7 +75,8 @@ class UMNDirHandler(DirHandler):
         parent's prepare to append an entry to the list.  Here, we check
         to see if there's a .cap file right before adding it."""
         capfilename = self.fsbase + '/.cap/' + file
-        if os.path.isfile(capfilename):
+        
+        try:
             capinfo = self.processLinkFile(capfilename,
                                            fileentry.getselector())
             if len(capinfo) >= 1:       # We handle one and only one entry.
@@ -82,6 +84,8 @@ class UMNDirHandler(DirHandler):
                     return              # Type X -- don't append.
                 else:
                     self.mergeentries(fileentry, capinfo[0])
+        except IOError:                 # Ignore no capfile situation
+            pass
         DirHandler.prep_entriesappend(self, file, fileentry)
 
     def MergeLinkFiles(self):
@@ -90,27 +94,25 @@ class UMNDirHandler(DirHandler):
         we ONLY merge if the Path starts with ./ or ~/ in the file.  This
         is set in the getneedsmerge() attribute.  If that attribute is
         not set, don't even bother with it -- just add."""
+
+        # For faster matching, make a dictionary out of the list.
         
+        fileentriesdict = {}
+        for entry in self.fileentries:
+            fileentriesdict[entry.selector] = entry
+
         for linkentry in self.linkentries:
             if not linkentry.getneedsmerge():
                 self.fileentries.append(linkentry)
                 continue
-            # Find matching directory entry.
-            direntry = None
-            for direntrytry in self.fileentries:
-                if linkentry.getselector() == direntrytry.getselector() and \
-                       linkentry.gethost() == direntrytry.gethost() and \
-                       linkentry.getport() == direntrytry.getport():
-                    direntry = direntrytry
-                    break
-            if direntry:                # It matches!
+            if fileentriesdict.has_key(linkentry.selector):
                 if linkentry.gettype() == 'X':
                     # It's special code to hide something.
-                    self.fileentries.remove(direntry)
+                    self.fileentries.remove(linkentry)
                 else:
-                    self.mergeentries(direntry, linkentry)
+                    self.mergeentries(fileentriesdict[linkentry.selector],
+                                      linkentry)
             else:
-                # No match -- add to the directory.
                 self.fileentries.append(linkentry)
 
     def mergeentries(self, old, new):
@@ -216,21 +218,21 @@ class UMNDirHandler(DirHandler):
     def entrycmp(self, entry1, entry2):
         """This function implements an exact replica of UMN behavior
         GSqsortcmp() behavior."""
-        if entry1.getname() == None:
+        if entry1.name == None:
             return 1
-        if entry2.getname() == None:
+        if entry2.name == None:
             return -1
 
         # Equal numbers or no numbers: sort by title.
-        if entry1.getnum() == entry2.getnum():
-            return cmp(entry1.getname(), entry2.getname())
+        if entry1.num == entry2.num:
+            return cmp(entry1.name, entry2.name)
 
         # Same signs: use plain numeric comparison.
-        if (self.sgn(entry1.getnum()) == self.sgn(entry2.getnum())):
-            return cmp(entry1.getnum(), entry2.getnum())
+        if (self.sgn(entry1.num) == self.sgn(entry2.num)):
+            return cmp(entry1.num, entry2.getnum)
 
         # Different signs: other comparison.
-        if entry1.getnum() > entry2.getnum():
+        if entry1.num > entry2.num:
             return -1
         else:
             return 1

@@ -23,12 +23,13 @@ import re
 import os, stat, os.path, mimetypes, protocols, handlers, gopherentry
 import handlers.base
 from mailbox import UnixMailbox
+from stat import *
 
 class FolderHandler(handlers.base.BaseHandler):
     def canhandlerequest(self):
         """Figure out if this is a handleable request."""
         
-        if not os.path.isfile(self.getfspath()):
+        if not S_ISREG(self.statresult[ST_MODE]):
             return 0
         try:
             fd = open(self.getfspath(), "rt")

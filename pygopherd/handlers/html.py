@@ -24,7 +24,7 @@ import re
 import os, stat, os.path, mimetypes, protocols, gopherentry, mimetypes
 import handlers, handlers.base, htmlentitydefs
 from gopherentry import GopherEntry
-
+from stat import *
 
 ###########################################################################
 # HTML File Handler

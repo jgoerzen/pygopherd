@@ -21,6 +21,7 @@ import SocketServer
 import re
 import os, stat, os.path, mimetypes, protocols, gopherentry
 import handlers, handlers.base
+from stat import *
 
 class BuckGophermapHandler(handlers.base.BaseHandler):
     """Bucktooth selector handler.  Adheres to the specification
@@ -33,7 +34,7 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
     def getentry(self):
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
-            self.entry.populatefromfs(self.getfspath())
+            self.entry.populatefromfs(self.getfspath(), self.statresult)
         return self.entry
 
     def prepare(self):
