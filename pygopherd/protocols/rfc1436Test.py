@@ -66,6 +66,7 @@ class RFC1436TestCase(unittest.TestCase):
 'iThis is the abstract for the testdata directory.\tfake\t(NULL)\t0',
 '0README\t/README\tHOSTNAME\t64777\t+',
 '1pygopherd\t/pygopherd\tHOSTNAME\t64777\t+',
+'9symlinktest\t/symlinktest.zip\tHOSTNAME\t64777\t+',
 '9testarchive\t/testarchive.tar\tHOSTNAME\t64777\t+',
 '9testarchive.tar.gz\t/testarchive.tar.gz\tHOSTNAME\t64777\t+',
 '9testarchive.tgz\t/testarchive.tgz\tHOSTNAME\t64777\t+',
@@ -94,6 +95,7 @@ class RFC1436TestCase(unittest.TestCase):
         expectedarr = \
              ['0README\t/README\tHOSTNAME\t64777\t+',
               '1pygopherd\t/pygopherd\tHOSTNAME\t64777\t+',
+              '9symlinktest\t/symlinktest.zip\tHOSTNAME\t64777\t+',
               '9testarchive\t/testarchive.tar\tHOSTNAME\t64777\t+',
               '9testarchive.tar.gz\t/testarchive.tar.gz\tHOSTNAME\t64777\t+',
               '9testarchive.tgz\t/testarchive.tgz\tHOSTNAME\t64777\t+',
