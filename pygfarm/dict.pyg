@@ -69,13 +69,15 @@ class TopMenu(PYGMain):
 
         intro = [" ", "Use the following links to search a particular",
                  "database or to browse ALL the definitions",
-                 "in this entire server!", " "]
+                 "in a database!", " "]
 
         for item in intro:
             self.entries.append(getinfoentry(item, self.config))
 
-        for name, desc in [['*', 'All Databases']] + \
-                self.db.getdbdescs().items():
+        items = self.db.getdbdescs().items()
+        items.sort(lambda x, y: cmp(x[1], y[1]))
+
+        for name, desc in items:
             selector = self.genargsselector("/%s" % name)
             entry = GopherEntry(selector, self.config)
             entry.type = '1'
