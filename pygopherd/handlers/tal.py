@@ -17,7 +17,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 try:
-from simpletal import simpleTAL, simpleTALES
+    from simpletal import simpleTAL, simpleTALES
     talavailable = 1
 except:
     talavailable = 0
