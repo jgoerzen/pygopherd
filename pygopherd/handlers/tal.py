@@ -122,13 +122,9 @@ class TALFileHandler(FileHandler):
         context.addGlobal('protocol', self.protocol)
         context.addGlobal('root', TALLoader(self.vfs, '/'))
         context.addGlobal('rroot', RecursiveTALLoader(self.vfs, '/'))
-        context.addGlobal('dir', TALLoader(self.vfs,
-                                           os.path.dirname(self.getselector()))
-                          )
-        context.addGlobal('rdir',
-                          RecursiveTALLoader(self.vfs,
-                                             os.path.dirname(self.getselector())))
-
+        dirname = os.path.dirname(self.getselector())
+        context.addGlobal('dir', TALLoader(self.vfs, dirname))
+        context.addGlobal('rdir', RecursiveTALLoader(self.vfs, dirname))
 
         template = simpleTAL.compileHTMLTemplate(rfile)
         rfile.close()
