@@ -71,6 +71,6 @@ class BaseHandler:
         pass
 
     def write(self, wfile):
-        """Writes out the request.  Should be overridden.""
+        """Writes out the request.  Should be overridden."""
         pass
 
