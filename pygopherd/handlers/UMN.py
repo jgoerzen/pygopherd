@@ -151,19 +151,6 @@ class UMNDirHandler(DirHandler):
         for field in new.geteadict().keys():
             old.setea(field, new.getea(field))
 
-    def sortLinkEntries(self, x, y):
-        """Called by processLinkFile() to sort entries according to the
-        specified number."""
-        xnum = x.getnum()
-        ynum = y.getnum()
-        if xnum == ynum:
-            return 0
-        if xnum == None:
-            return 1
-        if ynum == None:
-            return -1
-        return cmp(xnum, ynum)
-
     def processLinkFile(self, filename, capfilepath = None):
         """Processes a link file.  If capfilepath is set, it should
         be the equivolent of the Path= in a .names file."""
@@ -175,7 +162,6 @@ class UMNDirHandler(DirHandler):
                 linkentries.append(entry)
             if nextstep == 'stop':
                 break
-        linkentries.sort(self.sortLinkEntries)
         return linkentries
         
     def getLinkItem(self, fd, capfilepath = None):
@@ -280,17 +266,19 @@ class UMNDirHandler(DirHandler):
             return 1
         if entry2.name == None:
             return -1
+        e1num = entry1.getnum(0)
+        e2num = entry2.getnum(0)
 
         # Equal numbers or no numbers: sort by title.
-        if entry1.num == entry2.num:
+        if e1num == e2num:
             return cmp(entry1.name, entry2.name)
 
         # Same signs: use plain numeric comparison.
-        if (self.sgn(entry1.num) == self.sgn(entry2.num)):
-            return cmp(entry1.num, entry2.num)
+        if (self.sgn(e1num) == self.sgn(e2num)):
+            return cmp(e1num, e2num)
 
         # Different signs: other comparison.
-        if entry1.num > entry2.num:
+        if e1num > e2num:
             return -1
         else:
             return 1
