@@ -19,8 +19,12 @@ class Virtual(BaseHandler):
         self.selectorreal = None
         self.selectorargs = None
 
-        if self.selector.find("?") != -1:
-            i = self.selector.index("?")
+        if self.selector.find("?") != -1 or self.selector.find("|") != -1:
+            try:
+                i = self.selector.index("?")
+            except:
+                i = self.selector.index("|")
+                
             self.selectorreal = self.selector[0:i]
             self.selectorargs = self.selector[i+1:]
             # Now, retry the stat with the real selector.
@@ -38,7 +42,7 @@ class Virtual(BaseHandler):
         """Returns a string representing a full selector to this resource, with
         the given string of args.  This is a selector that can be passed
         back to clients."""
-        return self.getselector() + "?" + args
+        return self.getselector() + "|" + args
 
     def getselector(self):
         """Overridden to return the 'real' portion of the selector."""
