@@ -12,46 +12,42 @@ gopherplushack = "+-1\r\n" + \
 "+ABSTRACT:\r\n" + \
 " Foo.\r\n"
 
+
 class GopherRequestHandler(SocketServer.StreamRequestHandler):
     def handle(self):
         request = self.rfile.readline()
-        tabindex = request.find("\t")
-        if (tabindex != -1):
-            self.wfile.write(gopherplushack)
+
+        requestparts = request.split("\t")
+        for i in range(0, len(requestparts)):
+            requestparts[i] = requestparts[i].strip()
+
+        if re.match('\./', requestparts[0]):    # Weed out ./ and ../
+            return
+        if re.match('//', requestparts[0]):     # Weed out //
             return
 
-        request = request.strip()
+        if len(requestparts[0]) and requestparts[0][-1] == '/':
+                requestparts[0] = requestparts[0][0:-1]
+        if len(requestparts[0]) == 0 or requestparts[0][0] != '/':
+            requestparts[0] = '/' + requestparts[0]
 
-        if re.match('\./', request):    # Weed out ./ and ../
-            return
-        if re.match('//', request):     # Weed out //
-            return
+        path = self.server.config.get("serving", "root") + requestparts[0]
 
-        if len(request) and request[-1] == '/':
-                request = request[0:-1]
-        if len(request) == 0 or request[0] != '/':
-            request = '/' + request
-
-        path = self.server.config.get("serving", "root") + request
-
-        handler = None
-
-        if os.path.isdir(path):
-            handler = GopherDirHandler(path, request, self.server,
-                                       self.server.config)
-        else:
-            handler = GopherFileHandler(path, request, self.server,
-                                        self.server.config)
-
-        handler.write(self.wfile)
-        
+        protocols = [GopherPlusProtocol, GopherProtocol]
+        for protocol in protocols:
+            protohandler = protocol(path, requestlist, self.server,
+                                    self.server.config)
+            if (protohandler.canhandlerequest()):
+                protohandler.handle(self.wfile)
+                break
 
 class GopherHandler:
-    def __init__(self, path, request, server, config):
+    def __init__(self, protocol, path, request, server, config):
         self.path = path
         self.request = request
         self.config = config
         self.server = server
+        self.protocol = protocol
 
 class GopherDirHandler(GopherHandler):
     def write(self, wfile):
@@ -65,11 +61,10 @@ class GopherDirHandler(GopherHandler):
             fsbase = ''
 
         for file in files:
-            entry = GopherDirEntry(gopherbase + '/' + file,
+            entry = GopherDirEntry(protocol, gopherbase + '/' + file,
                                    fsbase + '/' + file,
                                    self.server.mapping,
                                    self.server.defaulttype,
-                                   'enhanced',
                                    self.server.server_name,
                                    self.server.server_port)
             wfile.write(str(entry) + "\r\n")
@@ -86,16 +81,17 @@ class GopherFileHandler(GopherHandler):
             wfile.write(string)
 
 class GopherDirEntry:
-    def __init__(self, gopherpath, fspath, mapping, protocol = 'enhanced',
+    def __init__(self, protocol,
+                 gopherpath, fspath, mapping,
                  defaulttype = 'text/plain', defaulthost = 'localhost',
                  defaultport = 70):
         self.gopherpath = gopherpath
         self.fspath = fspath
-        self.type = '0'
+        self.type = None
         self.name = os.path.basename(gopherpath)
         self.host = defaulthost
         self.port = defaultport
-        self.mimetype = defaulttype
+        self.mimetype = None
         self.size = -2
         self.populated = 0
         self.encoding = ''
@@ -113,7 +109,7 @@ class GopherDirEntry:
         
         if stat.S_ISDIR(statval[0]):
             self.type = '1'
-            self.mimetype = 'application/gopher-menu'
+            self.mimetype = self.protocol.getmenutype()
             return
 
         type, encoding = mimetypes.guess_type(self.gopherpath)
@@ -126,20 +122,110 @@ class GopherDirEntry:
         else:
             self.encoding = ''
 
-        for maprule in self.mapping:
-            if re.match(maprule[0], self.mimetype):
-                self.type = maprule[1]
-                break
+        if not self.mimetype:
+            self.mimetype = defaulttype
+
+        if self.mimetype and not self.type:
+            self.type = 0
+            for maprule in self.mapping:
+                if re.match(maprule[0], self.mimetype):
+                    self.type = maprule[1]
+                    break
 
     def __str__(self):
         self.populate()
-        return self.type + \
-               self.name + "\t" + \
-               self.gopherpath + "\t" + \
-               self.host + "\t" + \
-               str(self.port) + "\t" + \
-               str(self.size) + "\t" + \
-               self.mimetype + "\t" + \
-               self.encoding + "\t" + \
-               self.language
+        return self.protocol.direntrystr(self)
 
+class GopherProtocol:
+    """Implementation of basic protocol.  Will always return valid."""
+    def __init__(self, path, requestlist, server, config):
+        self.path = path
+        self.requestlist = requestlist
+        self.server = server
+        self.config = config
+
+    def canhandlerequest(self):
+        return 1
+
+    def getmenutype(self):
+        return 'application/gopher-menu'
+
+    def handle(self, wfile):
+        if os.path.isdir(path):
+            handler = GopherDirHandler(self, self.path, self.requestlist[0], self.server,
+                                       self.server.config)
+        else:
+            handler = GopherFileHandler(self, self.path, self.requestlist[0], self.server,
+                                        self.server.config)
+
+        handler.write(wfile)
+
+    def direntrystr(self, direntry):
+        return direntry.type + \
+               direntry.name + "\t" + \
+               direntry.gopherpath + "\t" + \
+               direntry.host + "\t" + \
+               str(direntry.port) + "\t"
+
+class GopherEnhancedProtocol(GopherProtocol):
+    def direntrystr(self, direntry):
+        return direntry.type + \
+               direntry.name + "\t" + \
+               direntry.gopherpath + "\t" + \
+               direntry.host + "\t" + \
+               str(direntry.port) + "\t" + \
+               str(direntry.size) + "\t" + \
+               direntry.mimetype + "\t" + \
+               direntry.encoding + "\t" + \
+               direntry.language
+
+class GopherPlusProtocol(GopherProtocol):
+    def canhandlerequest(self):
+        return len(self.requestlist) > 1 and \
+               (self.requestlist[1][0] == '+' or \
+               self.requestlist[1] == '!' or \
+               self.requestlist[1][0] == '$')
+
+    def handle(self, wfile):
+        if self.requestlist[1][0] == '+':
+            self.gopherplusdirs = 0
+            wfile.write("+-2\r\n")
+            GopherProtocol.handle(self, wfile)
+        elif self.requestlist[1] == '!':
+            self.gopherplusdirs = 1
+            wfile.write("+-2\r\n")
+            wfile.write(self.stat())
+        elif self.requestlist[1][0] == '$':
+            self.gopherplusdirs = 1
+            wfile.write("+-2\r\n")
+            GopherProtocol.handle(self, wfile)
+
+        def stat(self):
+            return self.fileinfo(self.requestlist[0], self.path)
+
+        def fileinfo(self, request, path):
+            entry = GopherDirEntry(self, request, path, self.server.mapping,
+                                   self.server.defaulttype,
+                                   self.server.server_name,
+                                   self.server.sever_port)
+            return str(entry)
+
+        def getmenutype(self):
+            if self.gopherplusdirs:
+                return 'application/gopher+-menu'
+            else:
+                return 'application/gopher-menu'
+
+        def direntrystr(self, direntry):
+            if self.gopherplusdirs:
+                retstr = \
+                 "+INFO " + GopherProtocol.direntrystr(direntry) + \
+                       "\r\n" + \
+                       "+VIEWS:\r\n" + \
+                       direntry.mimetype
+                if (direntry.language):
+                    retstr += " " + direntry.language
+                retstr += \
+                       (": <%dk>\r\n" % (direntry.size / 1024) )
+                return retstr
+                       
