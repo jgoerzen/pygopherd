@@ -32,10 +32,12 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
             self.wfile.write("+-2\r\n")
             self.wfile.write(self.renderobjinfo(entry))
         else:
-            self.wfile.write("+" + entry.getsize() + "\r\n")
+            self.wfile.write("+" + entry.getsize(-2) + "\r\n")
             entry.write(self, self.wfile)
 
     def renderobjinfo(self, entry):
+        if entry.getmimetype() == 'application/gopher-menu':
+            entry.mimetype = 'application/gopher+-menu'
         if self.handlemethod = 'documentonly':
             # It's a Gopher+ request for a gopher0 menu entry.
             retstr = protocols.rfc1436.GopherProtocol.renderobjinfo(self, entry)
@@ -52,5 +54,5 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
             if (entry.getlanguage()):
                 retstr += " " + entry.getlanguage()
             retstr += \
-                   ": <%d>\r\n" % entry.getsize()
+                   ": <%d>\r\n" % entry.getsize(-2)
             return retstr
