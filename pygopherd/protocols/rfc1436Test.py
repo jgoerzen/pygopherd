@@ -37,7 +37,7 @@ class RFC1436TestCase(unittest.TestCase):
                           "10.77.77.77 [GopherProtocol/FileHandler]: /testfile.txt\n")
         self.assertEquals(self.wfile.getvalue(), "Test\n")
 
-    def testhandle_dir(self):
+    def testhandle_dir_abstracts(self):
         proto = GopherProtocol("", self.server, self.handler, self.rfile,
                                self.wfile, self.config)
         proto.handle()
@@ -65,6 +65,26 @@ class RFC1436TestCase(unittest.TestCase):
             self.assertEquals(actualarr[i], expectedarr[i])
         # Make sure proper line endings are present.
         self.assertEquals("\r\n".join(actualarr) + "\r\n", self.wfile.getvalue())
-        
-                                                 
+
+    def testhandle_dir_noabstract(self):
+        self.config.set("pygopherd", "abstract_headers", "off")
+        self.config.set("pygopherd", "abstract_entries", "off")
+        proto = GopherProtocol("", self.server, self.handler, self.rfile,
+                               self.wfile, self.config)
+        proto.handle()
+        actualarr = self.wfile.getvalue().splitlines()
+        expectedarr = \
+             ['1CVS\t/CVS\tHOSTNAME\t64777\t+',
+              '0README\t/README\tHOSTNAME\t64777\t+',
+              '1pygopherd\t/pygopherd\tHOSTNAME\t64777\t+',
+              '9testarchive\t/testarchive.tar\tHOSTNAME\t64777\t+',
+              '9testarchive.tar.gz\t/testarchive.tar.gz\tHOSTNAME\t64777\t+',
+              '9testarchive.tgz\t/testarchive.tgz\tHOSTNAME\t64777\t+',
+              '0testfile\t/testfile.txt\tHOSTNAME\t64777\t+',
+              '9testfile.txt.gz\t/testfile.txt.gz\tHOSTNAME\t64777\t+']
+        expectedarr = [re.sub('HOSTNAME', self.server.server_name, x) for \
+                       x in expectedarr]
+        self.assertEquals(len(actualarr), len(expectedarr))
+        for i in range(len(actualarr)):
+            self.assertEquals(actualarr[i], expectedarr[i])
         
