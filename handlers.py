@@ -27,7 +27,7 @@ class GopherRequestHandler(SocketServer.StreamRequestHandler):
             protohandler = protocol(path, requestparts, self.server,
                                     self.server.config)
             if (protohandler.canhandlerequest()):
-                protohandler.handle(self.wfile)
+                protohandler.handle(self.rfile, self.wfile)
                 break
 
 class GopherHandler:

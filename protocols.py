@@ -16,7 +16,7 @@ class GopherProtocol:
     def getmenutype(self):
         return 'application/gopher-menu'
 
-    def handle(self, wfile):
+    def handle(self, rfile, wfile):
         print "Handling Gopher0 request."
         if os.path.isdir(self.path):
             handler = handlers.GopherDirHandler(self, self.path, self.requestlist[0], self.server,
@@ -26,6 +26,16 @@ class GopherProtocol:
                                         self.server.config)
 
         handler.write(wfile)
+
+    def getinfo(self):
+        return self.fileinfo(self.requestlist[0], self.path)
+
+    def fileinfo(self, request, path):
+        entry = handlers.GopherDirEntry(self, request, path, self.server.mapping,
+                               self.server.defaulttype,
+                               self.server.server_name,
+                               self.server.server_port)
+        return str(entry)
 
     def direntrystr(self, direntry):
         return direntry.type + \
@@ -67,16 +77,6 @@ class GopherPlusProtocol(GopherProtocol):
             self.gopherplusdirs = 1
             wfile.write("+-2\r\n")
             GopherProtocol.handle(self, wfile)
-
-    def getinfo(self):
-        return self.fileinfo(self.requestlist[0], self.path)
-
-    def fileinfo(self, request, path):
-        entry = GopherDirEntry(self, request, path, self.server.mapping,
-                               self.server.defaulttype,
-                               self.server.server_name,
-                               self.server.server_port)
-        return str(entry)
 
     def getmenutype(self):
         if self.gopherplusdirs:
