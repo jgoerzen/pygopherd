@@ -36,7 +36,14 @@ class DirHandler(handlers.base.BaseHandler):
             fileentry = gopherentry.GopherEntry(self.selectorbase + '/' + file,
                                           self.config)
             fileentry.populatefromfs(self.fsbase + '/' + file)
+            self.prep_entrieshook(file, fileentry)
             self.fileentries.append(fileentry)
+
+    def prep_entrieshook(self, file, fileentry):
+        """Subclasses can override to do post-processing on the entry while
+        we still have the filename around.
+        IE, for .cap files."""
+        pass
 
     def prepare(self):
         # Initialize some variables.

@@ -63,7 +63,7 @@ class UMNDirHandler(DirHandler):
             # If the parent says it's OK, then let's see if it's
             # a link file.  If yes, process it and return false.
             if file[0] == '.' and not os.path.isdir(self.fsbase + '/' + file):
-                self.processLinkFile(self.fsbase + '/' + file)
+                self.linkentries.extend(self.processLinkFile(self.fsbase + '/' + file))
                 return 0
             return 1
         else:
@@ -83,33 +83,48 @@ class UMNDirHandler(DirHandler):
                     direntry = direntrytry
                     break
             if direntry:                # It matches!
-                for field in ['selector', 'type', 'name', 'host', 'port']:
-                    if getattr(linkentry, field):
-                        setattr(direntry, field, getattr(linkentry, field))
+                self.mergeentries(direntry, linkentry)
             else:
                 # No match -- add to the directory.
                 self.fileentries.append(linkentry)
 
-    def processLinkFile(self, filename):
-        print "processLinkFile: ", filename
+    def mergeentries(self, old, new):
+        for field in ['selector', 'type', 'name', 'host', 'port']:
+            if getattr(new, field):
+                setattr(old, field, getattr(new, field))
+
+
+    def prep_entrieshook(self, file, fileentry):
+        """Overridden to process .cap files."""
+        capfilename = self.fsbase + '/.cap/' + file
+        if os.path.isfile(capfilename):
+            capinfo = self.processLinkFile(capfilename,
+                                           fileentry.getselector())
+            if len(capinfo) >= 1:       # We handle one and only one entry.
+                self.mergeentries(fileentry, capinfo[0])
+
+    def processLinkFile(self, filename, capfilepath = None):
+        linkentries = []
         fd = open(filename, "rt")
         while 1:
-            nextstep, entry = self.getLinkItem(fd)
+            nextstep, entry = self.getLinkItem(fd, capfilepath)
             if entry:
-                self.linkentries.append(entry)
+                linkentries.append(entry)
             if nextstep == 'stop':
                 break
-    
+        return linkentries
         
-    def getLinkItem(self, fd):
+    def getLinkItem(self, fd, capfilepath = None):
         """This is an almost exact clone of UMN's GSfromLink function."""
         entry = LinkEntry(self.entry.selector, self.config)
         nextstep = 'continue'
 
         done = {'path' : 0, 'type' : 0, 'name' : 0, 'host' : 0, 'port' : 0}
 
-        print 'Start of getLinkItem.'
-        
+        if capfilepath != None:
+            entry.setselector(capfilepath)
+            done['path'] = 1
+
         while 1:
             line = fd.readline()
             if not line:
