@@ -48,7 +48,7 @@ class WAPProtocol(HTTPProtocol):
         global accesskeys
         retstr = ''
         if not hasattr(self, 'accesskeyidx'):
-            self.accesskeyidx
+            self.accesskeyidx = 0
         if not entry.gettype() in ['i', '7']:
             retstr += '<a '
             if self.accesskeyidx < len(accesskeys):
