@@ -1,4 +1,47 @@
 ------------------------------------------------------------------------
+rev 192:  jgoerzen | 2002-07-17 20:05:05 -0500 (Wed, 17 Jul 2002) | 4 lines
+Changed paths:
+   U /pygopherd/head/conf/pygopherd.conf
+   U /pygopherd/head/debian/changelog
+   U /pygopherd/head/pygopherd/gopherentry.py
+   U /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
+   U /pygopherd/head/pygopherd/handlers/UMN.py
+   U /pygopherd/head/pygopherd/handlers/__init__.py
+   U /pygopherd/head/pygopherd/handlers/base.py
+   U /pygopherd/head/pygopherd/handlers/dir.py
+   U /pygopherd/head/pygopherd/handlers/file.py
+   U /pygopherd/head/pygopherd/handlers/gophermap.py
+   U /pygopherd/head/pygopherd/handlers/html.py
+   U /pygopherd/head/pygopherd/handlers/mbox.py
+   U /pygopherd/head/pygopherd/handlers/pyg.py
+   U /pygopherd/head/pygopherd/handlers/scriptexec.py
+   U /pygopherd/head/pygopherd/handlers/url.py
+   U /pygopherd/head/pygopherd/version.py
+
+Added URL type rewriter.
+Modified handler importing scheme to work nicer.
+Preparing for 1.0.0 release.
+
+------------------------------------------------------------------------
+rev 191:  jgoerzen | 2002-07-17 19:33:07 -0500 (Wed, 17 Jul 2002) | 2 lines
+Changed paths:
+   U /pygopherd/head/debian/changelog
+   U /pygopherd/head/pygopherd/handlers/gophermap.py
+
+Fixed gophermap info-only lines that have no tabs
+
+------------------------------------------------------------------------
+rev 190:  jgoerzen | 2002-07-17 19:28:16 -0500 (Wed, 17 Jul 2002) | 3 lines
+Changed paths:
+   U /pygopherd/head/ChangeLog
+   U /pygopherd/head/Makefile
+   U /pygopherd/head/debian/rules
+   U /pygopherd/head/pygopherd.py
+
+Initial move over to Subversion: mark appropriate files executable, new way
+of generating the ChangeLog.
+
+------------------------------------------------------------------------
 rev 188:  jgoerzen | 2002-07-02 18:43:05 -0500 (Tue, 02 Jul 2002) | 2 lines
 Changed paths:
    U /pygopherd/head/ChangeLog

@@ -1,6 +1,6 @@
 pygopherd (1.0.0) unstable; urgency=low
 
-  * FIRST RELEASE!
+  * First release.  Welcome, pygopherd.
   * Added URL type rewriting handler.
   * Fixed gophermap info-only lines that have no tabs.
 
