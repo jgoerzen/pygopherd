@@ -50,11 +50,14 @@ class WAPProtocol(HTTPProtocol):
         if not hasattr(self, 'accesskeyidx'):
             self.accesskeyidx = 0
         if not entry.gettype() in ['i', '7']:
-            retstr += '<a '
             if self.accesskeyidx < len(accesskeys):
-                retstr += 'accesskey="%s" ' % accesskeys[self.accesskeyidx]
+                retstr += '%s <a accesskey="%s" href="%s">' % \
+                          (accesskey[self.accesskeyidx],
+                           accesskey[self.accesskeyidx],
+                           url)
                 self.accesskeyidx += 1
-            retstr += 'href="%s">' % url
+            else:
+                retstr += '<a href="%s">' % url
         if entry.getname() != None:
             retstr += cgi.escape(entry.getname())
         else:
