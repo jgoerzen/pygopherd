@@ -221,8 +221,8 @@ class VFS_Zip(base.VFS_Real):
                 retval.append(f)
         return retval
         
-#class TestVFS_Zip_huge(unittest.TestCase):
-class DISABLED_TestVFS_Zip_huge:
+class TestVFS_Zip_huge(unittest.TestCase):
+#class DISABLED_TestVFS_Zip_huge:
     def setUp(self):
         from pygopherd import testutil
         from pygopherd.protocols.rfc1436 import GopherProtocol
@@ -261,13 +261,13 @@ class DISABLED_TestVFS_Zip_huge:
                                     self.config)
         self.proto.handle()
 
-#    def testlistdir3(self):
-#        from pygopherd.protocols.rfc1436 import GopherProtocol
-#        self.proto = GopherProtocol("/foo.zip/lib/dpkg/info\n",
-#                                    self.server,
-#                                    self.handler, self.rfile, self.wfile,
-#                                    self.config)
-#        self.proto.handle()
+    def testlistdir3(self):
+        from pygopherd.protocols.rfc1436 import GopherProtocol
+        self.proto = GopherProtocol("/foo.zip/lib/dpkg/info\n",
+                                    self.server,
+                                    self.handler, self.rfile, self.wfile,
+                                    self.config)
+        self.proto.handle()
         
     def testopen1(self):
         from pygopherd.protocols.rfc1436 import GopherProtocol
