@@ -41,8 +41,7 @@ def extstrip(file, filetype):
         if file.endswith(possible):
             extindex = file.rfind(possible)
             return file[0:extindex]
-
-    
+    return file
 
 def init():
     for fileext, filetype in mimetypes.types_map.items():

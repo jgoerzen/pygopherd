@@ -26,6 +26,8 @@ from pygopherd.handlers.dir import DirHandler
 from stat import *
 import pygopherd.fileext
 
+extstrip = None
+
 ###########################################################################
 # UMN Directory handler
 # Handles .Links, .names, and .cap/* files
@@ -76,10 +78,19 @@ class UMNDirHandler(DirHandler):
         parent's prepare to append an entry to the list.  Here, we check
         to see if there's a .cap file right before adding it."""
 
-        if isinstance(handler, handlers.file.FileHandler):
-            fileentry.setname(
-                pygopherd.fileext.extstrip(file, fileentry.getmimetype()))
-            # If it's a file, has a MIME type, and we know about it..
+        global extstrip
+        if extstrip == None:
+            extstrip = self.config.get("handlers.UMN.UMNDirHandler",
+                                       "extstrip")
+        if extstrip != 'none' and \
+               isinstance(handler, handlers.file.FileHandler):
+            if extstrip == 'full' or \
+               (extstrip == 'nonencoded' and not fileentry.getencoding()):
+                # If it's a file, has a MIME type, and we know about it..
+                fileentry.setname(
+                    pygopherd.fileext.extstrip(file,
+                                               fileentry.getencodedmimetype() or
+                                               fileentry.getmimetype()))
         
         capfilename = self.fsbase + '/.cap/' + file
         

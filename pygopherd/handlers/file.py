@@ -59,11 +59,18 @@ class CompressedFileHandler(FileHandler):
     def getentry(self):
         if not self.entry:
             self.entry = FileHandler.getentry(self)
+            self.entry.realencoding = None
             if self.entry.getencoding() and \
                decompressors.has_key[self.entry.getencoding()] and \
                self.entry.getencodedmimetype():
-                # Make it the real type.
+                # When the client gets it, there will not be
+                # encoding.  Therefore, we remove the encoding and switch
+                # to the real MIME type.
                 self.entry.mimetype = self.entry.getencodedmimetype()
+                self.entry.encodedmimetype = None
+                self.entry.realencoding = self.entry.encoding
+                self.entry.encoding = None
+        return self.entry
     
     def initdecompressors(self):
         global decompressors
@@ -74,15 +81,11 @@ class CompressedFileHandler(FileHandler):
 
     def write(self, wfile):
         global decompressors
-        if decompressors.has_key(self.getentry().getencoding()):
-            decompprog = decompressors[self.getentry().getencoding()]
-            pygopherd.pipe.pipedata_unix(decompprog, [decompprog],
-                                         childstdin = self.rfile,
-                                         childstdout = wfile,
-                                         pathsearch = 1)
-            self.rfile.close()
-            self.rfile = None
-        else:
-            FileHandler.write(self, wfile)
-
+        decompprog = decompressors[self.getentry().realencoding]
+        pygopherd.pipe.pipedata_unix(decompprog, [decompprog],
+                                     childstdin = self.rfile,
+                                     childstdout = wfile,
+                                     pathsearch = 1)
+        self.rfile.close()
+        self.rfile = None
     
