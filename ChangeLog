@@ -1,3 +1,123 @@
+2002-05-01 11:43  jgoerzen
+
+	* debian/control: Added a dep on a non-buggy python2.2
+
+2002-04-26 10:18  jgoerzen
+
+	* pygopherd/protocols/: base.py, http.py: HTTP protocol wasn't
+	normalizing incoming selectors.  Fixed.
+
+2002-04-18 18:39  jgoerzen
+
+	* pygfarm/dict.pyg: Nicer display, sorted
+
+2002-04-18 13:01  jgoerzen
+
+	* debian/changelog, debian/control, pygfarm/dict.pyg,
+	pygopherd/version.py: [no log message]
+
+2002-04-18 12:22  jgoerzen
+
+	* Makefile, debian/README.Debian, debian/control,
+	debian/pygfarm.README.Debian, debian/pygfarm.dirs, debian/rules,
+	pygfarm/foo.py: Added pygfarm package for Debian.
+
+2002-04-18 12:13  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/protocols/http.py: Added support
+	to HTTP for search requests.
+
+2002-04-18 11:57  jgoerzen
+
+	* pygfarm/dict.pyg, pygopherd/protocols/http.py: Fixed gopher-dir
+	to gopher-menu
+
+2002-04-18 11:49  jgoerzen
+
+	* pygfarm/dict.pyg: Updated.
+
+2002-04-18 11:12  jgoerzen
+
+	* pygfarm/dict.pyg: Fixed
+
+2002-04-18 11:07  jgoerzen
+
+	* pygfarm/dict.pyg: All except DBINFO working now.
+
+2002-04-18 11:00  jgoerzen
+
+	* pygfarm/dict.pyg: Updated -- more features and bugfixes
+
+2002-04-18 10:51  jgoerzen
+
+	* pygfarm/dict.pyg: All except Match is now working.
+
+2002-04-18 10:42  jgoerzen
+
+	* pygfarm/dict.pyg: Some various bugfixes
+
+2002-04-17 21:31  jgoerzen
+
+	* pygfarm/dict.pyg: [no log message]
+
+2002-04-17 21:22  jgoerzen
+
+	* pygfarm/dict.pyg: Updated, working better.
+
+2002-04-17 17:07  jgoerzen
+
+	* pygfarm/: dict.pyg, foo.py: Updated.
+
+2002-04-17 14:31  jgoerzen
+
+	* pygfarm/dict.pyg: [no log message]
+
+2002-04-17 14:20  jgoerzen
+
+	* pygfarm/dict.pyg: [no log message]
+
+2002-04-17 09:26  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Updated -- use normpath for relative
+	links.
+
+2002-04-16 13:37  jgoerzen
+
+	* pygopherd/protocols/rfc1436Test.py: Made sure noabstract stuff
+	works.
+
+2002-04-16 13:32  jgoerzen
+
+	* pygopherd/protocols/rfc1436Test.py: Enhanced.
+
+2002-04-16 10:11  jgoerzen
+
+	* pygopherd/handlers/gophermap.py: Fixed entries handling after new
+	prepare.
+
+2002-04-16 10:06  jgoerzen
+
+	* pygopherd/protocols/rfc1436Test.py: A test fix.
+
+2002-04-16 09:45  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Removed an old debugging print
+
+2002-04-16 09:44  jgoerzen
+
+	* pygopherd/: handlers/mbox.py, protocols/http.py: Fixed a bug in
+	HTTP handler that was adding an extra <TR><TD> (reported by Robert
+	Hahn)
+	
+	Fixed a bug in mbox.py affecting both mailbox handlers -- after the
+	new directory architecture, the prepare in the child classes was
+	not properly updated.
+
+2002-04-15 19:21  jgoerzen
+
+	* ChangeLog, debian/changelog, pygopherd/version.py: Final
+	preparations for 0.9.10 RELEASE
+
 2002-04-15 19:19  jgoerzen
 
 	* runtests.py, pygopherd/protocols/rfc1436Test.py: Updated.
