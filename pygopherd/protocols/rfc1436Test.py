@@ -63,6 +63,8 @@ class RFC1436TestCase(unittest.TestCase):
         self.assertEquals(len(actualarr), len(expectedarr))
         for i in range(len(actualarr)):
             self.assertEquals(actualarr[i], expectedarr[i])
-
-
+        # Make sure proper line endings are present.
+        self.assertEquals("\r\n".join(actualarr) + "\r\n", self.wfile.getvalue())
+        
+                                                 
         
