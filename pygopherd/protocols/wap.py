@@ -118,7 +118,7 @@ class WAPProtocol(HTTPProtocol):
         self.handler.write(fakefile)
         fakefile.seek(0)
         wfile.write(wmlheader)
-        wfile.write('card id="index" title="Text File" newcontext="true">\n')
+        wfile.write('<card id="index" title="Text File" newcontext="true">\n')
         wfile.write('<p>\n')
         while 1:
             line = fakefile.readline()
