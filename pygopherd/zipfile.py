@@ -284,8 +284,7 @@ class ZipReader:
     def __init__(self, file):
         """Open the ZIP file with mode read "r", write "w" or append "a"."""
         self.debug = 0  # Level of printing: 0 through 3
-        self.locationmap = {}           # Map to location of central dir header
-        self.directorymap = {}
+        self.locationmap = {'': -1} # Map to location of central dir header
 
         # Check if we were passed a file-like object
         if type(file) in _STRING_TYPES:
@@ -339,7 +338,7 @@ class ZipReader:
 
             self.locationmap[filename] = self.start_dir + total
             components = filename.split('/')
-            self.directorymap['/'.join(filename.split('/')[:-1])] = 1
+            self.locationmap['/'.join(filename.split('/')[:-1])] = -1
             # Skip past the other stuff.
             total = (total + 46 + centdir[_CD_FILENAME_LENGTH]
                      + centdir[_CD_EXTRA_FIELD_LENGTH]
@@ -392,6 +391,8 @@ class ZipReader:
         return centdir
 
     def _getinfofrompos(self, location):
+        if location < 0:
+            raise KeyError, "Attempt to get information from non-file"
         fp = self.fp
         fp.seek(location, 0)
         centdir = self._getcentdir()

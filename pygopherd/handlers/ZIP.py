@@ -162,7 +162,10 @@ class VFS_Zip(base.VFS_Real):
 
 
     def _isdir_fspath(self, fspath):
-        return self.zip.directorymap.has_key(fspath)
+        try:
+            return self.zip.locationmap[fspath] == -1
+        except KeyError:
+            return 0
 
     def isdir(self, selector):
         if self._needschain(selector):
@@ -171,7 +174,10 @@ class VFS_Zip(base.VFS_Real):
         return self._isdir_fspath(self._getfspathresolved(selector))
 
     def _isfile_fspath(self, fspath):
-        return self.zip.locationmap.has_key(fspath)
+        try:
+            return self.zip.locationmap[fspath] != -1
+        except KeyError:
+            return 0
     
     def isfile(self, selector):
         if self._needschain(selector):
@@ -180,7 +186,7 @@ class VFS_Zip(base.VFS_Real):
         return self._isfile_fspath(self._getfspathresolved(selector))
 
     def _exists_fspath(self, fspath):
-        return self._isfile_fspath(fspath) or self._isdir_fspath(fspath)
+        return self.zip.locationmap.has_key(fspath)
 
     def exists(self, selector):
         if self._needschain(selector):
