@@ -295,6 +295,13 @@ class ZipReader:
             self._filePassed = 1
             self.fp = file
             self.filename = getattr(file, 'name', None)
+        try:
+            self._InitZip()
+        except BadZipfile:
+            if not self._filePassed:
+                self.fp.close()
+                self.fp = None
+            raise
 
     def GetContents(self):
         """Read the directory, making sure we close the file if the format
@@ -303,37 +310,34 @@ class ZipReader:
 
         Must use before trying to access any included files by name!
         """
-        try:
-            self._RealGetContents()
-        except BadZipfile:
-            if not self._filePassed:
-                self.fp.close()
-                self.fp = None
-            raise
+        self._RealGetContents()
 
-    def _RealGetContents(self):
-        """Read in the table of contents for the ZIP file."""
+    def _InitZip(self):
         fp = self.fp
         endrec = _EndRecData(fp)
         if not endrec:
             raise BadZipfile, "File is not a zip file"
         if self.debug > 1:
             print endrec
-        size_cd = endrec[5]             # bytes in central directory
-        offset_cd = endrec[6]   # offset of central directory
+        self.size_cd = endrec[5]             # bytes in central directory
+        self.offset_cd = endrec[6]   # offset of central directory
         self.comment = endrec[8]        # archive comment
         # endrec[9] is the offset of the "End of Central Dir" record
-        x = endrec[9] - size_cd
+        x = endrec[9] - self.size_cd
         # "concat" is zero, unless zip was concatenated to another file
-        concat = x - offset_cd
+        concat = x - self.offset_cd
         self.concat = concat
         if self.debug > 2:
             print "given, inferred, offset", offset_cd, x, concat
         # self.start_dir:  Position of start of central directory
-        self.start_dir = offset_cd + concat
+        self.start_dir = self.offset_cd + concat
+
+    def _RealGetContents(self):
+        """Read in the table of contents for the ZIP file."""
+        fp = self.fp
         fp.seek(self.start_dir, 0)
         total = 0
-        while total < size_cd:
+        while total < self.size_cd:
             centdir = self._getcentdir() # Reads 46 bytes
             filename = fp.read(centdir[_CD_FILENAME_LENGTH])
 

@@ -59,25 +59,34 @@ class VFS_Zip(base.VFS_Real):
                 self._createcache(fspath)
                 return 0
 
+            print "Using existing cache"
+            for key in self.dircache.keys():
+                print "%s: %s" % (key, str(self.dircache[key]))
+
             return 1
 
     def _createcache(self, fspath):
         self.dircache = {}
         try:
-            self.dircache = shelve.open(fspath, 'n')
+            self.dbdircache = shelve.open(fspath, 'n')
+            print "Successfully created cache"
         except:
             return 0
 
-    def _savecache(self, newcache):
-        for (key, value) in newcache.iteritems():
-            self.dircache[key] = value
+    def _savecache(self):
+        print "Saving", self.dircache
+        for (key, value) in self.dircache.iteritems():
+            print "setting", key, value
+            self.dbdircache[key] = value
 
     def _initzip(self):
         zipfd = self.chain.open(self.zipfilename)
         self.zip = zipfile.ZipReader(zipfd)
         if not self._initcache():
             # For reloading an existing one.  Must be called before _cachedir.
-            self._savecache(self._getdircache())
+            self._cachedir()
+            self._savecache()
+            self.dbdircache.close()       # Flush it out
 
     def _isentryincache(self, fspath):
         try:
@@ -103,13 +112,13 @@ class VFS_Zip(base.VFS_Real):
                 inode = directory[item]
             except KeyError:
                 raise KeyError, "Call for %s: Couldn't find %s" % (fspath, item)
-            return inode
+        return inode
         
-    def _getdircache(self):
+    def _cachedir(self):
         symlinkinodes = []
         nextinode = 1
         self.zip.GetContents()
-        dircache = {'0': {}}
+        self.dircache = {'0': {}}
 
         for (file, location) in self.zip.locationmap.iteritems():
             info = self.zip.getinfo(file)
@@ -117,25 +126,26 @@ class VFS_Zip(base.VFS_Real):
             if dir == '/':
                 dir == ''
 
-            dirlevel = dircache['0']
+            dirlevel = self.dircache['0']
             for level in dir.split('/'):
                 if level == '':
                     continue
                 if not dirlevel.has_key(level):
-                    dircache[str(nextinode)] = {}
+                    self.dircache[str(nextinode)] = {}
                     dirlevel[level] = str(nextinode)
                     nextinode += 1
-                dirlevel = dircache[dirlevel[level]]
+                dirlevel = self.dircache[dirlevel[level]]
 
             if len(filename):
                 if self._islinkinfo(info):
+                    print "Got link", file
                     symlinkinodes.append({'dirlevel': dirlevel,
                                           'filename': filename,
                                           'pathname': file,
                                           'dest': self._readlinkfspath(file)})
                 else:
                     dirlevel[filename] = str(nextinode)
-                    dircache[str(nextinode)] = location
+                    self.dircache[str(nextinode)] = location
                     nextinode += 1
 
         lastsymlinklen = 0
@@ -143,21 +153,22 @@ class VFS_Zip(base.VFS_Real):
             lastsymlinklen = len(symlinkinodes)
             newsymlinkinodes = []
             for item in symlinkinodes:
+                print "Processing symlinkinode", item
                 if item['dest'][0] == '/':
                     dest = item['dest'][1:]
                 else:
                     dest = os.path.join(os.path.dirname(item['pathname']),
                                         item['dest'])
                     dest = os.path.normpath(dest)
+                print "dest is", dest
                 if self._isentryincache(dest):
                     item['dirlevel'][item['filename']] = \
                         self._getcacheinode(dest)
                 else:
+                    print "Failed to insert dest", dest
                     newsymlinkinodes.append(item)
             symlinkinodes = newsymlinkinodes
                                                          
-        return dircache
-            
     def _needschain(self, selector):
         return not selector.startswith(self.zipfilename)
 
@@ -308,7 +319,7 @@ class VFS_Zip(base.VFS_Real):
         except KeyError:
             raise IOError, "Request to open %s, which does not exist" % selector
         if type(item) == types.DictType:
-            raise IOError, "Request to open %s, which is a directory" % selector
+            raise IOError, "Request to open %s, which is a directory (%s)" % (selector, str(item))
 
         return self._open(fspath)
 
