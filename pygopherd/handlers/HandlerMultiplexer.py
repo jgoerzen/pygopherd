@@ -31,6 +31,15 @@ def getHandler(selector, searchrequest, protocol, config):
         handlers = eval(config.get("handlers.HandlerMultiplexer", "handlers"))
         rootpath = config.get("pygopherd", "root")
 
+    # SECURITY: assert that our absolute path is within the absolute
+    # path of the site root.
+
+    if not os.path.abspath(rootpath + '/' + selector). \
+       startswith(os.path.abspath(rootpath)):
+        raise GopherExceptions.FileNotFound, \
+              [selector, "Requested document is outside the server root",
+               protocol]
+
     for handler in handlers:
         statresult = None
         try:

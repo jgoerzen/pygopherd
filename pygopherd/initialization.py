@@ -109,7 +109,11 @@ def getserverclass(config):
     # Instantiate a server.  Has to be done before the security so we can
     # get a privileged port if necessary.
 
-    s = MyServer(('', config.getint('pygopherd', 'port')),
+    interface = ''
+    if config.has_option('pygopherd', 'interface'):
+        servername = config.get('pygopherd', 'interface')
+
+    s = MyServer((interface, config.getint('pygopherd', 'port')),
                  GopherRequestHandler)
     s.config = config
     return s
