@@ -103,8 +103,8 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
             retstr += "+VIEWS:\r\n " + entry.getmimetype()
             if (entry.getlanguage()):
                 retstr += " " + entry.getlanguage()
+            retstr += ":"
             if (entry.getsize() != None):
-                retstr += ":"
                 retstr += " <%dk>" % (entry.getsize() / 1024)
             retstr += "\r\n"
         return retstr

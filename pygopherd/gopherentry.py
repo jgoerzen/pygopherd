@@ -129,6 +129,8 @@ class GopherEntry:
         if self.mimetype == None:
             return default
         return self.mimetype
+    def setmimetype(self, arg):
+        self.mimetype = arg
     def getsize(self, default = None):
         if self.size == None:
             return default

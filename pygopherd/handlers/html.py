@@ -22,7 +22,7 @@ from HTMLParser import HTMLParser
 import SocketServer
 import re
 import os, stat, os.path, mimetypes, protocols, gopherentry, mimetypes
-import handlers, handlers.base
+import handlers, handlers.base, htmlentitydefs
 from gopherentry import GopherEntry
 
 
@@ -50,6 +50,12 @@ class HTMLTitleParser(HTMLParser):
         if self.readingtitle:
             self.titlestr += data
 
+    def handle_entityref(self, name):
+        """Handle things like &amp; or &gt; or &lt;.  If it's not in
+        the dictionary, ignore it."""
+        if self.readingtitle and htmlentitydefs.entitydefs.has_key(name):
+            self.titlestr += htmlentitydefs.entitydefs[name]
+
 class HTMLFileTitleHandler(FileHandler):
     """This class will set the title of a HTML document based on the
     HTML title.  It is a clone of the UMN gsfindhtmltitle function."""
@@ -73,13 +79,19 @@ class HTMLFileTitleHandler(FileHandler):
                 parser.feed(line)
             parser.close()
         except HTMLParser.HTMLParseError:
-            # Parse error? Just return the title.
-            return entry
+            # Parse error?  Stop parsing, go to here.  We can still
+            # return a title if the parse error happened after we got
+            # the title.
+            pass
+
         file.close()
         # OK, we've parsed the file and exited because of either an EOF
-        # or a complete title.  Now, figure out what happened.
+        # or a complete title (or error).  Now, figure out what happened.
 
         if parser.gotcompletetitle:
+            # Convert all whitespace sequences to a single space.
+            # Removes newlines, tabs, etc.  Good for presentation
+            # and for security.
             title = re.sub('[\s]+', ' ', parser.titlestr)
             entry.setname(title)
         return entry
