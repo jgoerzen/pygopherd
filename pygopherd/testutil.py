@@ -25,7 +25,9 @@ from pygopherd import initialization, logger
 from StringIO import StringIO
 
 def getconfig():
-    return initialization.initconffile('conf/pygopherd.conf')
+    config = initialization.initconffile('conf/pygopherd.conf')
+    config.set("pygopherd", "root", os.path.abspath('./testdata'))
+    return config
 
 def getstringlogger():
     config = getconfig()
