@@ -49,13 +49,20 @@ class BaseGopherProtocol:
         self.handler = None
 
         selector = requestparts[0]
-
-        if len(selector) and selector[-1] == '/':
-                selector = selector[0:-1]
-        if len(selector) == 0 or selector[0] != '/':
-            selector = '/' + selector
+        selector = self.slashnormalize(selector)
 
         self.selector = selector
+
+    def slashnormalize(self, selector):
+        """Normalize slashes in the selector.  Make sure it starts
+        with a slash and does not end with one.  If it is a root directory
+        request, make sure it is exactly '/'.  Returns result."""
+        if len(selector) and selector[-1] == '/':
+            selector = selector[0:-1]
+        if len(selector) == 0 or selector[0] != '/':
+            selector = '/' + selector
+        return selector
+
 
     def canhandlerequest(self):
         """Decides whether or not a given request is valid for this
