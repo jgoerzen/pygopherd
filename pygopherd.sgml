@@ -11,7 +11,7 @@
     <refentryinfo>
       <address><email>jgoerzen@complete.org</email></address>
       <author><firstname>John</firstname><surname>Goerzen</surname></author>
-      <date> $Date: 2003-08-24 20:38:33 -0500 (Sun, 24 Aug 2003) $ </date>
+      <date> $Date: 2003-08-25 10:31:58 -0500 (Mon, 25 Aug 2003) $ </date>
     </refentryinfo>
 
     <refmeta>
@@ -474,12 +474,320 @@
 	    <cmdsynopsis>
 	      <arg choice="Plain"><replaceable>gophertypeDESCRIPTION</replaceable></arg><arg>\t<replaceable>selector</replaceable><arg>\t<replaceable>host</replaceable><arg>\t<replaceable>port</replaceable></arg></arg></arg>
 	    </cmdsynopsis>
-	    <!-- START HERE -->
 	    <para>
-	      Foo
+	      Note: spaces shown above are for clarity only and should
+	      not actually be present in your file.
+	    </para>
+	    <para>
+	      The informational text must not contain any tab
+	      characters, but may contain spaces.  Informational text
+	      will be rendered with gopher type
+	      <property>i</property>, which will cause it to be
+	      displayed on a client's screen at its particular
+	      position in the file.
+	    </para>
+	    <para>
+	      The second type of line represents a link to a file or
+	      directory.  It begins with a single-character Gopher
+	      type (see Gopher Item Types below) followed immediately
+	      by a description and a tab character.  There is no space
+	      or other separator between the gopher type and the
+	      description.  The description may contain spaces but not
+	      tabs.
+	    </para>
+
+	    <para>
+	      The remaining arguments are optional, but only to the
+	      extent that arguments may be omitted only if all
+	      arguments after them are also omitted.  These arguments
+	      are:
+	    </para>
+	    <variablelist>
+	      <varlistentry><term><replaceable>selector</replaceable></term>
+		<listitem><para>The <property>selector</property> is
+		    the name of the file on the server.  If it begins
+		    with a slash, it is an absolute path; otherwise,
+		    it is interpreted relative to the directory that
+		    the gophermap file is in.  If no selector is
+		    specified, the description is also used as the
+		    selector.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry><term><replaceable>host</replaceable></term>
+		<listitem><para>The <property>host</property>
+		    specifies the host on which this resource is
+		    located.  If not specified, defaults to the
+		    current server.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	      <varlistentry><term><replaceable>port</replaceable></term>
+		<listitem><para>The <property>port</property>
+		    specifies the port on which the resource is
+		    located.  If not specified, defaults to the port
+		    the current server is listening on.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+	    <para>
+	      An example of a gophermap to help illustrate the concept
+	      is included with the &PyGopherd; distribution in the
+	      file <filename>examples/gophermap</filename>.
 	    </para>
 	  </listitem>
 	</varlistentry>
+	<varlistentry>
+	  <term>file.CompressedFileHandler</term>
+	  <listitem><para>
+	      In order to save space, you might want to store
+	      documents on-disk in a compressed format.  But then
+	      clients would ordinarily have to decompress the files
+	      themselves.  It would be nice to have the server
+	      automatically decompress the files on the fly, sending
+	      that result to the client.  That's where
+	      <property>file.CompressedFileHandler</property> comes
+	      in.
+	    </para>
+	    <para>
+	      This handler will take compressed files, pipe them
+	      through your chosen decompression program, and send the
+	      result directly to clients -- completely transparently.
+	    </para>
+	    <para>
+	      To use this handler, set the
+	      <property>decompressors</property> option in the
+	      configuration file.  This option defines a mapping from
+	      MIME encodings (as defined with the
+	      <property>encoding</property> option) to decompression
+	      programs.  Files that are not encoded, or which have an
+	      encoding that does not occur in the
+	      <property>decompressors</property> map, will not be
+	      decompressed by this handler.
+	    </para>
+	    <para>
+	      Please see the sample configuration file for more
+	      examples and details about the configuration of this
+	      handler.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>file.FileHandler</term>
+	  <listitem>
+	    <para>
+	      The <property>file.FileHandler</property> is just that
+	      -- its duty is to serve up regular files to clients.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	
+	<varlistentry>
+	  <term>html.HTMLFileTitleHandler</term>
+	  <listitem><para>
+	      This handler is used when generating directories and
+	      will set the description of HTML files to the HTML title
+	      defined in them rather than let it be the default
+	      filename.  Other than that, it has no effect.  UMN
+	      gopherd implements a similar policy.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>mbox.MaildirFolderHandler</term>
+	  <term>mbox.MaildirMessageHandler</term>
+	  <term>mbox.MBoxMessageHandler</term>
+	  <term>mbox.MBoxFolderHandler</term>
+	  <listitem>
+	    <para>
+	      These four handlers provide a unique "virtual folder"
+	      service.  They allow you to present mailboxes as if they
+	      were folders, the items of the folders being the
+	      messages in the mailbox, organized by subject.  This is
+	      useful for presenting mail archives or just making
+	      e-mail accessible in a nice and easy fashion.
+	    </para>
+	    <para>
+	      To use these handlers, all you have to do is enable them
+	      in your <property>handlers</property> section.  They
+	      will automatically detect requests for mailboxes and
+	      handle them appropriately.
+	    </para>
+	    <para>
+	      The different handlers are for traditional Unix mbox
+	      mailboxes (all messages in a single file) and new
+	      qmail-stype Maildir mailboxes.  You can enable only the
+	      two handlers for the specific mailbox type that you use,
+	      if desired.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>pyg.PYGHandler</term>
+	  <listitem>
+	    <para>
+	      PYG (short for PYGopherd) is a mechanism that provides a
+	      tremendous amount of flexibility.  Rather than just
+	      letting you execute a script like other Gopher or HTTP
+	      servers, PYGs are actually loaded up into PyGopherd and
+	      become fully-capable first-class virtual handlers.  Yet
+	      they need not be known ahead of time, and are loaded
+	      dynamically.
+	    </para>
+	    <para>
+	      With a PYG handler, you can generate gopher directories,
+	      handle searches, generate files, and more on the fly.
+	      You can create entire virtual directory trees (for
+	      instance, to interface with NNTP servers or with DICT
+	      servers), and access them all using the standard Gopher
+	      protocol.  All of this without having to modify even one
+	      line of PyGopherd code.
+	    </para>
+	    <para>
+	      If enabled, the <property>pyg.PYGHandler</property> will
+	      look for files with the extension .pyg that are marked
+	      executable.  If found, they will be loaded and run as
+	      PYGs.
+	    </para>
+	    <para>
+	      Please note: this module provides the capability to
+	      execute arbitrary code.  Please consider the security
+	      ramifications of that before enabling it.
+	    </para>
+	    <para>
+	      See the <property>virtual.Virtual</property> handler for
+	      more information about passing data to your scripts at
+	      runtime.
+	    </para>
+	    <para>
+	      At present, documentation on writing PYGs is not
+	      provides, but you may find examples in the
+	      <property>pygfarm</property> directory included with the
+	      &PyGopherd; distribution.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>scriptexec.ExecHandler</term>
+	  <listitem>
+	    <para>
+	      This handler implements "old-style" script execution;
+	      that is, executing arbitrary programs and piping the
+	      result to the client.  It is, for the most part,
+	      compatible with both scripts written for UMN gopherd and
+	      the Bucktooth gopher server.  If enabled, it will
+	      execute any file that is marked executable in the
+	      filesystem.  It will normally list scripts as returning
+	      plain text, but you may create a custom link to the
+	      script that defines it as returning whatever kind of
+	      file you desire.  Unlike PYGs, this type must be known
+	      in advance.
+	    </para>
+	    <para>
+	      The <property>scriptexec.ExecHandler</property> will set
+	      environment variables for your scripts to use.  They are
+	      as follows:
+	    </para>
+	    <variablelist>
+	      <varlistentry>
+		<term>SERVER_NAME</term>
+		<listitem><para>The name of this server as defined in
+		    the configuration file or detected from the
+		    operating system.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>SERVER_PORT</term>
+		<listitem><para>The port this server is listening on.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>REMOTE_ADDR</term>
+		<listitem><para>The IP address of the client.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>REMOTE_PORT</term>
+		<listitem><para>The port number of the client.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>REMOTE_HOST</term>
+		<listitem><para>The same value as <property>REMOTE_ADDR</property></para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>SELECTOR</term>
+		<listitem><para>The file that was requested; that is,
+		    the relative path to this script.  If the selector
+		    included additional parameters after a |, they
+		    will be included in this string as well.
+		  </para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>REQUEST</term>
+		<listitem><para>The "base" part of the selector; that
+		    is, the part leading up to the |.</para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>SEARCHREQUEST</term>
+		<listitem><para>Included only if the client specified
+		    search data, this is used if the client is
+		    searching for something.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+	    <para>
+	      See the <property>virtual.Virtual</property> handler for
+	      more information about passing data to your scripts at
+	      runtime.
+	    </para>
+	    <para>
+	      Please note: this module provides the capability to
+	      execute arbitrary code.  Please consider the security
+	      ramifications of that before enabling it.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term>UMN.UMNDirHandler</term>
+	  <listitem>
+	    <para>
+	      This is one of the most powerful workhorse handlers in
+	      &PyGopherd;.  It is designed to emulate most of the ways
+	      in which the UMN gopherd distribution generates
+	      directories, even going so far as to be bug-compatible
+	      in some cases.  Generating directories with this handler
+	      is often the best general-purpose way to make nice
+	      directories in gopherspace.
+	    </para>
+	    <para>
+	      The remainder of the description of the
+	      <property>UMN.UMNDirHandler</property>, except for the
+	      Abstracts and Info section, is lifted directly from the
+	      original UMN gopherd documentation, with light editing,
+	      because this handler implements it so exactly that there
+	      was no point in rewriting all that documentation :-)
+	    </para>
+	  </listitem>
+	</varlistentry>
+
       </variablelist>
     </refsect1>
 
