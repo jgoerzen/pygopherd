@@ -1,4 +1,117 @@
 ------------------------------------------------------------------------
+rev 258:  jgoerzen | 2003-03-13 09:52:47 -0600 (Thu, 13 Mar 2003) | 13 lines
+Changed paths:
+   M /pygopherd/head/debian/changelog
+
+  * Introduced new "inode-like" caching system for ZIP files.
+    Now, the first time a ZIP file is accessed, it will be scanned.
+    Links will be resolved immediately.  A dictionary tree is built up;
+    values being either file offsets in the ZIP file or dictionaries
+    (for subdirectories).  This dictionary is then cached on-disk using
+    a binary database and marshal algorithm derived from Python's shelve
+    module.  We do not need to use pickle for this task since we are saving
+    only simple structures.  The performance gain for large ZIP files using
+    this method is tremendous.  The only time a ZIP file's central
+    directory structure must be scanned now is the very first time it is
+    ever accessed.
+
+
+------------------------------------------------------------------------
+rev 257:  jgoerzen | 2003-03-13 09:48:56 -0600 (Thu, 13 Mar 2003) | 3 lines
+Changed paths:
+   M /pygopherd/head/pygopherd/handlers/ZIP.py
+   M /pygopherd/head/pygopherd/handlers/gophermap.py
+
+Removed the needschain tests
+Optimized the gophermap isrequestforme handler
+
+------------------------------------------------------------------------
+rev 256:  jgoerzen | 2003-03-13 08:58:54 -0600 (Thu, 13 Mar 2003) | 2 lines
+Changed paths:
+   M /pygopherd/head/pygopherd/handlers/ZIP.py
+
+Converted to using marshal for a performance gain
+
+------------------------------------------------------------------------
+rev 255:  jgoerzen | 2003-03-12 19:20:33 -0600 (Wed, 12 Mar 2003) | 2 lines
+Changed paths:
+   M /pygopherd/head/pygopherd/handlers/ZIP.py
+
+Removed debug code
+
+------------------------------------------------------------------------
+rev 254:  jgoerzen | 2003-03-12 19:20:01 -0600 (Wed, 12 Mar 2003) | 2 lines
+Changed paths:
+   M /pygopherd/head/pygopherd/handlers/ZIP.py
+   M /pygopherd/head/pygopherd/zipfile.py
+
+Passes all ZIP tests.
+
+------------------------------------------------------------------------
+rev 253:  jgoerzen | 2003-03-12 19:02:49 -0600 (Wed, 12 Mar 2003) | 2 lines
+Changed paths:
+   M /pygopherd/head/pygopherd/handlers/ZIP.py
+
+Removed debug code
+
+------------------------------------------------------------------------
+rev 252:  jgoerzen | 2003-03-12 18:56:26 -0600 (Wed, 12 Mar 2003) | 2 lines
+Changed paths:
+   M /pygopherd/head/pygopherd/handlers/ZIP.py
+
+Think I've nailed the caching problem
+
+------------------------------------------------------------------------
+rev 251:  jgoerzen | 2003-03-12 18:32:48 -0600 (Wed, 12 Mar 2003) | 2 lines
+Changed paths:
+   M /pygopherd/head/pygopherd/handlers/ZIP.py
+   M /pygopherd/head/pygopherd/zipfile.py
+
+All tests are passing, but caching doesn't seem to be working.
+
+------------------------------------------------------------------------
+rev 250:  jgoerzen | 2003-03-12 18:28:35 -0600 (Wed, 12 Mar 2003) | 2 lines
+Changed paths:
+   M /pygopherd/head/pygopherd/handlers/ZIP.py
+   M /pygopherd/head/pygopherd/zipfile.py
+
+Strating to fix errors as part of testing
+
+------------------------------------------------------------------------
+rev 249:  jgoerzen | 2003-03-12 16:55:49 -0600 (Wed, 12 Mar 2003) | 3 lines
+Changed paths:
+   M /pygopherd/head/ChangeLog
+   M /pygopherd/head/debian/changelog
+   M /pygopherd/head/pygopherd/handlers/ZIP.py
+
+Making more progress -- we now have this to the point of being ready for
+testing, I believe.
+
+------------------------------------------------------------------------
+rev 248:  jgoerzen | 2003-03-12 16:20:19 -0600 (Wed, 12 Mar 2003) | 3 lines
+Changed paths:
+   M /pygopherd/head/pygopherd/handlers/ZIP.py
+   M /pygopherd/head/pygopherd/zipfile.py
+
+Checkpointing my progress -- initial efforts to rewrite the caching to use
+an inode system complete.
+
+------------------------------------------------------------------------
+rev 247:  jgoerzen | 2003-03-12 15:37:27 -0600 (Wed, 12 Mar 2003) | 2 lines
+Changed paths:
+   M /pygopherd/head/pygopherd/handlers/ZIP.py
+
+Merged back in bugfix to islinkattr from ZIP.py prior to this rev.
+
+------------------------------------------------------------------------
+rev 246:  jgoerzen | 2003-03-12 15:33:07 -0600 (Wed, 12 Mar 2003) | 3 lines
+Changed paths:
+   M /pygopherd/head/pygopherd/handlers/ZIP.py
+
+Reverted to ZIP.py from revision 229 when pickling was present.  Will try to
+re-do this more efficiently with the new zipfile and anydbm.
+
+------------------------------------------------------------------------
 rev 245:  jgoerzen | 2003-03-07 16:01:39 -0600 (Fri, 07 Mar 2003) | 2 lines
 Changed paths:
    M /pygopherd/head/pygopherd/handlers/ZIP.py
