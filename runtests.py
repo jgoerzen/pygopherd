@@ -30,7 +30,8 @@ def suite():
              GopherExceptionsTest,
              fileextTest,
              gopherentryTest,
-             loggerTest
+             loggerTest,
+             pipeTest
         ]
     suite = unittest.TestSuite()
     for module in tests:

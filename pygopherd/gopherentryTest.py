@@ -101,6 +101,8 @@ class GopherEntryTestCase(unittest.TestCase):
         self.assertEquals(entry.getmimetype(), 'application/octet-stream')
         self.assertEquals(entry.getencoding(), 'gzip')
         self.assertEquals(entry.getencodedmimetype(), 'text/plain')
+        self.assertEquals(entry.geteadict(),
+                          {'ABSTRACT': "This is the abstract\nfor testfile.txt.gz"})
 
     def testpopulate_dir(self):
         fspath = self.root + '/'
@@ -124,6 +126,9 @@ class GopherEntryTestCase(unittest.TestCase):
 
         self.assertEntryMatches(conditions, entry,
                                 "testpopulate_dir")
+        self.assertEqual(entry.geteadict(),
+                         {'ABSTRACT':
+                          'This is the abstract for the testdata directory.'})
 
     def testpopulate_remote(self):
         """Asserts that population is not done on remote objects."""

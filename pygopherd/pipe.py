@@ -29,8 +29,7 @@ def pipedata_unix(file, args, environ = os.environ,
     pid = os.fork()
     if pid:
         # Parent.
-        os.waitpid(pid, 0)
-        return
+        return os.waitpid(pid, 0)[1]
     else:
         # Child.
         if childstdin:
@@ -43,5 +42,6 @@ def pipedata_unix(file, args, environ = os.environ,
             os.execvpe(file, args, environ)
         else:
             os.execve(file, args, environ)
+        sys.exit(255)
 
 pipedata = pipedata_unix
