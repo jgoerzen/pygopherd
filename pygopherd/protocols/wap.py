@@ -52,7 +52,7 @@ class WAPProtocol(HTTPProtocol):
         if not entry.gettype() in ['i', '7']:
             retstr += '<a '
             if self.accesskeyidx < len(accesskeys):
-                retstr += 'accesskey="%s" ' % accesskeys[accesskeyidx]
+                retstr += 'accesskey="%s" ' % accesskeys[self.accesskeyidx]
                 self.accesskeyidx += 1
             retstr += 'href="%s">' % url
         if entry.getname() != None:
