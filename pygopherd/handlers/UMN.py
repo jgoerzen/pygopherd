@@ -159,9 +159,9 @@ class UMNDirHandler(DirHandler):
         if xnum == ynum:
             return 0
         if xnum == None:
-            return -1
-        if ynum == None:
             return 1
+        if ynum == None:
+            return -1
         return cmp(xnum, ynum)
 
     def processLinkFile(self, filename, capfilepath = None):

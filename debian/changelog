@@ -1,3 +1,9 @@
+pygopherd (2.0.8) unstable; urgency=low
+
+  * Fixed a logic error in the Numb handling fix.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 17 Dec 2003 08:43:38 -0600
+
 pygopherd (2.0.7) unstable; urgency=low
 
   * Fixed UMN.py to properly handle Numb=.
