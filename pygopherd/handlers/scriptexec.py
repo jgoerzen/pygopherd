@@ -21,7 +21,9 @@ class ExecHandler(Virtual):
         # We work on a separate thing to avoid contaminating our own
         # environment.  Just saying newenv = os.environ would still
         # do that.
-        newenv = os.environ.copy()
+        newenv = {}
+        for key in os.environ.keys():
+            newenv[key] = os.environ[key]
         newenv['SERVER_NAME'] = self.protocol.server.server_name
         newenv['SERVER_PORT'] = str(self.protocol.server.server_port)
         newenv['REMOTE_ADDR'] = self.protocol.requesthandler.client_address[0]
