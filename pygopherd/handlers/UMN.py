@@ -160,12 +160,15 @@ class UMNDirHandler(DirHandler):
                 entry.setname(line[5:])
                 done['name'] = 1
             elif line[0:5] == "Path=":
+                pathname = line[5:]
+                if pathname[-1] == '/':
+                    pathname = pathname[0:-1]
                 # Handle ./: make full path.
                 if line[5:7] == './' or line[5:7] == '~/':
-                    entry.setselector(self.selectorbase + "/" + line[7:])
+                    entry.setselector(self.selectorbase + "/" + pathname[2:])
                     entry.setneedsmerge(1)
                 else:
-                    entry.setselector(line[5:])
+                    entry.setselector(pathname)
                 done['path'] = 1
             elif line[0:5] == 'Host=':
                 if line[5:] != '+':
