@@ -37,7 +37,12 @@ class BuckGophermapHandler(base.BaseHandler):
     def getentry(self):
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
-            self.entry.populatefromfs(self.getfspath(), self.statresult)
+            if (self.statresult and S_ISREG(self.statresult[ST_MODE]) and \
+                self.getfspath().endswith(".gophermap")):
+                self.entry.populatefromfs(os.path.dirname(self.getfspath()))
+            else:
+                self.entry.populatefromfs(self.getfspath(), self.statresult)
+            
         return self.entry
 
     def prepare(self):
