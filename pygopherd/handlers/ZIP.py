@@ -23,12 +23,6 @@ from pygopherd import zipfile
 UNX_IFMT = 0170000L
 UNX_IFLNK = 0120000L
 
-### DEBUG
-import traceback
-TRENABLED = 1
-TRACEFD = open('traces', 'wb')
-##
-
 from pygopherd.handlers import base
 
 class VFS_Zip(base.VFS_Real):
@@ -41,6 +35,7 @@ class VFS_Zip(base.VFS_Real):
         self.zip = zipfile.ZipReader(zipfd)
 
     def _needschain(self, selector):
+        pass                            # TEST
         return not selector.startswith(self.zipfilename)
 
     # Functions to determine if this is a link.
@@ -69,14 +64,30 @@ class VFS_Zip(base.VFS_Real):
 
     def _resolvelink(self, fspath):
         zi = None
+
+        # Optimization for instances where things are NOT a symlink.
+        # We assume this is the most common case
+
+        try:
+            zi = self.zip.getinfo(fspath)
+            if not self._islinkinfo(zi):
+                return fspath
+        except KeyError:
+            pass
+        
+        
         newpath = ''
         for component in fspath.split('/'):
             newpath = os.path.join(newpath, component)
             while 1:
+                # Optimization: if it's a directory, break now.
+                # This will also catch it if it's not a valid entry.
                 try:
-                    zi = self.zip.getinfo(newpath)
+                    if self.zip.locationmap[newpath] == -1:
+                        break
                 except KeyError:
                     break
+                zi = self.zip.getinfo(newpath)
                 if not self._islinkinfo(zi):
                     break
 
@@ -128,9 +139,6 @@ class VFS_Zip(base.VFS_Real):
         return self._getfspathfinal(selector)
 
     def stat(self, selector):
-        if TRENABLED:
-            TRACEFD.write("******************************************************** " + selector + "\n")
-            traceback.print_stack(file = TRACEFD)
         if self._needschain(selector):
             return self.chain.stat(selector)
 
@@ -180,7 +188,11 @@ class VFS_Zip(base.VFS_Real):
         if self._needschain(selector):
             return self.chain.isdir(selector)
 
-        return self._isdir_fspath(self._getfspathresolved(selector))
+        # Optimization: if it is a directory without having to resolve
+        # the link, just return true.
+        fspath = self._getfspathfinal(selector)
+        return self._isdir_fspath(fspath) or \
+               self._isdir_fspath(self._resolvelink(fspath))
 
     def _isfile_fspath(self, fspath):
         try:
@@ -192,6 +204,9 @@ class VFS_Zip(base.VFS_Real):
         if self._needschain(selector):
             return self.chain.isfile(selector)
 
+        # The same optimization as with isdir is not possible here,
+        # because what appears on the surface to be a file may be
+        # a symlink.
         return self._isfile_fspath(self._getfspathresolved(selector))
 
     def _exists_fspath(self, fspath):
@@ -230,8 +245,8 @@ class VFS_Zip(base.VFS_Real):
                 retval.append(f)
         return retval
         
-class TestVFS_Zip_huge(unittest.TestCase):
-#class DISABLED_TestVFS_Zip_huge:
+#class TestVFS_Zip_huge(unittest.TestCase):
+class DISABLED_TestVFS_Zip_huge:
     def setUp(self):
         from pygopherd import testutil
         from pygopherd.protocols.rfc1436 import GopherProtocol

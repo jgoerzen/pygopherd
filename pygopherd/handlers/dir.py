@@ -43,7 +43,6 @@ class DirHandler(base.BaseHandler):
         "Initialize the list of files.  Ignore the files we're suppoed to."
         self.files = []
         dirfiles = self.vfs.listdir(self.getselector())
-        print "** dirhandler: dirfiles =", dirfiles
         ignorepatt = self.config.get("handlers.dir.DirHandler", "ignorepatt")
         for file in dirfiles:
             if self.prep_initfiles_canaddfile(ignorepatt,
@@ -59,7 +58,6 @@ class DirHandler(base.BaseHandler):
 
         self.fileentries = []
         for file in self.files:
-            print "Processing file", file
             # We look up the appropriate handler for this object, and ask
             # it to give us an entry object.
             handler = handlers.HandlerMultiplexer.\
