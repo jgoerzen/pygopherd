@@ -35,14 +35,24 @@ s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind(('', config.getint('serving', 'port')))
 s.listen(25)
 
+
 def closeupshop(signum, frame):
     s.close()
     print "Closeupshop."
     sys.exit(0)
 
+def waitchildren(signum, frame):
+    os.waitpid(-1, os.WNOHANG)
+    return
+    try:
+        while (os.waitpid(-1, os.WNOHANG)):
+            print "Reaped a child process."
+    except OSError:
+        return
+
 signal.signal(signal.SIGINT, closeupshop)
 signal.signal(signal.SIGQUIT, closeupshop)
-
+signal.signal(signal.SIGCHLD, waitchildren)
 
 while 1:
     conn, addr = s.accept()
