@@ -82,11 +82,14 @@ class VFS_Zip(base.VFS_Real):
         self.dircache = {}
         try:
             self.dbdircache = shelveopen(fspath, 'n')
-        except:
-            #raise
+        except e:
+            GopherExceptions.log(e, handler = self)
             return 0
 
     def _savecache(self):
+        if not hasattr(self, 'dbdircache'):
+            # createcache was somehow unsuccessful
+            return
         for (key, value) in self.dircache.iteritems():
             self.dbdircache[key] = value
 

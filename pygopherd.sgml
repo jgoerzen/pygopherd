@@ -11,7 +11,7 @@
     <refentryinfo>
       <address><email>jgoerzen@complete.org</email></address>
       <author><firstname>John</firstname><surname>Goerzen</surname></author>
-      <date> $Date: 2003-08-25 10:31:58 -0500 (Mon, 25 Aug 2003) $ </date>
+      <date> $Date: 2003-08-25 13:47:40 -0500 (Mon, 25 Aug 2003) $ </date>
     </refentryinfo>
 
     <refmeta>
@@ -425,967 +425,968 @@
 
       <para>
 	The remaining parts of this section describe the different
-	handlers that ship with &PyGopherd;.
+	handlers that ship with &PyGopherd;.  Please note that some
+	versions of this manual may show the handlers in all caps;
+	however, their names are not all caps and are case-sensitive.
       </para>
 
-      <variablelist>
-	<varlistentry><term>dir.DirHandler</term>
-	  <listitem><para>
-	      This handler is a basic one that generates menus based
-	      on the contents of a directory.  It is used for
-	      directories that contain neither a
-	      <filename>gophermap</filename> file nor UMN-style links
-	      files, or situations where you have no need for either
-	      of those.</para>
-	    <para>
-	      This handler simply
-	      reads the contents of your on-disk directory, determines the
-	      appropriate types of each file, and sends the result to the client.
-	      The descriptions of each item are usually set to the filename, but the
-	      <property>html.HTMLFileTitleHandler</property> may
-	      override that.
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry><term>gophermap.BuckGophermapHandler</term>
-	  <listitem><para>
-	      This handler is used to generate directory listings
-	      based on <filename>gophermap</filename> files.  It will
-	      not read the directory on-disk, instead serving content
-	      from the <filename>gophermap</filename> file only.
-	      Gophermaps are useful if you want to present a directory
-	      in which the files do not frequently change and there is
-	      general information to present.  Overall, if you only
-	      wish to present information particular to certain files,
-	      you should consider using the abstract feature of
-	      UMN.UMNDirHandler.
-	    </para>
-	    <para>
-	      The <filename>gophermap</filename> files contain two
-	      types of lines, which are described here using the same
-	      convention normally used for command line arguments.  In
-	      this section, the symbol \t will be used to indicate a
-	      tab character, Control-I.
-	    </para>
-	    <cmdsynopsis>
-	      <arg choice="Plain"><replaceable>full line of informational
-		text</replaceable></arg>
-	    </cmdsynopsis>
-	    <cmdsynopsis>
-	      <arg choice="Plain"><replaceable>gophertypeDESCRIPTION</replaceable></arg><arg>\t<replaceable>selector</replaceable><arg>\t<replaceable>host</replaceable><arg>\t<replaceable>port</replaceable></arg></arg></arg>
-	    </cmdsynopsis>
-	    <para>
-	      Note: spaces shown above are for clarity only and should
-	      not actually be present in your file.
-	    </para>
-	    <para>
-	      The informational text must not contain any tab
-	      characters, but may contain spaces.  Informational text
-	      will be rendered with gopher type
-	      <property>i</property>, which will cause it to be
-	      displayed on a client's screen at its particular
-	      position in the file.
-	    </para>
-	    <para>
-	      The second type of line represents a link to a file or
-	      directory.  It begins with a single-character Gopher
-	      type (see Gopher Item Types below) followed immediately
-	      by a description and a tab character.  There is no space
-	      or other separator between the gopher type and the
-	      description.  The description may contain spaces but not
-	      tabs.
-	    </para>
-
-	    <para>
-	      The remaining arguments are optional, but only to the
-	      extent that arguments may be omitted only if all
-	      arguments after them are also omitted.  These arguments
-	      are:
-	    </para>
-	    <variablelist>
-	      <varlistentry><term><replaceable>selector</replaceable></term>
-		<listitem><para>The <property>selector</property> is
-		    the name of the file on the server.  If it begins
-		    with a slash, it is an absolute path; otherwise,
-		    it is interpreted relative to the directory that
-		    the gophermap file is in.  If no selector is
-		    specified, the description is also used as the
-		    selector.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	      <varlistentry><term><replaceable>host</replaceable></term>
-		<listitem><para>The <property>host</property>
-		    specifies the host on which this resource is
-		    located.  If not specified, defaults to the
-		    current server.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	      <varlistentry><term><replaceable>port</replaceable></term>
-		<listitem><para>The <property>port</property>
-		    specifies the port on which the resource is
-		    located.  If not specified, defaults to the port
-		    the current server is listening on.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
-	    <para>
-	      An example of a gophermap to help illustrate the concept
-	      is included with the &PyGopherd; distribution in the
-	      file <filename>examples/gophermap</filename>.
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
-	  <term>file.CompressedFileHandler</term>
-	  <listitem><para>
-	      In order to save space, you might want to store
-	      documents on-disk in a compressed format.  But then
-	      clients would ordinarily have to decompress the files
-	      themselves.  It would be nice to have the server
-	      automatically decompress the files on the fly, sending
-	      that result to the client.  That's where
-	      <property>file.CompressedFileHandler</property> comes
-	      in.
-	    </para>
-	    <para>
-	      This handler will take compressed files, pipe them
-	      through your chosen decompression program, and send the
-	      result directly to clients -- completely transparently.
-	    </para>
-	    <para>
-	      To use this handler, set the
-	      <property>decompressors</property> option in the
-	      configuration file.  This option defines a mapping from
-	      MIME encodings (as defined with the
-	      <property>encoding</property> option) to decompression
-	      programs.  Files that are not encoded, or which have an
-	      encoding that does not occur in the
-	      <property>decompressors</property> map, will not be
-	      decompressed by this handler.
-	    </para>
-	    <para>
-	      Please see the sample configuration file for more
-	      examples and details about the configuration of this
-	      handler.
-	    </para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term>file.FileHandler</term>
-	  <listitem>
-	    <para>
-	      The <property>file.FileHandler</property> is just that
-	      -- its duty is to serve up regular files to clients.
-	    </para>
-	  </listitem>
-	</varlistentry>
+      <refsect2 id="handlers.dirhandler">
+	<title>dir.DirHandler</title>
+	<para>
+	  This handler is a basic one that generates menus based
+	  on the contents of a directory.  It is used for
+	  directories that contain neither a
+	  <filename>gophermap</filename> file nor UMN-style links
+	  files, or situations where you have no need for either
+	  of those.
+	</para>
+	<para>
+	  This handler simply reads the contents of your on-disk
+	  directory, determines the appropriate types of each file,
+	  and sends the result to the client.  The descriptions of
+	  each item are usually set to the filename, but the
+	  <property>html.HTMLFileTitleHandler</property> may override
+	  that.
+	</para>
+      </refsect2>
+      
+      <refsect2 id="handlers.buckgophermap">
+	<title>gophermap.BuckGophermapHandler</title>
+	<para>
+	  This handler is used to generate directory listings
+	  based on <filename>gophermap</filename> files.  It will
+	  not read the directory on-disk, instead serving content
+	  from the <filename>gophermap</filename> file only.
+	  Gophermaps are useful if you want to present a directory
+	  in which the files do not frequently change and there is
+	  general information to present.  Overall, if you only
+	  wish to present information particular to certain files,
+	  you should consider using the abstract feature of
+	  UMN.UMNDirHandler.
+	</para>
+	<para>
+	  The <filename>gophermap</filename> files contain two
+	  types of lines, which are described here using the same
+	  convention normally used for command line arguments.  In
+	  this section, the symbol \t will be used to indicate a
+	  tab character, Control-I.
+	</para>
+	<cmdsynopsis>
+	  <arg choice="Plain"><replaceable>full line of informational
+	      text</replaceable></arg>
+	</cmdsynopsis>
+	<cmdsynopsis>
+	  <arg choice="Plain"><replaceable>gophertypeDESCRIPTION</replaceable></arg><arg>\t<replaceable>selector</replaceable><arg>\t<replaceable>host</replaceable><arg>\t<replaceable>port</replaceable></arg></arg></arg>
+	</cmdsynopsis>
+	<para>
+	  Note: spaces shown above are for clarity only and should
+	  not actually be present in your file.
+	</para>
+	<para>
+	  The informational text must not contain any tab
+	  characters, but may contain spaces.  Informational text
+	  will be rendered with gopher type
+	  <property>i</property>, which will cause it to be
+	  displayed on a client's screen at its particular
+	  position in the file.
+	</para>
+	<para>
+	  The second type of line represents a link to a file or
+	  directory.  It begins with a single-character Gopher
+	  type (see Gopher Item Types below) followed immediately
+	  by a description and a tab character.  There is no space
+	  or other separator between the gopher type and the
+	  description.  The description may contain spaces but not
+	  tabs.
+	</para>
 	
-	<varlistentry>
-	  <term>html.HTMLFileTitleHandler</term>
-	  <listitem><para>
-	      This handler is used when generating directories and
-	      will set the description of HTML files to the HTML title
-	      defined in them rather than let it be the default
-	      filename.  Other than that, it has no effect.  UMN
-	      gopherd implements a similar policy.
-	    </para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term>mbox.MaildirFolderHandler</term>
-	  <term>mbox.MaildirMessageHandler</term>
-	  <term>mbox.MBoxMessageHandler</term>
-	  <term>mbox.MBoxFolderHandler</term>
-	  <listitem>
-	    <para>
-	      These four handlers provide a unique "virtual folder"
-	      service.  They allow you to present mailboxes as if they
-	      were folders, the items of the folders being the
-	      messages in the mailbox, organized by subject.  This is
-	      useful for presenting mail archives or just making
-	      e-mail accessible in a nice and easy fashion.
-	    </para>
-	    <para>
-	      To use these handlers, all you have to do is enable them
-	      in your <property>handlers</property> section.  They
-	      will automatically detect requests for mailboxes and
-	      handle them appropriately.
-	    </para>
-	    <para>
-	      The different handlers are for traditional Unix mbox
-	      mailboxes (all messages in a single file) and new
-	      qmail-stype Maildir mailboxes.  You can enable only the
-	      two handlers for the specific mailbox type that you use,
-	      if desired.
-	    </para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term>pyg.PYGHandler</term>
-	  <listitem>
-	    <para>
-	      PYG (short for PYGopherd) is a mechanism that provides a
-	      tremendous amount of flexibility.  Rather than just
-	      letting you execute a script like other Gopher or HTTP
-	      servers, PYGs are actually loaded up into PyGopherd and
-	      become fully-capable first-class virtual handlers.  Yet
-	      they need not be known ahead of time, and are loaded
-	      dynamically.
-	    </para>
-	    <para>
-	      With a PYG handler, you can generate gopher directories,
-	      handle searches, generate files, and more on the fly.
-	      You can create entire virtual directory trees (for
-	      instance, to interface with NNTP servers or with DICT
-	      servers), and access them all using the standard Gopher
-	      protocol.  All of this without having to modify even one
-	      line of PyGopherd code.
-	    </para>
-	    <para>
-	      If enabled, the <property>pyg.PYGHandler</property> will
-	      look for files with the extension .pyg that are marked
-	      executable.  If found, they will be loaded and run as
-	      PYGs.
-	    </para>
-	    <para>
-	      Please note: this module provides the capability to
-	      execute arbitrary code.  Please consider the security
-	      ramifications of that before enabling it.
-	    </para>
-	    <para>
-	      See the <property>virtual.Virtual</property> handler for
-	      more information about passing data to your scripts at
-	      runtime.
-	    </para>
-	    <para>
-	      At present, documentation on writing PYGs is not
-	      provides, but you may find examples in the
-	      <property>pygfarm</property> directory included with the
-	      &PyGopherd; distribution.
-	    </para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term>scriptexec.ExecHandler</term>
-	  <listitem>
-	    <para>
-	      This handler implements "old-style" script execution;
-	      that is, executing arbitrary programs and piping the
-	      result to the client.  It is, for the most part,
-	      compatible with both scripts written for UMN gopherd and
-	      the Bucktooth gopher server.  If enabled, it will
-	      execute any file that is marked executable in the
-	      filesystem.  It will normally list scripts as returning
-	      plain text, but you may create a custom link to the
-	      script that defines it as returning whatever kind of
-	      file you desire.  Unlike PYGs, this type must be known
-	      in advance.
-	    </para>
-	    <para>
-	      The <property>scriptexec.ExecHandler</property> will set
-	      environment variables for your scripts to use.  They are
-	      as follows:
-	    </para>
-	    <variablelist>
-	      <varlistentry>
-		<term>SERVER_NAME</term>
-		<listitem><para>The name of this server as defined in
-		    the configuration file or detected from the
-		    operating system.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>SERVER_PORT</term>
-		<listitem><para>The port this server is listening on.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>REMOTE_ADDR</term>
-		<listitem><para>The IP address of the client.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>REMOTE_PORT</term>
-		<listitem><para>The port number of the client.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>REMOTE_HOST</term>
-		<listitem><para>The same value as <property>REMOTE_ADDR</property></para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>SELECTOR</term>
-		<listitem><para>The file that was requested; that is,
-		    the relative path to this script.  If the selector
-		    included additional parameters after a |, they
-		    will be included in this string as well.
-		  </para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>REQUEST</term>
-		<listitem><para>The "base" part of the selector; that
-		    is, the part leading up to the |.</para>
-		</listitem>
-	      </varlistentry>
-
-	      <varlistentry>
-		<term>SEARCHREQUEST</term>
-		<listitem><para>Included only if the client specified
-		    search data, this is used if the client is
-		    searching for something.
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
-	    <para>
-	      See the <property>virtual.Virtual</property> handler for
-	      more information about passing data to your scripts at
-	      runtime.
-	    </para>
-	    <para>
-	      Please note: this module provides the capability to
-	      execute arbitrary code.  Please consider the security
-	      ramifications of that before enabling it.
-	    </para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term>UMN.UMNDirHandler</term>
-	  <listitem>
-	    <para>
-	      This is one of the most powerful workhorse handlers in
-	      &PyGopherd;.  It is designed to emulate most of the ways
-	      in which the UMN gopherd distribution generates
-	      directories, even going so far as to be bug-compatible
-	      in some cases.  Generating directories with this handler
-	      is often the best general-purpose way to make nice
-	      directories in gopherspace.
-	    </para>
-	    <para>
-	      The remainder of the description of the
-	      <property>UMN.UMNDirHandler</property>, except for the
-	      Abstracts and Info section, is lifted directly from the
-	      original UMN gopherd documentation, with light editing,
-	      because this handler implements it so exactly that there
-	      was no point in rewriting all that documentation :-)
-	    </para>
-	  </listitem>
-	</varlistentry>
-
-      </variablelist>
-    </refsect1>
-
-    <refsect1>
-      <title>Examples</title>
-      <para>Here are some example configurations for various situations.
-	Please e-mail any other examples you have that may be useful to
-	me.
-      </para>
-
-      <refsect2>
-	<title>Multiple Accounts with Mutt</title>
 	<para>
-	  This example shows you how to set up &OfflineIMAP; to
-	  synchronize multiple accounts with the mutt mail reader.
+	  The remaining arguments are optional, but only to the
+	  extent that arguments may be omitted only if all
+	  arguments after them are also omitted.  These arguments
+	  are:
 	</para>
+	<variablelist>
+	  <varlistentry><term><replaceable>selector</replaceable></term>
+	    <listitem><para>The <property>selector</property> is
+		the name of the file on the server.  If it begins
+		with a slash, it is an absolute path; otherwise,
+		it is interpreted relative to the directory that
+		the gophermap file is in.  If no selector is
+		specified, the description is also used as the
+		selector.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry><term><replaceable>host</replaceable></term>
+	    <listitem><para>The <property>host</property>
+		specifies the host on which this resource is
+		located.  If not specified, defaults to the
+		current server.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  <varlistentry><term><replaceable>port</replaceable></term>
+	    <listitem><para>The <property>port</property>
+		specifies the port on which the resource is
+		located.  If not specified, defaults to the port
+		the current server is listening on.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
 	<para>
-	  Start by creating a directory to hold your folders by running
-	  <command>mkdir ~/Mail</command>.  Then, in your
-	  <filename>~/.offlineimaprc</filename>, specify:
-	</para>
-	<programlisting>accounts = Personal, Work</programlisting>
-	<para>
-	  Make sure that you have both an
-	  <property>[Account Personal]</property>
-	  and an <property>[Account Work]</property> section.  The
-	  local repository for each account must have different
-	  <property>localfolder</> path names.
-	  Also, make sure
-	  to enable <property>[mbnames]</property>.
-	</para>
-	<para>
-	  In each local repository section, write something like this:
-	</para>
-	<programlisting>localfolders = ~/Mail/Personal</programlisting>
-	<para>
-	  Finally, add these lines to your <filename>~/.muttrc</filename>:
-	</para>
-	<programlisting>source ~/path-to-mbnames-muttrc-mailboxes
-folder-hook Personal set from="youremail@personal.com"
-folder-hook Work set from="youremail@work.com"
-set mbox_type=Maildir
-set folder=$HOME/Mail
-spoolfile=+Personal/INBOX</programlisting>
-	<para>
-	  That's it!
+	  An example of a gophermap to help illustrate the concept
+	  is included with the &PyGopherd; distribution in the
+	  file <filename>examples/gophermap</filename>.
 	</para>
       </refsect2>
 
-      <refsect2>
-	<title>UW-IMAPD and References</title>
-	<para>Some users with a UW-IMAPD server need to use &OfflineIMAP;'s
-	  "reference" feature to get at their mailboxes, specifying a reference
-	  of "~/Mail" or "#mh/" depending on the configuration.  The below
-	  configuration from (originally from docwhat@gerf.org)
-	  shows using a <property>reference</property> of Mail, a <property>nametrans</property>
-	  that strips
-	  the leading Mail/ off incoming folder names, and a
-	  <property>folderfilter</property> that
-	  limits the folders synced to just three.
+      <refsect2 id="handlers.compressedfilehandler">
+	<title>file.CompressedFileHandler</title>
+	<para>
+	  In order to save space, you might want to store
+	  documents on-disk in a compressed format.  But then
+	  clients would ordinarily have to decompress the files
+	  themselves.  It would be nice to have the server
+	  automatically decompress the files on the fly, sending
+	  that result to the client.  That's where
+	  <property>file.CompressedFileHandler</property> comes
+	  in.
 	</para>
-	<programlisting>[Account Gerf]
-localrepository = GerfLocal
-remoterepository = GerfRemote
-
-[Repository GerfLocal]
-type = Maildir
-localfolders = ~/Mail
-
-[Repository GerfRemote]
-type = IMAP
-remotehost = gerf.org
-ssl = yes
-remoteuser = docwhat
-reference = Mail
-# Trims off the preceeding Mail on all the folder names.
-nametrans = lambda foldername: \
-            re.sub('^Mail/', '', foldername)
-# Yeah, you have to mention the Mail dir, even though it
-# would seem intuitive that reference would trim it.
-folderfilter = lambda foldername: foldername in [
-      'Mail/INBOX',
-      'Mail/list/zaurus-general',
-      'Mail/list/zaurus-dev',
-      ]
-maxconnections = 1
-holdconnectionopen = no</programlisting>
+	<para>
+	  This handler will take compressed files, pipe them
+	  through your chosen decompression program, and send the
+	  result directly to clients -- completely transparently.
+	</para>
+	<para>
+	  To use this handler, set the
+	  <property>decompressors</property> option in the
+	  configuration file.  This option defines a mapping from
+	  MIME encodings (as defined with the
+	  <property>encoding</property> option) to decompression
+	  programs.  Files that are not encoded, or which have an
+	  encoding that does not occur in the
+	  <property>decompressors</property> map, will not be
+	  decompressed by this handler.
+	</para>
+	<para>
+	  Please see the sample configuration file for more
+	  examples and details about the configuration of this
+	  handler.
+	</para>
       </refsect2>
 
-      <refsect2>
-	<title>pythonfile Configuration File Option</title>
-	<para>You can have &OfflineIMAP;
-	  load up a Python file before evaluating the
-	  configuration file options that are Python expressions.  This example
-	  is based on one supplied by Tommi Virtanen for this feature.
-	</para>
+      <refsect2 id="handlers.filehandler">
+	<title>file.FileHandler</title>
 	<para>
-	  In <filename>~/.offlineimap.rc</filename>, he adds these options:
-	</para>
-	<programlisting>[general]
-pythonfile=~/.offlineimap.py
-[Repository foo]
-foldersort=mycmp</programlisting>
-	<para>
-	  Then, the <filename>~/.offlineimap.py</filename> file will
-	  contain:
-	</para>
-	<programlisting>prioritized = ['INBOX', 'personal', 'announce', 'list']
-
-def mycmp(x, y):
-   for prefix in prioritized:
-       if x.startswith(prefix):
-           return -1
-       elif y.startswith(prefix):
-           return +1
-   return cmp(x, y)
-
-def test_mycmp():
-   import os, os.path
-   folders=os.listdir(os.path.expanduser('~/data/mail/tv@hq.yok.utu.fi'))
-   folders.sort(mycmp)
-   print folders</programlisting>
-	<para>
-	  This code snippet illustrates how the <property>foldersort</property>
-	  option can be customized with a Python function from the
-	  <property>pythonfile</property> to always synchronize certain
-	  folders first.
+	  The <property>file.FileHandler</property> is just that
+	  -- its duty is to serve up regular files to clients.
 	</para>
       </refsect2>
-    </refsect1>
-      
-    <refsect1>
-      <title>Errors</title>
-      <para>
-	If you get one of some frequently-encountered or confusing errors,
-	please check this section.
-      </para>
-      
-      <refsect2>
-	<title>UID validity problem for folder</title>
-	<para>IMAP servers use a unique ID (UID) to refer to a specific message.
-	  This number is guaranteed to be unique to a particular message
-	  <emphasis>forever</emphasis>.
-	  No other message in the same folder will ever get the same
-	  UID.  UIDs are an integral part of &OfflineIMAP;'s synchronization
-	  scheme; they are used to match up messages on your computer to
-	  messages on the server.
-	</para>
 
+      <refsect2 id="handlers.htmlfiletitlehandler">
+	<title>html.HTMLFileTitleHandler</title>
 	<para>
-	  Sometimes, the UIDs on the server might get reset.  Usually this will
-	  happen if you delete and then recreate a folder.  When you create a
-	  folder, the server will often start the UID back from 1.  But
-	  &OfflineIMAP; might still have the UIDs from the previous folder by the
-	  same name stored.  &OfflineIMAP; will detect this condition and skip the
-	  folder.  This is GOOD, because it prevents data loss.
-	</para>
-
-	<para>
-	  You can fix it by removing your local folder and cache data.  For
-	  instance, if your folders are under <filename>~/Folders</filename>
-	  and the folder with the problem is INBOX, you'd type this:
-	</para>
-
-	<programlisting>rm -r ~/Folders/INBOX
-rm -r ~/.offlineimap/Account-<replaceable>AccountName</>
-rm -r ~/.offlineimap/Repository-<replaceable>RepositoryName</></programlisting>
-
-	<para>
-	  (Of course, replace AccountName and RepositoryName 
-	  with the names as specified
-	  in <filename>~/.offlineimaprc</filename>).
-	</para>
-
-	<para>Next time you run &OfflineIMAP;, it will re-download
-	  the folder with the
-	  new UIDs.  Note that the procedure specified above will lose any local
-	  changes made to the folder.
-	</para>
-
-	<para>
-	  Some IMAP servers are broken and do not support UIDs properly.  If you
-	  continue to get this error for all your folders even after performing
-	  the above procedure, it is likely that your IMAP server falls into
-	  this category.  &OfflineIMAP; is incompatible with such servers.
-	  Using &OfflineIMAP; with them will not destroy any mail, but at the same time,
-	  it will not actually synchronize it either.  (&OfflineIMAP; will detect
-	  this condition and abort prior to synchronization.)
-	</para>
-	<para>
-	  This question comes up frequently on the
-	  <ulink
-	  url="http://lists.complete.org/offlineimap@complete.org/">&OfflineIMAP;
-	  mailing list</ulink>.  You can find a
-	  <ulink
-	  url="http://lists.complete.org/offlineimap@complete.org/2003/04/msg00012.html.gz">detailed
-	  discussion</ulink> of the problem there.
+	  This handler is used when generating directories and
+	  will set the description of HTML files to the HTML title
+	  defined in them rather than let it be the default
+	  filename.  Other than that, it has no effect.  UMN
+	  gopherd implements a similar policy.
 	</para>
       </refsect2>
-    </refsect1>
-    <refsect1>
-      <title>Other Frequently Asked Questions</title>
-      <para>There are some other FAQs that might not fit into another section
-	of the document, so they are discussed here.
-      </para>
 
-      <variablelist>
-	<varlistentry><term>What platforms does &OfflineIMAP; run on?</term>
-	  <listitem><para>
-	    It should run on most platforms supported by Python, which are quite a
-	    few.
-	  </para></listitem>
-        </varlistentry>
+      <refsect2 id="handlers.mailboxes">
+	<title>mbox handlers</title>
+	<para>
+	  There are four mailbox handlers:
+	</para>
+	<itemizedlist>
+	  <listitem><para>mbox.MaildirFolderHandler</></>
+	  <listitem><para>mbox.MaildirMessageHandler</></>
+	  <listitem><para>mbox.MBoxMessageHandler</></>
+	  <listitem><para>mbox.MBoxFolderHandler</></>
+	</itemizedlist>
+	<para>
+	  These four handlers provide a unique "virtual folder"
+	  service.  They allow you to present mailboxes as if they
+	  were folders, the items of the folders being the
+	  messages in the mailbox, organized by subject.  This is
+	  useful for presenting mail archives or just making
+	  e-mail accessible in a nice and easy fashion.
+	</para>
+	<para>
+	  To use these handlers, all you have to do is enable them
+	  in your <property>handlers</property> section.  They
+	  will automatically detect requests for mailboxes and
+	  handle them appropriately.
+	</para>
+	<para>
+	  The different handlers are for traditional Unix mbox
+	  mailboxes (all messages in a single file) and new
+	  qmail-stype Maildir mailboxes.  You can enable only the
+	  two handlers for the specific mailbox type that you use,
+	  if desired.
+	</para>
+      </refsect2>
 
-	<varlistentry><term>I'm using Mutt.  Other IMAP sync programs require me to use "set maildir_trash=yes".  Do I need to do that with &OfflineIMAP;?</term>
-	  <listitem><para>
-	    No.  &OfflineIMAP; is smart enough to figure out message deletion without this extra
-	    crutch.  You'll get the best results if you don't use this setting, in
-	    fact.
-	  </para></listitem>
-	</varlistentry>
+      <refsect2 id="handlers.pyghandler">
+	<title>pyg.PYGHandler</title>
+	<para>
+	  PYG (short for PYGopherd) is a mechanism that provides a
+	  tremendous amount of flexibility.  Rather than just
+	  letting you execute a script like other Gopher or HTTP
+	  servers, PYGs are actually loaded up into PyGopherd and
+	  become fully-capable first-class virtual handlers.  Yet
+	  they need not be known ahead of time, and are loaded
+	  dynamically.
+	</para>
+	<para>
+	  With a PYG handler, you can generate gopher directories,
+	  handle searches, generate files, and more on the fly.
+	  You can create entire virtual directory trees (for
+	  instance, to interface with NNTP servers or with DICT
+	  servers), and access them all using the standard Gopher
+	  protocol.  All of this without having to modify even one
+	  line of &PyGopherd; code.
+	</para>
+	<para>
+	  If enabled, the <property>pyg.PYGHandler</property> will
+	  look for files with the extension .pyg that are marked
+	  executable.  If found, they will be loaded and run as
+	  PYGs.
+	</para>
+	<para>
+	  Please note: this module provides the capability to
+	  execute arbitrary code.  Please consider the security
+	  ramifications of that before enabling it.
+	</para>
+	<para>
+	  See the <property>virtual.Virtual</property> handler for
+	  more information about passing data to your scripts at
+	  runtime.
+	</para>
+	<para>
+	  At present, documentation on writing PYGs is not
+	  provides, but you may find examples in the
+	  <property>pygfarm</property> directory included with the
+	  &PyGopherd; distribution.
+	</para>
+      </refsect2>
 
-	<varlistentry><term>I've upgraded and now &OfflineIMAP;
-	crashes when I start it up!  Why?</term>
-	  <listitem><para>You need to upgrade your configuration
-	file.  See <xref linkend="upgrading.4.0"> at the end of this
-	      manual.
-	    </para>
-	  </listitem>
-	</varlistentry>
+      <refsect2 id="handlers.exechandler">
+	<title>scriptexec.ExecHandler</>
+	<para>
+	  This handler implements "old-style" script execution;
+	  that is, executing arbitrary programs and piping the
+	  result to the client.  It is, for the most part,
+	  compatible with both scripts written for UMN gopherd and
+	  the Bucktooth gopher server.  If enabled, it will
+	  execute any file that is marked executable in the
+	  filesystem.  It will normally list scripts as returning
+	  plain text, but you may create a custom link to the
+	  script that defines it as returning whatever kind of
+	  file you desire.  Unlike PYGs, this type must be known
+	  in advance.
+	</para>
+	<para>
+	  The <property>scriptexec.ExecHandler</property> will set
+	  environment variables for your scripts to use.  They are
+	  as follows:
+	</para>
+	<variablelist>
+	  <varlistentry>
+	    <term>SERVER_NAME</term>
+	    <listitem><para>The name of this server as defined in
+		the configuration file or detected from the
+		operating system.</para>
+	    </listitem>
+	  </varlistentry>
+	  
+	  <varlistentry>
+	    <term>SERVER_PORT</term>
+	    <listitem><para>The port this server is listening on.</para>
+	    </listitem>
+	  </varlistentry>
+	  
+	  <varlistentry>
+	    <term>REMOTE_ADDR</term>
+	    <listitem><para>The IP address of the client.</para>
+	    </listitem>
+	  </varlistentry>
 
-	<varlistentry><term>How do I specify the names of my folders?</term>
-  	  <listitem><para>
-	    You do not need to.  &OfflineIMAP; is smart
-	    enough to automatically figure out what folders are present
-	    on the IMAP server and synchronize them.  You can use the
-	    <property>folderfilter</property> and <property>foldertrans</property>
-	    configuration file options to request certain folders and rename them
-	    as they come in if you like.
-	  </para></listitem>
-	</varlistentry>
+	  <varlistentry>
+	    <term>REMOTE_PORT</term>
+	    <listitem><para>The port number of the client.</para>
+	    </listitem>
+	  </varlistentry>
+	  
+	  <varlistentry>
+	    <term>REMOTE_HOST</term>
+	    <listitem><para>The same value as <property>REMOTE_ADDR</property></para>
+	    </listitem>
+	  </varlistentry>
+	  
+	  <varlistentry>
+	    <term>SELECTOR</term>
+	    <listitem><para>The file that was requested; that is,
+		the relative path to this script.  If the selector
+		included additional parameters after a |, they
+		will be included in this string as well.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	  
+	  <varlistentry>
+	    <term>REQUEST</term>
+	    <listitem><para>The "base" part of the selector; that
+		is, the part leading up to the |.</para>
+	    </listitem>
+	  </varlistentry>
+	  
+	  <varlistentry>
+	    <term>SEARCHREQUEST</term>
+	    <listitem><para>Included only if the client specified
+		search data, this is used if the client is
+		searching for something.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+	<para>
+	  See the <property>virtual.Virtual</property> handler for
+	  more information about passing data to your scripts at
+	  runtime.
+	</para>
+	<para>
+	  Please note: this module provides the capability to
+	  execute arbitrary code.  Please consider the security
+	  ramifications of that before enabling it.
+	</para>
+      </refsect2>
 
-	<varlistentry><term>How can I prevent certain folders from being synced?</term>
-	  <listitem><para>
-	    Use the <property>folderfilter</property> option in the configuration file.
-	  </para></listitem>
-	</varlistentry>
+      <refsect2 id="handlers.umn">
+	<title>UMN.UMNDirHandler</title>
+	<para>
+	  This is one of the most powerful workhorse handlers in
+	  &PyGopherd;.  It is designed to emulate most of the ways
+	  in which the UMN gopherd distribution generates
+	  directories, even going so far as to be bug-compatible
+	  in some cases.  Generating directories with this handler
+	  is often the best general-purpose way to make nice
+	  directories in gopherspace.
+	</para>
+	<para>
+	  The remainder of the description of the
+	  <property>UMN.UMNDirHandler</property>, except for the
+	  Abstracts and Info section, is lifted directly from the
+	  original UMN gopherd documentation, with light editing,
+	  because this handler implements it so exactly that there
+	  was no point in rewriting all that documentation :-)
+	</para>
 
-	<varlistentry><term>How can I add or delete a folder?</term>
-	  <listitem><para>
-	    &OfflineIMAP; does not currently provide this feature, but if you create a new
-	    folder on the IMAP server, it will be created locally automatically.
-	  </para></listitem>
-	</varlistentry>
-
-	<varlistentry><term>Are there any other warnings that I should be aware of?</term>
-	  <listitem><para>
-	    Yes; see the Notes section below.
-	  </para></listitem>
-	</varlistentry>
-
-	<varlistentry><term>What is the mailbox name recorder (mbnames) for?</term>
-	  <listitem><para>Some mail readers, such as Mutt, are not capable
-	    of automatically determining the names of your mailboxes.
-	    &OfflineIMAP; can help these programs by writing the names
-	    of the folders ni a format you specify.  See the example
-	    <filename>offlineimap.conf</filename> for details.
-	  </para></listitem>
-	</varlistentry>
-
-	<varlistentry><term>Can I synchronize multiple accounts with &OfflineIMAP?</term>
-	  <listitem><para>Sure.  Just name them all in the
-	    <property>accounts</property> line in the <property>general</property>
-	    section of the configuration file, and add a per-account section
-	    for each one.
-	  </para></listitem>
-	</varlistentry>
-
-	<varlistentry><term>Does &OfflineIMAP; support POP?</term>
-	  <listitem><para>No.  POP is not robust enough to do a completely reliable
-	    multi-machine synchronization like &OfflineIMAP; can do.  &OfflineIMAP;
-	    will not support it.
-	  </para></listitem>
-	</varlistentry>
-
-	<varlistentry><term>Does &OfflineIMAP; support mailbox formats other than Maildir?</term>
-	  <listitem><para>Not at present.  There is no technical reason not to; just no
-	    demand yet.  Maildir is a superior format anyway.
-	      However, &OfflineIMAP; can sync between two IMAP
-	  servers, and some IMAP servers support other formats.  You
-	  could install an IMAP server on your local machine and have
-	  &OfflineIMAP sync to that.
-	  </para></listitem>
-	</varlistentry>
-
-	<varlistentry><term>[technical] Why are your Maildir message filenames so huge?</term>
-	  <listitem><para>&OfflineIMAP; has two relevant principles: 1) never modifying your
-	    messages in any way and 2) ensuring 100% reliable synchronizations.
-	    In order to do a reliable sync, &OfflineIMAP;
-	    must have a way to
-	    uniquely identify each e-mail.  Three pieces of information are
-	    required to do this: your account name, the folder name, and the
-	    message UID.  The account name can be calculated from the path in
-	    which your messages are.  The folder name can usually be as well, BUT
-	    some mail clients move messages between folders by simply moving the
-	    file, leaving the name intact.
+	<refsect3 id="handlers.umn.links">
+	  <title>Links</title>
+	  <para>
+	    You can override the default view of a directory as
+	    generated by <property>dir.DirHandler</property> by
+	    creating what are known as <emphasis>Links</emphasis> in
+	    the data tree.
 	  </para>
 	  <para>
-	    So, &OfflineIMAP; must store both a UID folder ID.  The folder ID is
-	    necessary so &OfflineIMAP; can detect a message moved to a different
-	    folder.  &OfflineIMAP; stores the UID (U= number) and an md5sum of the
-	    foldername (FMD5= number) to facilitate this.
-	  </para></listitem>
+	    The ability to make links to other hosts is how gopher
+	    distributes itself among multiple hosts.  There are two
+	    different ways to make a link.  The first and simplest is
+	    to create a link file that contains the data needed by the
+	    server.  By default all files in the gopher data directory
+	    starting with a period are taken to be link files.  A link
+	    file can contain multiple links.  To define a link you
+	    need to put five lines in a link file that define the
+	    needed characteristics for the document.  Here is an
+	    example of a link.
+	  </para>
+	  <programlisting>
+Name=Cheese Ball Recipes
+Numb=1
+Type=1
+Port=150
+Path=1/Moo/Cheesy
+Host=zippy.micro.umn.edu
+	  </programlisting>
+
+	  <para>
+	    The Name= line is what the user will see when cruising
+	    through the database.  In this case the name is "Cheese
+	    Ball Recipes".  The "Type=" defines what kind of document
+	    this object is.  For a list of all defined types, see
+	    Gopher Item Types below.  For Gopher+ and HTTP, a MIME
+	    type is also used, which is determined automatically based
+	    on the type you specify.
+	  </para>
+
+	  <para>
+	    The "Path=" line contains the selector string that the
+	    client will use to retrieve the actual document.  The
+	    Numb= specifies that this entry should be presented first
+	    in the directory list (instead of being alphabetized).
+	    The "Numb=" line is optional.  If it is present it cannot
+	    be the last line of the link.  The "Port=" and "Host="
+	    lines specify a fully qualified domain name (FQDN) and a
+	    port respectively.  You may substitute a plus '+' for
+	    these two parameters if you wish.  The server will insert
+	    the current hostname and the current port when it sees a
+	    plus in either of these two fields.
+	  </para>
+
+	  <para>An easy way to retrieve links is to use the Curses
+	    Gopher Client.  By pressing '=' You can get information
+	    suitable for inclusion in a link file.
+	  </para>
+	    
+	</refsect3>
+
+	<refsect3 id="handlers.umn.overriding">
+	  <title>Overriding Defaults</title>
+	  <para>
+	    The server looks for a directory called
+	    <filename>.cap</filename> when parsing a directory.  The
+	    server then checks to see if the <filename>.cap</filename>
+	    directory contains a file with the same name as the file
+	    it's parsing.  If this file exists then the server will
+	    open it for reading.  The server parses this file just
+	    like a link file.  However, instead of making a new
+	    object, the parameters inside the
+	    <filename>.cap/</filename> file are used to override any
+	    of the server supplied default values.
+	  </para>
+
+	  <para>
+	    For instance, say you wanted to change the Title of a text
+	    file for gopher, but don't want to change the filename.
+	    You also don't want it alphabetized, instead you want it
+	    second in the directory listing.  You could make a
+	    set-aside file in the <filename>.cap</> directory with the same
+	    filename that contained the following lines:
+	  </para>
+
+	  <programlisting>
+Name=New Long Cool Name
+Numb=2
+	  </programlisting>
+
+	  <para>
+	    An alternative to <filename>.cap</filename> files are
+	    extended link files.  They work just the same as the files
+	    described in Links above, but have a somewhat abbreviated
+	    format.  As an example, if the name of the file was
+	    <filename>file-to-change</filename>, then you could create
+	    a file called <filename>.names</filename> with the
+	    following contents:
+	  </para>
+
+	  <programlisting>
+Path=./file-to-change
+Name=New Long Cool Name
+Numb=2
+	  </programlisting>
+	</refsect3>
+
+	<refsect3 id="handlers.umn.cool">
+	  <title>Adding Cool Links</title>
+	  <para>
+	    One cool thing you can do with .Links is to add neato
+	    services to your gopher server.  Adding a link like this:
+	  </para>
+
+	  <programlisting>
+Name=Cool ftp directory
+Type=h
+Path=/URL:ftp://hostname/path/
+Host=+
+Port=+
+ 
+Name=Cool web site
+Type=h
+Path=/URL:http://hostname/
+Host=+
+Port=+
+	  </programlisting>
+	  <para>
+	    Will allow you to link in any FTP or Web site to your
+	    gopher.  (See url.URLHandler for more details.)
+	  </para>
+
+	  <para>
+	    You can easily add a finger site to your gopher server thusly:
+	  </para>
+	  
+	  <programlisting>
+Name=Finger information
+Type=0
+Path=lindner
+Host=mudhoney.micro.umn.edu
+Port=79
+	  </programlisting>
+
+	</refsect3>
+
+	<refsect3 id="handlers.umn.hiding">
+	  <title>Hiding an Entry</title>
+	  <para>
+	    This kind of trick may be necessary in some cases,
+	    and thus for
+	    object "fred", the overriding .names file entry would be:
+	  </para>
+
+	  <programlisting>
+ Type=X
+ Path=./fred
+	  </programlisting>
+
+	  <para>
+	    by overriding default type to be "X".  This kind of
+	    hideouts may be usefull, when for some reason there are
+	    symlinks (or whatever) in the directory at which
+	    &PyGopherd; looks at, and those entries are not desired to
+	    be shown at all.
+	  </para>
+	</refsect3>
+
+	<refsect3 id="handlers.umn.abstracts">
+	  <title>Abstracts and Info</title>
+	  <para>
+	    Many modern gopher server maintainers like to intersperse
+	    gopher directory listings with other information -- often,
+	    additional information about the contents of files in the
+	    directory.  The gophermap system provides one way to do
+	    that, and abstracts used with UMN gopher directories
+	    provides another.
+	  </para>
+	  <para>
+	    Subject to the <property>abstract_headers</> and
+	    <property>abstract_entries</property> configuration file
+	    options, this feature allows you to define that extra
+	    information.  You can do that by simply creating a file
+	    named <filename>filename.abstract</filename> right
+	    alongside the regular file in your directory.  The file
+	    will be interpreted as the abstract.  For a directory,
+	    create a file named <filename>.abstract</filename> in the
+	    directory.  Simple as that!
+	  </para>
+	</refsect3>
+
+      </refsect2>
+
+      <refsect2 id="handlers.htmlurlhandler">
+	<title>url.HTMLURLHandler</title>
+	<para>
+	  &PyGopherd; provides ways for you to link to pages outside
+	  Gopherspace -- that is, web pages, FTP sites, and the like.
+	  This is accomplished according to the <ulink
+	  url="http://lists.complete.org/gopher@complete.org/2002/02/msg00033.html.gz">Links
+	  to URL</ulink> specification (see Conforming To below for
+	  details).  In order to link to a URL (EXCEPT gopher URLs)
+	  from a menu, you create a link of type h (regardless of the
+	  actual type of the resource that you are linking to) in your
+	  <filename>gophermap</filename> or
+	  <filename>.Links</filename>
+	  file that looks like this:
+	</para>
+	<programlisting>
+/URL:http://www.complete.org/
+	</programlisting>
+	<para>
+	  Modern Gopher clients that follow the Links to URL
+	  specification will automatically follow that link when you
+	  select it.  The rest need some help, and that's where this
+	  handler comes in.
+	</para>
+	<para>
+	  For Gopher clients that do not follow the Links to URL
+	  specification, the <property>url.HTMLURLHandler</property>
+	  will automatically generate an HTML document for them on the
+	  fly.  This document includes a refresh code that will send
+	  them to the proper page.  You should not disable this
+	  handler.
+	</para>
+      </refsect2>
+
+      <refsect2 id="handlers.urltyperewriter">
+	<title>url.URLTypeRewriter</title>
+	<para>
+	  Some people wish to serve HTML documents from their Gopher
+	  server.  One problem with that is that links in Gopherspace
+	  include an extra type character at the beginning, whereas
+	  links in HTTP do not.  This handler will remove the extra
+	  type character from HTTP requests that come in, allowing a
+	  single relative-to-root link to work for both.
+	</para>
+      </refsect2>
+
+      <refsect2 id="handlers.virtual">
+	<title>virtual.Virtual</title>
+	<para>
+	  This handler is not intended to ever be used directly, but
+	  is used by many other handlers such as the mbox support, PYG
+	  handlers, and others.  It is used to generate virtual
+	  entries in the directory hierarchy -- that is, entries that
+	  look normal to a client, but do not actually correspond to a
+	  file on disk.
+	</para>
+	<para>
+	  One special feature of the
+	  <property>virtual.Virtual</property> handler is that you can
+	  send information to it at runtime in a manner similar to a
+	  CGI script on the web.  You do this by adding a question
+	  mark after the regular selector, followed by any arbitrary
+	  data that you wish to have sent to the virtual request
+	  handler.
+	</para>
+      </refsect2>
+
+      <refsect2 id="handlers.zip">
+	<title>ZIP.ZIPHandler</title>
+	<para>
+	  Using zip.ZIPHandler, you can save space on your server by
+	  converting part or all of your site into a ZIP file.
+	  &PyGopherd; can use the contents of that ZIP file as the
+	  contents of your site -- completely transparently.
+	</para>
+	<para>
+	  The ZIP file handler must be enabled in the configuration
+	  file for this to work.
+	</para>
+      </refsect2>
+
+    </refsect1>
+
+    <refsect1 id="types">
+      <title>Gopher Item Types</title>
+      <para>
+	When you construct links to files via
+	<filename>.Links</filename> or <filename>gophermap</filename>
+	files, or modify the <property>mapping</property> in the
+	configuration file, you will need to know these.  Items
+	bearing the "not implemented" text are not served up by
+	&PyGopherd; as it ships, generally due to requirements of
+	customized per-site software, but may be served up via PYG
+	extension modules or other gopher servers.
+      </para>
+      <para>
+	This list was prepared based on RFC1436, the UMN gopherd(1) manpage,
+	and best current practices.
+      </para>
+
+      <variablelist>
+	<varlistentry><term>0</term>
+	  <listitem><para>Plain text file</para>
+	  </listitem>
 	</varlistentry>
 
-	<varlistentry><term>What is the speed of &OfflineIMAP;'s sync?</term>
-	  <listitem><para>OfflineIMAP
-	    versions 2.0 and above contain a multithreaded system.  A good way to
-	    experiment is by setting <property>maxsyncaccounts</property> to 3 and <property>maxconnections</property> to 3
-	    in each account clause.
-	  </para>
-	  <para>This lets OfflineIMAP open up multiple connections simultaneously.
-	    That will let it process multiple folders and messages at once.  In
-	    most cases, this will increase performance of the sync.
-	  </para>
-	  <para>Don't set the number too high.  If you do that, things might actually
-	    slow down as your link gets saturated.  Also, too many connections can
-	    cause mail servers to have excessive load.  Administrators might take
-	    unkindly to this, and the server might bog down.  There are many
-	    variables in the optimal setting; experimentation may help.
-	  </para>
-	  <para>An informal benchmark yields these results for my setup:
-	  </para>
-	  <itemizedlist>
-	    <listitem><para>10 minutes with MacOS X Mail.app "manual cache"
-	      </para></listitem>
-	    <listitem><para>5 minutes with GNUS agent sync</para></listitem>
-	    <listitem><para>20 seconds with OfflineIMAP 1.x</para></listitem>
-	    <listitem><para>9 seconds with OfflineIMAP 2.x</para></listitem>
-	    <listitem><para>3 seconds with OfflineIMAP 3.x "cold start"</para></listitem>
-	    <listitem><para>2 seconds with OfflineIMAP 3.x "held connection"</para></listitem>
-	  </itemizedlist>
-	</listitem></varlistentry>
+	<varlistentry><term>1</term>
+	  <listitem><para>Directory</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>2</term>
+	  <listitem><para>CSO phone book server (not implemented by &PyGopherd;)</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>3</term>
+	  <listitem><para>Error condition; text that follows is plain text</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>4</term>
+	  <listitem><para>Macintosh file, BinHex format</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>5</term>
+	  <listitem><para>DOS binary archive (not implemented by
+	      &PyGopherd;; use type 9 instead)</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>6</term>
+	  <listitem><para>uuencoded file; not directly generated by
+	      &PyGopherd; automatically, but can be linked to
+	      manually.  Most gopher clients will handle this better
+	      as type 1.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>7</term>
+	  <listitem><para>Search</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>8</term>
+	  <listitem><para>Telnet link</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>9</term>
+	  <listitem><para>Binary file</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>+</term>
+	  <listitem><para>Redundant server (not implemented by &PyGopherd;)</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>c</term>
+	  <listitem><para>Calendar (not implemented by &PyGopherd;)</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>e</term>
+	  <listitem><para>Event (not implemented by &PyGopherd;)</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>g</term>
+	  <listitem><para>GIF-format graphic</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>h</term>
+	  <listitem><para>HTML file</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>I</term>
+	  <listitem><para>Any kind of graphic file other than GIF</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>i</term> <listitem><para>Informational
+	text included in a directory that is displayed but does not
+	link to any actual file.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>M</term>
+	  <listitem><para>MIME multipart/mixed file</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>s</term>
+	  <listitem><para>Any kind of sound file</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>T</term>
+	  <listitem><para>tn3270 link</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry><term>X</term><term>-</term> <listitem><para>
+	UMN-specific -- signifies that this entry should not be
+	displayed in a directory entry, but may be accessed via a
+	direct link.  This value is never transmitted in any Gopher
+	protocol.
+	    </para>
+	  </listitem>
+	</varlistentry>
       </variablelist>
     </refsect1>
 
-    <refsect1>
+    <refsect1 id="conforming">
       <title>Conforming To</title>
       <itemizedlist>
-	<listitem><para>Internet Message Access Protocol version 4rev1 (IMAP 4rev1) as
-	  specified in RFC2060 and RFC3501</para></listitem>
-	<listitem><para>CRAM-MD5 as specified in RFC2195</para></listitem>
-	<listitem><para>Maildir as specified in
-	  <ulink url="http://www.qmail.org/qmail-manual-html/man5/maildir.html">the Maildir manpage</ulink> and
-	  <ulink url="http://cr.yp.to/proto/maildir.html">the qmail website</ulink>.</para></listitem>
-	<listitem><para>Standard Python 2.2.1 as implemented on POSIX-compliant systems.</para></listitem>
+	<listitem><para>
+	    The Internet Gopher Protocol as specified in RFC1436
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    The Gopher+ upward-compatible enhancements to the Internet Gopher
+	    Protocol from the University of Minnesota as laid out at
+	    <ulink
+	      url="gopher://gopher.quux.org/0/Archives/mirrors/boombox.micro.umn.edu/pub/gopher/gopher_protocol/Gopher+/Gopher+.txt"></ulink>.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    The gophermap file format as originally implemented in the
+	    Bucktooth gopher server and described at
+	    <ulink
+	      url="gopher://gopher.floodgap.com/0/buck/dbrowse%3Ffaquse%201"></ulink>.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    The Links to URL specification as laid out by John Goerzen
+	    at
+	    <ulink
+	      url="gopher://gopher.quux.org/0/Archives/Mailing%20Lists/gopher/gopher.2002-02%3f/MBOX-MESSAGE/34"></ulink>.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    The UMN format for specifying object attributes and links
+	    with .cap, .Links, .abstract, and similar files as specified elsewhere
+	    in this document and implemented by UMN gopherd.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    The PYG format for extensible Python gopher objects as created for
+	    &PyGopherd;.</para>
+	</listitem>
+
+	<listitem><para>
+	    Hypertext Transfer Protocol HTTP/1.0 as specified in
+	    RFC1945
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    Hypertext Markup Language (HTML) 3.2 and 4.0
+	    Transitional as specified in RFC1866 and RFC2854.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    Maildir as specified in
+	    <ulink
+	      url="http://www.qmail.org/qmail-manual-html/man5/maildir.html"></ulink> and
+	    <ulink url="http://cr.yp.to/proto/maildir.html"></ulink>.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    The mbox mail storage format as specified in
+	    <ulink
+	      url="http://www.qmail.org/qmail-manual-html/man5/mbox.html"></ulink>.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    Registered MIME media types as specified in RFC2048.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    Script execution conforming to both UMN standards as laid out in UMN
+	    gopherd(1) and Bucktooth standards as specified at
+	    <ulink
+	      url="gopher://gopher.floodgap.com:70/0/buck/dbrowse%3ffaquse%202"></ulink>, 
+	    so far as each can be implemented consistent with secure
+	    design principles.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Standard Python 2.2.1 or above as implemented on
+	    POSIX-compliant systems.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    WAP/WML as defined by the WAP Forum.</para>
+	</listitem>
       </itemizedlist>
     </refsect1>
 
-    <refsect1>
-      <title>Notes</title>
-      <refsect2>
-	<title>Deleting Local Folders</title>
-	<para>&OfflineIMAP; does a two-way synchronization.  That is, if you
-	  make a change to the mail on the server, it will be propogated to your
-	  local copy, and vise-versa.  Some people might think that it would be
-	  wise to just delete all their local mail folders periodically.  If you
-	  do this with &OfflineIMAP;, remember to also remove your local status
-	  cache (<filename>~/.offlineimap</filename> by default).  Otherwise, &OfflineIMAP; will take
-	  this as an intentional deletion of many messages and will interpret
-	  your action as requesting them to be deleted from the server as well.
-	  (If you don't understand this, don't worry; you probably won't
-	  encounter this situation)
-	</para>
-      </refsect2>
-
-      <refsect2>
-	<title>Multiple Instances</title>
-	<para>&OfflineIMAP; is not designed to have several instances (for instance, a cron job and an interactive invocation) run over the same
-	  mailbox simultaneously.  It will perform a check on startup and
-	  abort if another &OfflineIMAP; is already running.  If you need
-	  to schedule synchronizations, please use the
-	  <property>autorefresh</property> settings rather than cron.
-	  Alternatively, you can set a separate <property>metadata</property>
-	  directory for each instance.
-	</para>
-      </refsect2>
-
-      <refsect2>
-	<title>Copying Messages Between Folders</title>
-	<para>
-	  Normally, when you copy a message between folders or add a new message
-	  to a folder locally, &OfflineIMAP;
-	  will just do the right thing.  However, sometimes this can be tricky
-	  -- if your IMAP server does not provide the SEARCH command, or does
-	  not return something useful, &OfflineIMAP;
-	  cannot determine the new UID of the message.  So, in these rare
-	  instances, OfflineIMAP will upload the message to the IMAP server and
-	  delete it from your local folder.  Then, on your next sync, the
-	  message will be re-downloaded with the proper UID.
-	  &OfflineIMAP; makes sure that the message was properly uploaded before deleting it,
-	  so there should be no risk of data loss.
-	</para>
-      </refsect2>
-
-      <refsect2>
-	<title>Use with Evolution</title>
-	<para>&OfflineIMAP; can work with Evolution.  To do so, first configure
-	  your &OfflineIMAP; account to have
-	  <option>sep = /</option> in its configuration.  Then, configure
-	  Evolution with the
-	  "Maildir-format mail directories" server type.  For the path, you will need to
-	  specify the name of the top-level folder
-	  <emphasis>inside</emphasis> your &OfflineIMAP; storage location.
-	  You're now set!
-	</para>
-      </refsect2>
-
-      <refsect2>
-	<title>Use with KMail</title>
-	<para>At this time, I believe that &OfflineIMAP; with Maildirs
-	  is not compatible
-	  with KMail.  KMail cannot work in any mode other than to move
-	  all messages out of all folders immediately, which (besides being annoying
-	  and fundamentally broken) is incompatible with
-	&OfflineIMAP;.
-	</para>
-	<para>
-	  However, I have made KMail version 3 work well with
-	  &OfflineIMAP; by installing an IMAP server on my local
-	  machine, having &OfflineIMAP; sync to that, and pointing
-	  KMail at the same server.
-	</para>
-      </refsect2>
-
-      <refsect2>
-	<title>Mailing List</title>
-	<para>There is an OfflineIMAP mailing list available.
-	  To subscribe, send the text "Subscribe" in the subject of a mail to
-	  offlineimap-request@complete.org.  To post, send the message to
-	  offlineimap@complete.org.  Archives are available at
-	  <ulink url="http://lists.complete.org/offlineimap@complete.org/"></>.
-	</para>
-      </refsect2>
-
-      <refsect2>
-	<title>Bugs</title>
-	<para>Reports of bugs should be sent via e-mail to the
-	  &OfflineIMAP; bug-tracking system (BTS) at
-	  offlineimap@bugs.complete.org or submitted online using
-	  the <ulink url="http://bugs.complete.org/">web interface</ulink>.
-	</para>
-	<para>
-	  The Web site also lists all current bugs, where you can check their
-	  status or contribute to fixing them.
-	</para>
-      </refsect2>
-    </refsect1>
-
-    <refsect1 id="upgrading.4.0">
-      <title>Upgrading to 4.0</title>
+    <refsect1 id="bugs">
+      <title>Bugs</title>
       <para>
-	If you are upgrading from a version of &OfflineIMAP; prior to
-	3.99.12, you will find that you will get errors when
-	&OfflineIMAP; starts up (relating to ConfigParser or
-	AccountHashGenerator) and the
-	configuration file.  This is because the config file format
-	had to change to accomodate new features in 4.0.  Fortunately,
-	it's not difficult to adjust it to suit.
+	Reports of bugs should be sent via e-mail to the &PyGopherd;
+	bug-tracking system (BTS) at
+	<email>pygopherd@bugs.complete.org</email> or submitted online
+	using the Web interface at <ulink
+	  url="http://bugs.complete.org/"></ulink>.
       </para>
       <para>
-	First thing you need to do is stop any running &OfflineIMAP;
-	instance, making sure first that it's synced all your mail.
-	Then, modify your
-	<filename>~/.offlineimaprc</filename> file.  You'll need to
-	split up each account section (make sure that it now starts
-	with "Account ") into two Repository sections (one for the
-	local side and another for the remote side.)  See the files
-	<filename>offlineimap.conf.minimal</filename> and
-	<filename>offlineimap.conf</filename> in the distribution if
-	you need more assistance.
-      </para>
-      <para>
-	&OfflineIMAP;'s status directory area has also changed.
-	Therefore, you should delete everything in ~/.offlineimap as
-	well as your local mail folders.
-      </para>
-      <para>
-	When you start up &OfflineIMAP; 4.0, it will re-download all
-	your mail from the server and then you can continue using it
-	like normal.
+	The Web site also lists all current bugs, where you can check their
+	status or contribute to fixing them.
       </para>
     </refsect1>
-	
 
-    <refsect1>
+    <refsect1 id="copyright">
       <title>Copyright</title>
-      <para>OfflineIMAP, and this manual, are Copyright &copy; 2002, 2003 John Goerzen.</para>
-
       <para>
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+	&PyGopherd; is Copyright (C) 2002, 2003 John Goerzen.
       </para>
-
+      <para>
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License as
+	published by the Free Software Foundation; version 2 of the
+	License.
+      </para>
       <para>
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
       </para>
-
       <para>
 	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA</para>
-
-      <para>imaplib.py comes from the Python dev tree and is licensed under
-	the GPL-compatible PSF license as stated in the file
-	<filename>COPYRIGHT</filename> in the &OfflineIMAP;
-         distribution.
+	along with this program; if not, write to:
       </para>
+      <programlisting>
+Free Software Foundation, Inc.
+59 Temple Place
+Suite 330
+Boston, MA  02111-1307
+USA
+      </programlisting>
     </refsect1>
 
-    <refsect1>
+    <refsect1 id="author">
       <title>Author</title>
-      <para>&OfflineIMAP;, its libraries, documentation, and all included files, except where
-	noted, was written by John Goerzen <email>jgoerzen@complete.org</email> and
-	copyright is held as stated in the COPYRIGHT section.
+      <para>
+	&PyGopherd;, its libraries, documentation, and all included
+	files (except where noted) was written by John Goerzen
+	<email>jgoerzen@complete.org</email>
+	and copyright is held as stated in the
+	Copyright section.
       </para>
+      
+      <para>
+	Portions of this manual (specifically relating to certian UMN gopherd
+	features and characteristics that PyGopherd emulates) are modified
+	versions of the original
+	gopherd(1) manpage accompanying the UMN gopher distribution.  That
+	document is distributed under the same terms as this, and
+	bears the following copyright notices:
+      </para>
+      <programlisting>
+Copyright (C) 1991-2000  University of Minnesota
+Copyright (C) 2000-2002  John Goerzen and other developers
+      </programlisting>
+      <para>
+	&PyGopherd; may be downloaded, and information found, from its
+	homepage via either Gopher or HTTP:
+      </para>
+      <para>
+	<ulink
+	  url="gopher://quux.org/1/devel/gopher/pygopherd"></ulink></para>
 
       <para>
-	&OfflineIMAP; may be downloaded, and information found, from its
-	homepage via either <ulink url="gopher://quux.org/1/devel/offlineimap">Gopher</ulink>
-	or <ulink url="http://quux.org/devel/offlineimap">HTTP</ulink>.
-      </para>
+	<ulink
+	  url="http://quux.org/devel/gopher/pygopherd"></ulink></para>
 
       <para>
-	&OfflineIMAP; may also be downloaded using Subversion.  Additionally,
+	&PyGopherd; may also be downloaded using Subversion.  Additionally,
 	the distributed tar.gz may be updated with a simple "svn update"
-	command; it is ready to go.  For information on getting OfflineIMAP
-	with Subversion, please visit the
-	<ulink url="http://svn.complete.org/">complete.org Subversion page</ulink>.
+	command; it is ready to go.  For information on getting
+	&PyGopherd; with Subversion, please visit <ulink
+	  url="http://svn.complete.org/"></ulink>.
       </para>
-
     </refsect1>
 
     <refsect1>
       <title>See Also</title>
-      <para><application>mutt</application>(1),
-	<application>python</application>(1)
-      </para>
-    </refsect1>
-
-    <refsect1>
-      <title>History</title>
       <para>
-	Detailed history may be found in the file ChangeLog in the
-	&OfflineIMAP; distribution.  Feature and bug histories may be
-	found in the file debian/changelog which, despite its name, is
-	not really Debian-specific.  This section provides a large
-	overview.
-      </para>
-      <para>
-	Development on &OfflineIMAP; began on June 18, 2002.  Version
-	1.0.0 was released three days later on June 21, 2002.  Point
-	releases followed, including speed optimizations and some
-	compatibility fixes.
-      </para>
-      <para>Version 2.0.0 was released on July 3, 2002, and
-	represented the first time the synchronization became
-	multithreaded and, to the best of my knowledge, the first
-	multithreaded IMAP syncrhonizing application in existance.
-	The last 2.0.x release, 2.0.8, was made on July 9.
-      </para>
-      <para>
-	Version 3.0.0 was released on July 11, 2002, and introduced
-	modular user interfaces and the first GUI interface for
-	&OfflineIMAP;.  This manual also was introduced with 3.0.0,
-	along with many command-line options.  Version 3.1.0 was
-	released on July 21, adding the Noninteractive user
-	interfaces, profiling support, and several bugfixes.  3.2.0
-	was released on July 24, adding support for the Blinkenlights
-	GUI interface.  &OfflineIMAP; entered maintenance mode for
-	awhile, as it had reached a feature-complete milestone in my
-	mind.
-      </para>
-      <para>
-	The 3.99.x branch began in on October 7, 2002, to begin work
-	for 4.0.  The Curses.Blinkenlights interface was added in
-	3.99.6, and many architectural changes were made.
-      </para>
-      <para>
-	4.0.0 was released on July 18, 2003, including the ability to
-            synchronize directly between two IMAP servers, the first
-            re-architecting of the configuration file to refine the
-            notion of an account, and the new Curses interface.
+	python (1).
       </para>
     </refsect1>
   </refentry>
