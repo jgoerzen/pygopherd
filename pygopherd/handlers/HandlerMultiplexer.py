@@ -34,7 +34,7 @@ def getHandler(selector, protocol, config):
         statresult = None
         try:
             statresult = os.stat(rootpath + '/' + selector)
-        except IOError:
+        except OSError:
             pass
         htry = handler(selector, protocol, config, statresult)
         if htry.canhandlerequest():

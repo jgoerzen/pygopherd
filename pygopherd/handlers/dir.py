@@ -19,9 +19,13 @@
 
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols, gopherentry
+import os, stat, os.path, mimetypes, protocols, gopherentry, time
 import handlers, handlers.base
 from stat import *
+import cPickle
+
+cachetime = None
+cachefile = None
 
 class DirHandler(handlers.base.BaseHandler):
     def canhandlerequest(self):
@@ -78,12 +82,17 @@ class DirHandler(handlers.base.BaseHandler):
         if self.selectorbase == '/':
             self.selectorbase = ''           # Avoid dup slashes        
             
+        if self.loadcache():
+            # No need to do anything else.
+            return 0                    # Did nothing.
+
         self.prep_initfiles()
 
         # Sort the list.
         self.files.sort()
 
         self.prep_entries()
+        return 1                        # Did something.
 
     def write(self, wfile):
         startstr = self.protocol.renderdirstart(self.entry)
@@ -96,5 +105,38 @@ class DirHandler(handlers.base.BaseHandler):
         endstr = self.protocol.renderdirend(self.entry)
         if (endstr):
             wfile.write(endstr)
+        self.savecache()
 
             
+    def loadcache(self):
+        global cachetime, cachefile
+        self.fromcache = 0
+        if cachetime == None:
+            cachetime = self.config.getint("handlers.dir.DirHandler",
+                                           "cachetime")
+            cachefile = self.config.get("handlers.dir.DirHandler",
+                                        "cachefile")
+
+        cachename = self.fsbase + "/" + cachefile
+        try:
+            statval = os.stat(cachename)
+        except OSError:
+            return 0
+
+        if (time.time() - statval[stat.ST_MTIME] < cachetime):
+            fp = open(cachename, "rb")
+            self.fileentries = cPickle.load(fp)
+            fp.close()
+            self.fromcache = 1
+            return 1
+        return 0
+
+    def savecache(self):
+        global cachefile
+        if self.fromcache:
+            # Don't resave the cache.
+            return
+        fp = open(self.fsbase + "/" + cachefile, "wb")
+        cPickle.dump(self.fileentries, fp, 1)
+        fp.close()
+    

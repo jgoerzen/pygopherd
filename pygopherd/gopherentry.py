@@ -55,7 +55,7 @@ class GopherEntry:
         if self.populated:
             return
 
-        # Just let the stat catch the IOError rather than testing
+        # Just let the stat catch the OSError rather than testing
         # for existance here.  Help cut down on the number of syscalls.
 
         if not (self.gethost() == None and self.getport() == None):
@@ -64,7 +64,7 @@ class GopherEntry:
         if not statval:
             try:
                 statval = os.stat(self.fspath)
-            except IOError:
+            except OSError:
                 return
         
         self.populated = 1

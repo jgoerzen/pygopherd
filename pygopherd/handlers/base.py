@@ -55,7 +55,6 @@ class BaseHandler:
         global rootpath
         """Gets the root path."""
         if not rootpath:
-            print "setting root path"
             rootpath = self.config.get("pygopherd", "root")
         return rootpath
 

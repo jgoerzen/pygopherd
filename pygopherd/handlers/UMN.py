@@ -44,17 +44,16 @@ class UMNDirHandler(DirHandler):
 
     def prepare(self):
         """Override parent to do a few more things and override sort order."""
-
         # Initialize.
         self.linkentries = []
 
         # Let the parent do the directory walking for us.  Will call
         # prep_initfiles_canaddfile and prep_entriesappend.
-        DirHandler.prepare(self)
-
-        # Merge and sort.
-        self.MergeLinkFiles()
-        self.fileentries.sort(self.entrycmp)
+        if DirHandler.prepare(self):
+            # Returns 1 if it didn't load from the cache.
+            # Merge and sort.
+            self.MergeLinkFiles()
+            self.fileentries.sort(self.entrycmp)
         
     def prep_initfiles_canaddfile(self, ignorepatt, pattern, file):
         """Override the parent to process dotfiles and keep them out
