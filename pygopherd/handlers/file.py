@@ -51,15 +51,29 @@ decompressors = None
 
 class CompressedFileHandler(FileHandler):
     def canhandlerequest(self):
+        self.initdecompressors()
         return FileHandler.canhandlerequest(self) and \
-               self.getentry().getencoding()
+               self.getentry().getencoding() and \
+               decompressors.has_key(self.getentry().getencoding)
+
+    def getentry(self):
+        if not self.entry:
+            self.entry = FileHandler.getentry(self)
+            if self.entry.getencoding() and \
+               decompressors.has_key[self.entry.getencoding()] and \
+               self.entry.getencodedmimetype():
+                # Make it the real type.
+                self.entry.mimetype = self.entry.getencodedmimetype()
     
-    def write(self, wfile):
+    def initdecompressors(self):
         global decompressors
         if decompressors == None:
             decompressors = \
                 eval(self.config.get("handlers.file.CompressedFileHandler",
                                      "decompressors"))
+
+    def write(self, wfile):
+        global decompressors
         if decompressors.has_key(self.getentry().getencoding()):
             decompprog = decompressors[self.getentry().getencoding()]
             pygopherd.pipe.pipedata_unix(decompprog, [decompprog],

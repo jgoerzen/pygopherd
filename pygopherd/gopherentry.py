@@ -33,22 +33,23 @@ class GopherEntry:
         """Initialize object based on a selector and config."""
         if not mapping:
             mapping = eval(config.get("GopherEntry", "mapping"))
-        self.selector = selector
-        self.config = config
-        self.fspath = None
-        self.type = None
-        self.name = None
-        self.host = None
-        self.port = None
-        self.mimetype = None
-        self.size = None
-        self.encoding = None
-        self.populated = 0
-        self.language = None
-        self.ctime = None
-        self.mtime = None
-        self.num = 0
-        self.gopherpsupport = 0
+        self.selector = selector        # Gopher path to file
+        self.config = config            # Our config object
+        self.fspath = None              # Path to the obj in filesystem
+        self.type = None                # Gopher0 type char
+        self.name = None                # Menu name
+        self.host = None                # Hostname
+        self.port = None                # Port number (an int)
+        self.mimetype = None            # MIME type
+        self.encodedmimetype = None     # Real MIME type if encoded.
+        self.size = None                # Size
+        self.encoding = None            # Encoding type
+        self.populated = 0              # Whether or not it's been populated
+        self.language = None            # Language
+        self.ctime = None               # Creation date
+        self.mtime = None               # Modification date
+        self.num = 0                    # Number in menu
+        self.gopherpsupport = 0         # Supports gopher+
 
     def populatefromfs(self, fspath, statval = None):
         self.fspath = fspath
@@ -88,6 +89,10 @@ class GopherEntry:
             self.size = statval[6]          # Only set this if it's not a dir.
         mimetype, encoding = mimetypes.guess_type(self.selector, strict = 0)
 
+        if mimetype and (not self.mimetype) and encoding and (not self.encoding):
+            self.mimetype = 'application/octet-stream'
+            self.encoding = encoding
+            self.encodedmimetype = mimetype
         if mimetype and not self.mimetype:
             self.mimetype = mimetype
         if encoding and not self.encoding:
@@ -141,6 +146,10 @@ class GopherEntry:
         if self.mimetype == None:
             return default
         return self.mimetype
+    def getencodedmimetype(self, default = None):
+        if self.encodedmimetype == None:
+            return default
+        return self.encodedmimetype
     def setmimetype(self, arg):
         self.mimetype = arg
     def getsize(self, default = None):
