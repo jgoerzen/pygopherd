@@ -80,7 +80,7 @@ class BaseProtocolTestCase(unittest.TestCase):
                                    self.config)
         proto.handle()
         self.assertEquals(self.logfile.getvalue(),
-                          "10.77.77.77 [BaseGopherProtocol/None] FileNotFound: '/NONEXISTANT.txt' does not exist (no handler found)\n")
+                          "10.77.77.77 [BaseGopherProtocol/None] EXCEPTION FileNotFound: '/NONEXISTANT.txt' does not exist (no handler found)\n")
         self.assertEquals(self.wfile.getvalue(), "3'/NONEXISTANT.txt' does not exist (no handler found)\t\terror.host\t1\r\n")
                 
     # We cannot test handle_dir here because we don't have enough info.

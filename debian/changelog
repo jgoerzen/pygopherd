@@ -3,6 +3,9 @@ pygopherd (1.0.0) unstable; urgency=low
   * First release.  Welcome, pygopherd.
   * Added URL type rewriting handler.
   * Fixed gophermap info-only lines that have no tabs.
+  * UMN dir handler now keeps directories beginning with a . out of the
+    directory list.
+  * Shored up tests to work with Subversion.
 
  -- John Goerzen <jgoerzen@complete.org>  Wed, 17 Jul 2002 19:32:32 -0500
 

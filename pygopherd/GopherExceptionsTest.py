@@ -39,7 +39,7 @@ class GopherExceptionsTestCase(unittest.TestCase):
         except IOError, e:
             GopherExceptions.log(e)
         self.assertEqual(self.stringfile.getvalue(),
-                         "unknown-address [None/None] IOError: foo\n")
+                         "unknown-address [None/None] EXCEPTION IOError: foo\n")
 
     def testlog_proto_ip(self):
         rfile = StringIO("/NONEXISTANT\n")
@@ -48,7 +48,7 @@ class GopherExceptionsTestCase(unittest.TestCase):
         handler.handle()
         # handler.handle()
         self.assertEquals(self.stringfile.getvalue(),
-             "10.77.77.77 [GopherProtocol/None] FileNotFound: '/NONEXISTANT' does not exist (no handler found)\n")
+             "10.77.77.77 [GopherProtocol/None] EXCEPTION FileNotFound: '/NONEXISTANT' does not exist (no handler found)\n")
 
     def testFileNotFound(self):
         try:

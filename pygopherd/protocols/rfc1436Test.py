@@ -48,7 +48,6 @@ class RFC1436TestCase(unittest.TestCase):
         actualarr = self.wfile.getvalue().splitlines()
         expectedarr = [
 'iThis is the abstract for the testdata directory.\tfake\t(NULL)\t0',
-'1CVS\t/CVS\tHOSTNAME\t64777\t+',
 '0README\t/README\tHOSTNAME\t64777\t+',
 '1pygopherd\t/pygopherd\tHOSTNAME\t64777\t+',
 '9testarchive\t/testarchive.tar\tHOSTNAME\t64777\t+',
@@ -60,7 +59,7 @@ class RFC1436TestCase(unittest.TestCase):
 'ifor testfile.txt.gz\tfake\t(NULL)\t0']
         expectedarr = [re.sub('HOSTNAME', self.server.server_name, x) for \
                       x in expectedarr]
-        self.assertEquals(len(actualarr), len(expectedarr))
+        self.assertEquals(len(actualarr), len(expectedarr), str(actualarr))
         for i in range(len(actualarr)):
             self.assertEquals(actualarr[i], expectedarr[i])
         # Make sure proper line endings are present.
@@ -74,8 +73,7 @@ class RFC1436TestCase(unittest.TestCase):
         proto.handle()
         actualarr = self.wfile.getvalue().splitlines()
         expectedarr = \
-             ['1CVS\t/CVS\tHOSTNAME\t64777\t+',
-              '0README\t/README\tHOSTNAME\t64777\t+',
+             ['0README\t/README\tHOSTNAME\t64777\t+',
               '1pygopherd\t/pygopherd\tHOSTNAME\t64777\t+',
               '9testarchive\t/testarchive.tar\tHOSTNAME\t64777\t+',
               '9testarchive.tar.gz\t/testarchive.tar.gz\tHOSTNAME\t64777\t+',
