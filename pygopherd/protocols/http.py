@@ -1,5 +1,5 @@
 import SocketServer
-import re
+import re, binascii
 import os, stat, os.path, mimetypes, handlers, protocols, urllib, time
 import protocols.base
 import cgi, GopherExceptions
@@ -13,12 +13,23 @@ class HTTPProtocol(protocols.base.BaseGopherProtocol):
 
     def handle(self):
         self.canhandlerequest()         # To get self.requestparts
+        self.iconmapping = eval(self.config.get("protocols.http.HTTPProtocol",
+                                                "iconmapping"))
 
         # Slurp up remaining lines.
         while len(self.rfile.readline().strip()):
             pass
             
         self.selector = urllib.unquote(self.requestparts[1])
+
+        icon = re.match('/PYGOPHERD-HTTPPROTO-ICONS/(.+)$', self.selector)
+        if icon:
+            iconname = icon.group(1)
+            if icons.has_key(iconname):
+                self.wfile.write("HTTP/1.0 200 OK\n")
+                self.wfile.write("Content-Type: image/gif\n\n")
+                self.wfile.write(binascii.unhexlify(icons[iconname]))
+                return
 
         try:
             handler = self.gethandler()
@@ -62,7 +73,9 @@ class HTTPProtocol(protocols.base.BaseGopherProtocol):
 
         # OK.  Render.
 
-        retstr += "<TR><TD>&nbsp;"
+        retstr += "<TR><TD>"
+        retstr += self.getimgtag(entry)
+        retstr += "</TD>\n<TD>&nbsp;"
         if entry.gettype() != 'i':
             retstr += '<A HREF="%s">' % urllib.quote(url)
         retstr += "<TT>"
@@ -89,7 +102,7 @@ class HTTPProtocol(protocols.base.BaseGopherProtocol):
         retstr += "</TITLE></HEAD><BODY><H1>Gopher"
         if self.entry.getname():
             retstr += ": " + cgi.escape(self.entry.getname())
-        retstr += '</H1><TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="0">'
+        retstr += '</H1><TABLE WIDTH="100%" CELLSPACING="1" CELLPADDING="0">'
         return retstr
 
     def renderdirend(self, entry):
@@ -104,6 +117,14 @@ class HTTPProtocol(protocols.base.BaseGopherProtocol):
         <TT>""")
         self.wfile.write(cgi.escape(msg))
         self.wfile.write("</TT><HR>Pygopherd</BODY></HTML>\n")
+
+    def getimgtag(self, entry):
+        if self.iconmapping.has_key(entry.gettype()):
+            return '<IMG SRC="%s" WIDTH="20" HEIGHT="22" BORDER="0">' % \
+                   ('/PYGOPHERD-HTTPPROTO-ICONS/' + \
+                   self.iconmapping[entry.gettype()])
+        else:
+            return '&nbsp;'            
 
 icons = {
 'binary.gif':
