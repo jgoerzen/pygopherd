@@ -47,8 +47,6 @@ class WAPProtocol(HTTPProtocol):
     def getrenderstr(self, entry, url):
         global accesskeys
         retstr = ''
-        if not hasattr(self, 'accesskeyidx'):
-            self.accesskeyidx = 0
         if not entry.gettype() in ['i', '7']:
             if self.accesskeyidx < len(accesskeys):
                 retstr += '%s <a accesskey="%s" href="%s">' % \
@@ -64,10 +62,22 @@ class WAPProtocol(HTTPProtocol):
             retstr += cgi.escape(etry.getselector())
         if not entry.gettype() in ['i', '7']:
             retstr += '</a>'
+        if entry.gettype() == '7':
+            retstr += '<do type="accept">\n'
+            retstr += '  <input type="text" name="sr%d" size="30>\n' % \
+                      self.postfieldidx
+            retstr += '  <go href="%s">\n' % url
+            retstr += '    <postfield name="searchrequest" value="sr%d"/>\n' % \
+                      self.postfieldidx
+            retstr += '  </go>\n'
+            retstr += '</do>\n'
         retstr += "<br/>\n"
+        self.postfieldidx += 1
         return retstr
 
     def renderdirstart(self, entry):
+        self.accesskeyidx = 0
+        self.postfieldidx = 0
         retval = """<?xml version="1.0"?>
 <!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN"
 "http://www.wapforum.org/DTD/wml_1.1.xml">

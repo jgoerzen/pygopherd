@@ -1,7 +1,8 @@
-pygopherd (1.99.6) unstable; urgency=low
+pygopherd (2.0.0) unstable; urgency=low
 
   * New feature: WAP/WMP support!
   * HTTP bugfix: use \r\n line endings.
+  * Debian: Updated for Python 2.3.
 
  -- John Goerzen <jgoerzen@complete.org>  Sat, 23 Aug 2003 12:00:48 -0500
 
