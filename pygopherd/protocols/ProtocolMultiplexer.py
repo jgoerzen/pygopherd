@@ -17,8 +17,8 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import handlers, protocols
-from protocols import *
+from pygopherd import handlers, protocols
+from pygopherd.protocols import *
 
 def getProtocol(request, server, rfile, wfile, config):
     p = eval(config.get("protocols.ProtocolMultiplexer", "protocols"))

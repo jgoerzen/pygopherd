@@ -19,10 +19,10 @@
 
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols, gopherentry, mimetypes
-import handlers, handlers.base
-from gopherentry import GopherEntry
-from handlers.dir import DirHandler
+import os, stat, os.path, mimetypes
+from pygopherd import protocols, gopherentry, handlers
+from pygopherd.gopherentry import GopherEntry
+from pygopherd.handlers.dir import DirHandler
 from stat import *
 
 ###########################################################################

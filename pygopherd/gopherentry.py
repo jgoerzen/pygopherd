@@ -19,7 +19,8 @@
 
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols, handlers, urllib
+import os, stat, os.path, mimetypes, urllib
+from pygopherd import protocols, handlers
 
 mapping = None
 

@@ -19,8 +19,9 @@
 
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, handlers, GopherExceptions
-import handlers.HandlerMultiplexer
+import os, stat, os.path, mimetypes
+from pygopherd import handlers, GopherExceptions
+from pygopherd.handlers import HandlerMultiplexer
 
 class BaseGopherProtocol:
     """Skeleton protocl -- includes commonly-used routines."""
@@ -88,7 +89,7 @@ class BaseGopherProtocol:
 
     def gethandler(self):
         """Gets the handler for this object's selector."""
-        return handlers.HandlerMultiplexer.getHandler(self.selector,
+        return HandlerMultiplexer.getHandler(self.selector,
                                                self, self.config)
 
     def renderdirstart(self, entry):

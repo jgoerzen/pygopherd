@@ -19,7 +19,8 @@
 
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols, handlers, gopherentry
+import os, stat, os.path, mimetypes
+from pygopherd import protocols, handlers, gopherentry
 
 rootpath = None
 

@@ -19,10 +19,11 @@
 
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, handlers, protocols
-import protocols.base
+import os, stat, os.path, mimetypes
+from pygopherd import handlers, protocols
+from pygopherd.protocols.base import BaseGopherProtocol
 
-class GopherProtocol(protocols.base.BaseGopherProtocol):
+class GopherProtocol(BaseGopherProtocol):
     """Implementation of basic protocol.  Will handle every query."""
     def canhandlerequest(self):
         return 1

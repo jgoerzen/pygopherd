@@ -19,11 +19,12 @@
 
 import SocketServer
 import re, binascii
-import os, stat, os.path, mimetypes, handlers, protocols, urllib, time
-import protocols.base
-import cgi, GopherExceptions
+import os, stat, os.path, mimetypes, urllib, time
+from pygopherd import handlers, protocols, GopherExceptions
+from pygopherd.protocols.base import BaseGopherProtocol
+import cgi
 
-class HTTPProtocol(protocols.base.BaseGopherProtocol):
+class HTTPProtocol(BaseGopherProtocol):
     def canhandlerequest(self):
         self.requestparts = map(lambda arg: arg.strip(), self.request.split(" "))
         return len(self.requestparts) == 3 and \

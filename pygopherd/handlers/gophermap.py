@@ -19,8 +19,8 @@
 
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols, gopherentry
-import handlers, handlers.base
+import os, stat, os.path, mimetypes
+from pygopherd import protocols, gopherentry, handlers
 from stat import *
 
 class BuckGophermapHandler(handlers.base.BaseHandler):

@@ -1,3 +1,4 @@
+
 # pygopherd -- Gopher-based protocol server in Python
 # module: regular directory handling
 # Copyright (C) 2002 John Goerzen
@@ -19,8 +20,8 @@
 
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols, gopherentry, time
-import handlers, handlers.base
+import os, stat, os.path, mimetypes, time
+from pygopherd import protocols, gopherentry, handlers
 from stat import *
 import cPickle
 

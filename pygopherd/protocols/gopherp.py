@@ -19,10 +19,11 @@
 
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, handlers, protocols, time
-import protocols.rfc1436, GopherExceptions
+import os, stat, os.path, mimetypes, time
+from pygopherd import handlers, protocols, GopherExceptions
+from pygopherd.protocols.rfc1436 import GopherProtocol
 
-class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
+class GopherPlusProtocol(GopherProtocol):
     """Implementation of Gopher+ protocol.  Will handle Gopher+
     queries ONLY."""
 
@@ -81,7 +82,7 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
 
     def getinfoblock(self, entry):
         return "+INFO: " + \
-               protocols.rfc1436.GopherProtocol.renderobjinfo(self, entry)
+               GopherProtocol.renderobjinfo(self, entry)
 
     def getadminblock(self, entry):
         retstr = "+ADMIN:\r\n"
@@ -115,7 +116,7 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
             entry.mimetype = 'application/gopher+-menu'
         if self.handlemethod == 'documentonly':
             # It's a Gopher+ request for a gopher0 menu entry.
-            retstr = protocols.rfc1436.GopherProtocol.renderobjinfo(self, entry)
+            retstr = GopherProtocol.renderobjinfo(self, entry)
             return retstr
         else:
             return self.getallblocks(entry)

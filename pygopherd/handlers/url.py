@@ -19,8 +19,8 @@
 
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols, handlers, gopherentry
-import handlers.base
+import os, stat, os.path, mimetypes
+from pygopherd import protocols, handlers, gopherentry
 
 class HTMLURLHandler(handlers.base.BaseHandler):
     """Will take requests for a URL-like selector and generate
