@@ -31,6 +31,9 @@ class VFS_Real:
     def iswritable(self, selector):
         return 1
 
+    def unlink(self, selector):
+        os.unlink(self.getfspath(selector))
+
     def stat(self, selector):
         return os.stat(self.getfspath(selector))
 
