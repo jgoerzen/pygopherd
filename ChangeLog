@@ -1,0 +1,514 @@
+2002-04-10 09:10  jgoerzen
+
+	* setup.py: Updated.
+
+2002-04-10 09:06  jgoerzen
+
+	* debian/: README.Debian, changelog, conffiles.ex, control,
+	copyright, cron.d.ex, dirs, docs, emacsen-install.ex,
+	emacsen-remove.ex, emacsen-startup.ex, ex.package.doc-base,
+	init.d.ex, manpage.1.ex, manpage.sgml.ex, menu.ex, postinst.ex,
+	postrm.ex, preinst.ex, prerm.ex, rules, watch.ex: Imported debian/
+	directory.
+
+2002-04-10 08:57  jgoerzen
+
+	* Makefile: Now cleans up jython .class files
+
+2002-04-09 22:31  jgoerzen
+
+	* Makefile: Reverted -- oops
+
+2002-04-09 22:29  jgoerzen
+
+	* Makefile, conf/pygopherd.conf, pygopherd/handlers/scriptexec.py:
+	More security enhancements and stuff.
+
+2002-04-09 21:44  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/GopherExceptions.py,
+	pygopherd/__init__.py, pygopherd/logger.py,
+	pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/mbox.py, pygopherd/protocols/base.py,
+	pygopherd/protocols/gopherp.py, pygopherd/protocols/http.py: Added
+	logging support
+
+2002-04-09 16:26  jgoerzen
+
+	* conf/pygopherd.conf: Fixed ordering of handlers
+
+2002-04-09 16:22  jgoerzen
+
+	* pygopherd/handlers/pyg.py: Fixed an error with searchrequest
+	support.
+
+2002-04-09 15:42  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/base.py, pygopherd/handlers/dir.py,
+	pygopherd/handlers/scriptexec.py, pygopherd/handlers/virtual.py,
+	pygopherd/protocols/base.py, pygopherd/protocols/gopherp.py,
+	pygopherd/protocols/rfc1436.py: Added searchrequest capabilities.
+
+2002-04-09 15:18  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/__init__.py,
+	pygopherd/handlers/mbox.py, pygopherd/handlers/pyg.py,
+	pygopherd/handlers/scriptexec.py,
+	pygopherd/protocols/ProtocolMultiplexer.py,
+	pygopherd/protocols/base.py: More updates for vfolder rename. 
+	Added scriptexec capability.
+
+2002-04-09 14:45  jgoerzen
+
+	* pygopherd/handlers/: __init__.py, mbox.py, pyg.py, vfolder.py,
+	virtual.py: Renamed vfolder to virtual
+
+2002-04-08 15:36  jgoerzen
+
+	* conf/pygopherd.conf: Updated.
+
+2002-04-08 15:36  jgoerzen
+
+	* pygopherd/handlers/pyg.py: Added.
+
+2002-04-08 15:36  jgoerzen
+
+	* pygopherd/handlers/: __init__.py, mbox.py, vfolder.py: Updates.
+
+2002-04-08 14:22  jgoerzen
+
+	* pygopherd/handlers/: __init__.py, base.py, mbox.py, vfolder.py:
+	Updates with the vfolder.
+
+2002-04-06 16:08  jgoerzen
+
+	* pygopherd/: __init__.py, gopherentry.py,
+	handlers/HandlerMultiplexer.py, handlers/UMN.py,
+	handlers/__init__.py, handlers/base.py, handlers/dir.py,
+	handlers/file.py, handlers/gophermap.py, handlers/html.py,
+	handlers/mbox.py, handlers/url.py,
+	protocols/ProtocolMultiplexer.py, protocols/base.py,
+	protocols/enhanced.py, protocols/gopherp.py, protocols/http.py,
+	protocols/rfc1436.py: Updated for module moving.
+
+2002-04-06 15:31  jgoerzen
+
+	* Makefile: Added.
+
+2002-04-05 22:25  jgoerzen
+
+	* doc/manual.lyx: [no log message]
+
+2002-04-05 22:21  jgoerzen
+
+	* doc/: manual.lyx, manual.lyx: [no log message]
+
+2002-04-05 18:55  jgoerzen
+
+	* doc/manual.lyx: Added.
+
+2002-04-05 16:23  jgoerzen
+
+	* pygopherd/handlers/: UMN.py, base.py, dir.py: Updated
+
+2002-04-05 16:20  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/gopherentry.py,
+	pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/dir.py: Added directory caching ability.
+
+2002-04-05 15:59  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/gopherentry.py,
+	pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/UMN.py, pygopherd/handlers/base.py,
+	pygopherd/handlers/dir.py, pygopherd/handlers/file.py,
+	pygopherd/handlers/gophermap.py, pygopherd/handlers/html.py,
+	pygopherd/handlers/mbox.py: Performance enhancements after
+	profiling
+
+2002-04-05 15:09  jgoerzen
+
+	* pygopherd/gopherentry.py: Performance: made mapping a module
+	instead of a class variable.
+
+2002-04-05 14:51  jgoerzen
+
+	* pygopherd/handlers/base.py: Typo fix
+
+2002-04-05 14:39  jgoerzen
+
+	* pygopherd/handlers/base.py: Fixed two docstrings
+
+2002-04-05 14:37  jgoerzen
+
+	* pygopherd/handlers/mbox.py: [no log message]
+
+2002-04-05 14:24  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/gopherentry.py,
+	pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/__init__.py, pygopherd/handlers/html.py,
+	pygopherd/handlers/mbox.py, pygopherd/protocols/gopherp.py: More
+	work on the mbox handler.  Say that we don't support gopher+
+	because UMN hates size-less stuff.  Bah.
+	
+	Reverted gopherp : behavior.  It was right before, UMN is fussy.
+
+2002-04-05 14:13  jgoerzen
+
+	* pygopherd/protocols/gopherp.py: Only put colon on a VIEWS line if
+	there is size information coming.
+
+2002-04-05 12:43  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/UMN.py, pygopherd/handlers/__init__.py,
+	pygopherd/handlers/html.py: Split HTML title handler out of UMN.py
+	into html.py
+
+2002-04-05 11:58  jgoerzen
+
+	* pygopherd/: GopherExceptions.py, gopherentry.py,
+	handlers/HandlerMultiplexer.py, handlers/UMN.py,
+	handlers/__init__.py, handlers/base.py, handlers/dir.py,
+	handlers/file.py, handlers/gophermap.py, handlers/url.py,
+	protocols/ProtocolMultiplexer.py, protocols/__init__.py,
+	protocols/base.py, protocols/enhanced.py, protocols/gopherp.py,
+	protocols/http.py, protocols/rfc1436.py: Added copyright notices to
+	all files.
+
+2002-04-05 11:51  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/UMN.py: Added HTML
+	handler support.
+
+2002-04-05 11:12  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Added some comments and moved
+	miscellaneous functions into the UMNDirHandler.
+
+2002-04-05 10:32  jgoerzen
+
+	* pygopherd/protocols/gopherp.py: Removed \t+ adding to gopher0
+	dirstrings.  This is done in the rfc module already.
+
+2002-04-05 10:27  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/gopherentry.py,
+	pygopherd/handlers/dir.py, pygopherd/protocols/rfc1436.py: Modified
+	to use the getentry() from each handler in the dirhandler. 
+	Modified to indicate in each entry whether gopher+ is supported by
+	that entry.  Modified rfc1436 to only indicate + for those entries
+	where this is true.
+
+2002-04-04 16:05  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Typo fix
+
+2002-04-04 16:04  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Added code to strip off trailing
+	slashes in links.
+
+2002-04-04 15:55  jgoerzen
+
+	* pygopherd/handlers/: UMN.py, dir.py: Added handling of UMN type X
+
+2002-04-04 15:49  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/protocols/http.py: More HTTP
+	updates.
+
+2002-04-04 15:36  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/__init__.py,
+	pygopherd/protocols/http.py: Added icon support to HTTP protocol.
+
+2002-04-04 15:20  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/__init__.py,
+	pygopherd/protocols/http.py: Updated.
+
+2002-04-04 14:51  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Removed debug prints
+
+2002-04-04 14:51  jgoerzen
+
+	* pygopherd/handlers/: UMN.py, dir.py: Added .cap file handling.
+
+2002-04-04 14:37  jgoerzen
+
+	* pygopherd/handlers/: UMN.py, dir.py: UMN seems to be working now!
+
+2002-04-04 14:27  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/UMN.py, pygopherd/handlers/base.py,
+	pygopherd/handlers/dir.py: Various runtime fixes!
+
+2002-04-04 13:39  jgoerzen
+
+	* pygopherd/handlers/: UMN.py, dir.py: Updated.
+
+2002-04-04 13:29  jgoerzen
+
+	* pygopherd/handlers/UMN.py: More updates.
+
+2002-04-04 13:12  jgoerzen
+
+	* pygopherd/gopherentry.py: populatefromfs() now automatically
+	weeds out non-local or nonexistant links.
+
+2002-04-04 13:09  jgoerzen
+
+	* pygopherd/gopherentry.py: Updates -- safer populatefromfs(), etc.
+
+2002-04-04 12:51  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Initial writing.
+
+2002-04-04 10:41  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Added from dir.py
+
+2002-03-27 11:40  jgoerzen
+
+	* pygopherd/: gopherentry.py, protocols/gopherp.py: Added
+	experimental URLGopherPlus protocol.
+
+2002-03-27 11:24  jgoerzen
+
+	* pygopherd/protocols/base.py: Changed to use itemtype 3 for an
+	error.
+
+2002-03-27 11:23  jgoerzen
+
+	* pygopherd/protocols/gopherp.py: Modified to make more extensible.
+
+2002-03-27 09:16  jgoerzen
+
+	* pygopherd/handlers/gophermap.py: Moved to and fixes in prepare()
+
+2002-03-27 08:19  jgoerzen
+
+	* pygopherd/protocols/http.py: Added error handling
+
+2002-03-26 19:41  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/dir.py,
+	pygopherd/protocols/base.py, pygopherd/protocols/http.py: HTTP
+	support now nominally working.
+
+2002-03-26 16:44  jgoerzen
+
+	* pygopherd/protocols/http.py: Enough that it will at least compile
+
+2002-03-26 16:43  jgoerzen
+
+	* pygopherd/protocols/http.py: More work on http
+
+2002-03-26 16:17  jgoerzen
+
+	* pygopherd/protocols/gopherp.py: Added some bugfixes for time
+	handling.
+
+2002-03-26 16:10  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/GopherExceptions.py,
+	pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/base.py, pygopherd/handlers/dir.py,
+	pygopherd/handlers/file.py, pygopherd/handlers/gophermap.py,
+	pygopherd/handlers/url.py, pygopherd/protocols/__init__.py,
+	pygopherd/protocols/base.py, pygopherd/protocols/gopherp.py,
+	pygopherd/protocols/http.py: Added error handling.
+
+2002-03-26 15:27  jgoerzen
+
+	* pygopherd/handlers/url.py: Fixed an error with generated URL.
+
+2002-03-26 15:23  jgoerzen
+
+	* doc/standards/Gopher+.txt: Added from
+	gopher://gopher.quux.org:70/00/Archives/mirrors/boombox.micro.umn.e
+	du/pub/gopher/gopher_protocol/Gopher+/Gopher+.txt
+
+2002-03-26 15:19  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/__init__.py, pygopherd/handlers/base.py,
+	pygopherd/handlers/dir.py, pygopherd/handlers/gophermap.py,
+	pygopherd/protocols/base.py, pygopherd/protocols/gopherp.py: Added
+	gophermap capabilities.
+
+2002-03-26 14:52  jgoerzen
+
+	* doc/standards/gophermap.txt: Added from
+	gopher://gopher.floodgap.com:70/0/buck/dbrowse%3Ffaquse%201
+
+2002-03-26 14:30  jgoerzen
+
+	* doc/standards/url.txt: Added from
+	http://www.complete.org/mailinglists/archives/gopher-200202/msg0003
+	3.html
+
+2002-03-26 14:17  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/__init__.py, pygopherd/handlers/url.py: Added
+	url.py -- a URL: handler.
+
+2002-03-26 13:59  jgoerzen
+
+	* pygopherd/handlers/dir.py: Added ability to ignore files.
+
+2002-03-26 13:57  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/protocols/ProtocolMultiplexer.py: Some config file
+	enhancements
+
+2002-03-26 13:52  jgoerzen
+
+	* conf/pygopherd.conf: Added more comments
+
+2002-03-26 13:50  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/gopherentry.py,
+	pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/base.py,
+	pygopherd/protocols/ProtocolMultiplexer.py,
+	pygopherd/protocols/enhanced.py: Updated to use new multiplexers,
+	more configurability, some renaming
+
+2002-03-26 12:45  jgoerzen
+
+	* TODO, conf/pygopherd.conf, pygopherd/gopherentry.py: Updated.
+
+2002-03-26 12:24  jgoerzen
+
+	* pygopherd/protocols/: gopherp.py, rfc1436.py: More bugfixes
+
+2002-03-26 12:19  jgoerzen
+
+	* pygopherd/handlers/dir.py: Typo fix
+
+2002-03-26 12:19  jgoerzen
+
+	* entry.py, pygopherd/gopherentry.py, pygopherd/handlers/base.py,
+	pygopherd/handlers/dir.py, pygopherd/handlers/file.py,
+	pygopherd/protocols/gopherp.py: renamed entry to gopherentry
+
+2002-03-26 12:12  jgoerzen
+
+	* pygopherd/handlers/: HandlerMultiplexer.py, dir.py, file.py: More
+	bugfixes.
+
+2002-03-26 12:08  jgoerzen
+
+	* entry.py, pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/dir.py, pygopherd/protocols/base.py: Basic
+	execution fixes.
+
+2002-03-26 11:46  jgoerzen
+
+	* pygopherd/: handlers/HandlerMultiplexer.py, handlers/base.py,
+	handlers/dir.py, handlers/file.py, protocols/base.py,
+	protocols/gopherp.py, protocols/rfc1436.py: Bugfixes
+
+2002-03-26 11:31  jgoerzen
+
+	* pygopherd/: handlers/HandlerMultiplexer.py, handlers/__init__.py,
+	handlers/__init__.py, protocols/__init__.py: [no log message]
+
+2002-03-26 11:25  jgoerzen
+
+	* pygopherd/protocols/gopherp.py, entry.py, conf/mime.types: [no
+	log message]
+
+2002-03-26 11:17  jgoerzen
+
+	* pygopherd/handlers/base.py, pygopherd/handlers/dir.py,
+	handlers.py, pygopherd/protocols/base.py: [no log message]
+
+2002-03-26 11:09  jgoerzen
+
+	* handlers.py, conf/pygopherd.conf, pygopherd/handlers/base.py,
+	pygopherd/handlers/file.py, pygopherd/protocols/base.py: Updated
+
+2002-03-26 10:34  jgoerzen
+
+	* TODO, pygopherd/handlers/base.py, pygopherd/handlers/file.py:
+	Added files.
+
+2002-03-26 10:34  jgoerzen
+
+	* pygopherd/protocols/base.py: Updated.
+
+2002-03-26 10:29  jgoerzen
+
+	* handlers.py: Removed some code moved to the base protocol.
+
+2002-03-26 10:09  jgoerzen
+
+	* pygopherd/protocols/: enhanced.py, rfc1436.py: Updated to use
+	server_name and server_port properly.
+
+2002-03-26 10:07  jgoerzen
+
+	* protocols.py, pygopherd/protocols/__init__.py,
+	pygopherd/protocols/base.py, pygopherd/protocols/enhanced.py,
+	pygopherd/protocols/gopherp.py, pygopherd/protocols/rfc1436.py:
+	First stab at protocols.py -> protocols/* conversion.
+
+2002-03-26 09:24  jgoerzen
+
+	* doc/standards/rfc1436.txt: Added.
+
+2002-03-25 19:32  jgoerzen
+
+	* handlers.py, protocols.py: Updates for pre-http redir support.
+
+2002-03-25 19:01  jgoerzen
+
+	* handlers.py: Fixed an error arising from the rename.
+
+2002-03-25 18:58  jgoerzen
+
+	* handlers.py, protocols.py, rhandler.py: Rearranged code -- split
+	rhandler.py into handlers.py and protocols.py
+
+2002-03-25 16:47  jgoerzen
+
+	* rhandler.py: bug fixes
+
+2002-03-25 16:27  jgoerzen
+
+	* rhandler.py: Fixed compile error
+
+2002-03-25 16:26  jgoerzen
+
+	* rhandler.py, conf/pygopherd.conf: Rewrite in progress.
+
+2002-03-25 13:27  jgoerzen
+
+	* rhandler.py: More updates.
+
+2002-03-25 13:21  jgoerzen
+
+	* rhandler.py, conf/pygopherd.conf: Basic functionality is working.
+
+2002-03-25 12:17  jgoerzen
+
+	* rhandler.py: Some updates.
+
+2002-03-25 12:14  jgoerzen
+
+	* rhandler.py, conf/pygopherd.conf: Updated.
+
+2002-03-25 10:09  jgoerzen
+
+	* COPYING: Added license.
+

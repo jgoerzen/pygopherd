@@ -1,6 +1,7 @@
 #!/usr/bin/make -f
 # Sample debian/rules that uses debhelper.
 # GNU copyright 1997 to 1999 by Joey Hess.
+# Modified by John Goerzen
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -8,6 +9,8 @@
 # This is the debhelper compatibility version to use.
 export DH_COMPAT=3
 
+PYTHON=python2.2
+PACKAGE=pygopherd
 
 
 ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
@@ -21,6 +24,7 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
+	$(PYTHON) setup.py configure
 
 	touch configure-stamp
 
@@ -31,7 +35,7 @@ build-stamp: configure-stamp
 	dh_testdir
 
 	# Add here commands to compile the package.
-	$(MAKE)
+	$(PYTHON) setup.py build
 	#/usr/bin/docbook-to-man debian/pygopherd.sgml > pygopherd.1
 
 	touch build-stamp
@@ -43,6 +47,7 @@ clean:
 
 	# Add here commands to clean up after the build process.
 	-$(MAKE) clean
+	-$(PYTHON) setup.py clean --all
 
 	dh_clean
 
@@ -53,7 +58,8 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/pygopherd.
-	$(MAKE) install DESTDIR=$(CURDIR)/debian/pygopherd
+	#$(MAKE) install DESTDIR=$(CURDIR)/debian/pygopherd
+	$(PYTHON) setup.py install --root=`pwd`/debian/$(PACKAGE) --no-compile
 
 
 # Build architecture-independent files here.

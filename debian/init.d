@@ -14,7 +14,8 @@
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/pygopherd
 NAME=pygopherd
-DESC=pygopherd
+DESC=Python Gopher Server
+CONF=/etc/pygopherd/pygopherd.conf
 
 test -f $DAEMON || exit 0
 
@@ -23,8 +24,8 @@ set -e
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
-	start-stop-daemon --start --quiet --pidfile /var/run/$NAME.pid \
-		--exec $DAEMON
+	start-stop-daemon --start --quiet --m -b --pidfile /var/run/$NAME.pid \
+		--exec $DAEMON -- $CONF
 	echo "$NAME."
 	;;
   stop)
@@ -55,7 +56,7 @@ case "$1" in
 	start-stop-daemon --stop --quiet --pidfile \
 		/var/run/$NAME.pid --exec $DAEMON
 	sleep 1
-	start-stop-daemon --start --quiet --pidfile \
+	start-stop-daemon --start --quiet -m -b --pidfile \
 		/var/run/$NAME.pid --exec $DAEMON
 	echo "$NAME."
 	;;
