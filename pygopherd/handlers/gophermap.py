@@ -18,16 +18,18 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
         return self.entry
 
     def prepare(self):
-        self.rfile = open(fsbase + '/gophermap', 'rb')
+        self.selectorbase = self.selector
+        if self.selectorbase == '/':
+            self.selectorbase = ''           # Avoid dup slashes
+        self.fsbase = self.getfspath()
+        if self.fsbase == '/':
+            self.fsbase = ''                 # Avoid dup slashes
+
+        self.rfile = open(self.fsbase + '/gophermap', 'rb')
 
     def write(self, wfile):
-        selectorbase = self.selector
-        if selectorbase == '/':
-            selectorbase = ''           # Avoid dup slashes
-        fsbase = self.getfspath()
-        if fsbase == '/':
-            fsbase = ''                 # Avoid dup slashes
-
+        fsbase = self.fsbase
+        selectorbase = self.selectorbase
         for line in self.rfile:
             if re.search("\t", line):   # gophermap link
                 args = map(lambda arg: arg.strip(), line.split("\t"))
