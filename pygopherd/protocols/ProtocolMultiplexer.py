@@ -19,11 +19,32 @@
 
 from pygopherd import handlers, protocols
 from pygopherd.protocols import *
+from pygopherd.GopherExceptions import FileNotFound
+import re
 
 def getProtocol(request, server, requesthandler, rfile, wfile, config):
     p = eval(config.get("protocols.ProtocolMultiplexer", "protocols"))
 
+    # Do a security check.
+
+    securityprob = 0
+
+    if (request.find("./") != -1) or \
+       (request.find("//") != -1):
+        securityprob = 1
+
     for protocol in p:
         ptry = protocol(request, server, requesthandler, rfile, wfile, config)
         if ptry.canhandlerequest():
-            return ptry
+            if securityprob:
+                # Raise an exception and catch it.
+                try:
+                    raise FileNotFound, \
+                          [request.strip(),
+                           "Request may not contain ./, ../, or //",
+                           ptry]
+                except FileNotFound, e:
+                    ptry.filenotfound(str(e))
+                    raise e
+            else:
+                return ptry

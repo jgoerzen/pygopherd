@@ -49,13 +49,6 @@ class BaseGopherProtocol:
 
         selector = requestparts[0]
 
-        if re.match('\./', selector):    # Weed out ./ and ../
-            # FIXME: THROW ERROR!
-            pass
-        if re.match('//', selector):     # Weed out //
-            # FIXME: THROW ERROR
-            pass
-        
         if len(selector) and selector[-1] == '/':
                 selector = selector[0:-1]
         if len(selector) == 0 or selector[0] != '/':
