@@ -104,7 +104,10 @@ def getserverobject(config):
                 self.server_name = config.get("pygopherd", "servername")
             else:
                 self.server_name = socket.getfqdn(host)
-            self.server_port = port
+            if config.has_option("pygopherd", "advertisedport"):
+                self.server_port = config.getint("pygopherd", "advertisedport")
+            else:
+                self.server_port = port
 
     # Instantiate a server.  Has to be done before the security so we can
     # get a privileged port if necessary.
