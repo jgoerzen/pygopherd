@@ -1,4 +1,4 @@
-# Copyright (C) 2002 John Goerzen
+# Copyright (C) 2002, 2003 John Goerzen
 # <jgoerzen@complete.org>
 #
 #    This program is free software; you can redistribute it and/or modify
@@ -28,7 +28,11 @@ changelog:
 	svn log -v > ChangeLog
 
 docs:
+	docbook2man pygopherd.sgml
+	docbook2man pygopherd.sgml
+	docbook2html -u pygopherd.sgml
+	mv pygopherd.html manual.html
 	man -t -l pygopherd.8 > manual.ps
 	ps2pdf manual.ps
 	groff -Tascii -man pygopherd.8 | sed $$'s/.\b//g' > manual.txt
-	groff -Thtml -man pygopherd.8 > manual.html
+	-rm manpage.links manpage.refs
