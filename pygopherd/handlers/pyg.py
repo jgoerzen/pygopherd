@@ -1,4 +1,4 @@
-from pygopherd import protocols, handlers, gopherentry
+from pygopherd import protocols, gopherentry
 from pygopherd.handlers.base import BaseHandler
 from pygopherd.handlers.virtual import Virtual
 from stat import *

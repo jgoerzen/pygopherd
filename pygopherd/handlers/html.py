@@ -22,7 +22,7 @@ import HTMLParser
 import SocketServer
 import re
 import os, stat, os.path, mimetypes
-from pygopherd import protocols, gopherentry, handlers
+from pygopherd import protocols, gopherentry
 from pygopherd.gopherentry import GopherEntry
 import htmlentitydefs
 from stat import *

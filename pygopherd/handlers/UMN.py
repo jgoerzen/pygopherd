@@ -20,9 +20,10 @@
 import SocketServer
 import re
 import os, stat, os.path, mimetypes
-from pygopherd import protocols, gopherentry, handlers
+from pygopherd import protocols, gopherentry
 from pygopherd.gopherentry import GopherEntry
 from pygopherd.handlers.dir import DirHandler
+from pygopherd.handlers.file import FileHandler
 from stat import *
 import pygopherd.fileext
 
@@ -88,7 +89,7 @@ class UMNDirHandler(DirHandler):
             extstrip = self.config.get("handlers.UMN.UMNDirHandler",
                                        "extstrip")
         if extstrip != 'none' and \
-               isinstance(handler, handlers.file.FileHandler):
+               isinstance(handler, FileHandler):
             if extstrip == 'full' or \
                (extstrip == 'nonencoded' and not fileentry.getencoding()):
                 # If it's a file, has a MIME type, and we know about it..

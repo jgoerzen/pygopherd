@@ -18,7 +18,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-from pygopherd import protocols, handlers, gopherentry
+from pygopherd import protocols, gopherentry
 from pygopherd.handlers.base import BaseHandler
 from pygopherd.handlers.virtual import Virtual
 import pygopherd.pipe

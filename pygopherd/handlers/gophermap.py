@@ -20,10 +20,11 @@
 import SocketServer
 import re
 import os, stat, os.path, mimetypes
-from pygopherd import protocols, gopherentry, handlers
+from pygopherd import protocols, gopherentry
+from pygopherd.handlers import base
 from stat import *
 
-class BuckGophermapHandler(handlers.base.BaseHandler):
+class BuckGophermapHandler(base.BaseHandler):
     """Bucktooth selector handler.  Adheres to the specification
     at gopher://gopher.floodgap.com:70/0/buck/dbrowse%3Ffaquse%201"""
     def canhandlerequest(self):

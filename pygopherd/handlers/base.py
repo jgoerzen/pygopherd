@@ -20,7 +20,7 @@
 import SocketServer
 import re
 import os, stat, os.path, mimetypes
-from pygopherd import protocols, handlers, gopherentry
+from pygopherd import protocols, gopherentry
 
 rootpath = None
 
@@ -130,3 +130,8 @@ class BaseHandler:
             raise Exception, "Attempt to use getdir for a file."
         return []
     
+    def gethandler(self):
+        """Returns the handler to use to process this request.  For all
+        but special cases (rewriting handleres, for instance), this should
+        return self."""
+        return self

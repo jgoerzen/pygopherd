@@ -22,13 +22,14 @@ import SocketServer
 import re
 import os, stat, os.path, mimetypes, time
 from pygopherd import protocols, gopherentry, handlers
+from pygopherd.handlers import base
 from stat import *
 import cPickle
 
 cachetime = None
 cachefile = None
 
-class DirHandler(handlers.base.BaseHandler):
+class DirHandler(base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a directory."""
         return self.statresult and S_ISDIR(self.statresult[ST_MODE])

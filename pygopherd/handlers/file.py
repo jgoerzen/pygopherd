@@ -20,11 +20,12 @@
 import SocketServer
 import re
 import os, stat, os.path, mimetypes
-from pygopherd import protocols, handlers, gopherentry
+from pygopherd import protocols, gopherentry
+from pygopherd.handlers import base
 import pygopherd.pipe
 from stat import *
 
-class FileHandler(handlers.base.BaseHandler):
+class FileHandler(base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a file."""
         return self.statresult and S_ISREG(self.statresult[ST_MODE])

@@ -19,3 +19,5 @@
 
 __all__ = ['base', 'dir', 'file', 'url', 'gophermap',
            'UMN', 'html', 'mbox', 'virtual', 'pyg', 'scriptexec']
+#import base, dir, file, gophermap, UMN, html, mbox, virtual, pyg
+#import scriptexec, url
