@@ -435,17 +435,20 @@ class ZipReader:
 
     def read(self, name):
         fd = StringIO()
-        fd = self.copyto(name, fd)
+        self.copyto(name, fd)
         return fd.getvalue()
 
-    def _open_zinfo(self, zi):
-        return FileSimulator(ZipDecompressor(self.fp, zi), None, -1)
-        
-    def open(self, name):
+    def open_zinfo(self, zi):
         if not self.fp:
             raise RuntimeError, \
                   "Attempt to read ZIP archive that was already closed"
-        return self._open_zinfo(self.getinfo(name))
+        return FileSimulator(ZipDecompressor(self.fp, zi), None, -1)
+        
+    def open(self, name):
+        return self.open_zinfo(self.getinfo(name))
+
+    def open_pos(self, location):
+        return self.open_zinfo(self.getinfofrompos(location))
 
     def copyto(self, name, fd):
         """Copy the contents of the named file to the given descriptor."""

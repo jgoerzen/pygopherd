@@ -177,7 +177,7 @@ class VFS_Zip(base.VFS_Real):
         #if not self._islinkfspath(fspath):
         #    raise ValueError, "Readlinkfspath called on %s which is not a link" % fspath
 
-        return self._open(fspath).read()
+        return self.zip.read(fspath)
 
     def _readlink(self, selector):
         return self._readlinkfspath(self, self._getfspathfinal(selector))
@@ -296,7 +296,7 @@ class VFS_Zip(base.VFS_Real):
         return self._isentryincache(fspath)
 
     def _open(self, fspath):
-        return self.zip.open(fspath)
+        return self.zip.open_pos(self._getcacheentry(fspath))
 
     def open(self, selector, *args, **kwargs):
         if self._needschain(selector):
