@@ -150,11 +150,11 @@ class WAPProtocol(HTTPProtocol):
         
     def filenotfound(self, msg):
         wfile = self.wfile
-        wfile.write("HTTP/1.0 404 Not Found\r\n")
+        wfile.write("HTTP/1.0 200 Not Found\r\n")
         wfile.write("Content-Type: text/vnd.wap.wml\r\n\r\n")
         wfile.write(wmlheader)
         wfile.write('<card id="index" title="404 Error" newcontext="true">\n')
-        wfile.write('<p>\n')
+        wfile.write('<p><b>Gopher Error</b></p><p>\n')
         wfile.write(cgi.escape(msg)+ "\n")
         wfile.write('</p>\n</card>\n</wml>\n')
     
