@@ -191,6 +191,7 @@ def initeverything(conffile):
     pgrp = initpgrp(config)
     initsighandlers(config, pgrp)
     initsecurity(config)
+    os.chdir(config.get("pygopherd", "root"))
 
     logger.log("Running.  Root is '%s'" % config.get("pygopherd", "root"))
     return s
