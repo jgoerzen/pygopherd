@@ -17,28 +17,12 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import re, zipfile, time, stat, unittest, os.path, struct, types, copy
-import cPickle, fcntl
 from StringIO import StringIO
 
 UNX_IFMT = 0170000
 UNX_IFLNK = 0120000
 
 from pygopherd.handlers import base
-
-def GetPicklableZipFile(zipfile, chain, zipfilename, dircache):
-    pzf = copy.copy(zipfile)
-    pzf.fp = None
-    return (pzf, chain, zipfilename, dircache)
-
-def UnpickleZipFileObject(pickleobj):
-    """Warning: if read-write ZIPs are ever implemented along with
-    nested zips, this or the above may break.
-
-    Returns a new (ZipFile, dircache) object."""
-
-    (zipfile, chain, zipfilename, dircache) = pickleobj
-    zipfile.fp = chain.open(zipfilename)
-    return (zipfile, dircache)
 
 class VFS_Zip(base.VFS_Real):
     def __init__(self, config, chain, zipfilename):
@@ -47,67 +31,12 @@ class VFS_Zip(base.VFS_Real):
         self.zipfilename = zipfilename
         self._initzip()
 
-    def _getcachefilename(self):
-        (dir, file) = os.path.split(self.zipfilename)
-        return os.path.join(dir, '.cache.pygopherd.zip.' + file)
-
-    def _loadcache(self):
-        filename = self._getcachefilename()
-        if self.chain.iswritable(filename):
-            zipfilemtime = self.chain.stat(self.zipfilename)[stat.ST_MTIME]
-            try:
-                cachemtime = self.chain.stat(filename)[stat.ST_MTIME]
-            except OSError:
-                return 0
-
-            if zipfilemtime > cachemtime:
-                return 0
-            
-            try:
-                fd = self.chain.open(filename)
-            except OSError:
-                return 0
-
-            fcntl.flock(fd, fcntl.LOCK_SH)
-            (self.zip, self.dircache) = \
-                           UnpickleZipFileObject(cPickle.load(fd))
-            fcntl.flock(fd, fcntl.LOCK_UN)
-            return 1
-
-    def _savecache(self):
-        filename = self._getcachefilename()
-        if not self.chain.iswritable(filename):
-            return
-
-        try:
-            fd = self.chain.open(filename, 'wb')
-        except OSError:
-            return
-
-        fcntl.flock(fd, fcntl.LOCK_EX)
-        try:
-            cPickle.dump(GetPicklableZipFile(self.zip, self.chain,
-                                             self.zipfilename, self.dircache),
-                         fd, 1)
-        except:
-            self.chain.unlink(filename)
-            fd.close()
-            raise
-
-        fd.close()
-
     def _initzip(self):
-        if self._loadcache():
-            self.memberinfo = self.zip.NameToInfo
-        else:
-            # For reading from a new Zip file.
-            zipfd = self.chain.open(self.zipfilename)
-            self.zip = zipfile.ZipFile(zipfd, 'r')
-            self.dircache = None
-            # For reloading an existing one.  Must be called before _cachedir.
-            self.memberinfo = self.zip.NameToInfo
-            self._cachedir()
-            self._savecache()
+        zipfd = self.chain.open(self.zipfilename)
+        self.zip = zipfile.ZipFile(zipfd, 'r')
+        self.dircache = None
+        self.memberinfo = self.zip.NameToInfo
+        self._cachedir()
 
     def _isentryincache(self, fspath):
         try:
@@ -121,12 +50,13 @@ class VFS_Zip(base.VFS_Real):
         if fspath == '':
             return cur
         for item in fspath.split('/'):
-            if type(cur) != types.DictType:
-                raise KeyError, "Call for %s: couldn't find %s" % (fspath, item)
             try:
                 cur = cur[item]
             except KeyError:
                 raise KeyError, "Call for %s: Couldn't find %s" % (fspath, item)
+            except AttributeError:
+                raise KeyError, "Call for %s: couldn't find %s" % (fspath, item)
+                
         return cur
 
     def _cachedir(self):
@@ -210,8 +140,13 @@ class VFS_Zip(base.VFS_Real):
         return selector
     
     def _transformlink(self, fspath):
-        while self._islinkfspath(fspath):
-            linkdest = self._readlinkfspath(fspath)
+        while 1:
+            try:
+                linkdest = self._readlinkfspath(fspath)
+            except ValueError:
+                # It's not a link.
+                return fspath
+            
             if linkdest.startswith('/'):
                 fspath = os.path.normpath(linkdest)[1:]
             else:
@@ -322,9 +257,9 @@ class VFS_Zip(base.VFS_Real):
         try:
             item = self._getcacheentry(fspath)
         except KeyError:
-            raise IOError, "Request to open %s, which does not exist" % selector
+            raise IOError, "Request to open non-existant file"
         if type(item) == types.DictType:
-            raise IOError, "Request to open %s, which is a directory" % selector
+            raise IOError, "Request to open a directory"
 
         return self._open(fspath)
 

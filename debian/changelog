@@ -1,3 +1,15 @@
+pygopherd (1.99.3) unstable; urgency=low
+
+  * Backed out ZIP content cache.  Was slower than the ZIP file itself.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu,  6 Mar 2003 15:43:03 -0600
+
+pygopherd (1.99.2) unstable; urgency=low
+
+  * Made some aggressive optimizations in the ZIP handler.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu,  6 Mar 2003 15:34:08 -0600
+
 pygopherd (1.99.1) unstable; urgency=low
 
   * Fixed a bug in html handler.
