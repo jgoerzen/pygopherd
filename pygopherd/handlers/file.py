@@ -53,6 +53,9 @@ decompresspatt = None
 class CompressedFileHandler(FileHandler):
     def canhandlerequest(self):
         self.initdecompressors()
+
+        # It's OK to call just canhandlerequest() since we're not
+        # overriding the security or isrequestforme functions.
         
         return FileHandler.canhandlerequest(self) and \
                self.getentry().realencoding and \

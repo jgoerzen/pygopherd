@@ -19,7 +19,7 @@ class PYGHandler(Virtual):
         self.pygobject = self.pygclass(self.selector, self.searchrequest,
                                        self.protocol,
                                        self.config, self.statresult)
-        return self.pygobject.canhandlerequest()
+        return self.pygobject.isrequestforme()
         
     def prepare(self):
         return self.pygobject.prepare()

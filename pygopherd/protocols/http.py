@@ -1,5 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: serve up gopherspace via http
+# $Id: http.py,v 1.15 2002/04/12 16:39:50 jgoerzen Exp $
 # Copyright (C) 2002 John Goerzen
 # <jgoerzen@complete.org>
 #

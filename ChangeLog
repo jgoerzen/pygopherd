@@ -1,3 +1,27 @@
+2002-04-12 11:39  jgoerzen
+
+	* pygopherd/: handlers/HandlerMultiplexer.py, handlers/base.py,
+	handlers/file.py, handlers/pyg.py, handlers/url.py,
+	protocols/ProtocolMultiplexer.py, protocols/http.py: Re-did
+	checking for ., .., etc.  Fixed some corner cases.
+
+2002-04-12 11:39  jgoerzen
+
+	* ChangeLog: Updated.
+
+2002-04-11 22:13  jgoerzen
+
+	* pygopherd/protocols/http.py: Fixed bug with rendering URLs.
+
+2002-04-11 22:07  jgoerzen
+
+	* pygopherd/handlers/gophermap.py: Forgot to call renderdirstart
+	and renderdirend.
+
+2002-04-11 16:41  jgoerzen
+
+	* ChangeLog: RELEASE 0.9.3
+
 2002-04-11 16:41  jgoerzen
 
 	* debian/changelog, pygopherd/version.py: REVVED FOR RELEASE 0.9.3

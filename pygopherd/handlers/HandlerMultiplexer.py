@@ -34,11 +34,11 @@ def getHandler(selector, searchrequest, protocol, config):
     # SECURITY: assert that our absolute path is within the absolute
     # path of the site root.
 
-    if not os.path.abspath(rootpath + '/' + selector). \
-       startswith(os.path.abspath(rootpath)):
-        raise GopherExceptions.FileNotFound, \
-              [selector, "Requested document is outside the server root",
-               protocol]
+    #if not os.path.abspath(rootpath + '/' + selector). \
+    #   startswith(os.path.abspath(rootpath)):
+    #    raise GopherExceptions.FileNotFound, \
+    #          [selector, "Requested document is outside the server root",
+    #           protocol]
 
     for handler in handlers:
         statresult = None
@@ -47,7 +47,7 @@ def getHandler(selector, searchrequest, protocol, config):
         except OSError:
             pass
         htry = handler(selector, searchrequest, protocol, config, statresult)
-        if htry.canhandlerequest():
+        if htry.isrequestforme():
             return htry
     
     raise GopherExceptions.FileNotFound, \

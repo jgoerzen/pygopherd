@@ -30,6 +30,15 @@ class HTMLURLHandler(handlers.base.BaseHandler):
     http://www.complete.org/mailinglists/archives/gopher-200202/msg00033.html
     """
     
+    def isrequestsecure(self):
+        """For URLs, it is valid to have .., //, etc in the URLs."""
+        return self.canhandlerequest() and \
+               self.selector.find("\0") == -1 and \
+               self.selector.find("\n") == -1 and \
+               self.selector.find("\t") == -1 and \
+               self.selector.find('"') == -1 and \
+               self.selector.find("\r") == -1
+
     def canhandlerequest(self):
         """We can handle the request if it's for something that starts
         with http or https."""

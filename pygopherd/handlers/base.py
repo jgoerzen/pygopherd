@@ -43,6 +43,32 @@ class BaseHandler:
         self.entry = None
         self.searchrequest = searchrequest
 
+    def isrequestforme(self):
+        """Called by multiplexers or other handlers.  The default
+        implementation is just:
+
+        return self.isrequestsecure() and self.canhandlerequest()
+        """
+        return self.isrequestsecure() and self.canhandlerequest()
+
+    def isrequestsecure(self):
+        """An auxiliary to canhandlerequest.  In order for this handler
+        to be selected for handling a given request, both the securitycheck
+        and the canhandlerequest should be invoked.  The securitycheck is
+        intended to be a short, small, quick check -- usually not even
+        looking at the filesystem.  Here is a default.  Returns true
+        if the request is secure, false if not.  By default, we eliminate
+        ./, ../, and //"""
+        print "isrequestsecure on", self.selector
+        print "First test result", self.selector.find("./")
+        return (self.selector.find("./") == -1) and \
+               (self.selector.find("..") == -1) and \
+               (self.selector.find("//") == -1) and \
+               (self.selector.find(".\\") == -1) and \
+               (self.selector.find("\\\\") == -1) and \
+               (self.selector.find("\0") == -1)
+        
+
     def canhandlerequest(self):
         """Decides whether or not a given request is valid for this
         handler.  Should be overridden by all subclasses."""
@@ -55,8 +81,8 @@ class BaseHandler:
         return self.entry
 
     def getrootpath(self):
-        global rootpath
         """Gets the root path."""
+        global rootpath
         if not rootpath:
             rootpath = self.config.get("pygopherd", "root")
         return rootpath
@@ -85,3 +111,4 @@ class BaseHandler:
 
     def getselector(self):
         return self.selector
+
