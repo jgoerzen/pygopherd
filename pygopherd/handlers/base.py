@@ -67,11 +67,10 @@ class BaseHandler:
     def prepare(self):
         """Prepares for a write.  Ie, opens a file.  This is
         used so that the protocols can try to detect an error before
-        transmitting a result."""
+        transmitting a result.  Must always be called before write."""
         pass
 
     def write(self, wfile):
-        """Writes out the request.  Should be overridden.
-        Must always be called before write."""
+        """Writes out the request.  Should be overridden.""
         pass
 

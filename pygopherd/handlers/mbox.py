@@ -43,7 +43,6 @@ class FolderHandler(handlers.base.BaseHandler):
         ## Return my own entry.
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
-            # Populate, then override.
             self.entry.settype('1')
             self.entry.setname(os.path.basename(self.selector))
             self.entry.setmimetype('application/gopher-menu')
@@ -119,6 +118,11 @@ class MessageHandler(handlers.base.BaseHandler):
         self.canhandlerequest()         # Init the vars
 
     def write(self, wfile):
+        # Print out the headers first.
+        for header in self.getmessage().headers:
+            wfile.write(header)
+
+        # Now the message body.
         self.rfile = self.getmessage().fp
         while 1:
             string = self.rfile.read(4096)
