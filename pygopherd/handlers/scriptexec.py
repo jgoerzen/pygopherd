@@ -18,7 +18,7 @@
 
 
 from pygopherd import protocols, gopherentry
-from pygopherd.handlers.base import BaseHandler
+from pygopherd.handlers.base import BaseHandler, VFS_Real
 from pygopherd.handlers.virtual import Virtual
 import pygopherd.pipe
 from stat import *
@@ -26,7 +26,9 @@ import imp, re, os
 
 class ExecHandler(Virtual):
     def canhandlerequest(self):
-        return self.statresult and S_ISREG(self.statresult[ST_MODE]) and \
+        # We ONLY handle requests from the real filesystem.
+        return isinstance(self.vfs, VFS_Real) and \
+               self.statresult and S_ISREG(self.statresult[ST_MODE]) and \
                (S_IMODE(self.statresult[ST_MODE]) & S_IXOTH)
         
     def getentry(self):

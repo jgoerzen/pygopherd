@@ -71,8 +71,8 @@ class UMNDirHandler(DirHandler):
             # If the parent says it's OK, then let's see if it's
             # a link file.  If yes, process it and return false.
             if file[0] == '.':
-                if not os.path.isdir(self.fsbase + '/' + file):
-                    self.linkentries.extend(self.processLinkFile(self.fsbase + '/' + file))
+                if not self.vfs.isdir(self.selectorbase + '/' + file):
+                    self.linkentries.extend(self.processLinkFile(self.selectorbase + '/' + file))
                     return 0
                 else:
                     return 0            # A "dot dir" -- ignore.
@@ -100,7 +100,7 @@ class UMNDirHandler(DirHandler):
                                                fileentry.getencodedmimetype() or
                                                fileentry.getmimetype()))
         
-        capfilename = self.fsbase + '/.cap/' + file
+        capfilename = self.selectorbase + '/.cap/' + file
         
         try:
             capinfo = self.processLinkFile(capfilename,
@@ -155,7 +155,7 @@ class UMNDirHandler(DirHandler):
         """Processes a link file.  If capfilepath is set, it should
         be the equivolent of the Path= in a .names file."""
         linkentries = []
-        fd = open(filename, "rt")
+        fd = self.vfs.open(filename, "rt")
         while 1:
             nextstep, entry = self.getLinkItem(fd, capfilepath)
             if entry:

@@ -8,9 +8,10 @@ class Virtual(BaseHandler):
     not be instantiated itself but it is designed to be instantiated by
     its children."""
 
-    def __init__(self, selector, searchrequest, protocol, config, statresult):
+    def __init__(self, selector, searchrequest, protocol, config, statresult,
+                 vfs = None):
         BaseHandler.__init__(self, selector, searchrequest,
-                             protocol, config, statresult)
+                             protocol, config, statresult, vfs)
 
         # These hold the "real" and the "argument" portion of the selector,
         # respectively.
@@ -25,8 +26,7 @@ class Virtual(BaseHandler):
             # Now, retry the stat with the real selector.
             self.statresult = None
             try:
-                self.statresult = os.stat(self.getrootpath() + '/' +
-                                          self.selectorreal)
+                self.statresult = self.vfs.stat(self.selectorreal)
             except OSError:
                 pass
         else:

@@ -23,10 +23,15 @@ import os, re
 handlers = None
 rootpath = None
 
-def getHandler(selector, searchrequest, protocol, config, handlerlist = None):
+def getHandler(selector, searchrequest, protocol, config, handlerlist = None,
+               vfs = None):
     """Called without handlerlist specified, uses the default as listed
     in config."""
     global handlers, rootpath
+
+    if vfs == None:
+        from pygopherd.handlers.base import VFS_Real
+        vfs = VFS_Real(config)
 
     if not handlers:
         handlers = eval(config.get("handlers.HandlerMultiplexer",
@@ -47,10 +52,11 @@ def getHandler(selector, searchrequest, protocol, config, handlerlist = None):
     for handler in handlerlist:
         statresult = None
         try:
-            statresult = os.stat(rootpath + '/' + selector)
+            statresult = vfs.stat(selector)
         except OSError:
             pass
-        htry = handler(selector, searchrequest, protocol, config, statresult)
+        htry = handler(selector, searchrequest, protocol, config, statresult,
+                       vfs)
         if htry.isrequestforme():
             return htry.gethandler()
     

@@ -29,16 +29,16 @@ class BuckGophermapHandler(base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a directory AND
         the directory has a gophermap file."""
-        return os.path.isfile(self.getfspath() + '/gophermap') or \
+        return self.vfs.isfile(self.getselector() + '/gophermap') or \
                (self.statresult and S_ISREG(self.statresult[ST_MODE]) and \
-                self.getfspath().endswith(".gophermap"))
+                self.getselector().endswith(".gophermap"))
 
     def getentry(self):
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
             if (self.statresult and S_ISREG(self.statresult[ST_MODE]) and \
-                self.getfspath().endswith(".gophermap")):
-                self.entry.populatefromfs(os.path.dirname(self.getfspath()))
+                self.getselector().endswith(".gophermap")):
+                self.entry.populatefromvfs(self.vfs, self.getselector())
             else:
                 self.entry.populatefromfs(self.getfspath(), self.statresult)
             
@@ -48,15 +48,12 @@ class BuckGophermapHandler(base.BaseHandler):
         self.selectorbase = self.selector
         if self.selectorbase == '/':
             self.selectorbase = ''           # Avoid dup slashes
-        self.fsbase = self.getfspath()
-        if self.fsbase == '/':
-            self.fsbase = ''                 # Avoid dup slashes
 
-        if self.getfspath().endswith(".gophermap") and \
+        if self.getselector().endswith(".gophermap") and \
            self.statresult and S_ISREG(self.statresult[ST_MODE]):
-            self.rfile = open(self.getfspath(), 'rb')
+            self.rfile = self.vfs.open(self.getselector(), 'rb')
         else:
-            self.rfile = open(self.fsbase + '/gophermap', 'rb')
+            self.rfile = self.vfs.open(self.selectorbase + '/gophermap', 'rb')
 
         self.entries = []
 
@@ -90,8 +87,8 @@ class BuckGophermapHandler(base.BaseHandler):
                 if entry.gethost() == None and entry.getport() == None:
                     # If we're using links on THIS server, try to fill
                     # it in for gopher+.
-                    if os.path.exists(self.getrootpath() + selector):
-                        entry.populatefromfs(self.getrootpath() + selector)
+                    if self.vfsexists(selector):
+                        entry.populatefromvfs(self.vfs, selector)
                 self.entries.append(entry)
             else:                       # Info line
                 line = line.strip()

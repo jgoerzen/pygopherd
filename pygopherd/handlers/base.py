@@ -23,9 +23,52 @@ from pygopherd import protocols, gopherentry
 
 rootpath = None
 
+class VFS_Real:
+    def __init__(self, config, chain = None):
+        """This implementation does not chain."""
+        self.config = config
+    
+    def iswritable(self, selector):
+        return 1
+
+    def stat(self, selector):
+        return os.stat(self.getfspath(selector))
+
+    def isdir(self, selector):
+        return os.path.isdir(self.getfspath(selector))
+
+    def isfile(self, selector):
+        return os.path.isfile(self.getfspath(selector))
+
+    def exists(self, selector):
+        return os.path.exists(self.getfspath(selector))
+
+    def open(self, selector, *args, **kwargs):
+        return apply(open, (self.getfspath(selector),) + args, kwargs)
+
+    def listdir(self, selector):
+        return os.listdir(self.getfspath(selector))
+
+    def getrootpath(self):
+        global rootpath
+        if not rootpath:
+            rootpath = self.config.get("pygopherd", "root")
+        return rootpath
+
+    def getfspath(self, selector):
+        """Gets the filesystem path corresponding to the selector."""
+
+        fspath = self.getrootpath() + selector
+        # Strip off trailing slash.
+        if fspath[-1] == '/':
+            fspath = fspath[0:-1]
+
+        return fspath
+
 class BaseHandler:
     """Skeleton handler -- includes commonly-used routines."""
-    def __init__(self, selector, searchrequest, protocol, config, statresult):
+    def __init__(self, selector, searchrequest, protocol, config, statresult,
+                 vfs = None):
         """Parameters are:
         selector -- requested selector.  The selector must always start
         with a slash and never end with a slash UNLESS it is a one-char
@@ -41,6 +84,10 @@ class BaseHandler:
         self.fspath = None
         self.entry = None
         self.searchrequest = searchrequest
+        if not vfs:
+            self.vfs = VFS_Real(self.config)
+        else:
+            self.vfs = vfs
 
     def isrequestforme(self):
         """Called by multiplexers or other handlers.  The default
@@ -78,23 +125,9 @@ class BaseHandler:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
         return self.entry
 
-    def getrootpath(self):
-        """Gets the root path."""
-        global rootpath
-        if not rootpath:
-            rootpath = self.config.get("pygopherd", "root")
-        return rootpath
-
     def getfspath(self):
-        """Gets the filesystem path corresponding to the selector."""
-        if self.fspath:
-            return self.fspath
-
-        self.fspath = self.getrootpath() + self.getselector()
-        # Strip off trailing slash.
-        if self.fspath[-1] == '/':
-            self.fspath = self.fspath[0:-1]
-
+        if not self.fspath:
+            self.fspath = self.vfs.getfspath(self.getselector())
         return self.fspath
 
     def prepare(self):
@@ -134,3 +167,4 @@ class BaseHandler:
         but special cases (rewriting handleres, for instance), this should
         return self."""
         return self
+

@@ -42,7 +42,7 @@ class DirHandler(base.BaseHandler):
     def prep_initfiles(self):
         "Initialize the list of files.  Ignore the files we're suppoed to."
         self.files = []
-        dirfiles = os.listdir(self.getfspath())
+        dirfiles = self.vfs.listdir(self.getselector())
         ignorepatt = self.config.get("handlers.dir.DirHandler", "ignorepatt")
         for file in dirfiles:
             if self.prep_initfiles_canaddfile(ignorepatt,
@@ -76,9 +76,6 @@ class DirHandler(base.BaseHandler):
     def prepare(self):
         # Initialize some variables.
 
-        self.fsbase = self.getfspath()
-        if self.fsbase == '/':
-            self.fsbase = ''                 # Avoid dup slashes
         self.selectorbase = self.selector
         if self.selectorbase == '/':
             self.selectorbase = ''           # Avoid dup slashes        
@@ -104,21 +101,24 @@ class DirHandler(base.BaseHandler):
 
     def loadcache(self):
         global cachetime, cachefile
+
         self.fromcache = 0
         if cachetime == None:
             cachetime = self.config.getint("handlers.dir.DirHandler",
                                            "cachetime")
             cachefile = self.config.get("handlers.dir.DirHandler",
                                         "cachefile")
+        cachename = self.selector + "/" + cachefile
+        if not self.vfs.iswritable(cachename):
+            return 0
 
-        cachename = self.fsbase + "/" + cachefile
         try:
-            statval = os.stat(cachename)
+            statval = self.vfs.stat(cachename)
         except OSError:
             return 0
 
         if (time.time() - statval[stat.ST_MTIME] < cachetime):
-            fp = open(cachename, "rb")
+            fp = self.vfs.open(cachename, "rb")
             self.fileentries = cPickle.load(fp)
             fp.close()
             self.fromcache = 1
@@ -130,8 +130,10 @@ class DirHandler(base.BaseHandler):
         if self.fromcache:
             # Don't resave the cache.
             return
+        if not self.vfs.iswritable(self.selector + "/" + cachefile):
+            return
         try:
-            fp = open(self.fsbase + "/" + cachefile, "wb")
+            fp = self.vfs.open(self.selector + "/" + cachefile, "wb")
             cPickle.dump(self.fileentries, fp, 1)
             fp.close()
         except IOError:

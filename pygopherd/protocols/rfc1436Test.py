@@ -53,6 +53,8 @@ class RFC1436TestCase(unittest.TestCase):
 '9testarchive\t/testarchive.tar\tHOSTNAME\t64777\t+',
 '9testarchive.tar.gz\t/testarchive.tar.gz\tHOSTNAME\t64777\t+',
 '9testarchive.tgz\t/testarchive.tgz\tHOSTNAME\t64777\t+',
+'9testdata\t/testdata.zip\tHOSTNAME\t64777\t+',
+'9testdata2\t/testdata2.zip\tHOSTNAME\t64777\t+',
 '0testfile\t/testfile.txt\tHOSTNAME\t64777\t+',
 '9testfile.txt.gz\t/testfile.txt.gz\tHOSTNAME\t64777\t+',
 'iThis is the abstract\tfake\t(NULL)\t0',
@@ -78,6 +80,8 @@ class RFC1436TestCase(unittest.TestCase):
               '9testarchive\t/testarchive.tar\tHOSTNAME\t64777\t+',
               '9testarchive.tar.gz\t/testarchive.tar.gz\tHOSTNAME\t64777\t+',
               '9testarchive.tgz\t/testarchive.tgz\tHOSTNAME\t64777\t+',
+              '9testdata\t/testdata.zip\tHOSTNAME\t64777\t+',
+              '9testdata2\t/testdata2.zip\tHOSTNAME\t64777\t+',
               '0testfile\t/testfile.txt\tHOSTNAME\t64777\t+',
               '9testfile.txt.gz\t/testfile.txt.gz\tHOSTNAME\t64777\t+']
         expectedarr = [re.sub('HOSTNAME', self.server.server_name, x) for \

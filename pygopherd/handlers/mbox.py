@@ -22,6 +22,7 @@ import re
 import os, stat, os.path, mimetypes
 from pygopherd import protocols, gopherentry
 from pygopherd.handlers.virtual import Virtual
+from pygopherd.handlers.base import VFS_Real
 from mailbox import UnixMailbox, Maildir
 from stat import *
 
@@ -139,7 +140,7 @@ class MBoxFolderHandler(FolderHandler):
         if not (self.statresult and S_ISREG(self.statresult[ST_MODE])):
             return 0
         try:
-            fd = open(self.getfspath(), "rt")
+            fd = self.vfs.open(self.getselector(), "rt")
             startline = fd.readline()
             fd.close()
             
@@ -148,7 +149,7 @@ class MBoxFolderHandler(FolderHandler):
             return 0
 
     def prepare(self):
-        self.rfile = open(self.getfspath(), "rt")
+        self.rfile = self.vfs.open(self.getselector(), "rt")
         self.mbox = UnixMailbox(self.rfile)
         FolderHandler.prepare(self)
 
@@ -160,7 +161,7 @@ class MBoxMessageHandler(MessageHandler):
         return "/MBOX-MESSAGE/"
 
     def openmailbox(self):
-        fd = open(self.getfspath(), "rt")
+        fd = self.vfs.open(self.getselector(), "rt")
         return UnixMailbox(fd)
 
 ###########################################################################
@@ -169,12 +170,14 @@ class MBoxMessageHandler(MessageHandler):
 
 class MaildirFolderHandler(FolderHandler):
     def canhandlerequest(self):
+        if not isinstance(self.vfs, VFS_Real):
+            return 0
         if self.selectorargs:
             return 0
         if not (self.statresult and S_ISDIR(self.statresult[ST_MODE])):
             return 0
-        return os.path.isdir(self.getfspath() + "/new") and \
-               os.path.isdir(self.getfspath() + "/cur")
+        return self.vfs.isdir(self.getselector() + "/new") and \
+               self.vfs.isdir(self.getselector() + "/cur")
 
     def prepare(self):
         self.mbox = Maildir(self.getfspath())

@@ -36,7 +36,7 @@ class FileHandler(base.BaseHandler):
         return self.entry
 
     def prepare(self):
-        self.rfile = open(self.getfspath(), "rb")
+        self.rfile = self.vfs.open(self.getselector(), "rb")
 
     def write(self, wfile):
         while 1:

@@ -70,7 +70,7 @@ class HTMLFileTitleHandler(FileHandler):
         # Start with the entry from the parent.
         entry = FileHandler.getentry(self)
         parser = HTMLTitleParser()
-        file = open(self.getfspath(), "rt")
+        file = vfs.open(self.getselector(), "rt")
         try:
             while not parser.gotcompletetitle:
                 line = file.readline()
