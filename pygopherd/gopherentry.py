@@ -21,6 +21,8 @@ import SocketServer
 import re
 import os, stat, os.path, mimetypes, protocols, handlers, urllib
 
+mapping = eval(config.get("GopherEntry", "mapping"))
+
 class GopherEntry:
     """The entry object for Gopher.  It holds information about each
     Gopher object."""
@@ -37,7 +39,6 @@ class GopherEntry:
         self.mimetype = None
         self.size = None
         self.encoding = None
-        self.mapping = eval(config.get("GopherEntry", "mapping"))
         self.populated = 0
         self.language = None
         self.ctime = None
@@ -86,7 +87,7 @@ class GopherEntry:
 
         if self.mimetype and self.type == None:
             self.type = 0
-            for maprule in self.mapping:
+            for maprule in mapping:
                 if re.match(maprule[0], self.mimetype):
                     self.type = maprule[1]
                     break
