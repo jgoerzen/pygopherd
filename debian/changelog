@@ -1,3 +1,9 @@
+pygopherd (2.0.5) unstable; urgency=low
+
+  * Added build-dep on python2.3-dev.  Closes: #213938.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu,  9 Oct 2003 11:09:41 -0500
+
 pygopherd (2.0.4) unstable; urgency=low
 
   * Eliminated outdated import of xreadlines, clearing up a warning
