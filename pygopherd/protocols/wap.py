@@ -31,6 +31,7 @@ class WAPProtocol(HTTPProtocol):
 
         waptop = self.config.get("protocols.wap.WAPProtocol",
                                  "waptop")
+        self.waptop = waptop
         if self.requestparts[1].startswith(waptop):
             self.requestparts[1] = self.requestparts[1][len(waptop):]
             return 1
@@ -46,6 +47,8 @@ class WAPProtocol(HTTPProtocol):
 
     def getrenderstr(self, entry, url):
         global accesskeys
+        if url.startswith('/'):
+            url = self.waptop + url
         retstr = ''
         if not entry.gettype() in ['i', '7']:
             if self.accesskeyidx < len(accesskeys):
