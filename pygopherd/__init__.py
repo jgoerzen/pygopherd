@@ -19,5 +19,6 @@
 
 __all__ = ['handlers', 'protocols', 'GopherExceptions',
 'GopherExceptionsTest', 'gopherentry', 'gopherentryTest',
-           'logger', 'fileext', 'fileextTest', 'pipe', 'initialization',
-           'initializationTest', 'testutil']
+           'logger', 'loggerTest',
+'fileext', 'fileextTest', 'pipe', 'initialization',
+           'initializationTest', 'testutil', 'version']

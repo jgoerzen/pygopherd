@@ -1,3 +1,117 @@
+2002-04-11 16:13  jgoerzen
+
+	* Makefile: Updated
+
+2002-04-11 16:12  jgoerzen
+
+	* runtests.py, setup.py, conf/pygopherd.conf, debian/changelog,
+	pygopherd/__init__.py, pygopherd/loggerTest.py,
+	pygopherd/version.py, pygopherd/protocols/http.py: Added the
+	ability to http to put a configurable spiel at the top of each
+	page.
+	
+	Added version.py for stuff to find info about the software.
+
+2002-04-11 14:32  jgoerzen
+
+	* pygopherd/: gopherentryTest.py, handlers/url.py: Further refining
+	of the entrytest.
+
+2002-04-11 14:32  jgoerzen
+
+	* pygopherd/gopherentry.py: Geturl now handles URL: patterns
+
+2002-04-11 14:22  jgoerzen
+
+	* pygopherd/: gopherentry.py, gopherentryTest.py: Gopherentrytest
+	almost finished.
+	
+	Fixed some bugs that test illuminated.
+	
+	Updated testutil.
+
+2002-04-11 13:23  jgoerzen
+
+	* testdata/: README, testarchive.tar, testarchive.tar.gz,
+	testarchive.tgz: Added.
+
+2002-04-11 13:23  jgoerzen
+
+	* testdata/testfile.txt.gz: Added an encoded file.
+
+2002-04-11 13:01  jgoerzen
+
+	* runtests.py, pygopherd/__init__.py, pygopherd/gopherentryTest.py,
+	pygopherd/testutil.py: Initial add of the gopherentryTest
+
+2002-04-11 12:42  jgoerzen
+
+	* testdata/testfile.txt: Added.
+
+2002-04-11 12:41  jgoerzen
+
+	* Makefile: clean now calles setup.py's clean too.
+
+2002-04-11 12:38  jgoerzen
+
+	* pygopherd/testutil.py: Always set the root to testroot
+
+2002-04-11 11:41  jgoerzen
+
+	* runtests.py, conf/pygopherd.conf,
+	pygopherd/GopherExceptionsTest.py, pygopherd/__init__.py,
+	pygopherd/fileextTest.py, pygopherd/initializationTest.py,
+	pygopherd/testutil.py: Added the fileext test.
+
+2002-04-11 11:33  jgoerzen
+
+	* pygopherd/: GopherExceptionsTest.py, __init__.py,
+	initialization.py, initializationTest.py, testutil.py: Added more
+	tests, test utilities, etc.
+
+2002-04-11 10:47  jgoerzen
+
+	* runtests.py, conf/pygopherd.conf, pygopherd/GopherExceptions.py,
+	pygopherd/GopherExceptionsTest.py, pygopherd/__init__.py,
+	pygopherd/logger.py: Added more tests.
+	
+	Made logger capable of logging to non-stdout sources.
+
+2002-04-11 09:58  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/initialization.py,
+	pygopherd/handlers/HandlerMultiplexer.py: Added a sanity check to
+	HandlerMultiplexer.  Handle a special interface bind request in
+	initialization.py and conf/pygopherd.conf.
+
+2002-04-11 09:49  jgoerzen
+
+	* pygopherd/protocols/: ProtocolMultiplexer.py, base.py: Security:
+	block ./ and ../
+
+2002-04-11 09:07  jgoerzen
+
+	* pygopherd/initializationTest.py: Added.
+
+2002-04-10 23:05  jgoerzen
+
+	* pygopherd/initialization.py: Added real tests.
+
+2002-04-10 22:31  jgoerzen
+
+	* pygopherd.py, runtests.py, pygopherd/__init__.py: Added initial
+	testing infrastructure.
+
+2002-04-10 22:12  jgoerzen
+
+	* pygopherd.py, conf/pygopherd.conf, pygopherd/__init__.py,
+	pygopherd/initialization.py: Redid initialization system -- makes
+	it easier for tests.
+
+2002-04-10 21:23  jgoerzen
+
+	* ChangeLog, debian/changelog: Updated
+
 2002-04-10 19:29  jgoerzen
 
 	* pygopherd.py, conf/pygopherd.conf, pygopherd/GopherExceptions.py,
