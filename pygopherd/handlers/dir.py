@@ -36,7 +36,7 @@ class DirHandler(base.BaseHandler):
     def getentry(self):
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
-            self.entry.populatefromfs(self.getfspath(), self.statresult)
+            self.entry.populatefromfs(self.getselector(), self.statresult, vfs = self.vfs)
         return self.entry
 
     def prep_initfiles(self):
@@ -63,7 +63,7 @@ class DirHandler(base.BaseHandler):
             handler = handlers.HandlerMultiplexer.\
                         getHandler(self.selectorbase + '/' \
                                    + file, self.searchrequest, self.protocol,
-                                   self.config)
+                                   self.config, vfs = self.vfs)
             fileentry = handler.getentry()
             self.prep_entriesappend(file, handler, fileentry)
 

@@ -49,7 +49,11 @@ class GopherEntry:
         self.ea = {}                    # Extended attributes -- Gopher+
                                         # Abstract, etc.
 
-    def populatefromfs(self, fspath, statval = None):
+    def populatefromvfs(self, vfs, selector):
+        self.populatefromfs(self, selector, statval = vfs.stat(selector),
+                            vfs = vfs)
+
+    def populatefromfs(self, fspath, statval = None, vfs = None):
         """Fills in self with data gleaned from the filesystem.
 
         The argument fspath specifies where in the filesystem it will search.
@@ -126,10 +130,10 @@ class GopherEntry:
         if stat.S_ISDIR(statval[0]):
             self.type = self.type or '1'
             self.mimetype = self.mimetype or 'application/gopher-menu'
-            self.handleeaext(self.fspath + '/') # Add the / so we get /.abs
+            self.handleeaext(self.fspath + '/', vfs) # Add the / so we get /.abs
             return
 
-        self.handleeaext(self.fspath)
+        self.handleeaext(self.fspath, vfs)
 
         self.size = self.size or statval[6]
 
@@ -158,17 +162,23 @@ class GopherEntry:
                 return maprule[1]
         return '0'
 
-    def handleeaext(self, fspath):
+    def handleeaext(self, selector, vfs):
         """Handle getting extended attributes from the filesystem."""
+        print vfs
         global eaexts
         if eaexts == None:
             eaexts = eval(self.config.get("GopherEntry", "eaexts"))
+        if vfs == None:
+            from pygopherd.handlers.base import VFS_Real
+            vfs = VFS_Real(self.config)
+        print vfs
 
         for extension, blockname in eaexts.items():
             if self.ea.has_key(blockname):
                 continue
             try:
-                rfile = open(fspath + extension, "rt")
+                print "Opening", selector + extension
+                rfile = vfs.open(selector + extension, "rt")
                 self.setea(blockname, "\n".join(
                            [x.strip() for x in rfile.readlines(20480)]))
             except IOError:

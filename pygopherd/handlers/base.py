@@ -130,22 +130,24 @@ class BaseHandler:
             self.fspath = self.vfs.getfspath(self.getselector())
         return self.fspath
 
+    def getselector(self):
+        """Returns the selector we are handling."""
+        return self.selector
+
+    def gethandler(self):
+        """Returns the handler to use to process this request.  For all
+        but special cases (rewriting handleres, for instance), this should
+        return self."""
+        return self
+
+    ## The next three are the publically-exposed interface -- the ones
+    ## called by things other than handlers.
+
     def prepare(self):
         """Prepares for a write.  Ie, opens a file.  This is
         used so that the protocols can try to detect an error before
         transmitting a result.  Must always be called before write."""
         pass
-
-    def write(self, wfile):
-        """Writes out the request if isdir() returns false.  You should
-        NOT call write if isdir() returns true!  Should be overridden
-        by files."""
-        if self.isdir():
-            raise Exception, "Attempt to use write for a directory"
-
-    def getselector(self):
-        """Returns the selector we are handling."""
-        return self.selector
 
     def isdir(self):
         """Returns true if this handler is handling a directory; false
@@ -153,6 +155,13 @@ class BaseHandler:
 
         return 0
     
+    def write(self, wfile):
+        """Writes out the request if isdir() returns false.  You should
+        NOT call write if isdir() returns true!  Should be overridden
+        by files."""
+        if self.isdir():
+            raise Exception, "Attempt to use write for a directory"
+
     def getdirlist(self):
         """Returns a list-like object (list, iterator, tuple, generator, etc)
         that contains as its elements the gopherentry objects corresponding
@@ -162,9 +171,3 @@ class BaseHandler:
             raise Exception, "Attempt to use getdir for a file."
         return []
     
-    def gethandler(self):
-        """Returns the handler to use to process this request.  For all
-        but special cases (rewriting handleres, for instance), this should
-        return self."""
-        return self
-

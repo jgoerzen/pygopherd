@@ -128,7 +128,7 @@ class VFS_Zip(base.VFS_Real):
             return apply(self.chain.open, (selector,) + args, kwargs)
 
         if not self.isfile(selector):
-            raise ValueError, "Request to open %s which is not a file" % selector
+            raise IOError, "Request to open %s which is not a file" % selector
 
         return StringIO(self.zip.read(self.getfspath(selector)))
 
@@ -184,8 +184,8 @@ class TestVFS_Zip(unittest.TestCase):
         m1.sort()
         m2.sort()
 
-        s.assertEquals(m1, m2)
-        s.assertEquals(m1, ['pipetest.sh', 'pipetestdata'])
+        s.assertEquals(m1, m2 + ['ziponly'])
+        s.assertEquals(m1, ['pipetest.sh', 'pipetestdata', 'ziponly'])
 
     def test_needschain(s):
         assert s.z._needschain('/testfile.txt')
@@ -242,9 +242,11 @@ class TestVFS_Zip(unittest.TestCase):
         assert not s.z2.exists('/testdata.zip/pygopherd')
 
     def test_open(s):
-        s.assertRaises(ValueError, s.z.open, '/testdata.zip/pygopherd')
-        s.assertRaises(ValueError, s.z2.open, '/testdata2.zip/pygopherd')
+        s.assertRaises(IOError, s.z.open, '/testdata.zip/pygopherd')
+        s.assertRaises(IOError, s.z2.open, '/testdata2.zip/pygopherd')
         s.assertRaises(IOError, s.z2.open, '/testdata.zip/pygopherd')
+
+        assert s.z.open("/testdata.zip/.abstract")
 
         s.assertEquals(s.z.open('/testdata.zip/testfile.txt').read(),
                        'Test\n')
@@ -265,6 +267,7 @@ class ZIPHandler(base.BaseHandler):
                                       "enabled"):
             return 0
 
+
         pattern = re.compile(self.config.get("handlers.ZIP.ZIPHandler",
                                              "pattern"))
 
@@ -272,9 +275,9 @@ class ZIPHandler(base.BaseHandler):
         appendage = None
 
         while 1:
-            if pattern.match(basename) and \
-               self.vfs.isfile(self.vfs.getfspath(basename)) and \
-               self.zipfile.is_zipfile(self.vfs.getfspath(basename)):
+            if pattern.search(basename) and \
+               self.vfs.isfile(basename) and \
+               zipfile.is_zipfile(self.vfs.getfspath(basename)):
                 self.basename = basename
                 self.appendage = appendage
                 return 1
@@ -291,8 +294,31 @@ class ZIPHandler(base.BaseHandler):
 
             basename = head
 
-    def isdir(self):
-        return 1
+    def _makehandler(self):
+        if hasattr(self, 'handler'):
+            return
+        vfs = VFS_Zip(self.config, self.vfs, self.basename)
+        from pygopherd.handlers import HandlerMultiplexer
+        self.handler = HandlerMultiplexer.getHandler(self.getselector(),
+                                                     self.searchrequest,
+                                                     self.protocol,
+                                                     self.config,
+                                                     vfs = vfs)
+        
 
-    
+    def prepare(self):
+        self._makehandler()
+        self.handler.prepare()
+
+    def isdir(self):
+        return self.handler.isdir()
+
+    def getdirlist(self):
+        return self.handler.getdirlist()
+
+    def write(self, wfile):
+        self.handler.write(wfile)
                
+    def getentry(self):
+        self._makehandler()
+        return self.handler.getentry()

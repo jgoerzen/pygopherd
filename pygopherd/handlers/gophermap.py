@@ -40,7 +40,7 @@ class BuckGophermapHandler(base.BaseHandler):
                 self.getselector().endswith(".gophermap")):
                 self.entry.populatefromvfs(self.vfs, self.getselector())
             else:
-                self.entry.populatefromfs(self.getfspath(), self.statresult)
+                self.entry.populatefromfs(self.getselector(), self.statresult, vfs = self.vfs)
             
         return self.entry
 
