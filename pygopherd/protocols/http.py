@@ -187,8 +187,8 @@ class HTTPProtocol(BaseGopherProtocol):
         return retstr + "\n</BODY></HTML>\n"
 
     def filenotfound(self, msg):
-        self.wfile.write("HTTP/1.0 404 Not Found\n")
-        self.wfile.write("Content-Type: text/html\n\n")
+        self.wfile.write("HTTP/1.0 404 Not Found\r\n")
+        self.wfile.write("Content-Type: text/html\r\n\r\n")
         self.wfile.write('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">')
         self.wfile.write("""\n<HTML><HEAD><TITLE>Selector Not Found</TITLE>
         <H1>Selector Not Found</H1>
