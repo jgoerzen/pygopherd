@@ -377,7 +377,7 @@ class ZipReader:
 
     def getinfo(self, name):
         """Return the instance of ZipInfo given 'name'."""
-        return self._getinfofrompos(self.locationmap[name])
+        return self.getinfofrompos(self.locationmap[name])
 
     def _getcentdir(self):
         """Read central directory info from an ALREADY-SEEKED fp!"""
@@ -389,7 +389,7 @@ class ZipReader:
             print centdir
         return centdir
 
-    def _getinfofrompos(self, location):
+    def getinfofrompos(self, location):
         if location < 0:
             raise KeyError, "Attempt to get information from non-file"
         fp = self.fp
@@ -449,7 +449,7 @@ class ZipReader:
 
     def copyto(self, name, fd):
         """Copy the contents of the named file to the given descriptor."""
-        self.open(name).copyto(fd)
+        self.open(name)._sock.copyto(fd)
 
     def __del__(self):
         """Call the "close()" method in case the user forgot."""
