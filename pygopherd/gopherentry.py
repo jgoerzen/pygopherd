@@ -49,6 +49,52 @@ class GopherEntry:
         self.gopherpsupport = 0         # Supports gopher+
 
     def populatefromfs(self, fspath, statval = None):
+        """Fills in self with data gleaned from the filesystem.
+
+        The argument fspath specifies where in the filesystem it will search.
+        statval, if present, will be used instead of calling stat() itself
+        so as to cut down on the number of system calls.
+
+        The overall idea of this function is to set only those values that
+        are not already set and to do so only if a definitive answer for
+        them can be obtained from the operating system.  The rest of this
+        information describes the details of how it does this.
+
+        If populatefromfs has already been called or self.populated is true,
+        this function will note the fspath and the return without modifying
+        anything else.
+
+        If either gethost() or getport() return anything other than None,
+        the same thing will happen.
+
+        If there is no statval and os.stat returns an error, again,
+        the same thing will happen.
+
+        Assuming these tests pass, then:
+
+        self.gopherpsupport will be set to true for any file or directory.
+
+        The remaining values will be set only if they are not set already:
+
+        For both files and directories, the creation and modification times
+        will be noted, the name will be set to the filename (as returned
+        by os.path.basename on the selector).
+
+        For directories only, the type will be set to 1 and the mimetype to
+        application/gopher-menu.  Gopher+ protocols may wish to
+        indicate application/gopher+-menu is available as well, but that
+        is outside the scope of this function.
+
+        For files only, the size will be noted.  An attempt will be made
+        to ascertain a mimetype and an encoding.  If only a mimetype is
+        found, it will be noted in self.mimetype.  If both a mimetype
+        and an encoding is found, self.mimetype will be
+        application/octet-stream, self.encoding will note the encoding,
+        and self.encodedmimetype will note the type of the encoded data.
+        If no mimetype can be found, it will be set to the default
+        from the config file.  If no gopher0 type character is already present,
+        self.guesstype() will be called to set it."""
+        
         self.fspath = fspath
 
         if self.populated:
@@ -69,37 +115,35 @@ class GopherEntry:
         self.populated = 1
         self.gopherpsupport = 1         # Indicate gopher+ support for locals.
 
-        if self.ctime == None:
-            self.ctime = statval[9]
-        if self.mtime == None:
-            self.mtime = statval[8]
+        # All this "or" stuff means that we only modify it if it's not already
+        # set.
 
-        if self.name == None:
-            self.name = os.path.basename(self.selector)
+        self.ctime = self.ctime or statval[9]
+        self.mtime = self.mtime or statval[8]
+        self.name = self.name or os.path.basename(self.selector)
 
         if stat.S_ISDIR(statval[0]):
-            self.type = '1'
-            self.mimetype = 'application/gopher-menu'
+            self.type = self.type or '1'
+            self.mimetype = self.mimetype or 'application/gopher-menu'
             return
 
-        if self.size == None:
-            self.size = statval[6]          # Only set this if it's not a dir.
+        self.size = self.size or statval[6]
+
         mimetype, encoding = mimetypes.guess_type(self.selector, strict = 0)
 
-        if (not self.mimetype) and encoding and (not self.encoding):
-            self.mimetype = 'application/octet-stream'
-            self.encoding = encoding
-            self.encodedmimetype = mimetype
-        if mimetype and not self.mimetype:
-            self.mimetype = mimetype
-        if encoding and not self.encoding:
-            self.encoding = encoding
+        if encoding:
+            self.mimetype = self.mimetype or 'application/octet-stream'
+            self.encoding = self.encoding or encoding
+            self.encodedmimetype = self.encodedmimetype or mimetype
+        else:
+            self.mimetype = self.mimetype or mimetype
+
+        # Did we get no mime type at all?  Fall back to a default.
 
         if not self.mimetype:
             self.mimetype = self.config.get("GopherEntry", "defaultmimetype")
 
-        if self.mimetype and self.type == None:
-            self.type = self.guesstype()
+        self.type = self.type or self.guesstype()
 
     def guesstype(self):
         global mapping
@@ -116,10 +160,16 @@ class GopherEntry:
         return self.selector
     def setselector(self, arg):
         self.selector = arg
+    def getconfig(self, default = None):
+        return self.config or default
+    def setconfig(self, arg):
+        self.config = arg
     def getfspath(self, default = None):
         if self.fspath == None:
             return default
         return self.fspath
+    def setfspath(self, arg):
+        self.fspath = arg
     def gettype(self, default = None):
         if self.type == None:
             return default
@@ -152,28 +202,46 @@ class GopherEntry:
         if self.encodedmimetype == None:
             return default
         return self.encodedmimetype
+    def setencodedmimetype(self, arg):
+        self.encodedmimetype = arg
     def setmimetype(self, arg):
         self.mimetype = arg
     def getsize(self, default = None):
         if self.size == None:
             return default
         return self.size
+    def setsize(self, arg):
+        self.size = arg
     def getencoding(self, default = None):
         if self.encoding == None:
             return default
         return self.encoding
+    def setencoding(self, arg):
+        self.encoding = arg
     def getlanguage(self, default = None):
         if self.language == None:
             return default
         return self.language
+    def setlanguage(self, arg):
+        self.language = arg
     def getctime(self, default = None):
         if self.ctime == None:
             return default
         return self.ctime
+    def setctime(self, arg):
+        self.ctime = arg
     def getmtime(self, default = None):
         if self.mtime == None:
             return default
         return self.mtime
+    def setmtime(self, arg):
+        self.mtime = arg
+    def getpopulated(self, default = None):
+        if self.populated != None:
+            return self.populated
+        return default
+    def setpopulated(self, arg):
+        self.populated = arg
     
     def geturl(self, defaulthost = 'MISSINGHOST', defaultport = 0):
         retval = 'gopher://%s:%d/' % (self.gethost(defaulthost),
@@ -181,12 +249,16 @@ class GopherEntry:
         retval += urllib.quote('%s%s' % (self.gettype(), self.getselector()))
         return retval
 
-    def getnum(self):
-        return self.num
+    def getnum(self, default = None):
+        if self.num != None:
+            return self.num
+        return default
     def setnum(self, arg):
         self.num = arg
 
-    def getgopherpsupport(self):
-        return self.gopherpsupport
+    def getgopherpsupport(self, default = None):
+        if self.gopherpsupport != None:
+            return self.gopherpsupport
+        return default
     def setgopherpsupport(self, arg):
         self.gopherpsupport = arg

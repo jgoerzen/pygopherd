@@ -24,14 +24,19 @@ import unittest, os, stat
 from pygopherd import testutil
 from pygopherd.gopherentry import GopherEntry
 
+fields = ['selector', 'config', 'fspath', 'type', 'name', 'host', 'port',
+          'mimetype', 'encodedmimetype', 'size', 'encoding',
+          'populated', 'language', 'ctime', 'mtime', 'num', 'gopherpsupport']
+
 class GopherEntryTestCase(unittest.TestCase):
     def setUp(self):
         self.config = testutil.getconfig()
+        self.root = self.config.get("pygopherd", "root")
 
     def assertEntryMatches(self, conditions, entry, testname):
         for field, value in conditions.items():
             self.assertEquals(value, getattr(entry, field),
-                              "%s: Field %s expected %s but was %s" % \
+                              "%s: Field '%s' expected '%s' but was '%s'" % \
                               (testname, field, value, getattr(entry, field)))
 
     def testinit(self):
@@ -48,7 +53,7 @@ class GopherEntryTestCase(unittest.TestCase):
         self.assertEntryMatches(conditions, entry, 'testinit')
 
     def testpopulate_basic(self):
-        fspath = self.config.get("pygopherd", "root") + '/testfile.txt'
+        fspath = self.root + '/testfile.txt'
         statval = os.stat(fspath)
         conditions = {'selector' : '/testfile.txt',
                       'config' : self.config,
@@ -79,4 +84,177 @@ class GopherEntryTestCase(unittest.TestCase):
         self.assertEntryMatches(conditions, entry,
                                 'testpopulate_basic with cached stat')
     
+        # Make sure it's a no-op if it's already populated.
         
+        entry = GopherEntry('/NONEXISTANT', self.config)
+        entry.populated = 1
+        entry.populatefromfs(fspath)
+
+        assert entry.gettype() == None
+
+    def testpopulate_encoded(self):
+        fspath = self.root + '/testfile.txt.gz'
+        entry = GopherEntry('/testfile.txt.gz', self.config)
+        entry.populatefromfs(fspath)
+
+        self.assertEquals(entry.gettype(), '9')
+        self.assertEquals(entry.getmimetype(), 'application/octet-stream')
+        self.assertEquals(entry.getencoding(), 'gzip')
+        self.assertEquals(entry.getencodedmimetype(), 'text/plain')
+
+    def testpopulate_dir(self):
+        fspath = self.root + '/'
+        entry = GopherEntry('/', self.config)
+        entry.populatefromfs(fspath)
+
+        conditions = {
+            'selector' : '/',
+            'config' : self.config,
+            'fspath' : fspath,
+            'type' : '1',
+            'name' : '',
+            'host' : None,
+            'port' : None,
+            'mimetype' : 'application/gopher-menu',
+            'encodedmimetype' : None,
+            'encoding' : None,
+            'populated' : 1,
+            'language' : None,
+            'gopherpsupport' : 1}
+
+        self.assertEntryMatches(conditions, entry,
+                                "testpopulate_dir")
+
+    def testpopulate_remote(self):
+        """Asserts that population is not done on remote objects."""
+        selector = '/testfile.txt'
+        fspath = self.root + selector
+        entry = GopherEntry(selector, self.config)
+        entry.host = 'gopher.nowhere'
+        entry.populatefromfs(fspath)
+        assert entry.gettype() == None
+
+        entry.populated = 0
+        entry.host = None
+        entry.port = 70
+        entry.populatefromfs(fspath)
+        assert entry.gettype() == None
+
+        entry.populated = 0
+        entry.host = 'gopher.nowhere'
+        entry.populatefromfs(fspath)
+        assert entry.gettype() == None
+
+    def testpopulate_untouched(self):
+        """Asserts that populatefromfs does not touch data that has already
+        been set."""
+
+        selector = '/testfile.txt'
+        fspath = self.root + selector
+
+        entry = GopherEntry(selector, self.config)
+        entry.name = 'FAKE NAME'
+        entry.ctime = 1
+        entry.mtime = 2
+        entry.populatefromfs(fspath)
+        self.assertEntryMatches({'name' : 'FAKE NAME', 'ctime':1, 'mtime':2},
+                                entry, 'testpopulate_untouched')
+
+        # Reset for the next batch.
+        entry = GopherEntry('/', self.config)
+
+        # Test type for a dir.
+        entry.type = '2'
+        entry.mimetype = 'FAKEMIMETYPE'
+        entry.populatefromfs(self.root)
+        self.assertEquals(entry.gettype(), '2')
+        self.assertEquals(entry.getmimetype(), 'FAKEMIMETYPE')
+        
+        # Test mime type handling.  First, regular file.
+
+        entry = GopherEntry(selector, self.config)
+        entry.mimetype = 'fakemimetype'
+        entry.populatefromfs(fspath)
+        self.assertEquals(entry.getmimetype(), 'fakemimetype')
+        # The guesstype will not find fakemimetype and so it'll set it to 0
+        self.assertEquals(entry.gettype(), '0')
+
+        # Now, an encoded file.
+
+        entry = GopherEntry(selector + '.gz', self.config)
+        entry.mimetype = 'fakemime'
+        entry.populatefromfs(fspath + '.gz')
+        self.assertEquals(entry.getmimetype(), 'fakemime')
+        self.assertEquals(entry.getencoding(), 'gzip')
+        self.assertEquals(entry.getencodedmimetype(), 'text/plain')
+        self.assertEquals(entry.gettype(), '0') # again from fakemime
+
+        # More details.
+
+        selector = '/testarchive.tgz'
+        fspath = self.root + selector
+        entry = GopherEntry(selector, self.config)
+        entry.mimetype = 'foo1234'
+        entry.encoding = 'bar'
+        entry.populatefromfs(fspath)
+        self.assertEquals(entry.getmimetype(), 'foo1234')
+        self.assertEquals(entry.getencoding(), 'bar')
+        self.assertEquals(entry.getencodedmimetype(), 'application/x-tar')
+        self.assertEquals(entry.gettype(), '0')
+
+        # And overriding only the encoding.
+
+        entry = GopherEntry(selector, self.config)
+        entry.encoding = 'fakeencoding'
+        entry.populatefromfs(fspath)
+        self.assertEquals(entry.getencoding(), 'fakeencoding')
+        self.assertEquals(entry.gettype(), '9')
+        self.assertEquals(entry.getmimetype(), 'application/octet-stream')
+
+        # And finally -- overriding the encoded mime type.
+
+        entry = GopherEntry(selector, self.config)
+        entry.encodedmimetype = 'fakeencoded'
+        entry.populatefromfs(fspath)
+        self.assertEquals(entry.getencodedmimetype(), 'fakeencoded')
+        self.assertEquals(entry.getmimetype(), 'application/octet-stream')
+
+    def test_guesstype(self):
+        entry = GopherEntry('/NONEXISTANT', self.config)
+        expected = {'text/plain': '0',
+                    'application/gopher-menu': '1',
+                    'application/gopher+-menu' : '1',
+                    'text/html' : 'h',
+                    'image/gif' : 'g',
+                    'image/jpeg' : 'I',
+                    'application/pdf' : '9',
+                    'application/msword' : '9',
+                    'audio/aiff' : 's'}
+
+        for mimetype, type in expected.items():
+            entry.mimetype = mimetype
+            self.assertEquals(entry.guesstype(), type,
+                              "Failure for %s: got %s, expected %s" % \
+                              (mimetype, entry.guesstype(), type))
+    def test_gets_sets(self):
+        """Tests a bunch of gets that operate on values that are None
+        to start with, and take a default."""
+
+        entry = GopherEntry('/NONEXISTANT', self.config)
+        # Initialize the rest of them to None.
+        entry.selector = None
+        entry.config = None
+        entry.populated = None
+        entry.num = None
+        entry.gopherpsupport = None
+        
+        for field in fields:
+            getfunc = getattr(entry, 'get' + field)
+            setfunc = getattr(entry, 'set' + field)
+            self.assertEquals(getfunc(), None)
+            self.assertEquals(getfunc('DEFAULT' + field), 'DEFAULT' + field)
+            setfunc('NewValue' + field)
+            self.assertEquals(getfunc(), 'NewValue' + field)
+            self.assertEquals(getfunc('DEFAULT'), 'NewValue' + field)
+
+    
