@@ -27,7 +27,10 @@ class HTTPProtocol(protocols.base.BaseGopherProtocol):
             iconname = icon.group(1)
             if icons.has_key(iconname):
                 self.wfile.write("HTTP/1.0 200 OK\n")
+                self.wfile.write("Last-Modified: Fri, 14 Dec 2001 21:19:47 GMT\n")
                 self.wfile.write("Content-Type: image/gif\n\n")
+                if self.requestparts[0] == 'HEAD':
+                    return
                 self.wfile.write(binascii.unhexlify(icons[iconname]))
                 return
 
@@ -59,14 +62,14 @@ class HTTPProtocol(protocols.base.BaseGopherProtocol):
         # Decision time....
         if (not entry.gethost()) and (not entry.getport()):
             # It's a link to our own server.  Make it as such.  (relative)
-            url = entry.getselector()
+            url = urllib.quote(entry.getselector())
         else:
             # Link to a different server.  Make it a gopher URL.
             url = 'gopher://%s:%d/%s%s' % \
-                  (entry.gethost(self.server.server_name),
+                  (urllib.quote(entry.gethost(self.server.server_name)),
                    entry.getport(70),
-                   entry.gettype('0'),
-                   entry.getselector())
+                   urllib.quote(entry.gettype('0')),
+                   urllib.quote(entry.getselector()))
         if re.match('(/|)URL:', entry.getselector()):
             # It's a plain URL.  Make it that.
             url = re.match('(/|)URL:(.+)$', entry.getselector()).group(1)
@@ -77,7 +80,7 @@ class HTTPProtocol(protocols.base.BaseGopherProtocol):
         retstr += self.getimgtag(entry)
         retstr += "</TD>\n<TD>&nbsp;"
         if entry.gettype() != 'i':
-            retstr += '<A HREF="%s">' % urllib.quote(url)
+            retstr += '<A HREF="%s">' % url
         retstr += "<TT>"
         if entry.getname() != None:
             retstr += cgi.escape(entry.getname())
@@ -119,12 +122,11 @@ class HTTPProtocol(protocols.base.BaseGopherProtocol):
         self.wfile.write("</TT><HR>Pygopherd</BODY></HTML>\n")
 
     def getimgtag(self, entry):
+        name = 'generic.gif'
         if self.iconmapping.has_key(entry.gettype()):
-            return '<IMG SRC="%s" WIDTH="20" HEIGHT="22" BORDER="0">' % \
-                   ('/PYGOPHERD-HTTPPROTO-ICONS/' + \
-                   self.iconmapping[entry.gettype()])
-        else:
-            return '&nbsp;'            
+            name = self.iconmapping[entry.gettype()]
+        return '<IMG ALT=" * " SRC="%s" WIDTH="20" HEIGHT="22" BORDER="0">' % \
+                   ('/PYGOPHERD-HTTPPROTO-ICONS/' + name)
 
 icons = {
 'binary.gif':
@@ -143,4 +145,10 @@ icons = {
 '47494638396114001600c20000ffffffff3333ccffffcccccc99999966000033333300000021fe4e546869732061727420697320696e20746865207075626c696320646f6d61696e2e204b6576696e204875676865732c206b6576696e68406569742e636f6d2c2053657074656d62657220313939350021f90401000002002c000000001400160000036b28badcfe3036c34290ea1c61558f07b171170985c0687e0d9a729e77693401dc5bd7154148fcb6db6b77e1b984c20d4fb03406913866717a842aa7d22af22acd120cdf6fd2d49cd10e034354871518de06b43a17334de42a36243e187d4a7b1a762c7b140b8418898a0b09003b',
 
 'text.gif':
-'47494638396114001600c20000ffffffccffff99999933333300000000000000000000000021fe4e546869732061727420697320696e20746865207075626c696320646f6d61696e2e204b6576696e204875676865732c206b6576696e68406569742e636f6d2c2053657074656d62657220313939350021f90401000001002c000000001400160000035838babcf1300c40ab9d23be693bcf11d75522b88dd7057144eb52c410cf270abb6e8db796e00b849aadf20b4a6ebb1705281c128daca412c03c3a7b50a4f4d9bc5645dae9f78aed6e975932baebfc0e7ef0b84f1691da8d09003b'}
+'47494638396114001600c20000ffffffccffff99999933333300000000000000000000000021fe4e546869732061727420697320696e20746865207075626c696320646f6d61696e2e204b6576696e204875676865732c206b6576696e68406569742e636f6d2c2053657074656d62657220313939350021f90401000001002c000000001400160000035838babcf1300c40ab9d23be693bcf11d75522b88dd7057144eb52c410cf270abb6e8db796e00b849aadf20b4a6ebb1705281c128daca412c03c3a7b50a4f4d9bc5645dae9f78aed6e975932baebfc0e7ef0b84f1691da8d09003b',
+
+'generic.gif':
+'47494638396114001600c20000ffffffccffff99999933333300000000000000000000000021fe4e546869732061727420697320696e20746865207075626c696320646f6d61696e2e204b6576696e204875676865732c206b6576696e68406569742e636f6d2c2053657074656d62657220313939350021f90401000001002c000000001400160000035038babcf1300c40ab9d23be693bcf11d75522b88dd705892831b8f08952446d13f24c09bc804b3a4befc70a027c39e391a8ac2081cd65d2f82c06ab5129b4898d76b94c2f71d02b9b79afc86dcdfe2500003b',
+
+'blank.gif':
+'47494638396114001600a10000ffffffccffff00000000000021fe4e546869732061727420697320696e20746865207075626c696320646f6d61696e2e204b6576696e204875676865732c206b6576696e68406569742e636f6d2c2053657074656d62657220313939350021f90401000001002c00000000140016000002138c8fa9cbed0fa39cb4da8bb3debcfb0f864901003b'}
