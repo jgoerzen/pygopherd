@@ -63,9 +63,10 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
             retstr += "\r\n"
             if entry.getmtime():
                 retstr += " Mod-Date: "
-                retstr += time.ctime(time.gmtime(entry.getmtime()))
+                retstr += time.ctime(entry.getmtime())
+                m = time.localtime(entry.getmtime())
                 retstr += " <%04d%02d%02d%02d%02d%02d>\r\n" % \
-                          time.gmtime(entry.getmtime())
+                          (m[0], m[1], m[2], m[3], m[4], m[5])
             if entry.getmimetype():
                 retstr += "+VIEWS:\r\n " + entry.getmimetype()
                 if (entry.getlanguage()):
