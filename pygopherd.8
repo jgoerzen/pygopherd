@@ -249,6 +249,500 @@ Therefore, the program has only one command-line option.
 .I configfile
 This optional argument specifies the location of the configuration
 file that \fBPyGopherD\fP is to use.
+.\"**********************************************************************
+.SH HANDLERS
+\fBPyGopherd\fP defines several handlers which are responsible for
+finding data on your server and presenting it to the user.  The
+handlers are used to generate things like links to other documents and
+directory listings.  They are also responsible for serving up regular
+files and even virtual folders.
+
+Handlers are specified with the \fBhandlers\fP option in
+\fIpygopherd.conf\fP.  This option is a list of handlers to use.  For
+each request that arrives, \fBPyGopherd\fP will ask each handler in
+turn whether or not it can handle the request, and will handle the
+request according to the first handler that is capable of doing so.
+If no handlers can handle the request, a file not found error is
+generated.  See the example configuration file for an example.
+
+The remaining parts of this section describe the different handlers
+that ship with PyGopherd.
+.\"********************
+.SS dir.DirHandler
+This handler is a basic one that is used for directories that contain
+neither a \fIgophermap\fP file nor UMN-style links files, or
+situations where you have no need for either of those.  It simply
+reads the contents of your on-disk directory, determines the
+appropriate types of each file, and sends the result to the client.
+The descriptions of each item are usually set to the filename, but the
+\fBhtml.HTMLFileTitleHandler\fP may override that.
+.\"********************
+.SS gophermap.BuckGophermapHandler
+This handler is used to generate gopher directory listings based on
+\fIgophermap\fP files.  It will not read the directory on-disk, instead
+serving content from the \fIgophermap\fP file only.  Gophermaps are
+useful if you want to present a directory where the files do not
+frequently change and there is general information to present.
+Overall, if you only wish to present information particular to certain
+files, you should consider using the abstract feature of the
+UMN.UMNDirHandler handler.
+
+The \fIgophermap\fP files contain two types of lines, which are
+described here using the same convention normally used for
+command-line arguments.  In this section, the symbol \\t will be used
+to indicate a tab character, Control-I.
+
+.I full line of informational text
+.br
+\fIgophertypeDESCRIPTION\fP\\t[\fIselector\fP[\\t\fIhost\fP[\\t\fIport\fP]]]
+
+The informational text must not contain any tab characters.  If
+present, it will be rendered with gopher type \fBi\fP, which willl
+cause it to be displayed on a client's screen at its particular
+position in the file.
+
+The second type of line represents a link to a gopher file or
+directory.  It begins with a single-character gopher type (see GOPHER
+ITEM TYPES below) followed immediately by a description and a tab
+character.  There is no space or other separator between the gopher
+type and the description.
+
+The remaining arguments are optional, but only to the extent that
+arguments may be omitted only if all arguments after them are also
+omitted.  These arguments are:
+.IP \(bu
+The \fIselector\fP is the name of the file on the gopher server.  If
+it begins with a slash, it is an absolute path; if it does not, it is
+interpreted relative to the directory that the gophermap file is in.
+If no selector is specified, the description is also used as the
+selector.
+.IP \(bu
+The \fIhost\fP specifies the host on which this resource is located.
+If not specified, defaults to the current server.
+.IP \(bu
+The \fIport\fP specifies the port on which the resource is located.
+If not specified, defaults to the port the current server is listening
+on.
+.PP
+An example of a gophermap to help illustrate the concept is included
+with the \fBPyGopherd\fP distribution in the file
+\fIexamples/gophermap\fP.
+.\"********************
+.SS file.CompressedFileHandler
+In order to save space, you might want to store documents on-disk in a
+compressed format.  But then clients would ordinarily have to
+decompress the files themselves.  It would be nice to have the server
+automatically decompress the files on the fly, sending that result to
+the client.  That's where \fBfile.CompressedFileHandler\fP comes in.
+
+This handler will take compressed files, pipe them through your chosen
+decompression program, and send the result directly to clients --
+completely transparently.
+
+To use this handler, set the \fBdecompressors\fP option in the
+configuration file.  That option defines a mapping from MIME encodings
+(as defined with the \fBencoding\fP option) to decompression
+programs.  Files that are not encoded, or which have an encoding that
+does not occur in the \fBdecompressors\fP map, will not be
+decompressed by this handler.
+
+Please see the sample configuration file for more examples and details
+about the configuration of this handler.
+.\"********************
+.SS file.FileHandler
+The \fBfile.FileHandler\fP is just that -- its duty is to serve up
+regular files to clients.
+.\"********************
+.SS html.HTMLFileTitleHandler
+This handler is used when generating directories and will set the
+description of HTML files to the HTML title defined in them rather
+than let it be the default filename.  Other than that, it has no
+effect.  UMN gopherd implements a similar policy.
+.\"********************
+.SS mbox.MaildirFolderHandler
+.SS mbox.MaildirMessageHandler
+.SS mbox.MBoxMessageHandler
+.SS mbox.MBoxFolderHandler
+These four handlers provide a unique "virtual folder" service.  They
+allow you to present mailboxes as if they were folders, the items of
+the folders being the messages in the mailbox, organized by subject.
+This is useful for presenting mail archives or just making e-mail
+accessible in a nice and easy fashion.
+
+All you have to do to use these handlers is enable them in your
+\fBhandlers\fP section.  They will automatically detect requests for
+mailboxes and handle them appropriately.
+
+The different handlers are for traditional Unix mbox mailboxes (all
+messages in a single file) and new qmail-stype Maildir mailboxes.  You
+can enable only the two handlers for the specific mailbox type that
+you use, if desired.
+.\"********************
+.SS pyg.PYGHandler
+PYG (short for PYGopherd) is a mechanism that provides a tremendous
+amount of flexibility.  Rather than just letting you execute a script
+like other Gopher or HTTP servers, PYGs are actually loaded up into
+PyGopherd and become fully-capable first-class virtual handlers.  Yet
+they need not be known ahead of time, and are loaded dynamically.
+
+With a PYG handler, you can generate gopher directories, handle
+searches, generate files, and more on the fly.  You can create entire
+virtual directory trees (for instance, to interface with NNTP servers
+or with DICT servers), and access them all using the standard Gopher
+protocol.  All of this without having to modify even one line of
+PyGopherd code.
+
+If enabled, the \fBpyg.PYGHandler\fP will look for files with the
+extension .pyg that are marked executable.  If found, they will be
+loaded and run as PYGs.
+
+Please note: this module provides the capability to execute arbitrary
+code.  Please consider the security ramifications of that before
+enabling it.
+
+See the \fBvirtual.Virtual\fP handler for more information about
+passing data to your scripts at runtime.
+
+At present, documentation on writing PYGs is not provided, but you may
+find examples in the \fIpygfarm\fP directory included with the
+\fBPyGopherd\fP distribution.
+.\"********************
+.SS scriptexec.ExecHandler
+This handler implements "old-style" script execution; that is,
+executing arbitrary programs and piping the result to the client.  It
+is, for the most part, compatible with both scripts written for UMN
+gopherd and the Bucktooth gopher server.  If enabled, it will execute
+any file that is marked executable in the filesystem.  It will
+normally list scripts as returning plain text, but you may create a
+custom link to the script that defines it as returning whatever kind
+of file you desire.  Unlike PYGs, this type must be known in advance.
+
+The \fBscriptexec.ExecHandler\fP will set environment variables for
+your scripts to use.  They are as follows:
+.TP
+.B SERVER_NAME
+The name of this server as defined in the configuration file or
+detected from the operating system.
+.TP
+.B SERVER_PORT
+The port this server is listening on.
+.TP
+.B REMOTE_ADDR
+The IP address of the client.
+.TP
+.B REMOTE_PORT
+The port number of the client.
+.TP
+.B REMOTE_HOST
+The same value as \fBREMOTE_ADDR\fP.
+.TP
+.B SELECTOR
+The file that was requested; that is, the relative path to this
+script.  If the selector included additional parameters after a ?,
+they will be included in this string as well.
+.TP
+.B REQUEST
+The "base" part of the selector; that is, the part leading up to the
+?.
+.TP
+.B SEARCHREQUEST
+Included only if the client specified search data, this is used if the
+client is searching for something.
+.PP
+See the \fBvirtual.Virtual\fP handler for more information about
+passing data to your scripts at runtime.
+
+Please note: this module provides the capability to execute arbitrary
+code.  Please consider the security ramifications of that before
+enabling it.
+.\"********************
+.SS UMN.UMNDirHandler
+This is one of the most powerful workhorse handlers in
+\fBPyGopherd\fP.  It is designed to emulate most of the ways in which
+the UMN gopherd distribution generates directories, even going so far
+as to be bug-compatible in some cases.  Generating directories with
+this handler is often the best general-purpose way to make nice
+directories in gopherspace.
+
+The remainder of the description of the \fBUMN.UMNDirHandler\fP,
+except for the ABSTRACTS AND INFO section, is
+lifted directly from the original UMN gopherd documentation, with
+light editing, because this handler implements it so exactly that
+there was no point in rewriting all that documentation :-)
+
+.B LINKS
+.br
+You can override the default view of a directory as generated by
+\fBdir.DirHandler\fP by creating what are known as
+.I Links
+in the Gopher data directory tree.
+
+The ability to make links to
+other hosts is how gopher distributes itself among multiple hosts.
+There are two different ways to make a link.  The first and simplest
+is to create a link file that contains the data needed by the server.
+By default all files in the gopher data directory starting with a
+period are taken to be link files.  A link file can contain multiple
+links.  To define a link you need to put five lines in a link file that
+define the needed characteristics for the document.  Here is an
+example of a link.
+
+.RS 3
+ Name=Cheese Ball Recipes
+ Numb=1
+ Type=1
+ Port=150
+ Path=1/Moo/Cheesy
+ Host=zippy.micro.umn.edu
+.RE
+
+The Name= line is what the user will see when cruising through the
+database.  In this case the name is "Cheese Ball Recipes".  The
+"Type=" defines what kind of document this object is.  For a list of
+all defined types, see GOPHER ITEM TYPES below.  For Gopher+ and HTTP,
+a MIME type is also used, which is determined automatically based on
+the type you specify.
+
+The "Path=" line contains the selector string that the client will use
+to retrieve the actual document.  The Numb= specifies that this entry
+should be presented first in the directory list (instead of being
+alphabetized).  The "Numb=" line is optional.  If it is present it
+cannot be the last line of the link.  The "Port=" and "Host=" lines
+specify a fully qualified domain name (FQDN) and a port respectively.
+You may substitute a plus '+' for these two parameters if you wish.
+The server will insert the current hostname and the current port when
+it sees a plus in either of these two fields.
+
+An easy way to retrieve links is to use the Curses Gopher Client.  By
+pressing '=' You can get information suitable for inclusion in a link
+file. 
+
+.B OVERRIDING DEFAULTS
+.br
+The
+server looks for a directory called
+.I .cap
+when parsing a directory.  The server then checks to see if the .cap
+directory contains a file with the same name as the file it's
+parsing.  If this file exists then the server will open it for
+reading.  The server parses this file just like a link file.  However
+instead of making a new object, the parameters inside the .cap/ file
+are used to override any of the server supplied default values. 
+
+For instance say you wanted to change the Title of a text file for
+gopher, but don't want to change the filename.  You also don't want it
+alphabetized, instead you want it second in the directory listing.
+You could make a set-aside file in the .cap directory with the same
+filename that contained the following lines:
+
+.RS 3
+ Name=New Long Cool Name
+ Numb=2
+.RE
+
+The replacement (and default) for .cap files are extended link files.
+The equivilant is to create a file that begins with a dot (.) in the
+.I same
+directory as the file you wish to override.  If the name of the file
+was 
+.I "file-to-change"
+then you could create a file called
+.I .names
+with the following contents
+
+.RS 3
+ Path=./file-to-change
+ Name=New Long Cool Name
+ Numb=2
+.RE
+
+.B ADDING COOL LINKS
+.br
+One cool thing you can do with .Links is to add neato services to your
+gopher server.  Adding a link like this:
+
+.RS 3
+ Name=Cool ftp directory
+ Type=h
+ Path=/URL:ftp://hostname/path/
+ Host=+
+ Port=+
+ 
+ Name=Cool web site
+ Type=h
+ Path=/URL:http://hostname/
+ Host=+
+ Port=+
+.RE
+
+Will allow you to link in any FTP or Web site to your gopher.
+
+You can easily add a finger site to your gopher server thusly:
+
+.RS 3
+ Name=Finger information
+ Type=0
+ Path=lindner
+ Host=mudhoney.micro.umn.edu
+ Port=79
+.RE
+
+.B HIDING AN ENTRY
+.br
+This kind of trick may be necessary in some cases,
+and thus for
+object "fred", the overriding .names file entry would be:
+
+.RS 3
+ Type=X
+ Path=./fred
+.RE
+
+by overriding default type to be "X".
+This kind of hideouts may be usefull, when for some reason there are
+symlinks (or whatever) in the directory at which \fBPyGopherd\fP looks at,
+and those entries are not desired to be shown at all.
+
+.B ABSTRACTS AND INFO
+.br
+Many modern gopher server maintainers like to intersperse gopher
+directory listings with other information -- often, additional
+information about the contents of files in the directory.  The
+gophermap system provides one way to do that, and abstracts used with
+UMN gopher directories provides another.
+
+Subject to the \fBabstract_headers\fP and \fBabstract_entries\fP
+configuration file options, this feature allows you to define that
+extra information.  You can do that by simply creating a file named
+\fIfilename\fP.abstract right alongside the regular file in your
+directory.  The file will be interpreted as the abstract.  For a
+directory, create a file named .abstract in the directory.  Simple as
+that!
+.\"********************
+.SS url.HTMLURLHandler
+.B PyGopherd
+provides ways for you to link to pages outside Gopherspace -- that is,
+web pages, FTP sites, and the like.  This is accomplished according to
+the
+.UR http://lists.complete.org/gopher@complete.org/2002/02/msg00033.html.gz
+Links to URL
+.UE
+specification (see CONFORMING TO below for details).  In order to link
+to a URL (EXCEPT gopher URLs), you create a link of type h (regardless
+of the actual type of the resource that you are linking to) in your
+gophermap or .Links file that looks like this:
+
+.B /URL:http://www.complete.org/
+
+Modern Gopher clients that follow the Links to URL specification will
+automatically follow that link when you select it.  The rest need some
+help, and that's where this handler comes in.
+
+For Gopher clients that do not follow the Links to URL specification,
+the \fBurl.HTMLURLHandler\fP will automatically generate an HTML
+document for them on the fly.  This document includes a refresh code
+that will send them to the proper page.  You should not disable this
+handler.
+.\"********************
+.SS url.URLTypeRewriter
+Some people wish to serve HTML documents from their Gopher server.
+One problem with that is that links in Gopherspace include an extra
+type character at the beginning, whereas links in HTTP do not.  This
+handler will remove the extra type character from HTTP requests that
+come in, allowing a single relative-to-root link to work for both.
+.\"**********************************************************************
+.SS virtual.Virtual
+This handler is not intended to ever be used directly, but is used by
+many other handlers such as the mbox support, PYG handlers, and
+others.  It is used to generate virtual entries in the directory
+hierarchy -- that is, entries that look normal to a Gopher client, but
+do not actually correspond to a file on disk.
+
+One special feature of the \fBvirtual.Virtual\fP handler is that you
+can send information to it at runtime in a manner similar to a CGI
+script on the web.  You do this by adding a question mark after the
+regular selector, followed by any arbitrary data that you wish to have
+sent to the virtual request handler.
+.\"**********************************************************************
+.SH GOPHER ITEM TYPES
+When you construct links to files via .Links files or gophermap files,
+or modify the \fBmapping\fP in the configuration file, you will need
+to know these.  Items bearing the "not implemented" text are not
+served up by \fBPyGopherd\fP as it ships, generally due to
+requirements of customized per-site software, but may be served up via
+PYG extension modules or other gopher servers.
+
+This list was prepared based on RFC1436, the UMN gopherd(1) manpage,
+and best current practices.
+.TP
+.B 0
+Plain text file
+.TP
+.B 1
+Directory
+.TP
+.B 2
+CSO phone book server (not implemented by \fBPyGopherd\fP)
+.TP
+.B 3
+Error condition; text that follows in plain text.
+.TP
+.B 4
+Macintosh file, BinHex format
+.TP
+.B 5
+DOS binary archive (not implemented by \fBPyGopherd\fP; use type 9
+instead)
+.TP
+.B 6
+uuencoded file; not directly generated by \fBPyGopherd\fP
+automatically, but can be linked to manually.  Most gopher clients
+will handle this better as type 1.
+.TP
+.B 7
+A Gopher search
+.TP
+.B 8
+A telnet link
+.TP
+.B 9
+Binary file
+.TP
+.B +
+Redundant server (not implemented by \fBPyGopherd\fP)
+.TP
+.B c
+Calendar (not implemented by \fBPyGopherd\fP)
+.TP
+.B e
+Event (not implemented by \fBPyGopherd\fP)
+.TP
+.B g
+GIF-format graphic
+.TP
+.B h
+An HTML file
+.TP
+.B I
+Any kind of graphic file other than GIF
+.TP
+.B i
+Informational text included in a directory that is displayed but does
+not link to any actual file.
+.TP
+.B M
+A MIME multipart/mixed file
+.TP
+.B s
+Any kind of sound file
+.TP
+.B T
+tn3270 link
+.TP
+.B X, \-
+UMN-specific -- signifies that this entry should not be displayed in a
+directory entry, but may be accessed via a direct link.  This value is
+never transmitted in any Gopher protocol.
 .\".TP
 .\".B \-v, \-\-version
 .\"Show version of program.
@@ -358,9 +852,20 @@ Boston, MA  02111-1307
 USA
 .SH AUTHOR
 .B PyGopherd,
-its libraries, documentation, and all included files
+its libraries, documentation, and all included files (except where noted)
 was written by John Goerzen <jgoerzen@complete.org> and
 copyright is held as stated in the COPYRIGHT section.
+.PP
+Portions of this manual (specifically relating to certian UMN gopherd
+features and characteristics that PyGopherd emulates) are modified
+versions of the original
+gopherd(1) manpage accompanying the UMN gopher distribution.  That
+document is distributed under the same terms as this, and
+bears the following copyright notices:
+.PP
+Copyright (C) 1991-2000  University of Minnesota
+.br
+Copyright (C) 2000-2002  John Goerzen and other developers
 .PP
 \fBPyGopherd\fP may be downloaded, and information found, from its
 homepage via either Gopher or HTTP:
@@ -375,7 +880,7 @@ http://quux.org/devel/gopher/pygopherd
 .PP
 \fBPyGopherd\fP may also be downloaded using Subversion.  Additionally,
 the distributed tar.gz may be updated with a simple "svn update"
-command; it is ready to go.  For information on getting \fbPyGopherd\fP
+command; it is ready to go.  For information on getting \fBPyGopherd\fP
 with Subversion, please visit:
 .PP
 .UR http://svn.complete.org/

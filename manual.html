@@ -1,0 +1,1942 @@
+<html>
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta name="Content-Style" content="text/css">
+<title>PYGOPHERD</title>
+</head>
+<body>
+
+<h1 align=center>PYGOPHERD</h1>
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#INSTALLATION">INSTALLATION</a><br>
+<a href="#CONFIGURATION">CONFIGURATION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#HANDLERS">HANDLERS</a><br>
+<a href="#GOPHER ITEM TYPES">GOPHER ITEM TYPES</a><br>
+<a href="#CONFORMING TO">CONFORMING TO</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#COPYRIGHT">COPYRIGHT</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+<!-- Creator     : groff version 1.17.2 -->
+<!-- CreationDate: Thu Aug  8 16:38:29 2002 -->
+<a name="NAME"></a>
+<h2>NAME</h2>
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+PyGopherd - Multiprotocol Information Server</td></table>
+<a name="SYNOPSIS"></a>
+<h2>SYNOPSIS</h2>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>pygopherd</b> <i>[configfile]</i></td></table>
+<a name="DESCRIPTION"></a>
+<h2>DESCRIPTION</h2>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Welcome to <b>PyGopherd</b>. In a nutshell, <b>PyGopherd</b>
+is a modern dynamic multi-protocol hierarchical information
+server with a pluggable modularized extension system, full
+flexible caching, virtual files and folders, and
+autodetection of file types -- all with support for
+standardized yet extensible per-document metadata. Whew!
+Read on for information on this what all these buzzwords
+mean.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>PyGopherd</b> is designed to serve up files using the
+Gopher Internet protocol. With Gopher, you can mount a
+filesystem (viewing files and folders as if they were
+local), browse Gopherspace with a web browser, download
+files, and be interactive with searching.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+But this is only part of the story. The world of Gopher is
+more expansive than this. There are two major gopher
+protocols: Gopher0 (also known as RFC1436) and Gopher+.
+Gopher0 is a small, simple, lightweight protocol that is
+very functional yet also extremely easy to implement.
+Gopher0 clients can be easily places in small embedded
+devices or in massive environments like a modern web
+browser.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Gopher+ is based on Gopher0 but extends it by providing
+document metadata such as file size and MIME type. Gopher+
+allows all sorts of neat features, such as configurable
+metadata (serving up a bunch of photos? Add a Subject field
+to your metadata to let a customized photo browser display
+who is pictured) and multiple views of a file (let the user
+select to view your photos as PNG or JPEG).</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>PyGopherd</b> supports both.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>PyGopherd</b> also fully natively supports HTTP, the
+protocol used on the Internet for most Web transactions. So,
+you can access a <b>PyGopherd</b> server using anything from
+a small, 20-line client in mobile phone to a massive 50-MB
+web browser.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>MODULARITY</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>PyGopherd</b> is designed in an extremely modular
+fashion. In fact, all protocols in <b>PyGopherd</b> and all
+handlers are modules. You can easily select which modules to
+use and which to exclude, and the order in which they are
+tried. Protocol modules implement different ways of speaking
+to clients (HTTP, Gopher+, Gopher0) and handler modules
+implement different ways of handling data on the local
+machine (files, directories, links, mailboxes,
+etc.)</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>FEATURE LIST</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Here are some of <b>PyGopherd</b>'s features:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Runs on any platform supported by Python 2.2. This includes
+virtually every past and current flavor of Unix (Linux,
+*BSD, Solaris, SunOS), Windows, MacOS 9.x and 10.x, and
+more. Some features may not be available on non-Unix
+platforms, however.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Runs on any platform supported by Java 1.1 via the Jython
+Python implementation.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Tunable server types via configuration directive -- forking
+or threading.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Secure design with support for chrooted
+execution.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Feature-complete, full implementations of Gopher0 (RFC1436),
+Gopher+, and HTTP/1.0.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Complete support Bucktooth-style gophermap
+files.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Complete support for UMN-type .Links, .names, etc. files and
+support for .cap directories.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Support for automatically finding the titles of HTML
+documents for presentation in a directory.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Virtual folder support can present many different types of
+files as folders. Some examples are:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="32%"></td><td width="68%">
+Can present any Unix MBOX, MMDF box, MH directory, Maildir
+directory, or Babyl mailbox as a virtual folder, the
+contents of which are the messages in the
+mailbox.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="32%"></td><td width="68%">
+Can use a configurable separator to split a file into
+multiple parts, the first line of each becoming the name for
+the virtual folder.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Versatile configuration file format is both extensible and
+nicely complementary of the module system.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Several options for running external programs to generate
+dynamic content: UMN-style execution, Bucktooth-style
+execution, or Pygopher PYG objects.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Protocol-independant, handler-dependant caching. This speeds
+up time by letting handlers cache dynamically-generated
+information -- currently used by the two directory handlers.
+This can improve performance of directories by several
+orders of magnitude. Because this is a handler cache only,
+all protocols can share the single cache -- and since the
+processing time of the protocols is negligable anyway, it
+works very well.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Autosensing of MIME types and gopher0 item types. Both are
+completely configurable. MIME type detection is done using a
+standard mime.types file, and gopher0 types are calculated
+by using a configurable regexp-based MIME-to-gophertype
+map.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Heavy support of regular expressions in
+configuration.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+ProtocolMultiplexer and HandlerMultiplexer let you choose
+only those protocols and handlers that you wish your server
+to support and the order in which they are tried when a
+request comes in.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Modular architecture permits rapid prototyping of new
+capabilities.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+--</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Full logging via syslog.</td></table>
+<a name="INSTALLATION"></a>
+<h2>INSTALLATION</h2>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+If you are reading this document via the &quot;man&quot;
+command, it is likely that you have no installation tasks to
+perform; your system administrator has already installed it.
+If you need to install it yourself, you have three options:
+a system-wide installation with Debian, system-wide
+installation with other systems, and a single-user
+installation. You can download the latest version of
+<b>PyGopherd</b> from
+http://quux.org/devel/gopher/pygopherd/.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>DEBIAN SYSTEM-WIDE INSTALLATION</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+If you are tracking Debian unstable, you may install
+<b>PyGopherD</b> by simply running the following command as
+root:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>apt-get install pygopherd</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+If you are not tracking Debian unstable, download the Debian
+.deb package from the <b>PyGopherd</b> website and then run
+<b>dpkg -i</b> to install the downloaded package. Then, go
+to CONFIGURATION below. You will use
+<b>/etc/init.d/pygopherd start</b> to start the
+program.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>OTHER SYSTEM-WIDE INSTALLATION</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Download the tar.gz version of the package from the website.
+Make sure you have Python 2.2 or above installed; if now,
+download and install it from www.python.org. Then run these
+commands:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>tar -zxvf pygopherd-x.y.z.tar.gz<br>
+cd pygopherd-x.y.z<br>
+python2.2 setup.py</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Some systems will need to use <b>python</b> instead of
+<b>python2.2.</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Next, proceed to configuration. Make sure that the
+<i>/etc/pygopherd/pygopherd.conf</i> file names valid users
+(<b>setuid</b> and <b>setgid</b> options) and a valid
+document root (<b>root</b> option).</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+You will type <b>pygopherd</b> to invoke the
+program.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>SINGLE-ACCOUNT INSTALLATION</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Download the tar.gz version of the package from the website.
+Make sure you have Python 2.2 installed; if not, download it
+from www.python.org Then run these commands:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>tar -zxvf pygopherd-x.y.z.tar.gz<br>
+cd pygopherd-x.y.z</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Modify <i>conf/pygopherd.conf</i> as follows:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Set <b>usechroot = no</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Comment out (add a # sign to the start of the line) the
+<b>pidfile</b>, <b>setuid</b>, and <b>setgid</b>
+lines.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Set <b>mimetypes = ./conf/mime.types</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Set <b>root =</b> to something appropriate.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Set <b>port</b> to a number greater than 1024.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+When you want to run <b>PyGopherd,</b> you will issue the
+<b>cd</b> command as above and then type
+<b>./bin/pygopherd;</b> there is no installation step
+necessary.</td></table>
+<a name="CONFIGURATION"></a>
+<h2>CONFIGURATION</h2>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>PyGopherd</b> is regulated by a configuration file that
+is normally stored in <i>/etc/pygopherd/pygopherd.conf</i>.
+You can specify alternate configuration files on the
+command-line. The <b>PyGopherd</b> distribution ships with a
+sample <i>pygopherd.conf</i> file that thoroughly documents
+the configuration file options and settings.</td></table>
+<a name="OPTIONS"></a>
+<h2>OPTIONS</h2>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+All <b>PyGopherd</b> configuration is done via the
+configuration file. Therefore, the program has only one
+command-line option.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<i>configfile</i></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+This optional argument specifies the location of the
+configuration file that <b>PyGopherD</b> is to
+use.</td></table>
+<a name="HANDLERS"></a>
+<h2>HANDLERS</h2>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>PyGopherd</b> defines several handlers which are
+responsible for finding data on your server and presenting
+it to the user. The handlers are used to generate things
+like links to other documents and directory listings. They
+are also responsible for serving up regular files and even
+virtual folders.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Handlers are specified with the <b>handlers</b> option in
+<i>pygopherd.conf</i>. This option is a list of handlers to
+use. For each request that arrives, <b>PyGopherd</b> will
+ask each handler in turn whether or not it can handle the
+request, and will handle the request according to the first
+handler that is capable of doing so. If no handlers can
+handle the request, a file not found error is generated. See
+the example configuration file for an example.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The remaining parts of this section describe the different
+handlers that ship with PyGopherd.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>dir.DirHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+This handler is a basic one that is used for directories
+that contain neither a <i>gophermap</i> file nor UMN-style
+links files, or situations where you have no need for either
+of those. It simply reads the contents of your on-disk
+directory, determines the appropriate types of each file,
+and sends the result to the client. The descriptions of each
+item are usually set to the filename, but the
+<b>html.HTMLFileTitleHandler</b> may override
+that.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>gophermap.BuckGophermapHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+This handler is used to generate gopher directory listings
+based on <i>gophermap</i> files. It will not read the
+directory on-disk, instead serving content from the
+<i>gophermap</i> file only. Gophermaps are useful if you
+want to present a directory where the files do not
+frequently change and there is general information to
+present. Overall, if you only wish to present information
+particular to certain files, you should consider using the
+abstract feature of the UMN.UMNDirHandler
+handler.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The <i>gophermap</i> files contain two types of lines, which
+are described here using the same convention normally used
+for command-line arguments. In this section, the symbol t
+will be used to indicate a tab character,
+Control-I.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<i>full line of informational text<br>
+
+gophertypeDESCRIPTION</i>t[<i>selector</i>[t<i>host</i>[t<i>port</i>]]]</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The informational text must not contain any tab characters.
+If present, it will be rendered with gopher type <b>i</b>,
+which willl cause it to be displayed on a client's screen at
+its particular position in the file.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The second type of line represents a link to a gopher file
+or directory. It begins with a single-character gopher type
+(see GOPHER ITEM TYPES below) followed immediately by a
+description and a tab character. There is no space or other
+separator between the gopher type and the
+description.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The remaining arguments are optional, but only to the extent
+that arguments may be omitted only if all arguments after
+them are also omitted. These arguments are:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The <i>selector</i> is the name of the file on the gopher
+server. If it begins with a slash, it is an absolute path;
+if it does not, it is interpreted relative to the directory
+that the gophermap file is in. If no selector is specified,
+the description is also used as the selector.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The <i>host</i> specifies the host on which this resource is
+located. If not specified, defaults to the current
+server.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The <i>port</i> specifies the port on which the resource is
+located. If not specified, defaults to the port the current
+server is listening on.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+An example of a gophermap to help illustrate the concept is
+included with the <b>PyGopherd</b> distribution in the file
+<i>examples/gophermap</i>.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>file.CompressedFileHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+In order to save space, you might want to store documents
+on-disk in a compressed format. But then clients would
+ordinarily have to decompress the files themselves. It would
+be nice to have the server automatically decompress the
+files on the fly, sending that result to the client. That's
+where <b>file.CompressedFileHandler</b> comes
+in.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+This handler will take compressed files, pipe them through
+your chosen decompression program, and send the result
+directly to clients -- completely
+transparently.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+To use this handler, set the <b>decompressors</b> option in
+the configuration file. That option defines a mapping from
+MIME encodings (as defined with the <b>encoding</b> option)
+to decompression programs. Files that are not encoded, or
+which have an encoding that does not occur in the
+<b>decompressors</b> map, will not be decompressed by this
+handler.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Please see the sample configuration file for more examples
+and details about the configuration of this
+handler.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>file.FileHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The <b>file.FileHandler</b> is just that -- its duty is to
+serve up regular files to clients.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>html.HTMLFileTitleHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+This handler is used when generating directories and will
+set the description of HTML files to the HTML title defined
+in them rather than let it be the default filename. Other
+than that, it has no effect. UMN gopherd implements a
+similar policy.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>mbox.MaildirFolderHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>mbox.MaildirMessageHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>mbox.MBoxMessageHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>mbox.MBoxFolderHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+These four handlers provide a unique &quot;virtual
+folder&quot; service. They allow you to present mailboxes as
+if they were folders, the items of the folders being the
+messages in the mailbox, organized by subject. This is
+useful for presenting mail archives or just making e-mail
+accessible in a nice and easy fashion.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+All you have to do to use these handlers is enable them in
+your <b>handlers</b> section. They will automatically detect
+requests for mailboxes and handle them
+appropriately.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The different handlers are for traditional Unix mbox
+mailboxes (all messages in a single file) and new
+qmail-stype Maildir mailboxes. You can enable only the two
+handlers for the specific mailbox type that you use, if
+desired.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>pyg.PYGHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+PYG (short for PYGopherd) is a mechanism that provides a
+tremendous amount of flexibility. Rather than just letting
+you execute a script like other Gopher or HTTP servers, PYGs
+are actually loaded up into PyGopherd and become
+fully-capable first-class virtual handlers. Yet they need
+not be known ahead of time, and are loaded
+dynamically.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+With a PYG handler, you can generate gopher directories,
+handle searches, generate files, and more on the fly. You
+can create entire virtual directory trees (for instance, to
+interface with NNTP servers or with DICT servers), and
+access them all using the standard Gopher protocol. All of
+this without having to modify even one line of PyGopherd
+code.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+If enabled, the <b>pyg.PYGHandler</b> will look for files
+with the extension .pyg that are marked executable. If
+found, they will be loaded and run as PYGs.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Please note: this module provides the capability to execute
+arbitrary code. Please consider the security ramifications
+of that before enabling it.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+See the <b>virtual.Virtual</b> handler for more information
+about passing data to your scripts at runtime.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+At present, documentation on writing PYGs is not provided,
+but you may find examples in the <i>pygfarm</i> directory
+included with the <b>PyGopherd</b>
+distribution.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>scriptexec.ExecHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+This handler implements &quot;old-style&quot; script
+execution; that is, executing arbitrary programs and piping
+the result to the client. It is, for the most part,
+compatible with both scripts written for UMN gopherd and the
+Bucktooth gopher server. If enabled, it will execute any
+file that is marked executable in the filesystem. It will
+normally list scripts as returning plain text, but you may
+create a custom link to the script that defines it as
+returning whatever kind of file you desire. Unlike PYGs,
+this type must be known in advance.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The <b>scriptexec.ExecHandler</b> will set environment
+variables for your scripts to use. They are as
+follows:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>SERVER_NAME</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The name of this server as defined in the configuration file
+or detected from the operating system.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>SERVER_PORT</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The port this server is listening on.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>REMOTE_ADDR</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The IP address of the client.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>REMOTE_PORT</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The port number of the client.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>REMOTE_HOST</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The same value as <b>REMOTE_ADDR</b>.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>SELECTOR</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The file that was requested; that is, the relative path to
+this script. If the selector included additional parameters
+after a ?, they will be included in this string as
+well.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>REQUEST</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The &quot;base&quot; part of the selector; that is, the part
+leading up to the ?.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>SEARCHREQUEST</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Included only if the client specified search data, this is
+used if the client is searching for something.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+See the <b>virtual.Virtual</b> handler for more information
+about passing data to your scripts at runtime.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Please note: this module provides the capability to execute
+arbitrary code. Please consider the security ramifications
+of that before enabling it.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>UMN.UMNDirHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+This is one of the most powerful workhorse handlers in
+<b>PyGopherd</b>. It is designed to emulate most of the ways
+in which the UMN gopherd distribution generates directories,
+even going so far as to be bug-compatible in some cases.
+Generating directories with this handler is often the best
+general-purpose way to make nice directories in
+gopherspace.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The remainder of the description of the
+<b>UMN.UMNDirHandler</b>, except for the ABSTRACTS AND INFO
+section, is lifted directly from the original UMN gopherd
+documentation, with light editing, because this handler
+implements it so exactly that there was no point in
+rewriting all that documentation :-)</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>LINKS</b><br>
+You can override the default view of a directory as
+generated by <b>dir.DirHandler</b> by creating what are
+known as <i>Links</i> in the Gopher data directory
+tree.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The ability to make links to other hosts is how gopher
+distributes itself among multiple hosts. There are two
+different ways to make a link. The first and simplest is to
+create a link file that contains the data needed by the
+server. By default all files in the gopher data directory
+starting with a period are taken to be link files. A link
+file can contain multiple links. To define a link you need
+to put five lines in a link file that define the needed
+characteristics for the document. Here is an example of a
+link.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="15%"></td><td width="85%">
+Name=Cheese Ball Recipes Numb=1 Type=1 Port=150
+Path=1/Moo/Cheesy Host=zippy.micro.umn.edu</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The Name= line is what the user will see when cruising
+through the database. In this case the name is &quot;Cheese
+Ball Recipes&quot;. The &quot;Type=&quot; defines what kind
+of document this object is. For a list of all defined types,
+see GOPHER ITEM TYPES below. For Gopher+ and HTTP, a MIME
+type is also used, which is determined automatically based
+on the type you specify.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The &quot;Path=&quot; line contains the selector string that
+the client will use to retrieve the actual document. The
+Numb= specifies that this entry should be presented first in
+the directory list (instead of being alphabetized). The
+&quot;Numb=&quot; line is optional. If it is present it
+cannot be the last line of the link. The &quot;Port=&quot;
+and &quot;Host=&quot; lines specify a fully qualified domain
+name (FQDN) and a port respectively. You may substitute a
+plus '+' for these two parameters if you wish. The server
+will insert the current hostname and the current port when
+it sees a plus in either of these two fields.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+An easy way to retrieve links is to use the Curses Gopher
+Client. By pressing '=' You can get information suitable for
+inclusion in a link file.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>OVERRIDING DEFAULTS</b><br>
+The server looks for a directory called <i>.cap</i> when
+parsing a directory. The server then checks to see if the
+.cap directory contains a file with the same name as the
+file it's parsing. If this file exists then the server will
+open it for reading. The server parses this file just like a
+link file. However instead of making a new object, the
+parameters inside the .cap/ file are used to override any of
+the server supplied default values.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+For instance say you wanted to change the Title of a text
+file for gopher, but don't want to change the filename. You
+also don't want it alphabetized, instead you want it second
+in the directory listing. You could make a set-aside file in
+the .cap directory with the same filename that contained the
+following lines:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="15%"></td><td width="85%">
+Name=New Long Cool Name Numb=2</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+The replacement (and default) for .cap files are extended
+link files. The equivilant is to create a file that begins
+with a dot (.) in the <i>same</i> directory as the file you
+wish to override. If the name of the file was
+<i>file-to-change</i> then you could create a file called
+<i>.names</i> with the following contents</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="15%"></td><td width="85%">
+Path=./file-to-change Name=New Long Cool Name
+Numb=2</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>ADDING COOL LINKS</b><br>
+One cool thing you can do with .Links is to add neato
+services to your gopher server. Adding a link like
+this:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="15%"></td><td width="85%">
+Name=Cool ftp directory Type=h
+Path=/URL:ftp://hostname/path/ Host=+ Port=+</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="15%"></td><td width="85%">
+Name=Cool web site Type=h Path=/URL:http://hostname/ Host=+
+Port=+</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Will allow you to link in any FTP or Web site to your
+gopher.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+You can easily add a finger site to your gopher server
+thusly:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="15%"></td><td width="85%">
+Name=Finger information Type=0 Path=lindner
+Host=mudhoney.micro.umn.edu Port=79</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>HIDING AN ENTRY</b><br>
+This kind of trick may be necessary in some cases, and thus
+for object &quot;fred&quot;, the overriding .names file
+entry would be:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="15%"></td><td width="85%">
+Type=X Path=./fred</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+by overriding default type to be &quot;X&quot;. This kind of
+hideouts may be usefull, when for some reason there are
+symlinks (or whatever) in the directory at which
+<b>PyGopherd</b> looks at, and those entries are not desired
+to be shown at all.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>ABSTRACTS AND INFO</b><br>
+Many modern gopher server maintainers like to intersperse
+gopher directory listings with other information -- often,
+additional information about the contents of files in the
+directory. The gophermap system provides one way to do that,
+and abstracts used with UMN gopher directories provides
+another.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Subject to the <b>abstract_headers</b> and
+<b>abstract_entries</b> configuration file options, this
+feature allows you to define that extra information. You can
+do that by simply creating a file named
+<i>filename</i>.abstract right alongside the regular file in
+your directory. The file will be interpreted as the
+abstract. For a directory, create a file named .abstract in
+the directory. Simple as that!</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>url.HTMLURLHandler</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>PyGopherd</b> provides ways for you to link to pages
+outside Gopherspace -- that is, web pages, FTP sites, and
+the like. This is accomplished according to the Links to URL
+specification (see CONFORMING TO below for details). In
+order to link to a URL (EXCEPT gopher URLs), you create a
+link of type h (regardless of the actual type of the
+resource that you are linking to) in your gophermap or
+.Links file that looks like this:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>/URL:http://www.complete.org/</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Modern Gopher clients that follow the Links to URL
+specification will automatically follow that link when you
+select it. The rest need some help, and that's where this
+handler comes in.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+For Gopher clients that do not follow the Links to URL
+specification, the <b>url.HTMLURLHandler</b> will
+automatically generate an HTML document for them on the fly.
+This document includes a refresh code that will send them to
+the proper page. You should not disable this
+handler.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>url.URLTypeRewriter</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Some people wish to serve HTML documents from their Gopher
+server. One problem with that is that links in Gopherspace
+include an extra type character at the beginning, whereas
+links in HTTP do not. This handler will remove the extra
+type character from HTTP requests that come in, allowing a
+single relative-to-root link to work for both.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td><td width="96%">
+<b>virtual.Virtual</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+This handler is not intended to ever be used directly, but
+is used by many other handlers such as the mbox support, PYG
+handlers, and others. It is used to generate virtual entries
+in the directory hierarchy -- that is, entries that look
+normal to a Gopher client, but do not actually correspond to
+a file on disk.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+One special feature of the <b>virtual.Virtual</b> handler is
+that you can send information to it at runtime in a manner
+similar to a CGI script on the web. You do this by adding a
+question mark after the regular selector, followed by any
+arbitrary data that you wish to have sent to the virtual
+request handler.</td></table>
+<a name="GOPHER ITEM TYPES"></a>
+<h2>GOPHER ITEM TYPES</h2>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+When you construct links to files via .Links files or
+gophermap files, or modify the <b>mapping</b> in the
+configuration file, you will need to know these. Items
+bearing the &quot;not implemented&quot; text are not served
+up by <b>PyGopherd</b> as it ships, generally due to
+requirements of customized per-site software, but may be
+served up via PYG extension modules or other gopher
+servers.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+This list was prepared based on RFC1436, the UMN gopherd(1)
+manpage, and best current practices.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>0</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Plain text file</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>1</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Directory</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>2</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+CSO phone book server (not implemented by
+<b>PyGopherd</b>)</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>3</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Error condition; text that follows in plain
+text.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>4</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Macintosh file, BinHex format</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>5</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+DOS binary archive (not implemented by <b>PyGopherd</b>; use
+type 9 instead)</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>6</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+uuencoded file; not directly generated by <b>PyGopherd</b>
+automatically, but can be linked to manually. Most gopher
+clients will handle this better as type 1.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>7</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+A Gopher search</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>8</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+A telnet link</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>9</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Binary file</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>+</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Redundant server (not implemented by
+<b>PyGopherd</b>)</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>c</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Calendar (not implemented by <b>PyGopherd</b>)</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>e</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Event (not implemented by <b>PyGopherd</b>)</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>g</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+GIF-format graphic</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>h</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+An HTML file</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>I</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Any kind of graphic file other than GIF</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>i</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Informational text included in a directory that is displayed
+but does not link to any actual file.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>M</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+A MIME multipart/mixed file</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>s</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Any kind of sound file</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>T</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+tn3270 link</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>X, -</b></td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+UMN-specific -- signifies that this entry should not be
+displayed in a directory entry, but may be accessed via a
+direct link. This value is never transmitted in any Gopher
+protocol.</td></table>
+<a name="CONFORMING TO"></a>
+<h2>CONFORMING TO</h2>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The Internet Gopher Protocol as specified in
+RFC1436</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The Gopher+ upward-compatible enhancements to the Internet
+Gopher Protocol from the University of Minnesota as laid out
+at
+gopher://gopher.quux.org/0/Archives/mirrors/boombox.micro.umn.edu/pub/gopher/gopher_protocol/Gopher+/Gopher+.txt</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The gophermap file format as originally implemented in the
+Bucktooth gopher server and described at
+gopher://gopher.floodgap.com/0/buck/dbrowse%3Ffaquse%201</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The Links to URL specification as laid out by John Goerzen
+at
+gopher://gopher.quux.org/0/Archives/Mailing%20Lists/gopher/gopher.2002-02%3f/MBOX-MESSAGE/34</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The UMN format for specifying object attributes and links
+with .cap, .Links, .abstract, and similar files as specified
+elsewhere in this document and implemented by UMN
+gopherd.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The PYG format for extensible Python gopher objects as
+created for <b>PyGopherd</b>.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Hypertext Transfer Protocol HTTP/1.0 as specified in
+RFC1945</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Hypertext Markup Language (HTML) 3.2 and 4.0 Transitional as
+specified in RFC1866 and RFC2854.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Maildir as specified in
+http://www.qmail.org/qmail-manual-html/man5/maildir.html and
+http://cr.yp.to/proto/maildir.html.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+The mbox mail storage format as specified in
+http://www.qmail.org/qmail-manual-html/man5/mbox.html</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Registered MIME media types as specified in
+RFC2048.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Script execution conforming to both UMN standards as laid
+out in UMN gopherd(1) and Bucktooth standards as specified
+at
+gopher://gopher.floodgap.com:70/0/buck/dbrowse%3ffaquse%202
+so far as each can be implemented consistent with secure
+design principles.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td><td width="79%">
+Standard Python 2.2.1 as implemented on POSIX-compliant
+systems.</td></table>
+<a name="BUGS"></a>
+<h2>BUGS</h2>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Reports of bugs should be sent via e-mail to the
+<b>PyGopherd</b> bug-tracking system (BTS) at
+pygopherd@bugs.complete.org or submitted on-line using the
+Web interface at http://bugs.complete.org/. The Web site
+also lists all current bugs, where you can check their
+status or contribute to fixing them.</td></table>
+<a name="COPYRIGHT"></a>
+<h2>COPYRIGHT</h2>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>PyGopherd</b> is Copyright (C) 2002 John
+Goerzen.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+This program is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later
+version.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+This program is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE. See the GNU General Public License for more
+details.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+You should have received a copy of the GNU General Public
+License along with this program; if not, write
+to:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Free Software Foundation, Inc.<br>
+59 Temple Place<br>
+Suite 330<br>
+Boston, MA 02111-1307<br>
+USA</td></table>
+<a name="AUTHOR"></a>
+<h2>AUTHOR</h2>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>PyGopherd,</b> its libraries, documentation, and all
+included files (except where noted) was written by John
+Goerzen &lt;jgoerzen@complete.org&gt; and copyright is held
+as stated in the COPYRIGHT section.</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Portions of this manual (specifically relating to certian
+UMN gopherd features and characteristics that PyGopherd
+emulates) are modified versions of the original gopherd(1)
+manpage accompanying the UMN gopher distribution. That
+document is distributed under the same terms as this, and
+bears the following copyright notices:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+Copyright (C) 1991-2000 University of Minnesota<br>
+Copyright (C) 2000-2002 John Goerzen and other
+developers</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>PyGopherd</b> may be downloaded, and information found,
+from its homepage via either Gopher or HTTP:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+gopher://quux.org/1/devel/gopher/pygopherd<br>
+http://quux.org/devel/gopher/pygopherd</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>PyGopherd</b> may also be downloaded using Subversion.
+Additionally, the distributed tar.gz may be updated with a
+simple &quot;svn update&quot; command; it is ready to go.
+For information on getting <b>PyGopherd</b> with Subversion,
+please visit:</td></table>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+http://svn.complete.org/</td></table>
+<a name="SEE ALSO"></a>
+<h2>SEE ALSO</h2>
+
+<table width="100%" border=0 rules="none" frame="void"
+       cols="2" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td><td width="90%">
+<b>python</b>(1).</td></table>
+<hr>
+</body>
+</html>
