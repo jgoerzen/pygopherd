@@ -38,15 +38,18 @@ def getstringlogger():
     logger.setlogfile(stringfile)
     return stringfile
 
-def gettestingserver(config = getconfig()):
+def gettestingserver(config = None):
+    config = config or getconfig()
     config.set('pygopherd', 'port', '64777')
     s = initialization.getserverobject(config)
     s.server_close()
     return s
 
-def gettestinghandler(rfile, wfile, config = getconfig()):
+def gettestinghandler(rfile, wfile, config = None):
     """Creates a testing handler with input from rfile.  Fills in
     other stuff with fake values."""
+
+    config = config or getconfig()
 
     # Kludge to pass to the handler init.
     
