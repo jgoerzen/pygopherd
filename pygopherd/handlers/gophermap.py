@@ -81,10 +81,10 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
                     # it in for gopher+.
                     if os.path.exists(self.getrootpath() + selector):
                         entry.populatefromfs(self.getrootpath() + selector)
-                entries.append(entry)
+                self.entries.append(entry)
             else:                       # Info line
                 line = line.strip()
-                entries.append(gopherentry.getinfoentry(line))
+                self.entries.append(gopherentry.getinfoentry(line))
 
     def isdir(self):
         return 1
