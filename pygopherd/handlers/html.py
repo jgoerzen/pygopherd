@@ -18,7 +18,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from pygopherd.handlers.file import FileHandler
-from HTMLParser import HTMLParser
+import HTMLParser
 import SocketServer
 import re
 import os, stat, os.path, mimetypes
@@ -31,9 +31,9 @@ from stat import *
 # HTML File Handler
 # Sets the name of a file if it's HTML.
 ###########################################################################
-class HTMLTitleParser(HTMLParser):
+class HTMLTitleParser(HTMLParser.HTMLParser):
     def __init__(self):
-        HTMLParser.__init__(self)
+        HTMLParser.HTMLParser.__init__(self)
         self.titlestr = ""
         self.readingtitle = 0
         self.gotcompletetitle = 0

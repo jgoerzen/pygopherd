@@ -1,3 +1,9 @@
+pygopherd (0.9.13) unstable; urgency=low
+
+  * Added signal handlers so shutdowns work properly.
+
+ -- John Goerzen <jgoerzen@complete.org>  Tue,  2 Jul 2002 11:03:18 -0500
+
 pygopherd (0.9.12) unstable; urgency=low
 
   * Minor bugfixes.

@@ -35,7 +35,7 @@ def log(exception, protocol = None, handler = None):
     if handler:
         handlerstr = re.search("[^.]+$", str(handler.__class__)).group(0)
     
-    logger.log("%s [%s/%s] %s: %s" % \
+    logger.log("%s [%s/%s] EXCEPTION %s: %s" % \
                (ipaddr, protostr, handlerstr, exceptionclass,
                 str(exception)))
 
