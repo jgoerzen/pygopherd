@@ -3,7 +3,7 @@ from stat import *
 from pygopherd.handlers.base import BaseHandler
 import os
 
-class VirtualFolder(BaseHandler):
+class Virtual(BaseHandler):
     """Implementation of virtual folder support.  This class will probably
     not be instantiated itself but it is designed to be instantiated by
     its children."""

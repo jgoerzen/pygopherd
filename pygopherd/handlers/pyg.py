@@ -1,6 +1,6 @@
 from pygopherd import protocols, handlers, gopherentry
 from pygopherd.handlers.base import BaseHandler
-from pygopherd.handlers.vfolder import VirtualFolder
+from pygopherd.handlers.virtual import Virtual
 from stat import *
 import imp, re
 

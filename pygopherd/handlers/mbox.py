@@ -22,7 +22,7 @@ import SocketServer
 import re
 import os, stat, os.path, mimetypes
 from pygopherd import protocols, handlers, gopherentry
-from pygopherd.handlers.vfolder import VirtualFolder
+from pygopherd.handlers.virtual import Virtual
 from mailbox import UnixMailbox, Maildir
 from stat import *
 
