@@ -9,9 +9,13 @@ class GopherProtocol(protocols.base.BaseGopherProtocol):
         return 1
 
     def renderobjinfo(self, entry):
-        return entry.gettype() + \
-               entry.getname() + "\t" + \
-               entry.getselector() + "\t" + \
-               entry.gethost(default = self.server.server_name) + "\t" + \
-               str(entry.getport(default = self.server.server_port)) + \
-               "\t+\r\n"
+        retval = entry.gettype() + \
+                 entry.getname() + "\t" + \
+                 entry.getselector() + "\t" + \
+                 entry.gethost(default = self.server.server_name) + "\t" + \
+                 str(entry.getport(default = self.server.server_port))
+        if entry.getgopherpsupport():
+            return retval + "\t+\r\n"
+        else:
+            return retval + "\r\n"
+

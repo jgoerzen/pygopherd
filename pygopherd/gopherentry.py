@@ -24,6 +24,7 @@ class GopherEntry:
         self.ctime = None
         self.mtime = None
         self.num = 0
+        self.gopherpsupport = 0
 
     def populatefromfs(self, fspath):
         self.fspath = fspath
@@ -37,6 +38,7 @@ class GopherEntry:
 
         statval = os.stat(self.fspath)
         self.populated = 1
+        self.gopherpsupport = 1         # Indicate gopher+ support for locals.
 
         if self.ctime == None:
             self.ctime = statval[9]
@@ -139,3 +141,8 @@ class GopherEntry:
         return self.num
     def setnum(self, arg):
         self.num = arg
+
+    def getgopherpsupport(self):
+        return self.gopherpsupport
+    def setgopherpsupport(self, arg):
+        self.gopherpsupport = arg

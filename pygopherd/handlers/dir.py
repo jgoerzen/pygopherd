@@ -33,9 +33,13 @@ class DirHandler(handlers.base.BaseHandler):
 
         self.fileentries = []
         for file in self.files:
-            fileentry = gopherentry.GopherEntry(self.selectorbase + '/' + file,
-                                          self.config)
-            fileentry.populatefromfs(self.fsbase + '/' + file)
+            # We look up the appropriate handler for this object, and ask
+            # it to give us an entry object.
+            fileentry = handlers.HandlerMultiplexer.\
+                        getHandler(self.selectorbase + '/' \
+                                   + file, self.protocol,
+                                   self.config).\
+                        getentry()
             self.prep_entriesappend(file, fileentry)
 
     def prep_entriesappend(self, file, fileentry):
