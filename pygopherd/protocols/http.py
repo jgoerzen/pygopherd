@@ -2,14 +2,16 @@ import SocketServer
 import re
 import os, stat, os.path, mimetypes, handlers, protocols, urllib, time
 import protocols.base
-import cgi
+import cgi, GopherExceptions
 
-class GopherProtocol(protocols.base.BaseGopherProtocol):
+class HTTPProtocol(protocols.base.BaseGopherProtocol):
     def canhandlerequest(self):
         self.requestparts = map(lambda arg: arg.strip(), self.request.split(" "))
-        return len(self.requestparts == 3) and \
+        print 'len', len(self.requestparts)
+        print self.requestparts[0]
+        return len(self.requestparts) == 3 and \
                (self.requestparts[0] == 'GET' or self.requestparts[0] == 'HEAD') and \
-               self.requestparts[0:5] == 'HTTP/'
+               self.requestparts[2][0:5] == 'HTTP/'
 
     def handle(self):
         self.canhandlerequest()         # To get self.requestparts
@@ -20,12 +22,8 @@ class GopherProtocol(protocols.base.BaseGopherProtocol):
             
         self.selector = urllib.unquote(self.requestparts[1])
 
-        # Use these in renderobjinfo -- it's used if we're displaying a dir.
-
-        self.htmlstarted = 0
-        self.htmlended = 1
-
         try:
+            print 'HTTP: getting handler for', self.selector
             handler = self.gethandler()
             self.entry = handler.getentry()
             handler.prepare()
@@ -34,7 +32,7 @@ class GopherProtocol(protocols.base.BaseGopherProtocol):
                 gmtime = time.gmtime(self.entry.getmtime())
                 mtime = time.strftime("%a, %d %b %Y %H:%M:%S GMT", gmtime)
                 self.wfile.write("Last-Modified: " + mtime + "\n")
-            mimetype = self.getmimetype()
+            mimetype = self.entry.getmimetype()
             if mimetype == None:
                 mimetype = 'text/plain'
             if mimetype == 'application/gopher-menu':
@@ -42,31 +40,60 @@ class GopherProtocol(protocols.base.BaseGopherProtocol):
             self.wfile.write("Content-Type: " + mimetype + "\n\n")
             if self.requestparts[0] == 'GET':
                 handler.write(self.wfile)
-            if not self.htmlended:
-                self.endhtml()
         except GopherExceptions.FileNotFound, e:
             self.filenotfound(str(e))
         except IOError, e:
             self.filenotfound(e[1])
 
     def renderobjinfo(self, entry):
-        if not self.htmlstarted:
-            self.starthtml()
-            self.htmlstarted = 1
         retstr = '<TR><TD>'
-        #url = 'http://
-        #if entry.gettype != 'i':
-        #    retstr += '<A HREF="%s">' % urllib.quote("http
-    
-    def starthtml(self):
-        self.wfile.write('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">\n')
-        self.wfile.write("""<HTML><HEAD><TITLE>Gopher""")
-        if self.entry.getname():
-            self.wfile.write(": " + cgi.escape(self.entry.getname()))
-        self.wfile.write("""</TITLE></HEAD><BODY><H1>Gopher""")
-        if self.entry.getname():
-            self.wfile.write(": " + cgi.escape(self.entry.getname()))
-        self.wfile.write('</H1><TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="0">')
+        url = None
+        # Decision time....
+        if (not entry.gethost()) and (not entry.getport()):
+            # It's a link to our own server.  Make it as such.  (relative)
+            url = entry.getselector()
+        else:
+            # Link to a different server.  Make it a gopher URL.
+            url = 'gopher://%s:%d/%s%s' % \
+                  (entry.gethost(self.server.server_name),
+                   entry.getport(70),
+                   entry.gettype('0'),
+                   entry.getselector())
+        if re.match('(/|)URL:', entry.getselector()):
+            # It's a plain URL.  Make it that.
+            url = re.match('(/|)URL:(.+)$', entry.getselector()).group(1)
 
-    def endhtml(self):
-        self.wfile.write('</TABLE></BODY></HTML>')
+        # OK.  Render.
+
+        retstr += "<TR><TD>&nbsp;"
+        if entry.gettype() != 'i':
+            retstr += '<A HREF="%s">' % urllib.quote(url)
+        retstr += "<TT>"
+        if entry.getname() != None:
+            retstr += cgi.escape(entry.getname())
+        else:
+            retstr += cgi.escape(entry.getselector())
+        retstr += "</TT>"
+        if entry.gettype() != 'i':
+            retstr += '</A>'
+        retstr += '</TD><TD><FONT SIZE="-2">'
+        if entry.getmimetype():
+            subtype = re.search('/.+$', entry.getmimetype())
+            if subtype:
+                retstr += cgi.escape(subtype.group()[1:])
+        retstr += '</FONT></TD></TR>\n'
+        return retstr
+    
+    def renderdirstart(self, entry):
+        retstr ='<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">\n'
+        retstr += "<HTML><HEAD><TITLE>Gopher"
+        if self.entry.getname():
+            retstr += ": " + cgi.escape(self.entry.getname())
+        retstr += "</TITLE></HEAD><BODY><H1>Gopher"
+        if self.entry.getname():
+            retstr += ": " + cgi.escape(self.entry.getname())
+        retstr += '</H1><TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="0">'
+        return retstr
+
+    def renderdirend(self, entry):
+        return '</TABLE></BODY></HTML>'

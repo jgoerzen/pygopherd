@@ -71,3 +71,12 @@ class BaseGopherProtocol:
         """Gets the handler for this object's selector."""
         return handlers.HandlerMultiplexer.getHandler(self.selector,
                                                self, self.config)
+
+    def renderdirstart(self, entry):
+        """Renders the start of a directory.  Most protocols will not need
+        this.  Exception might be HTML.  Returns None if not needed."""
+        return None
+
+    def renderdirend(self, entry):
+        """Likewise for the end of a directory."""
+        return None

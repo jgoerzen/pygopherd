@@ -28,6 +28,10 @@ class DirHandler(handlers.base.BaseHandler):
 
         ignorepatt = self.config.get("handlers.dir.DirHandler", "ignorepatt")
 
+        startstr = self.protocol.renderdirstart(self.entry)
+        if (startstr):
+            wfile.write(startstr)
+
         for file in self.files:
             # Skip files we're ignoring.
             if re.search(ignorepatt, selectorbase + '/' + file):
@@ -37,4 +41,9 @@ class DirHandler(handlers.base.BaseHandler):
                                           self.config)
             fileentry.populatefromfs(fsbase + '/' + file)
             wfile.write(self.protocol.renderobjinfo(fileentry))
+
+        endstr = self.protocol.renderdirend(self.entry)
+        if (endstr):
+            wfile.write(endstr)
+
             
