@@ -29,9 +29,10 @@ class BuckGophermapHandler(base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a directory AND
         the directory has a gophermap file."""
-        return self.vfs.isfile(self.getselector() + '/gophermap') or \
-               (self.statresult and S_ISREG(self.statresult[ST_MODE]) and \
-                self.getselector().endswith(".gophermap"))
+        return self.statresult and ((S_ISDIR(self.statresult[ST_MODE]) and \
+                self.vfs.isfile(self.getselector() + '/gophermap')) or \
+               (S_ISREG(self.statresult[ST_MODE]) and \
+                self.getselector().endswith(".gophermap")))
 
     def getentry(self):
         if not self.entry:
