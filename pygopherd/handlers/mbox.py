@@ -22,10 +22,11 @@ import SocketServer
 import re
 import os, stat, os.path, mimetypes
 from pygopherd import protocols, handlers, gopherentry
+from pygopherd.handlers.vfolder import VirtualFolder
 from mailbox import UnixMailbox
 from stat import *
 
-class FolderHandler(handlers.base.BaseHandler):
+class FolderHandler(VirtualFolder):
     def canhandlerequest(self):
         """Figure out if this is a handleable request."""
         
@@ -43,9 +44,10 @@ class FolderHandler(handlers.base.BaseHandler):
     def getentry(self):
         ## Return my own entry.
         if not self.entry:
-            self.entry = gopherentry.GopherEntry(self.selector, self.config)
+            self.entry = gopherentry.GopherEntry(self.getselector(),
+                                                 self.config)
             self.entry.settype('1')
-            self.entry.setname(os.path.basename(self.selector))
+            self.entry.setname(os.path.basename(self.getselector()))
             self.entry.setmimetype('application/gopher-menu')
             self.entry.setgopherpsupport(0)
         return self.entry
@@ -64,8 +66,9 @@ class FolderHandler(handlers.base.BaseHandler):
             message = self.mbox.next()
             if not message:
                 break
-            handler = MessageHandler(self.selector + "/MBOX-MESSAGE/" + \
-                                     str(count), self.protocol, self.config)
+            handler = MessageHandler(self.genargsselector("/MBOX-MESSAGE/" + \
+                                     str(count)), self.protocol, self.config,
+                                     None)
             wfile.write(self.protocol.renderobjinfo(handler.getentry(message)))
             count += 1
 
@@ -73,15 +76,19 @@ class FolderHandler(handlers.base.BaseHandler):
         if (endstr):
             wfile.write(endstr)
 
-class MessageHandler(handlers.base.BaseHandler):
+class MessageHandler(VirtualFolder):
     def canhandlerequest(self):
-        msgnum = re.search('/MBOX-MESSAGE/(\d+)$', self.selector)
+        """We put MBOX-MESSAGE in here so we don't have to re-check
+        the first line of the mbox file before returning a true or false
+        result."""
+        if not self.selectorargs:
+            return 0
+        msgnum = re.search('^/MBOX-MESSAGE/(\d+)$', self.selectorargs)
         if not msgnum:
             return 0
         self.msgnum = int(msgnum.group(1))
-        self.msgpath = re.sub('/MBOX-MESSAGE/\d+$', '', self.getfspath())
         self.message = None
-        return os.path.isfile(self.msgpath)
+        return self.statresult and S_ISREG(self.statresult[ST_MODE])
 
     def getentry(self, message = None):
         """Set the message if called from, eg, the dir handler.  Saves
@@ -107,7 +114,7 @@ class MessageHandler(handlers.base.BaseHandler):
     def getmessage(self):
         if self.message:
             return self.message
-        fd = open(self.msgpath, "rt")
+        fd = open(self.getfspath(), "rt")
         mbox = UnixMailbox(fd)
         message = None
         for x in range(self.msgnum):

@@ -64,7 +64,7 @@ class BaseHandler:
         if self.fspath:
             return self.fspath
 
-        self.fspath = self.getrootpath() + self.selector
+        self.fspath = self.getrootpath() + self.getselector()
         # Strip off trailing slash.
         if self.fspath[-1] == '/':
             self.fspath = self.fspath[0:-1]
@@ -81,3 +81,5 @@ class BaseHandler:
         """Writes out the request.  Should be overridden."""
         pass
 
+    def getselector(self):
+        return self.selector
