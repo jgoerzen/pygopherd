@@ -83,12 +83,15 @@ class HTTPProtocol(BaseGopherProtocol):
                 if handler.isdir():
                     self.writedir(self.entry, handler.getdirlist())
                 else:
-                    handler.write(self.wfile)
+                    self.handlerwrite(self.wfile)
         except GopherExceptions.FileNotFound, e:
             self.filenotfound(str(e))
         except IOError, e:
             GopherExceptions.log(e, self, None)
             self.filenotfound(e[1])
+
+    def handlerwrite(self, wfile):                                
+        self.handler.write(wfile)
 
     def adjustmimetype(self, mimetype):
         if mimetype == None:

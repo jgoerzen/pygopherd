@@ -18,9 +18,15 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from http import HTTPProtocol
+from StringIO import StringIO
 import cgi, re
 
 accesskeys = '1234567890#*'
+wmlheader = """<?xml version="1.0"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN"
+"http://www.wapforum.org/DTD/wml_1.1.xml">
+<wml>
+"""
 
 class WAPProtocol(HTTPProtocol):
     # canhandlerequest inherited
@@ -39,8 +45,10 @@ class WAPProtocol(HTTPProtocol):
             return 0
 
     def adjustmimetype(self, mimetype):
-        if mimetype == None:
-            return 'text/plain'
+        self.needsconversion = 0
+        if mimetype == None or mimetype == 'text/plain':
+            self.needsconversion = 1
+            return 'text/vnd.wap.wml'
         if mimetype == 'application/gopher-menu':
             return 'text/vnd.wap.wml'
         return mimetype
@@ -84,13 +92,10 @@ class WAPProtocol(HTTPProtocol):
         return retstr
 
     def renderdirstart(self, entry):
+        global wmlheader
         self.accesskeyidx = 0
         self.postfieldidx = 0
-        retval = """<?xml version="1.0"?>
-<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN"
-"http://www.wapforum.org/DTD/wml_1.1.xml">
-<wml>
-"""
+        retval = wmlheader
         title = 'Gopher'
         if self.entry.getname():
             title = cgi.escape(self.entry.getname())
@@ -104,3 +109,25 @@ class WAPProtocol(HTTPProtocol):
     def renderdirend(self, entry):
         return "</p>\n</card>\n</wml>\n"
     
+    def handlerwrite(self, wfile):
+        global wmlheader
+        if not self.needsconversion:
+            self.handler.write(wfile)
+            return
+        fakefile = StringIO()
+        self.handler.write(fakefile)
+        fakefile.seek(0)
+        wfile.write(wmlheader)
+        wfile.write('card id="index" title="Text File" newcontext="true">\n')
+        wfile.write('<p>\n')
+        while 1:
+            line = fakefile.readline()
+            if not len(line):
+                break
+            line = line.rstrip()
+            if len(line):
+                wfile.write(cgi.escape(line) + "\n")
+            else:
+                wfile.write("</p>\n<p>")
+        wfile.write('</p>\n</card>\n</wml>\n')
+        
