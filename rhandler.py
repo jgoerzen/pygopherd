@@ -15,9 +15,7 @@ gopherplushack = "+-1\r\n" + \
 class GopherRequestHandler(SocketServer.StreamRequestHandler):
     def handle(self):
         request = self.rfile.readline()
-        print "Incoming request: '%s'\n" % request
         tabindex = request.find("\t")
-        print "Tabindex: ", tabindex
         if (tabindex != -1):
             self.wfile.write(gopherplushack)
             return
@@ -37,8 +35,6 @@ class GopherRequestHandler(SocketServer.StreamRequestHandler):
         path = self.server.config.get("serving", "root") + request
 
         handler = None
-
-        print "Request = '%s', path = '%s'\n" % (request, path)
 
         if os.path.isdir(path):
             handler = GopherDirHandler(path, request, self.server,
@@ -73,6 +69,7 @@ class GopherDirHandler(GopherHandler):
                                    fsbase + '/' + file,
                                    self.server.mapping,
                                    self.server.defaulttype,
+                                   'enhanced',
                                    self.server.server_name,
                                    self.server.server_port)
             wfile.write(str(entry) + "\r\n")
@@ -89,7 +86,7 @@ class GopherFileHandler(GopherHandler):
             wfile.write(string)
 
 class GopherDirEntry:
-    def __init__(self, gopherpath, fspath, mapping,
+    def __init__(self, gopherpath, fspath, mapping, protocol = 'enhanced',
                  defaulttype = 'text/plain', defaulthost = 'localhost',
                  defaultport = 70):
         self.gopherpath = gopherpath
@@ -103,7 +100,8 @@ class GopherDirEntry:
         self.populated = 0
         self.encoding = ''
         self.mapping = mapping
-        self.language = 'C'
+        self.language = ''
+        self.protocol = protocol
 
     def populate(self):
         if self.populated:
@@ -119,8 +117,9 @@ class GopherDirEntry:
             return
 
         type, encoding = mimetypes.guess_type(self.gopherpath)
+        print "Mime result for", self.gopherpath, type, encoding
         if type:
-            self.type = type
+            self.mimetype = type
 
         if encoding:
             self.encoding = encoding
@@ -138,9 +137,9 @@ class GopherDirEntry:
                self.name + "\t" + \
                self.gopherpath + "\t" + \
                self.host + "\t" + \
-               str(self.port)# + "\t" + \
-               #str(self.size) + "\t" + \
-               #self.mimetype + "\t" + \
-               #self.encoding + "\t" + \
-               #self.language
+               str(self.port) + "\t" + \
+               str(self.size) + "\t" + \
+               self.mimetype + "\t" + \
+               self.encoding + "\t" + \
+               self.language
 
