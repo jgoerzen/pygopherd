@@ -4,7 +4,7 @@ clean:
 	-rm -f `find . -name "*.class"`
 	-rm -f `find . -name "*.bak"`
 
-ChangeLog:
+changelog:
 	cvs2cl
 	cvs commit ChangeLog
 	rm ChangeLog.bak
