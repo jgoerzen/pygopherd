@@ -33,9 +33,9 @@ class HTTPProtocol(BaseGopherProtocol):
                self.requestparts[2][0:5] == 'HTTP/'
 
     def headerslurp(self):
-        if hasattr(self.rfile, 'pygopherd_http_slurped'):
+        if hasattr(self.requesthandler, 'pygopherd_http_slurped'):
             # Already slurped.
-            self.httpheaders = self.rfile.pygopherd_http_slurped
+            self.httpheaders = self.requesthandler.pygopherd_http_slurped
             return
         # Slurp up remaining lines.
         self.httpheaders = {}
@@ -49,7 +49,7 @@ class HTTPProtocol(BaseGopherProtocol):
             splitline = line.split(':', 1)
             if len(splitline) == 2:
                 self.httpheaders[splitline[0].lower()] = splitline[1]
-        self.rfile.pygopherd_http_slurped = self.httpheaders
+        self.requesthandler.pygopherd_http_slurped = self.httpheaders
 
     def handle(self):
         self.canhandlerequest()         # To get self.requestparts
