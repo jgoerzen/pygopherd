@@ -1,3 +1,21 @@
+2002-04-14 22:34  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Fixed a bug with handling empty Path=
+	lines.	Thanks to David Allen <mda@idatar.com> for identifying this
+	one.
+
+2002-04-12 15:26  jgoerzen
+
+	* pygopherd/handlers/base.py: Miscellany comments and stuff
+
+2002-04-12 11:46  jgoerzen
+
+	* debian/changelog, pygopherd/version.py: Updated for 0.9.4
+
+2002-04-12 11:39  jgoerzen
+
+	* ChangeLog: [no log message]
+
 2002-04-12 11:39  jgoerzen
 
 	* pygopherd/: handlers/HandlerMultiplexer.py, handlers/base.py,
