@@ -1,0 +1,5 @@
+This directory contains data for the unit tests.
+
+Some tests are dependant upon the precise length of files; those files are
+added with -kb.
+
