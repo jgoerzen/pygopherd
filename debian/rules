@@ -75,6 +75,9 @@ binary-indep: build install
 	mv debian/pygopherd/usr/bin/pygopherd.py \
 		debian/pygopherd/usr/sbin/pygopherd
 	rm debian/pygopherd/etc/pygopherd/mime.types
+	cp pygfarm/*.pyg debian/pygfarm/usr/share/pygfarm
+	chown root.root debian/pygfarm/usr/share/pygfarm/*
+	chmod 0755 debian/pygfarm/usr/share/pygfarm/*
 	dh_installexamples
 	dh_installmenu
 #	dh_installlogrotate

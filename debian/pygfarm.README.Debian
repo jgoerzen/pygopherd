@@ -1,0 +1,8 @@
+pygfarm for Debian
+------------------
+
+This package installs its files into /usr/share/pygfarm.  To actually make
+them visible to your server, you'll need to either symlink (if not running
+chroot) or copy (if running chroot) them into a path under your server root.
+
+ -- John Goerzen <jgoerzen@complete.org>, Wed, 10 Apr 2002 08:58:31 -0500

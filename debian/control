@@ -19,3 +19,17 @@ Description: Modular Multiprotocol Gopher/HTTP Server in Python
  and executables.  In addition to all this, there are Pygopherd's own
  extra features.  All features are fully customizable and can be enabled
  or disabled by editing /etc/pygopherd/pygopherd.conf.
+
+Package: pygfarm
+Architecture: all
+Depends: pygopherd (>= ${Source-Version})
+Description: Collection of add-on modules for Pygopherd
+ These add-on modules provide additional functionality for
+ your Pygopherd server.
+ .
+ Included modules are:
+ .
+ dict.pyg: Interface to a dictd database
+ .
+ These are installed into /usr/share/pygfarm for you to link to
+ as you like.
