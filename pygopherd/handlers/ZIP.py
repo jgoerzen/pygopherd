@@ -16,34 +16,148 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import re, time, stat, unittest, os.path, struct, types, copy
+import re, zipfile, time, stat, unittest, os.path, struct, types, copy
+import cPickle, fcntl
 from StringIO import StringIO
-from pygopherd import zipfile
 
-UNX_IFMT = 0170000L
-UNX_IFLNK = 0120000L
+UNX_IFMT = 0170000
+UNX_IFLNK = 0120000
 
 from pygopherd.handlers import base
+
+def GetPicklableZipFile(zipfile, chain, zipfilename, dircache):
+    pzf = copy.copy(zipfile)
+    pzf.fp = None
+    return (pzf, chain, zipfilename, dircache)
+
+def UnpickleZipFileObject(pickleobj):
+    """Warning: if read-write ZIPs are ever implemented along with
+    nested zips, this or the above may break.
+
+    Returns a new (ZipFile, dircache) object."""
+
+    (zipfile, chain, zipfilename, dircache) = pickleobj
+    zipfile.fp = chain.open(zipfilename)
+    return (zipfile, dircache)
 
 class VFS_Zip(base.VFS_Real):
     def __init__(self, config, chain, zipfilename):
         self.config = config
         self.chain = chain
         self.zipfilename = zipfilename
+        self._initzip()
 
-        zipfd = self.chain.open(self.zipfilename)
-        self.zip = zipfile.ZipReader(zipfd)
+    def _getcachefilename(self):
+        (dir, file) = os.path.split(self.zipfilename)
+        return os.path.join(dir, '.cache.pygopherd.zip.' + file)
+
+    def _loadcache(self):
+        filename = self._getcachefilename()
+        if self.chain.iswritable(filename):
+            zipfilemtime = self.chain.stat(self.zipfilename)[stat.ST_MTIME]
+            try:
+                cachemtime = self.chain.stat(filename)[stat.ST_MTIME]
+            except OSError:
+                return 0
+
+            if zipfilemtime > cachemtime:
+                return 0
+            
+            try:
+                fd = self.chain.open(filename)
+            except OSError:
+                return 0
+
+            fcntl.flock(fd, fcntl.LOCK_SH)
+            (self.zip, self.dircache) = \
+                           UnpickleZipFileObject(cPickle.load(fd))
+            fcntl.flock(fd, fcntl.LOCK_UN)
+            return 1
+
+    def _savecache(self):
+        filename = self._getcachefilename()
+        if not self.chain.iswritable(filename):
+            return
+
+        try:
+            fd = self.chain.open(filename, 'wb')
+        except OSError:
+            return
+
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        try:
+            cPickle.dump(GetPicklableZipFile(self.zip, self.chain,
+                                             self.zipfilename, self.dircache),
+                         fd, 1)
+        except:
+            self.chain.unlink(filename)
+            fd.close()
+            raise
+
+        fd.close()
+
+    def _initzip(self):
+        if self._loadcache():
+            self.memberinfo = self.zip.NameToInfo
+        else:
+            # For reading from a new Zip file.
+            zipfd = self.chain.open(self.zipfilename)
+            self.zip = zipfile.ZipFile(zipfd, 'r')
+            self.dircache = None
+            # For reloading an existing one.  Must be called before _cachedir.
+            self.memberinfo = self.zip.NameToInfo
+            self._cachedir()
+            self._savecache()
+
+    def _isentryincache(self, fspath):
+        try:
+            self._getcacheentry(fspath)
+            return 1
+        except KeyError:
+            return 0
+
+    def _getcacheentry(self, fspath):
+        cur = self.dircache
+        if fspath == '':
+            return cur
+        for item in fspath.split('/'):
+            if type(cur) != types.DictType:
+                raise KeyError, "Call for %s: couldn't find %s" % (fspath, item)
+            try:
+                cur = cur[item]
+            except KeyError:
+                raise KeyError, "Call for %s: Couldn't find %s" % (fspath, item)
+        return cur
+
+    def _cachedir(self):
+        if self.dircache != None:
+            return
+
+        self.dircache = {}
+
+        for (file, info) in self.memberinfo.iteritems():
+            (dir, filename) = os.path.split(file)
+            if dir == '/':
+                dir == ''
+
+            dirlevel = self.dircache
+            for level in dir.split('/'):
+                if level == '':
+                    continue
+                if not dirlevel.has_key(level):
+                    dirlevel[level] = {}
+                dirlevel = dirlevel[level]
+
+            if len(filename):
+                dirlevel[filename] = info
 
     def _needschain(self, selector):
-        pass                            # TEST
         return not selector.startswith(self.zipfilename)
 
-    # Functions to determine if this is a link.
-
     def _islinkattr(self, attr):
-        str = struct.pack('L', attr)
+        str = struct.pack('l', attr)
         str2 = str[2:5] + str[0:2]
-        result = struct.unpack('L', str2)[0]
+        result = int(struct.unpack('L', str2)[0])
         return (result & UNX_IFMT) == UNX_IFLNK
 
     def _islinkinfo(self, info):
@@ -51,59 +165,28 @@ class VFS_Zip(base.VFS_Real):
             return 0
         return self._islinkattr(info.external_attr)
 
-    # Functions to read a link.
+    def _islinkfspath(self, fspath):
+        if not len(fspath):
+            return 0
+
+        try:
+            info = self._getcacheentry(fspath)
+        except KeyError:
+            return 0
+        
+        return self._islinkinfo(info)
+
+    def _islinkname(self, selector):
+        return self._islinkfspath(self._getfspathfinal(selector))
 
     def _readlinkfspath(self, fspath):
-        """It better be a link before you try this!"""
+        if not self._islinkfspath(fspath):
+            raise ValueError, "Readlinkfspath called on %s which is not a link"
+
         return self._open(fspath).read()
 
     def _readlink(self, selector):
         return self._readlinkfspath(self, self._getfspathfinal(selector))
-
-    # Resolve a link into its final form.
-
-    def _resolvelink(self, fspath):
-        zi = None
-
-        # Optimization for instances where things are NOT a symlink.
-        # We assume this is the most common case
-
-        try:
-            zi = self.zip.getinfo(fspath)
-            if not self._islinkinfo(zi):
-                return fspath
-        except KeyError:
-            pass
-        
-        
-        newpath = ''
-        for component in fspath.split('/'):
-            newpath = os.path.join(newpath, component)
-            while 1:
-                # Optimization: if it's a directory, break now.
-                # This will also catch it if it's not a valid entry.
-                try:
-                    if self.zip.locationmap[newpath] == -1:
-                        break
-                except KeyError:
-                    break
-                zi = self.zip.getinfo(newpath)
-                if not self._islinkinfo(zi):
-                    break
-
-                newlink = self._readlinkfspath(newpath)
-                if newlink[0] == '/':
-                    newpath = os.path.normpath(newlink[1:])
-                else:
-                    newpath = os.path.normpath(os.path.join(os.path.dirname(newpath), newlink))
-        return newpath
-
-    def _getinfofspath(self, fspath):
-        """This function takes a pre-resolved link!"""
-        return self.zip.getinfo(fspath)
-
-    def _getinfo(self, selector):
-        return self._getinfofspath(self._getfspathresolved(selector))
 
     def iswritable(self, selector):
         if self._needschain(selector):
@@ -113,9 +196,6 @@ class VFS_Zip(base.VFS_Real):
 
     def unlink(self, selector):
         raise NotImplementedError, "VFS_ZIP cannot unlink files."
-
-    def _getfspathresolved(self, selector):
-        return self._resolvelink(self._getfspathfinal(selector))
 
     def _getfspathfinal(self, selector):
         # Strip off the filename part.
@@ -129,6 +209,18 @@ class VFS_Zip(base.VFS_Real):
 
         return selector
     
+    def _transformlink(self, fspath):
+        while self._islinkfspath(fspath):
+            linkdest = self._readlinkfspath(fspath)
+            if linkdest.startswith('/'):
+                fspath = os.path.normpath(linkdest)[1:]
+            else:
+                fspath = os.path.join(os.path.dirname(fspath), linkdest)
+                fspath = os.path.normpath(fspath)
+
+        return fspath
+        
+
     def getfspath(self, selector):
         if self._needschain(selector):
             return self.chain.getfspath(selector)
@@ -136,115 +228,122 @@ class VFS_Zip(base.VFS_Real):
         # We can skip the initial part -- it just contains the start of
         # the path.
 
-        return self._getfspathfinal(selector)
+        selector = self._getfspathfinal(selector)
+        if not len(selector):
+            return selector
+
+        # Build from the bottom up.
+        newselector = ''
+        components = selector.split('/')
+
+        for item in components:
+            newselector = os.path.join(newselector, item)
+            newselector = self._transformlink(newselector)
+
+        return os.path.normpath(newselector)
 
     def stat(self, selector):
         if self._needschain(selector):
             return self.chain.stat(selector)
 
-        fspath = self._getfspathresolved(selector)
-
+        fspath = self.getfspath(selector)
         try:
-            zi = self._getinfofspath(fspath)
-            zt = zi.date_time
-            modtime = time.mktime(zt + (0, 0, -1))
-            return (33188,                  # mode
-                    0,                      # inode
-                    0,                      # device
-                    1,                      # links
-                    0,                      # uid
-                    0,                      # gid
-                    zi.file_size,           # size
-                    modtime,                # access time
-                    modtime,                # modification time
-                    modtime)                # change time
+            zi = self._getcacheentry(fspath)
         except KeyError:
-            pass
-        
-        if not self._isdir_fspath(fspath):
             raise OSError, "Entry %s does not exist in %s" %\
                   (selector, self.zipfilename)
+        
+        if type(zi) == types.DictType:
+            # It's a directory.
+            return (16877,              # mode
+                    0,                  # inode
+                    0,                  # device
+                    3,                  # links
+                    0,                  # uid
+                    0,                  # gid
+                    0,                  # size
+                    0,                  # access time
+                    0,                  # modification time
+                    0)                  # change time
+
+        zt = zi.date_time
+        modtime = time.mktime(zt + (0, 0, -1))
+        return (33188,                  # mode
+                0,                      # inode
+                0,                      # device
+                1,                      # links
+                0,                      # uid
+                0,                      # gid
+                zi.file_size,           # size
+                modtime,                # access time
+                modtime,                # modification time
+                modtime)                # change time
             
-        # It's a directory.
-        return (16877,              # mode
-                0,                  # inode
-                0,                  # device
-                3,                  # links
-                0,                  # uid
-                0,                  # gid
-                0,                  # size
-                0,                  # access time
-                0,                  # modification time
-                0)                  # change time
-
-
-    def _isdir_fspath(self, fspath):
-        try:
-            return self.zip.locationmap[fspath] == -1
-        except KeyError:
-            return 0
 
     def isdir(self, selector):
         if self._needschain(selector):
             return self.chain.isdir(selector)
 
-        # Optimization: if it is a directory without having to resolve
-        # the link, just return true.
-        fspath = self._getfspathfinal(selector)
-        return self._isdir_fspath(fspath) or \
-               self._isdir_fspath(self._resolvelink(fspath))
-
-    def _isfile_fspath(self, fspath):
+        fspath = self.getfspath(selector)
         try:
-            return self.zip.locationmap[fspath] != -1
+            item = self._getcacheentry(fspath)
         except KeyError:
             return 0
-    
+
+        return type(item) == types.DictType
+
     def isfile(self, selector):
         if self._needschain(selector):
             return self.chain.isfile(selector)
 
-        # The same optimization as with isdir is not possible here,
-        # because what appears on the surface to be a file may be
-        # a symlink.
-        return self._isfile_fspath(self._getfspathresolved(selector))
+        fspath = self.getfspath(selector)
+        try:
+            item = self._getcacheentry(fspath)
+        except KeyError:
+            return 0
 
-    def _exists_fspath(self, fspath):
-        return self.zip.locationmap.has_key(fspath)
+        return type(item) != types.DictType
 
     def exists(self, selector):
         if self._needschain(selector):
             return self.chain.exists(selector)
 
-        return self._exists_fspath(self._getfspathresolved(selector))
+        fspath = self.getfspath(selector)
+        return self._isentryincache(fspath)
 
     def _open(self, fspath):
-        return self.zip.open(fspath)
+        return StringIO(self.zip.read(fspath))
 
     def open(self, selector, *args, **kwargs):
         if self._needschain(selector):
             return apply(self.chain.open, (selector,) + args, kwargs)
 
-        fspath = self._getfspathresolved(selector)
-        if not self._isfile_fspath(fspath):
-            raise IOError, "Request to open non-existant file"
+        fspath = self.getfspath(selector)
+        try:
+            item = self._getcacheentry(fspath)
+        except KeyError:
+            raise IOError, "Request to open %s, which does not exist" % selector
+        if type(item) == types.DictType:
+            raise IOError, "Request to open %s, which is a directory" % selector
+
         return self._open(fspath)
 
     def listdir(self, selector):
         if self._needschain(selector):
             return self.chain.listdir(selector)
 
-        fspath = self._getfspathresolved(selector)
-        if not self._isdir_fspath(fspath):
-            raise OSError, "Request to list non-existant directory"
+        fspath = self.getfspath(selector)
+        try:
+            retobj = self._getcacheentry(fspath)
+        except KeyError:
+            raise OSError, "listdir on %s (%s) failed: no such file or directory" % (selector, fspath)
 
-        retval = []
-        for item in self.zip.locationmap.iterkeys():
-            (d, f) = os.path.split(item)
-            if d == fspath and f != '':
-                retval.append(f)
-        return retval
-        
+        if type(retobj) != types.DictType:
+            raise OSError, "listdir on %s failed: that is a file, not a directory" % selector
+
+        return retobj.keys()
+
+
 #class TestVFS_Zip_huge(unittest.TestCase):
 class DISABLED_TestVFS_Zip_huge:
     def setUp(self):
@@ -416,31 +515,28 @@ class TestVFS_Zip(unittest.TestCase):
         s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir'), 'subdir')
         s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir2/real2.txt'),
                                       'subdir2/real2.txt')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linked.txt'),
+                                      'real.txt')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir'),
+                                      'subdir')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir/linked2.txt'),
+                                      'subdir2/real2.txt')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir/linked2.txt'),
+                                      'subdir2/real2.txt')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir/linkedabs.txt'),
+                                      'real.txt')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir/linktoself'),
+                                      'subdir')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir/linktosubdir2'),
+                                      'subdir2')
+        s.assertEquals(s.zs.getfspath('/symlinktest.zip/linktosubdir/linkedrel.txt'),
+                                      'real.txt')
 
-    def test_resolvelink(s):
-        a = s.assertEquals
-        f = s.zs._resolvelink
-        a(f(''), '')
-        a(f('real.txt'), 'real.txt')
-        a(f('linktosubdir'), 'subdir')
-        a(f('subdir'), 'subdir')
-        a(f('subdir2'), 'subdir2')
-
-        for d in ['subdir', 'linktosubdir', 'subdir/linktoself',
-                  'linktosubdir/linktoself', 'subdir/linktoself/linktoself',
-                  'linktosubdir/linktoself/linktoself']:
-            a(f(d + '/linked2.txt'), 'subdir2/real2.txt')
-            a(f(d + '/linkedabs.txt'), 'real.txt')
-            a(f(d + '/linkedrel.txt'), 'real.txt')
-            a(f(d + '/linktoself'), 'subdir')
-            a(f(d + '/linktosubdir2'), 'subdir2')
-            a(f(d + '/linktosubdir2/real2.txt'), 'subdir2/real2.txt')
-            a(f(d + '/linktosubdir2/foo.txt'), 'subdir2/foo.txt')
-
-
-#    def test_islinkname(s):
-#        assert not s.zs._islinkname('/symlinktest.zip/real.txt')
-#        assert not s.zs._islinkname('/symlinktest.zip/nonexistant')
+    def test_islinkname(s):
+        assert not s.zs._islinkname('/symlinktest.zip/real.txt')
+        assert not s.zs._islinkname('/symlinktest.zip/nonexistant')
+        assert s.zs._islinkname('/symlinktest.zip/linktosubdir')
+        assert s.zs._islinkname('/symlinktest.zip/subdir/linkedrel.txt')
 
     def test_symlink_listdir(s):
         m1 = s.zs.listdir('/symlinktest.zip')
@@ -470,16 +566,6 @@ class TestVFS_Zip(unittest.TestCase):
 
         m3 = s.zs.listdir('/symlinktest.zip/linktosubdir/linktoself/linktosubdir2')
         s.assertEquals(m3, ['real2.txt'])
-
-        s.assertEquals(s.zs.listdir('/symlinktest.zip/linktosubdir'),
-                       s.zs.listdir('/symlinktest.zip/subdir'))
-
-        s.assertEquals(s.zs.listdir('/symlinktest.zip/linktosubdir/linktoself'),
-                       s.zs.listdir('/symlinktest.zip/subdir'))
-
-        s.assertEquals(s.zs.listdir('/symlinktest.zip/subdir/linktosubdir2'),
-                       s.zs.listdir('/symlinktest.zip/subdir2'))
-        
         
     def test_symlink_open(s):
         realtxt = "Test.\n"
@@ -495,8 +581,6 @@ class TestVFS_Zip(unittest.TestCase):
         # Now, run the tests.
         s.assertEquals(s.zs.open('/symlinktest.zip/subdir/linked2.txt').read(),
                        real2txt)
-        s.assertEquals(s.zs.open('/symlinktest.zip/linked.txt').read(),
-                       realtxt)
         s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linked2.txt').read(),
                        real2txt)
         s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linkedabs.txt').read(),
@@ -505,9 +589,6 @@ class TestVFS_Zip(unittest.TestCase):
                        realtxt)
         s.assertEquals(s.zs.open('/symlinktest.zip/subdir/linktosubdir2/real2.txt').read(),
                        real2txt)
-
-        s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linkedrel.txt').read(),
-                       realtxt)
 
         s.assertRaises(IOError, s.zs.open, '/symlinktest.zip')
         s.assertRaises(IOError, s.zs.open, '/symlinktest.zip/subdir')
