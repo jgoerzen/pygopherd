@@ -1,19 +1,62 @@
-import sys
+import sys, string
 sys.path.append('/home/jgoerzen/tree/pygopherd/pyg')
 from pygopherd.handlers.pyg import PYGBase
-from pygopherd.gopherentry import GopherEntry
+from pygopherd.gopherentry import GopherEntry, getinfoentry
 import dictclient
 
 class PYGMain(PYGBase):
     def canhandlerequest(self):
-        return not self.selectorargs    
-
+        arglist = []
+        if self.selectorargs:
+            arglist = self.selectorargs.split("/")
+        self.dbname = None
+        self.dbcommand = None
+        self.commandargs = None
+        if len(arglist) >= 2:
+            self.dbname = arglist[1]
+        if len(arglist) >= 3:
+            self.dbcommand = arglist[2]
+        if len(arglist) >= 4:
+            self.commandargs = arglist[3:]
+        if self.dbcommand == 'DEFINE':
+            self.__class__ = Define
+        elif self.dbcommand == 'MATCH':
+            self.__class__ = Match
+        elif self.dbname:
+            self.__class__ = Browse
+        else:
+            self.__class__ = TopMenu
+        return 1
+            
+class TopMenu(PYGMain):
     def prepare(self):
         self.db = dictclient.Connection()
         self.entries = []
 
-        for name, desc in self.db.getdbdescs().items():
-            selector = self.genargsselector("/BROWSE-DB/%s" % name)
+        intro = ["Welcome to the dictionary server!",
+                 " ",
+                 "To do a quick lookup, use the following search:",
+                 " "]
+
+        for item in intro:
+            self.entries.append(getinfoentry(item, self.config))
+
+        selector = self.genargsselector("/*/DEFINE")
+        entry = GopherEntry(selector, self.config)
+        entry.type = '7'
+        entry.mimetype = 'application/gopher-dir'
+        entry.name = 'Definition Lookup -- All Databases'
+        self.entries.append(entry)
+
+        intro = [" ", "Use the following links to browse ALL the",
+                 "definitions in this entire server!", " "]
+
+        for item in intro:
+            self.entries.append(getinfoentry(item, self.config))
+
+        for name, desc in [['*', 'All Databases']] + \
+                self.db.getdbdescs().items():
+            selector = self.genargsselector("/%s" % name)
             entry = GopherEntry(selector, self.config)
             entry.type = '1'
             entry.mimetype = 'application/gopher-dir'
@@ -34,3 +77,47 @@ class PYGMain(PYGBase):
         return self.entries
 
     
+class Browse(PYGMain):
+    def prepare(self):
+        self.entries = []
+
+        intro = ["You can browse the entries in the database by",
+                 "selecting the first letter of the item you want.",
+                 " "]
+
+        for item in intro:
+            self.entries.append(getinfoentry(item, self.config))
+
+        selector = self.genargsselector("/%s/MATCH/re/^[^a-zA-Z]" % \
+                                        self.dbname)
+        entry = GopherEntry(selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-dir'
+        entry.name = "Items that do not begin with a letter"
+        self.entries.append(entry)
+        
+        for letter in string.ascii_uppercase:
+            selector = self.genargsselector("/%s/MATCH/re/^[%s%s]" % \
+                                            (self.dbname, letter,
+                                            letter.lower()))
+            entry = GopherEntry(selector, self.config)
+            entry.type = '1'
+            entry.mimetype = 'application/gopher-dir'
+            entry.name = letter
+            self.entries.append(entry)
+
+        def getentry(self):
+            entry = GopherEntry(self.selector, self.config)
+            entry.type = '1'
+            entry.mimetype = 'application/gopher-dir'
+            entry.name = 'Dictionary Database Browse'
+            return entry
+
+    def isdir(self):
+        return 1
+
+    def getdirlist(self):
+        return self.entries
+
+    
+            
