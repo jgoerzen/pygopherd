@@ -1,4 +1,4 @@
-from handlers import file, dir, url, gophermap
+from handlers import file, dir, url, gophermap, UMN
 import GopherExceptions
 
 def getHandler(selector, protocol, config):

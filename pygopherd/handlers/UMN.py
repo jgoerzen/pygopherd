@@ -1,7 +1,8 @@
-2import SocketServer
+import SocketServer
 import re
 import os, stat, os.path, mimetypes, protocols, gopherentry
 import handlers, handlers.base
+from gopherentry import GopherEntry
 from handlers.dir import DirHandler
 
 def sgn(a):
@@ -16,9 +17,9 @@ def sgn(a):
 def entrycmp(entry1, entry2):
     """This function implements an exact replica of UMN behavior
     GSqsortcmp() behavior."""
-    if entry1.getTitle() == None:
+    if entry1.getname() == None:
         return 1
-    if entry2.getTitle() == None:
+    if entry2.getname() == None:
         return -1
 
     # Equal numbers or no numbers: sort by title.
@@ -35,16 +36,29 @@ def entrycmp(entry1, entry2):
     else:
         return 1
 
+class LinkEntry(GopherEntry):
+    def __init__(self, selector, config):
+        GopherEntry.__init__(self, selector, config)
+        self.needsmerge = 0
+    def getneedsmerge(self):
+        return self.needsmerge
+    def setneedsmerge(self, arg):
+        self.needsmerge = arg
+
 class UMNDirHandler(DirHandler):
     """This module strives to be bug-compatible with UMN gopherd."""
     def prepare(self):
-        self.linkfiles = []
+        self.linkentries = []
         DirHandler.prepare(self)
         self.processLinkFiles()
+        self.fileentries.sort(entrycmp)
         
     def processLinkFiles(self):
         newfiles = []
         for filename in self.files:
+            print "self.fsbase: ", self.fsbase
+            print "self.selectorbase: ", self.selectorbase
+            print "filename: ", filename
             if filename[0] == '.' and not os.path.isdir(self.fsbase + '/' + filename):
                 self.processLinkFile(self.fsbase + '/' + filename)
             else:
@@ -53,39 +67,45 @@ class UMNDirHandler(DirHandler):
 
         # MERGE!
 
-        for linkentry in self.linkfiles:
+        for linkentry in self.linkentries:
+            if not linkentry.getneedsmerge():
+                self.fileentries.append(linkentry)
+                continue
             # Find matching directory entry.
             direntry = None
-            for direntrytry in self.files:
-                if linkentry.getpath() == direntrytry.getpath() and \
+            for direntrytry in self.fileentries:
+                if linkentry.getselector() == direntrytry.getselector() and \
                        linkentry.gethost() == direntrytry.gethost() and \
                        linkentry.getport() == direntrytry.getport():
                     direntry = direntrytry
                     break
             if direntry:                # It matches!
                 for field in ['selector', 'type', 'name', 'host', 'port']:
-                    if linkentry.getattr(field):
-                        direntry.setattr(field, linkentry.getattr(field))
+                    if getattr(linkentry, field):
+                        setattr(direntry, field, getattr(linkentry, field))
             else:
                 # No match -- add to the directory.
-                self.files.append(linkentry)
+                self.fileentries.append(linkentry)
 
     def processLinkFile(self, filename):
+        print "processLinkFile: ", filename
         fd = open(filename, "rt")
         while 1:
             nextstep, entry = self.getLinkItem(fd)
             if entry:
-                self.linkfiles.append(entry)
+                self.linkentries.append(entry)
             if nextstep == 'stop':
                 break
     
         
     def getLinkItem(self, fd):
         """This is an almost exact clone of UMN's GSfromLink function."""
-        entry = GopherEntry(self.entry.selector, self.config)
+        entry = LinkEntry(self.entry.selector, self.config)
         nextstep = 'continue'
 
         done = {'path' : 0, 'type' : 0, 'name' : 0, 'host' : 0, 'port' : 0}
+
+        print 'Start of getLinkItem.'
         
         while 1:
             line = fd.readline()
@@ -93,6 +113,10 @@ class UMNDirHandler(DirHandler):
                 nextstep = 'stop'
                 break
             line = line.strip()
+
+            # Empty.
+            if len(line) == 0:
+                break
 
             # Comment.
             if line[0] == '#':
@@ -112,7 +136,8 @@ class UMNDirHandler(DirHandler):
             elif line[0:5] == "Path=":
                 # Handle ./: make full path.
                 if line[5:7] == './' or line[5:7] == '~/':
-                    entry.setselector(self.pathname + "/" + line[7:])
+                    entry.setselector(self.selectorbase + "/" + line[7:])
+                    entry.setneedsmerge(1)
                 else:
                     entry.setselector(line[5:])
                 done['path'] = 1

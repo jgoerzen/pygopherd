@@ -39,6 +39,9 @@ class BaseHandler:
             return self.fspath
 
         self.fspath = self.getrootpath() + self.selector
+        # Strip off trailing slash.
+        if self.fspath[-1] == '/':
+            self.fspath = self.fspath[0:-1]
 
         return self.fspath
 
