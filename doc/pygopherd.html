@@ -5,7 +5,38 @@
 >PyGopherd Manual</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.7"></HEAD
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><STYLE
+TYPE="text/css"
+>.synopsis, .classsynopsis {
+    background: #eeeeee;
+    border: solid 1px #aaaaaa;
+    padding: 0.5em;
+}
+.programlisting {
+    background: #eeeeff;
+    border: solid 1px #aaaaff;
+    padding: 0.5em;
+}
+.variablelist {
+    padding: 4px;
+    margin-left: 3em;
+}
+.navigation {
+    background: #ffeeee;
+    border: solid 1px #ffaaaa;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+.navigation a {
+    color: #770000;
+}
+.navigation a:visited {
+    color: #550000;
+}
+.navigation .title {
+    font-size: 200%;
+}</STYLE
+></HEAD
 ><BODY
 CLASS="REFERENCE"
 BGCOLOR="#FFFFFF"
@@ -32,7 +63,7 @@ CLASS="TOC"
 ></DT
 ><DT
 ><A
-HREF="#AEN3"
+HREF="pygopherd.html#AEN3"
 >pygopherd</A
 >&nbsp;--&nbsp;Multiprotocol Information Server</DT
 ></DL
@@ -270,7 +301,7 @@ CLASS="EMPHASIS"
 ></LI
 ></UL
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="DESCRIPTION.ABOUTGOPHER"
@@ -467,7 +498,7 @@ CLASS="COMMAND"
 	  to start the program.
 	</P
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="INSTALLATION.OTHER"
@@ -540,7 +571,7 @@ CLASS="FILENAME"
 	  program.
 	</P
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="INSTALLATION.SINGLE"
@@ -679,24 +710,37 @@ CLASS="APPLICATION"
       </P
 ><P
 ></P
-><DIV
-CLASS="VARIABLELIST"
-><DL
-><DT
+><TABLE
+CLASS="variablelist"
+BORDER="0"
+CELLSPACING="0"
+CELLPADDING="4"
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN184"><SPAN
+STYLE="white-space: nowrap"
 ><VAR
 CLASS="REPLACEABLE"
 >configfile</VAR
-></DT
-><DD
+></SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >This option argument specifies the location
 	      of the configuration file that <SPAN
 CLASS="APPLICATION"
 >PyGopherd</SPAN
 > is to use.</P
-></DD
-></DL
-></DIV
+></TD
+></TR
+></TBODY
+></TABLE
 ></DIV
 ><DIV
 CLASS="REFSECT1"
@@ -773,7 +817,7 @@ CLASS="PROPERTY"
 	  that.
 	</P
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="HANDLERS.BUCKGOPHERMAP"
@@ -860,15 +904,27 @@ CLASS="PROPERTY"
 	</P
 ><P
 ></P
-><DIV
-CLASS="VARIABLELIST"
-><DL
-><DT
+><TABLE
+CLASS="variablelist"
+BORDER="0"
+CELLSPACING="0"
+CELLPADDING="4"
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN231"><SPAN
+STYLE="white-space: nowrap"
 ><VAR
 CLASS="REPLACEABLE"
 >selector</VAR
-></DT
-><DD
+></SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >The <SPAN
 CLASS="PROPERTY"
@@ -881,13 +937,23 @@ CLASS="PROPERTY"
 		specified, the description is also used as the
 		selector.
 	      </P
-></DD
-><DT
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN237"><SPAN
+STYLE="white-space: nowrap"
 ><VAR
 CLASS="REPLACEABLE"
 >host</VAR
-></DT
-><DD
+></SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >The <SPAN
 CLASS="PROPERTY"
@@ -897,13 +963,23 @@ CLASS="PROPERTY"
 		located.  If not specified, defaults to the
 		current server.
 	      </P
-></DD
-><DT
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN243"><SPAN
+STYLE="white-space: nowrap"
 ><VAR
 CLASS="REPLACEABLE"
 >port</VAR
-></DT
-><DD
+></SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >The <SPAN
 CLASS="PROPERTY"
@@ -913,9 +989,10 @@ CLASS="PROPERTY"
 		located.  If not specified, defaults to the port
 		the current server is listening on.
 	      </P
-></DD
-></DL
-></DIV
+></TD
+></TR
+></TBODY
+></TABLE
 ><P
 >	  An example of a gophermap to help illustrate the concept
 	  is included with the <SPAN
@@ -928,7 +1005,7 @@ CLASS="FILENAME"
 >.
 	</P
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="HANDLERS.COMPRESSEDFILEHANDLER"
@@ -979,7 +1056,7 @@ CLASS="PROPERTY"
 	  handler.
 	</P
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="HANDLERS.FILEHANDLER"
@@ -994,7 +1071,7 @@ CLASS="PROPERTY"
 	  -- its duty is to serve up regular files to clients.
 	</P
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="HANDLERS.HTMLFILETITLEHANDLER"
@@ -1009,7 +1086,7 @@ NAME="HANDLERS.HTMLFILETITLEHANDLER"
 	  gopherd implements a similar policy.
 	</P
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="HANDLERS.MAILBOXES"
@@ -1064,7 +1141,7 @@ CLASS="PROPERTY"
 	  if desired.
 	</P
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="HANDLERS.PYGHANDLER"
@@ -1127,7 +1204,7 @@ CLASS="APPLICATION"
 > distribution.
 	</P
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="HANDLERS.EXECHANDLER"
@@ -1157,72 +1234,155 @@ CLASS="PROPERTY"
 	</P
 ><P
 ></P
-><DIV
-CLASS="VARIABLELIST"
-><DL
-><DT
->SERVER_NAME</DT
-><DD
+><TABLE
+CLASS="variablelist"
+BORDER="0"
+CELLSPACING="0"
+CELLPADDING="4"
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN304"><SPAN
+STYLE="white-space: nowrap"
+>SERVER_NAME</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >The name of this server as defined in
 		the configuration file or detected from the
 		operating system.</P
-></DD
-><DT
->SERVER_PORT</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN308"><SPAN
+STYLE="white-space: nowrap"
+>SERVER_PORT</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >The port this server is listening on.</P
-></DD
-><DT
->REMOTE_ADDR</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN312"><SPAN
+STYLE="white-space: nowrap"
+>REMOTE_ADDR</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >The IP address of the client.</P
-></DD
-><DT
->REMOTE_PORT</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN316"><SPAN
+STYLE="white-space: nowrap"
+>REMOTE_PORT</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >The port number of the client.</P
-></DD
-><DT
->REMOTE_HOST</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN320"><SPAN
+STYLE="white-space: nowrap"
+>REMOTE_HOST</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >The same value as <SPAN
 CLASS="PROPERTY"
 >REMOTE_ADDR</SPAN
 ></P
-></DD
-><DT
->SELECTOR</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN325"><SPAN
+STYLE="white-space: nowrap"
+>SELECTOR</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >The file that was requested; that is,
 		the relative path to this script.  If the selector
 		included additional parameters after a |, they
 		will be included in this string as well.
 	      </P
-></DD
-><DT
->REQUEST</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN329"><SPAN
+STYLE="white-space: nowrap"
+>REQUEST</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >The "base" part of the selector; that
 		is, the part leading up to the |.</P
-></DD
-><DT
->SEARCHREQUEST</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN333"><SPAN
+STYLE="white-space: nowrap"
+>SEARCHREQUEST</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Included only if the client specified
 		search data, this is used if the client is
 		searching for something.
 	      </P
-></DD
-></DL
-></DIV
+></TD
+></TR
+></TBODY
+></TABLE
 ><P
 >	  See the <SPAN
 CLASS="PROPERTY"
@@ -1237,7 +1397,7 @@ CLASS="PROPERTY"
 	  ramifications of that before enabling it.
 	</P
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="HANDLERS.UMN"
@@ -1516,7 +1676,7 @@ CLASS="FILENAME"
 	  </P
 ></DIV
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="HANDLERS.HTMLURLHANDLER"
@@ -1570,7 +1730,7 @@ CLASS="PROPERTY"
 	  handler.
 	</P
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="HANDLERS.URLTYPEREWRITER"
@@ -1586,7 +1746,7 @@ NAME="HANDLERS.URLTYPEREWRITER"
 	  single relative-to-root link to work for both.
 	</P
 ></DIV
-><DIV
+><HR><DIV
 CLASS="REFSECT2"
 ><A
 NAME="HANDLERS.VIRTUAL"
@@ -1612,6 +1772,27 @@ CLASS="PROPERTY"
 	  mark after the regular selector, followed by any arbitrary
 	  data that you wish to have sent to the virtual request
 	  handler.
+	</P
+></DIV
+><HR><DIV
+CLASS="REFSECT2"
+><A
+NAME="HANDLERS.ZIP"
+></A
+><H3
+>ZIP.ZIPHandler</H3
+><P
+>	  Using zip.ZIPHandler, you can save space on your server by
+	  converting part or all of your site into a ZIP file.
+	  <SPAN
+CLASS="APPLICATION"
+>PyGopherd</SPAN
+> can use the contents of that ZIP file as the
+	  contents of your site -- completely transparently.
+	</P
+><P
+>	  The ZIP file handler must be enabled in the configuration
+	  file for this to work.
 	</P
 ></DIV
 ></DIV
@@ -1650,55 +1831,127 @@ CLASS="APPLICATION"
       </P
 ><P
 ></P
-><DIV
-CLASS="VARIABLELIST"
-><DL
-><DT
->0</DT
-><DD
+><TABLE
+CLASS="variablelist"
+BORDER="0"
+CELLSPACING="0"
+CELLPADDING="4"
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN424"><SPAN
+STYLE="white-space: nowrap"
+>0</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Plain text file</P
-></DD
-><DT
->1</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN428"><SPAN
+STYLE="white-space: nowrap"
+>1</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Directory</P
-></DD
-><DT
->2</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN432"><SPAN
+STYLE="white-space: nowrap"
+>2</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >CSO phone book server (not implemented by <SPAN
 CLASS="APPLICATION"
 >PyGopherd</SPAN
 >)</P
-></DD
-><DT
->3</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN437"><SPAN
+STYLE="white-space: nowrap"
+>3</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Error condition; text that follows is plain text</P
-></DD
-><DT
->4</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN441"><SPAN
+STYLE="white-space: nowrap"
+>4</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Macintosh file, BinHex format</P
-></DD
-><DT
->5</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN445"><SPAN
+STYLE="white-space: nowrap"
+>5</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >DOS binary archive (not implemented by
 	      <SPAN
 CLASS="APPLICATION"
 >PyGopherd</SPAN
 >; use type 9 instead)</P
-></DD
-><DT
->6</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN450"><SPAN
+STYLE="white-space: nowrap"
+>6</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >uuencoded file; not directly generated by
 	      <SPAN
@@ -1708,108 +1961,252 @@ CLASS="APPLICATION"
 	      manually.  Most gopher clients will handle this better
 	      as type 1.
 	    </P
-></DD
-><DT
->7</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN455"><SPAN
+STYLE="white-space: nowrap"
+>7</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Search</P
-></DD
-><DT
->8</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN459"><SPAN
+STYLE="white-space: nowrap"
+>8</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Telnet link</P
-></DD
-><DT
->9</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN463"><SPAN
+STYLE="white-space: nowrap"
+>9</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Binary file</P
-></DD
-><DT
->+</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN467"><SPAN
+STYLE="white-space: nowrap"
+>+</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Redundant server (not implemented by <SPAN
 CLASS="APPLICATION"
 >PyGopherd</SPAN
 >)</P
-></DD
-><DT
->c</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN472"><SPAN
+STYLE="white-space: nowrap"
+>c</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Calendar (not implemented by <SPAN
 CLASS="APPLICATION"
 >PyGopherd</SPAN
 >)</P
-></DD
-><DT
->e</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN477"><SPAN
+STYLE="white-space: nowrap"
+>e</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Event (not implemented by <SPAN
 CLASS="APPLICATION"
 >PyGopherd</SPAN
 >)</P
-></DD
-><DT
->g</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN482"><SPAN
+STYLE="white-space: nowrap"
+>g</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >GIF-format graphic</P
-></DD
-><DT
->h</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN486"><SPAN
+STYLE="white-space: nowrap"
+>h</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >HTML file</P
-></DD
-><DT
->I</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN490"><SPAN
+STYLE="white-space: nowrap"
+>I</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Any kind of graphic file other than GIF</P
-></DD
-><DT
->i</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN494"><SPAN
+STYLE="white-space: nowrap"
+>i</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Informational
 	text included in a directory that is displayed but does not
 	link to any actual file.</P
-></DD
-><DT
->M</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN498"><SPAN
+STYLE="white-space: nowrap"
+>M</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >MIME multipart/mixed file</P
-></DD
-><DT
->s</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN502"><SPAN
+STYLE="white-space: nowrap"
+>s</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >Any kind of sound file</P
-></DD
-><DT
->T</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN506"><SPAN
+STYLE="white-space: nowrap"
+>T</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >tn3270 link</P
-></DD
-><DT
->X, -</DT
-><DD
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><A
+NAME="AEN510"><SPAN
+STYLE="white-space: nowrap"
+>X</SPAN
+>, <SPAN
+STYLE="white-space: nowrap"
+>-</SPAN
+></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
 ><P
 >	UMN-specific -- signifies that this entry should not be
 	displayed in a directory entry, but may be accessed via a
 	direct link.  This value is never transmitted in any Gopher
 	protocol.
 	    </P
-></DD
-></DL
-></DIV
+></TD
+></TR
+></TBODY
+></TABLE
 ></DIV
 ><DIV
 CLASS="REFSECT1"
@@ -2085,7 +2482,7 @@ TARGET="_top"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN581"
+NAME="AEN586"
 ></A
 ><H2
 >See Also</H2

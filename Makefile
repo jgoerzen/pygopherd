@@ -30,19 +30,31 @@ changelog:
 docs: doc/pygopherd.8 doc/pygopherd.html doc/pygopherd.ps \
 	doc/pygopherd.pdf doc/pygopherd.txt
 
-doc/pygopherd.8: doc/pygopherd.sgml:
+doc/pygopherd.8: doc/pygopherd.sgml
 	docbook2man doc/pygopherd.sgml
 	docbook2man doc/pygopherd.sgml
 	-rm manpage.links manpage.refs
+	mv pygopherd.8 doc
+
+#doc/pygopherd.html: doc/pygopherd.sgml
+#	docbook2html -u doc/pygopherd.sgml
+#	mv pygopherd.html doc
 
 doc/pygopherd.html: doc/pygopherd.sgml
-	docbook2html -u doc/pygopherd.sgml
+	docbook-2-html -s local doc/pygopherd.sgml
+	mv doc/pygopherd-html/pygopherd.html doc/pygopherd.html
+	rm -r doc/pygopherd-html
 
-doc/pygopherd.ps: doc/pygopherd.8
-	man -t -l pygopherd.8 > doc/pygopherd.ps
+#doc/pygopherd.ps: doc/pygopherd.8
+#	man -t -l doc/pygopherd.8 > doc/pygopherd.ps
+
+doc/pygopherd.ps: doc/pygopherd.sgml
+	docbook-2-ps -q -O -V -O paper-size=Letter -s local=printlocal \
+		doc/pygopherd.sgml
 
 doc/pygopherd.pdf: doc/pygopherd.ps
 	ps2pdf doc/pygopherd.ps
+	mv pygopherd.pdf doc
 
 doc/pygopherd.txt:
 	groff -Tascii -man doc/pygopherd.8 | sed $$'s/.\b//g' > doc/pygopherd.txt

@@ -803,6 +803,15 @@ CGI script on the web.  You do this by adding a question
 mark after the regular selector, followed by any arbitrary
 data that you wish to have sent to the virtual request
 handler.
+.SS "ZIP.ZIPHANDLER"
+.PP
+Using zip.ZIPHandler, you can save space on your server by
+converting part or all of your site into a ZIP file.
+\fBPyGopherd\fR can use the contents of that ZIP file as the
+contents of your site -- completely transparently.
+.PP
+The ZIP file handler must be enabled in the configuration
+file for this to work.
 .SH "GOPHER ITEM TYPES"
 .PP
 When you construct links to files via
