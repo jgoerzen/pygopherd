@@ -59,12 +59,9 @@ class VFS_Zip(base.VFS_Real):
                 self._createcache(fspath)
                 return 0
 
-            print "Using cache"
-            print self.dircache.keys()
             return 1
 
     def _createcache(self, fspath):
-        print "Creating cache"
         self.dircache = {}
         try:
             self.dircache = shelve.open(fspath, 'n')
@@ -81,8 +78,6 @@ class VFS_Zip(base.VFS_Real):
         if not self._initcache():
             # For reloading an existing one.  Must be called before _cachedir.
             self._savecache(self._getdircache())
-            print "After cachedir, cache is:"
-            print self.dircache.keys()
 
     def _isentryincache(self, fspath):
         try:
@@ -95,15 +90,11 @@ class VFS_Zip(base.VFS_Real):
         return self.dircache[self._getcacheinode(fspath)]
 
     def _getcacheinode(self, fspath):
-        print "Running getcacheinode on", fspath
         inode = '0'
         if fspath == '':
             return inode
         for item in fspath.split('/'):
-            print "*** top of loop ***"
-            print "item is", item
             directory = self.dircache[inode]
-            print "directory is", directory
             # right now, directory holds the directory from the *last* iteration.
             if type(directory) != types.DictType:
                 raise KeyError, "Call for %s: couldn't find %s" % (fspath, item)
@@ -112,9 +103,8 @@ class VFS_Zip(base.VFS_Real):
                 inode = directory[item]
             except KeyError:
                 raise KeyError, "Call for %s: Couldn't find %s" % (fspath, item)
-        print "returning", inode
-        return inode
-
+            return inode
+        
     def _getdircache(self):
         symlinkinodes = []
         nextinode = 1
@@ -127,14 +117,11 @@ class VFS_Zip(base.VFS_Real):
             if dir == '/':
                 dir == ''
 
-            print "caching", file, dir, filename
-
             dirlevel = dircache['0']
             for level in dir.split('/'):
                 if level == '':
                     continue
                 if not dirlevel.has_key(level):
-                    print "dirlevel", dirlevel, "does not have key", level
                     dircache[str(nextinode)] = {}
                     dirlevel[level] = str(nextinode)
                     nextinode += 1
@@ -282,10 +269,8 @@ class VFS_Zip(base.VFS_Real):
             return self.chain.isdir(selector)
 
         fspath = self.getfspath(selector)
-        print "Running isdir on", selector, fspath
         try:
             item = self._getcacheentry(fspath)
-            print "isdir got cacheentry", item
         except KeyError:
             return 0
 
