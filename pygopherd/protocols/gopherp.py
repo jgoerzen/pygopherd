@@ -1,7 +1,7 @@
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, handlers, protocols
-import protocols.rfc1436
+import os, stat, os.path, mimetypes, handlers, protocols, time
+import protocols.rfc1436, GopherExceptions
 
 class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
     """Implementation of Gopher+ protocol.  Will handle Gopher+
@@ -26,15 +26,21 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
         elif self.requestlist[1][0] == '$':
             self.handlemethod = 'gopherplusdir'
 
-        handler = self.gethandler()
-        self.entry = handler.getentry()
-        
-        if self.handlemethod == 'infoonly':
-            self.wfile.write("+-2\r\n")
-            self.wfile.write(self.renderobjinfo(self.entry))
-        else:
-            self.wfile.write("+" + str(self.entry.getsize(-2)) + "\r\n")
-            handler.write(self.wfile)
+        try:
+            handler = self.gethandler()
+            self.entry = handler.getentry()
+            
+            if self.handlemethod == 'infoonly':
+                self.wfile.write("+-2\r\n")
+                self.wfile.write(self.renderobjinfo(self.entry))
+            else:
+                handler.prepare()
+                self.wfile.write("+" + str(self.entry.getsize(-2)) + "\r\n")
+                handler.write(self.wfile)
+        except GopherExceptions.FileNotFound, e:
+            self.filenotfound(str(e))
+        except IOError, e:
+            self.filenotfound(e[1])
 
     def renderobjinfo(self, entry):
         if entry.getmimetype() == 'application/gopher-menu':
@@ -50,6 +56,16 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
         else:
             retstr = "+INFO: " + \
                      protocols.rfc1436.GopherProtocol.renderobjinfo(self, entry)
+            retstr += "+ADMIN:\r\n"
+            retstr += " Admin: "
+            retstr += self.config.get("protocols.gopherp.GopherPlusProtocol",
+                                      "admin")
+            retstr += "\r\n"
+            if entry.getmtime():
+                retstr += " Mod-Date: "
+                retstr += time.ctime(time.gmtime(entry.getmtime()))
+                retstr += " <%04d%02d%02d%02d%02d%02d>\r\n" % \
+                          time.gmtime(entry.getmtime())
             if entry.getmimetype():
                 retstr += "+VIEWS:\r\n " + entry.getmimetype()
                 if (entry.getlanguage()):
@@ -59,3 +75,9 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
                     retstr += " <%dk>" % (entry.getsize() / 1024)
                 retstr += "\r\n"
             return retstr
+
+    def filenotfound(self, msg):
+        self.wfile.write("--2\r\n")
+        self.wfile.write("1 ")
+        self.wfile.write(self.config.get("protocols.gopherp.GopherPlusProtocol", "admin"))
+        self.wfile.write("\r\n" + msg + "\r\n")

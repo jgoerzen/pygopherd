@@ -14,10 +14,11 @@ class DirHandler(handlers.base.BaseHandler):
             self.entry.populatefromfs(self.getfspath())
         return self.entry
 
-    def write(self, wfile):
-        files = os.listdir(self.getfspath())
-        files.sort()
+    def prepare(self):
+        self.files = os.listdir(self.getfspath())
+        self.files.sort()
 
+    def write(self, wfile):
         selectorbase = self.selector
         if selectorbase == '/':
             selectorbase = ''           # Avoid dup slashes
@@ -27,7 +28,7 @@ class DirHandler(handlers.base.BaseHandler):
 
         ignorepatt = self.config.get("handlers.dir.DirHandler", "ignorepatt")
 
-        for file in files:
+        for file in self.files:
             # Skip files we're ignoring.
             if re.search(ignorepatt, selectorbase + '/' + file):
                 continue

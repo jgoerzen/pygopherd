@@ -1,6 +1,6 @@
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, handlers
+import os, stat, os.path, mimetypes, handlers, GopherExceptions
 import handlers.HandlerMultiplexer
 
 class BaseGopherProtocol:
@@ -49,10 +49,18 @@ class BaseGopherProtocol:
 
     def handle(self):
         """Handles the request."""
-        handler = self.gethandler()
-        self.entry = handler.getentry()
-        handler.write(self.wfile)
-        pass
+        try:
+            handler = self.gethandler()
+            self.entry = handler.getentry()
+            handler.prepare()
+            handler.write(self.wfile)
+        except GopherExceptions.FileNotFound, e:
+            self.filenotfound(str(e))
+        except IOError, e:
+            self.filenotfound(e[1])
+
+    def filenotfound(self, msg):
+        self.wfile.write("0%s\t\terror.host\t1\r\n" % msg)
 
     def renderobjinfo(self, entry):
         """Renders an object's info according to the protocol.  Returns

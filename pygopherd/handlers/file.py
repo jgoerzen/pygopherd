@@ -14,10 +14,14 @@ class FileHandler(handlers.base.BaseHandler):
             self.entry.populatefromfs(self.getfspath())
         return self.entry
 
+    def prepare(self):
+        self.rfile = open(self.getfspath(), "rb")
+
     def write(self, wfile):
-        rfile = open(self.getfspath(), "rb")
         while 1:
-            string = rfile.read(4096)
+            string = self.rfile.read(4096)
             if not len(string):
                 break
             wfile.write(string)
+        self.rfile.close()
+        self.rfile = None

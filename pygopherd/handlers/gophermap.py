@@ -17,6 +17,9 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
             self.entry.populatefromfs(self.getfspath())
         return self.entry
 
+    def prepare(self):
+        self.rfile = open(fsbase + '/gophermap', 'rb')
+
     def write(self, wfile):
         selectorbase = self.selector
         if selectorbase == '/':
@@ -25,8 +28,7 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
         if fsbase == '/':
             fsbase = ''                 # Avoid dup slashes
 
-        rfile = open(fsbase + '/gophermap', 'rb')
-        for line in rfile:
+        for line in self.rfile:
             if re.search("\t", line):   # gophermap link
                 args = map(lambda arg: arg.strip(), line.split("\t"))
 
@@ -61,3 +63,6 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
                 entry.port = 0
                 entry.type = 'i'
                 wfile.write(self.protocol.renderobjinfo(entry))
+
+        self.rfile.close()
+        self.rfile = None

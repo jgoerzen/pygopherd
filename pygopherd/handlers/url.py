@@ -24,6 +24,8 @@ class HTMLURLHandler(handlers.base.BaseHandler):
             self.entry.type = 'h'
         return self.entry
 
+    # We have nothing to prepare.
+
     def write(self, wfile):
         url = self.selector[4:]         # Strip off URL:
         if self.selector[0] == '/':
