@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.2
 
-# $Id: setup.py,v 1.2 2002/04/10 15:12:48 jgoerzen Exp $
+# $Id: setup.py,v 1.3 2002/04/10 15:26:23 jgoerzen Exp $
 
 # Python-based gopher server
 # Module: installer
@@ -32,6 +32,7 @@ setup(name = "pygopherd",
       author_email = "jgoerzen@complete.org",
       url = "http://www.quux.org/give-me-gopher/",
       packages = ['pygopherd'],
+      scripts = ['pygopherd.py'],
       data_files = [ ('/etc/pygopherd', ['conf/pygopherd.conf',
                                          'conf/mime.types'] ) ],
       licence = \

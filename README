@@ -27,6 +27,7 @@ as a system-wide daemon.  For running in-place, do this:
      setuid and setgid lines
    * Set mimetypes = ./conf/mime.types
    * Set root = to something appropriate.
+   * Set port to a number greater than 1024.
 
 2. Modify the first line of executables/pygopherd to reflect
    the location of your Python 2.2 installation.

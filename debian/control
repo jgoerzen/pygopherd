@@ -7,6 +7,7 @@ Standards-Version: 3.5.2
 
 Package: pygopherd
 Architecture: all
-Depends: python2.2, mime-support
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Depends: python2.2, mime-support, logrotate
+Provides: gopher-server
+Description: Modular Multiprotocol Gopher/HTTP Server in Python
+ More description to follow later...
