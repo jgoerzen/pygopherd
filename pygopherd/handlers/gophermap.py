@@ -50,7 +50,10 @@ class BuckGophermapHandler(handlers.base.BaseHandler):
     def write(self, wfile):
         fsbase = self.fsbase
         selectorbase = self.selectorbase
-        for line in self.rfile:
+        while 1:
+            line = self.rfile.readline()
+            if not line:
+                break
             if re.search("\t", line):   # gophermap link
                 args = map(lambda arg: arg.strip(), line.split("\t"))
 

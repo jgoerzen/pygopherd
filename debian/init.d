@@ -30,8 +30,7 @@ case "$1" in
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-	start-stop-daemon --oknodo --stop --quiet --pidfile /var/run/$NAME.pid \
-		--exec $DAEMON
+	start-stop-daemon --oknodo --stop --quiet --pidfile /var/run/$NAME.pid
 	echo "$NAME."
 	;;
   #reload)
@@ -54,10 +53,10 @@ case "$1" in
 	#
 	echo -n "Restarting $DESC: "
 	start-stop-daemon --stop --quiet --pidfile \
-		/var/run/$NAME.pid --exec $DAEMON
+		/var/run/$NAME.pid
 	sleep 1
 	start-stop-daemon --start --quiet -m -b --pidfile \
-		/var/run/$NAME.pid --exec $DAEMON
+		/var/run/$NAME.pid --exec $DAEMON -- $CONF
 	echo "$NAME."
 	;;
   *)
