@@ -4,10 +4,9 @@ import os, stat, os.path, mimetypes, handlers
 
 class BaseGopherProtocol:
     """Skeleton protocl -- includes commonly-used routines."""
-    def __init__(self, requestlist, server, rfile, wfile, config):
+    def __init__(self, requeststr, server, rfile, wfile, config):
         """Parameters are:
-        requestlist -- a list of the tab-separated params.
-        requestlist[0] is the selector.
+        request -- the raw request string.
 
         server -- a SocketServer object.
 
@@ -16,13 +15,34 @@ class BaseGopherProtocol:
         wfile -- output file.  Where the output should be sent.
 
         config -- a ConfigParser object."""
-        
-        self.requestlist = requestlist
+
+        self.request = request
+        requestparts = request.split("\t")
         self.rfile = rfile
         self.wfile = wfile
         self.config = config
-        self.selector = requestlist[0]
         self.server = server
+        self.requestlist = requestparts
+
+        for i in range(0, len(requestparts)):
+            requestparts[i] = requestparts[i].strip()
+
+        self.requestlist = requestparts
+        selector = requestparts[0]
+
+        if re.match('\./', selector):    # Weed out ./ and ../
+            # FIXME: THROW ERROR!
+            pass
+        if re.match('//', selector):     # Weed out //
+            # FIXME: THROW ERROR
+            pass
+        
+        if len(selector) and selector[-1] == '/':
+                selector = selector[0:-1]
+        if len(selector) == 0 or selector[0] != '/':
+            selector = '/' + selector
+
+        self.selector = selector
 
     def canhandlerequest(self):
         """Decides whether or not a given request is valid for this
@@ -32,7 +52,7 @@ class BaseGopherProtocol:
     def handle(self):
         """Handles the request."""
         handler = self.gethandler()
-        self.entry = handler.getobj()
+        self.entry = handler.getentry()
         entry.write(self, self.wfile)
         pass
 
