@@ -1,3 +1,9 @@
+pygopherd (2.0.9) unstable; urgency=low
+
+  * Don't crash if simpletal is unavailable. 
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 17 Dec 2003 11:26:14 -0600
+
 pygopherd (2.0.8) unstable; urgency=low
 
   * Fixed a logic error in the Numb handling fix.
