@@ -36,6 +36,9 @@ class GopherEntry:
         self.ctime = statval[9]
         self.mtime = statval[8]
 
+        if self.name == None:
+            self.name = os.path.basename(self.selector)
+
         if stat.S_ISDIR(statval[0]):
             self.type = '1'
             self.mimetype = 'application/gopher-menu'

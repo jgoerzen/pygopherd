@@ -54,7 +54,7 @@ class BaseGopherProtocol:
         """Handles the request."""
         handler = self.gethandler()
         self.entry = handler.getentry()
-        handler.write(self, self.wfile)
+        handler.write(self.wfile)
         pass
 
     def renderobjinfo(self, entry):
@@ -64,5 +64,5 @@ class BaseGopherProtocol:
 
     def gethandler(self):
         """Gets the handler for this object's selector."""
-        handlers.HandlerMultiplexer.getHandler(self.selector,
+        return handlers.HandlerMultiplexer.getHandler(self.selector,
                                                self, self.config)

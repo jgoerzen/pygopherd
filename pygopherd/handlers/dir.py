@@ -1,6 +1,6 @@
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols
+import os, stat, os.path, mimetypes, protocols, entry
 import handlers, handlers.base
 
 class DirHandler(handlers.base.BaseHandler):
@@ -15,7 +15,7 @@ class DirHandler(handlers.base.BaseHandler):
         return self.entry
 
     def write(self, wfile):
-        files = os.listdir(self.path)
+        files = os.listdir(self.getfspath())
         files.sort()
 
         selectorbase = self.selector
@@ -26,8 +26,8 @@ class DirHandler(handlers.base.BaseHandler):
             fsbase = ''                 # Avoid dup slashes
 
         for file in files:
-            entry = entry.GopherEntry(selectorbase + '/' + file,
-                                      self.config)
-            self.entry.populatefromfs(self.getfspath())
-            wfile.write(self.protocol.renderobjinfo(self))
+            fileentry = entry.GopherEntry(selectorbase + '/' + file,
+                                          self.config)
+            fileentry.populatefromfs(fsbase + '/' + file)
+            wfile.write(self.protocol.renderobjinfo(fileentry))
             

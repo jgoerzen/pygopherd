@@ -1,6 +1,6 @@
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols, handlers
+import os, stat, os.path, mimetypes, protocols, handlers, entry
 import handlers.base
 
 class FileHandler(handlers.base.BaseHandler):
