@@ -1,0 +1,268 @@
+<!-- 
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
+  <!ENTITY PyGopherd "<application>PyGopherd</application>">
+  <!ENTITY OfflineIMAP "<application>OfflineIMAP</application>">
+]> -->
+<!--      "file:///usr/share/sgml/docbook/dtd/xml/4.2/docbookx.dtd"> -->
+
+<reference id="pygopherd.man">
+  <title>PyGopherd Manpage</title>
+
+  <refentry>
+    <refentryinfo>
+      <address><email>jgoerzen@complete.org</email></address>
+      <author><firstname>John</firstname><surname>Goerzen</surname></author>
+      <date> $Date: 2003-08-25 16:14:52 -0500 (Mon, 25 Aug 2003) $ </date>
+    </refentryinfo>
+
+    <refmeta>
+      <refentrytitle>pygopherd</refentrytitle>
+      <manvolnum>8</manvolnum>
+      <refmiscinfo>John Goerzen</refmiscinfo>
+    </refmeta>
+
+    <refnamediv>
+      <refname>PyGopherd</refname>
+      <refpurpose>Multiprotocol Information Server</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv>
+      <cmdsynopsis>
+	<command>pygopherd</command>
+	<arg><replaceable>configfile</replaceable></arg>
+      </cmdsynopsis>
+    </refsynopsisdiv>
+
+    <refsect1 id="man.description">
+      <title>Description</title>
+
+      <para>
+	Welcome to &PyGopherd;.  In a nutshell, &PyGopherd;
+	is a modern dynamic
+	multi-protocol hierarchical information server with a pluggable
+	modularized extension system, 
+	full flexible caching, virtual files and
+	folders, and autodetection of file types -- all with support for
+	standardized yet extensible per-document metadata. Whew! Read on for
+	information on this what all these buzzwords mean.
+      </para>
+    </refsect1>
+
+    <refsect1 id="manpage.quickstart">
+      <title>Quick Start</title>
+      &quickstart;
+    </refsect1>
+ 
+    <refsect1 id="options">
+      <title>Options</title>
+      <para>
+	All &PyGopherd; configuratoin is done via the configuration
+	file.  Therefore, the program has only one command-line
+	option:
+      </para>
+      
+      <variablelist>
+	<varlistentry><term><replaceable>configfile</replaceable></term>
+	  <listitem><para>This option argument specifies the location
+	      of the configuration file that &PyGopherd; is to use.</para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+    </refsect1>
+    
+    <refsect1 id="conforming">
+      <title>Conforming To</title>
+      <itemizedlist>
+	<listitem><para>
+	    The Internet Gopher Protocol as specified in RFC1436
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    The Gopher+ upward-compatible enhancements to the Internet Gopher
+	    Protocol from the University of Minnesota as laid out at
+	    <ulink
+	      url="gopher://gopher.quux.org/0/Archives/mirrors/boombox.micro.umn.edu/pub/gopher/gopher_protocol/Gopher+/Gopher+.txt"></ulink>.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    The gophermap file format as originally implemented in the
+	    Bucktooth gopher server and described at
+	    <ulink
+	      url="gopher://gopher.floodgap.com/0/buck/dbrowse%3Ffaquse%201"></ulink>.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    The Links to URL specification as laid out by John Goerzen
+	    at
+	    <ulink
+	      url="gopher://gopher.quux.org/0/Archives/Mailing%20Lists/gopher/gopher.2002-02%3f/MBOX-MESSAGE/34"></ulink>.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    The UMN format for specifying object attributes and links
+	    with .cap, .Links, .abstract, and similar files as specified elsewhere
+	    in this document and implemented by UMN gopherd.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    The PYG format for extensible Python gopher objects as created for
+	    &PyGopherd;.</para>
+	</listitem>
+
+	<listitem><para>
+	    Hypertext Transfer Protocol HTTP/1.0 as specified in
+	    RFC1945
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    Hypertext Markup Language (HTML) 3.2 and 4.0
+	    Transitional as specified in RFC1866 and RFC2854.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    Maildir as specified in
+	    <ulink
+	      url="http://www.qmail.org/qmail-manual-html/man5/maildir.html"></ulink> and
+	    <ulink url="http://cr.yp.to/proto/maildir.html"></ulink>.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    The mbox mail storage format as specified in
+	    <ulink
+	      url="http://www.qmail.org/qmail-manual-html/man5/mbox.html"></ulink>.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    Registered MIME media types as specified in RFC2048.
+	  </para>
+	</listitem>
+
+	<listitem><para>
+	    Script execution conforming to both UMN standards as laid out in UMN
+	    gopherd(1) and Bucktooth standards as specified at
+	    <ulink
+	      url="gopher://gopher.floodgap.com:70/0/buck/dbrowse%3ffaquse%202"></ulink>, 
+	    so far as each can be implemented consistent with secure
+	    design principles.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Standard Python 2.2.1 or above as implemented on
+	    POSIX-compliant systems.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    WAP/WML as defined by the WAP Forum.</para>
+	</listitem>
+      </itemizedlist>
+    </refsect1>
+
+
+    <refsect1 id="bugs">
+      <title>Bugs</title>
+      <para>
+	Reports of bugs should be sent via e-mail to the &PyGopherd;
+	bug-tracking system (BTS) at
+	<email>pygopherd@bugs.complete.org</email> or submitted online
+	using the Web interface at <ulink
+	  url="http://bugs.complete.org/"></ulink>.
+      </para>
+      <para>
+	The Web site also lists all current bugs, where you can check their
+	status or contribute to fixing them.
+      </para>
+    </refsect1>
+
+    <refsect1 id="copyright">
+      <title>Copyright</title>
+      <para>
+	&PyGopherd; is Copyright (C) 2002, 2003 John Goerzen.
+      </para>
+      <para>
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License as
+	published by the Free Software Foundation; version 2 of the
+	License.
+      </para>
+      <para>
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+      </para>
+      <para>
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
+      </para>
+      <programlisting>
+Free Software Foundation, Inc.
+59 Temple Place
+Suite 330
+Boston, MA  02111-1307
+USA
+      </programlisting>
+    </refsect1>
+
+    <refsect1 id="author">
+      <title>Author</title>
+      <para>
+	&PyGopherd;, its libraries, documentation, and all included
+	files (except where noted) was written by John Goerzen
+	<email>jgoerzen@complete.org</email>
+	and copyright is held as stated in the
+	Copyright section.
+      </para>
+      
+      <para>
+	Portions of this manual (specifically relating to certian UMN gopherd
+	features and characteristics that PyGopherd emulates) are modified
+	versions of the original
+	gopherd(1) manpage accompanying the UMN gopher distribution.  That
+	document is distributed under the same terms as this, and
+	bears the following copyright notices:
+      </para>
+      <programlisting>
+Copyright (C) 1991-2000  University of Minnesota
+Copyright (C) 2000-2002  John Goerzen and other developers
+      </programlisting>
+      <para>
+	&PyGopherd; may be downloaded, and information found, from its
+	homepage via either Gopher or HTTP:
+      </para>
+      <para>
+	<ulink
+	  url="gopher://quux.org/1/devel/gopher/pygopherd"></ulink></para>
+
+      <para>
+	<ulink
+	  url="http://quux.org/devel/gopher/pygopherd"></ulink></para>
+
+      <para>
+	&PyGopherd; may also be downloaded using Subversion.  Additionally,
+	the distributed tar.gz may be updated with a simple "svn update"
+	command; it is ready to go.  For information on getting
+	&PyGopherd; with Subversion, please visit <ulink
+	  url="http://svn.complete.org/"></ulink>.
+      </para>
+    </refsect1>
+
+    <refsect1>
+      <title>See Also</title>
+      <para>
+	python (1).
+      </para>
+    </refsect1>
+  </refentry>

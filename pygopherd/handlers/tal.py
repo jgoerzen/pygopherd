@@ -22,6 +22,21 @@ from simpletal import simpleTAL, simpleTALES
 #except:
 #    talavailable = 0
 
+try:
+    import logging
+    haslogging = 1
+except:
+    haslogging = 0
+
+if haslogging:
+    logger = logging.getLogger('simpleTAL.HTMLTemplateCompiler')
+    hdlr = logging.FileHandler('/tmp/myapp.log')
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    hdlr.setFormatter(formatter)
+    logger.addHandler(hdlr) 
+    logger.setLevel(logging.INFO)
+
+
 from pygopherd.handlers.file import FileHandler
 from pygopherd import gopherentry
 import re, os.path
