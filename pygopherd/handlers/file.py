@@ -35,17 +35,8 @@ class FileHandler(base.BaseHandler):
             self.entry.populatefromfs(self.getselector(), self.statresult, vfs = self.vfs)
         return self.entry
 
-    def prepare(self):
-        self.rfile = self.vfs.open(self.getselector(), "rb")
-
     def write(self, wfile):
-        while 1:
-            string = self.rfile.read(4096)
-            if not len(string):
-                break
-            wfile.write(string)
-        self.rfile.close()
-        self.rfile = None
+        self.vfs.copyto(self.getselector(), wfile)
 
 decompressors = None
 decompresspatt = None

@@ -68,6 +68,15 @@ class VFS_Real:
 
         return fspath
 
+    def copyto(self, name, fd):
+        rfile = self.open(name, 'rb')
+        while 1:
+            data = rfile.read(4096)
+            if not len(data):
+                break
+            fd.write(data)
+        rfile.close
+
 class BaseHandler:
     """Skeleton handler -- includes commonly-used routines."""
     def __init__(self, selector, searchrequest, protocol, config, statresult,

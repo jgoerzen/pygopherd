@@ -169,6 +169,93 @@ else:
         return path
 
 
+class ZipDecompressor:
+    def __init__(self, fd, zinfo):
+        self.fd = fd
+        self.zinfo = zinfo
+        self.buffer = ''
+        self.bytesread = 0
+        self.byteswritten = 0           # Used for deflation only
+        self.crc = binascii.crc32("")
+        self.filepos = self.fp.tell()
+
+        if zinfo.compress_type == ZIP_STORED:
+            self.read = self.read_stored
+        elif zinfo.compress_type == ZIP_DEFLATED:
+            self.read = self.read_deflated
+            self.dc = zlib.decompressobj(-15)
+
+    def copyto(self, destfd, size = -1):
+        copied = 0
+        if size < 1:
+            size = self.zinfo.file_size
+        while copied < size:
+            data = self.read(min(4096, size - copied))
+            destfd.write(data)
+            copied += len(data)
+
+    def _finalize(self):
+        if self.crc != self.zinfo.CRC:
+            raise BadZipFile, "Bad CRC-32 for file %s" % self.zinfo.filename
+
+    def flush(self):
+        while self.byteswritten < self.zinfo.file_size:
+            self.read(min(4096, self.zinfo.file_size - self.byteswritten))
+        self._finalize()
+
+    def close(self):
+        pass
+
+    def read_stored(self, count = -1):
+        if count < 1 or count > self.zinfo.compress_size - self.bytesread:
+            count = self.zinfo.compress_size - self.bytesread
+        if count < 1:
+            raise EOFError
+
+        count = count + self.bytesread
+        self.fp.seek(self.zinfo.file_offset + self.bytesread)
+        retval = ''
+        while self.bytesread < count:
+            data = self.fd.read(min(4096, count - self.bytesread))
+            retval += data
+            self.bytesread += len(data)
+        self.byteswritten = self.bytesread
+        self.crc = binascii.crc32(retval, self.crc)
+        if self.bytesread == self.zinfo.compress_size:
+            self._finalize()
+        return retval
+
+    def read_deflated(self, count = -1):
+        if count < 1 or count > self.zinfo.file_size - self.byteswritten:
+            count = self.zinfo.file_size - self.byteswritten
+        if count < 1:
+            raise EOFError
+
+        count = count
+        self.fp.seek(self.zinfo.file_offset + self.bytesread)
+
+        # First, fill up the buffer.
+        while len(self.buffer) < count:
+            bytes = self.fd.read(min(self.zinfo.compress_size - self.bytesread, 4096))
+            self.bytesread += len(bytes)
+            result = self.dc.decompress(bytes)
+            if len(result):
+                self.buffer += result
+                self.crc = binascii.crc32(result, self.crc)
+
+            if self.bytesread == self.zinfo.compress_size:
+                bytes = dc.decompress('Z') + dc.flush()
+                result += bytes
+                if len(result):
+                    self.buffer += result
+                    self.crc = binascii.crc32(result, self.crc)
+                self._finalize()
+
+        retval = self.buffer[:count]
+        self.byteswritten += len(retval)
+        self.buffer = self.buffer[count:]
+        return retval
+                
 ###########################################################################
 ###########################################################################
 ###########################################################################
@@ -252,6 +339,12 @@ class ZipReader:
     def namelist(self):
         """Return a list of file names in the archive."""
         return self.locationmap.keys()
+
+    def namelistiter(self):
+        return self.locationmap.iterkeys()
+
+    def hasfile(self, name):
+        return self.locationmap.has_key(name)
 
     def infolist(self):
         """Return a list of class ZipInfo instances for files in the
@@ -338,50 +431,17 @@ class ZipReader:
         fd = self.copyto(name, fd)
         return fd.getvalue()
 
-    def _copy(self, srcfd, destfd, size):
-        copied = 0
-        while copied < size:
-            data = srcfd.read(min(4096, size - copied))
-            destfd.write(data)
-            copied += len(data)
-
-    def copyto(self, name, fd):
-        """Copy the contents of the named file to the given descriptor."""
+    def open(self, name):
         if not self.fp:
             raise RuntimeError, \
                   "Attempt to read ZIP archive that was already closed"
         zinfo = self.getinfo(name)
-        filepos = self.fp.tell()
-        self.fp.seek(zinfo.file_offset, 0)
+        return ZipDecompressor(self.fd, zinfo)
 
-        if zinfo.compress_type == ZIP_STORED:
-            self._copy(self.fp, fd, zinfo.compress_size)
-            pass
-        elif zinfo.compress_type == ZIP_DEFLATED:
-            if not zlib:
-                raise RuntimeError, \
-                      "De-compression requires the (missing) zlib module"
+    def copyto(self, name, fd):
+        """Copy the contents of the named file to the given descriptor."""
+        self.open(name).copyto(fd)
 
-
-            bytesread = 0
-            dc = zlib.decompressobj(-15)
-            crc = binascii.crc32("")
-            while bytesread < zinfo.compressed_size:
-                bytes = self.fd.read(min(zinfo.compressed_size, 4096))
-                bytesread += len(bytes)
-                # zlib compress/decompress code by Jeremy Hylton of CNRI
-                output = dc.decompress(bytes)
-                if len(output):
-                    fd.write(output)
-                    crc = binascii.crc32(output)
-            # need to feed in unused pad byte so that zlib won't choke
-            ex = dc.decompress('Z') + dc.flush()
-            if ex:
-                fd.write(ex)
-                crc = binascii.crc32(ex)
-                
-        else:
-            raise BadZipfile, \
                   "Unsupported compression method %d for file %s" % \
             (zinfo.compress_type, name)
         if crc != zinfo.CRC:
