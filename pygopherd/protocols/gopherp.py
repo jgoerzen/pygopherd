@@ -31,10 +31,10 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
         
         if self.handlemethod == 'infoonly':
             self.wfile.write("+-2\r\n")
-            self.wfile.write(self.renderobjinfo(entry))
+            self.wfile.write(self.renderobjinfo(self.entry))
         else:
-            self.wfile.write("+" + entry.getsize(-2) + "\r\n")
-            entry.write(self, self.wfile)
+            self.wfile.write("+" + self.entry.getsize(-2) + "\r\n")
+            self.entry.write(self, self.wfile)
 
     def renderobjinfo(self, entry):
         if entry.getmimetype() == 'application/gopher-menu':

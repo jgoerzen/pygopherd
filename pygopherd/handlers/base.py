@@ -1,6 +1,6 @@
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols, handlers, entry
+import os, stat, os.path, mimetypes, protocols, handlers, gopherentry
 
 class BaseHandler:
     """Skeleton handler -- includes commonly-used routines."""
@@ -26,7 +26,7 @@ class BaseHandler:
     def getentry(self):
         """Returns an entry object for this request."""
         if not self.entry:
-            self.entry = entry.GopherEntry(self.selector, self.config)
+            self.entry = gopherentry.GopherEntry(self.selector, self.config)
         return self.entry
 
     def getfspath(self):

@@ -1,6 +1,6 @@
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols, handlers, entry
+import os, stat, os.path, mimetypes, protocols, handlers, gopherentry
 import handlers.base
 
 class FileHandler(handlers.base.BaseHandler):
@@ -10,7 +10,7 @@ class FileHandler(handlers.base.BaseHandler):
 
     def getentry(self):
         if not self.entry:
-            self.entry = entry.GopherEntry(self.selector, self.config)
+            self.entry = gopherentry.GopherEntry(self.selector, self.config)
             self.entry.populatefromfs(self.getfspath())
         return self.entry
 
