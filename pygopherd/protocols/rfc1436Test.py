@@ -1,4 +1,4 @@
-import unittest
+import unittest, re
 from pygopherd.protocols.rfc1436 import GopherProtocol
 from pygopherd import testutil
 from StringIO import StringIO
@@ -44,6 +44,25 @@ class RFC1436TestCase(unittest.TestCase):
         self.assertEquals(proto.selector, '/')
         self.assertEquals(self.logfile.getvalue(),
                           "10.77.77.77 [GopherProtocol/UMNDirHandler]: /\n")
-        self.assertEquals(self.wfile.getvalue(),
-                          'iThis is the abstract for the testdata directory.\tfake\t(NULL)\t0\r\n1CVS\t/CVS\terwin.complete.org\t64777\t+\r\n0README\t/README\terwin.complete.org\t64777\t+\r\n1pygopherd\t/pygopherd\terwin.complete.org\t64777\t+\r\n9testarchive.tar\t/testarchive.tar\terwin.complete.org\t64777\t+\r\n9testarchive.tar.gz\t/testarchive.tar.gz\terwin.complete.org\t64777\t+\r\n9testarchive.tgz\t/testarchive.tgz\terwin.complete.org\t64777\t+\r\n0testfile.txt\t/testfile.txt\terwin.complete.org\t64777\t+\r\n9testfile.txt.gz\t/testfile.txt.gz\terwin.complete.org\t64777\t+\r\niThis is the abstract\tfake\t(NULL)\t0\r\nifor testfile.txt.gz\tfake\t(NULL)\t0\r\n')
+        # Try to make this easy on us to fix.
+        actualarr = self.wfile.getvalue().splitlines()
+        expectedarr = [
+'iThis is the abstract for the testdata directory.\tfake\t(NULL)\t0',
+'1CVS\t/CVS\tHOSTNAME\t64777\t+',
+'0README\t/README\tHOSTNAME\t64777\t+',
+'1pygopherd\t/pygopherd\tHOSTNAME\t64777\t+',
+'9testarchive\t/testarchive.tar\tHOSTNAME\t64777\t+',
+'9testarchive.tar.gz\t/testarchive.tar.gz\tHOSTNAME\t64777\t+',
+'9testarchive.tgz\t/testarchive.tgz\tHOSTNAME\t64777\t+',
+'0testfile\t/testfile.txt\tHOSTNAME\t64777\t+',
+'9testfile.txt.gz\t/testfile.txt.gz\tHOSTNAME\t64777\t+',
+'iThis is the abstract\tfake\t(NULL)\t0',
+'ifor testfile.txt.gz\tfake\t(NULL)\t0']
+        expectedarr = [re.sub('HOSTNAME', self.server.server_name, x) for \
+                      x in expectedarr]
+        self.assertEquals(len(actualarr), len(expectedarr))
+        for i in range(len(actualarr)):
+            self.assertEquals(actualarr[i], expectedarr[i])
+
+
         
