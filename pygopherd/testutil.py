@@ -63,10 +63,17 @@ def gettestinghandler(rfile, wfile, config = None):
                 return self.rfile
             return self.wfile
 
+    class handlerClass(initialization.GopherRequestHandler):
+        def __init__(self, request, client_address, server):
+            self.request = request
+            self.client_address = client_address
+            self.server = server
+            self.setup()
+
     s = gettestingserver(config)
-    rhandler = initialization.GopherRequestHandler(requestClass(rfile, wfile),
-                                                   ('10.77.77.77', '7777'),
-                                                   s)
+    rhandler = handlerClass(requestClass(rfile, wfile),
+                            ('10.77.77.77', '7777'),
+                            s)
     return rhandler
 
 def gettestingprotocol(request, config = None):

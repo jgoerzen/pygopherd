@@ -63,6 +63,7 @@ class BaseGopherProtocol:
         return 0
 
     def log(self, handler):
+        """Log a handled request."""
         logger.log("%s [%s/%s]: %s" % \
                    (self.requesthandler.client_address[0],
                     re.search("[^.]+$", str(self.__class__)).group(0),
