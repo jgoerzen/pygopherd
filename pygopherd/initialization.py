@@ -37,8 +37,7 @@ import traceback
 
 def initconffile(conffile):
     if not (os.path.isfile(conffile) and os.access(conffile, os.R_OK)):
-        sys.stderr.write("Could NOT access config file %s\nPlease specify config file as a command-line argument\n" % conffile)
-        sys.exit(200)
+        raise Exception, "Could NOT access config file %s\nPlease specify config file as a command-line argument\n" % conffile
             
     config = ConfigParser()
     config.read(conffile)
@@ -59,8 +58,7 @@ def initmimetypes(config):
     if not mimetypesfiles:
         errmsg = "Could not find any mimetypes files; check mimetypes option in config."
         logger.log(errmsg)
-        sys.stderr.write(errmsg + "\n")
-        sys.exit(201)
+        raise Exception, errmsg
 
 
     configencoding = eval(config.get("pygopherd", "encoding"))
