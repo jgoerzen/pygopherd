@@ -30,6 +30,8 @@ class PYGMain(PYGBase):
             self.__class__ = Definition
         elif self.dbcommand == 'MATCH':
             self.__class__ = Match
+        elif self.dbcommand == 'MATCHMENU':
+            self.__class__ = MatchMenu
         elif self.dbcommand == 'DBINFO':
             self.__class__ = DBInfo
         elif self.dbname:
@@ -58,8 +60,16 @@ class TopMenu(PYGMain):
         entry.name = 'Definition Lookup -- All Databases'
         self.entries.append(entry)
 
-        intro = [" ", "Use the following links to browse ALL the",
-                 "definitions in this entire server!", " "]
+        selector = self.genargsselector("/*/MATCHMENU")
+        entry = GopherEntry(selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-dir'
+        entry.name = 'Advanced Search -- All Databases'
+        self.entries.append(entry)
+
+        intro = [" ", "Use the following links to search a particular",
+                 "database or to browse ALL the definitions",
+                 "in this entire server!", " "]
 
         for item in intro:
             self.entries.append(getinfoentry(item, self.config))
@@ -103,6 +113,13 @@ class Browse(PYGMain):
         entry.type = '7'
         entry.mimetype = 'application/gopher-dir'
         entry.name = 'Search This Database'
+        self.entries.append(entry)
+
+        selector = self.genargsselector("/%s/MATCHMENU" % self.dbname)
+        entry = GopherEntry(selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-dir'
+        entry.name = 'Advanced Search for This Database'
         self.entries.append(entry)
 
         if self.dbname != '*':
@@ -272,6 +289,36 @@ class Match(PYGMain):
             entry.type = '1'
             entry.mimetype = 'application/gopher-dir'
             entry.name = matchword
+            self.entries.append(entry)
+
+    def isdir(self):
+        return 1
+
+    def getdirlist(self):
+        return self.entries
+
+class MatchMenu(PYGMain):
+    def getentry(self):
+        entry = GopherEntry(self.selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-dir'
+        entry.name = 'Advanced Search Options for %s' % self.dbname
+        return entry
+
+    def prepare(self):
+        self.conn = dictclient.Connection()
+        self.entries = []
+
+        self.entries.append(getinfoentry("Advanced Search: " + self.dbname,
+                                         self.config))
+
+        for name, desc in self.conn.getstratdescs().items():
+            selector = self.genargsselector("/%s/MATCH/%s" % \
+                                            (self.dbname, name))
+            entry = GopherEntry(selector, self.config)
+            entry.type = '7'
+            entry.mimetype = 'application/gopher-dir'
+            entry.name = 'Search with %s (%s)' % (name, desc)
             self.entries.append(entry)
 
     def isdir(self):
