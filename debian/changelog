@@ -1,3 +1,9 @@
+pygopherd (1.0.1) unstable; urgency=low
+
+  * Added new configuration option: advertisedport.
+
+ -- John Goerzen <jgoerzen@complete.org>  Mon, 22 Jul 2002 06:17:17 -0500
+
 pygopherd (1.0.0) unstable; urgency=low
 
   * First release.  Welcome, pygopherd.
