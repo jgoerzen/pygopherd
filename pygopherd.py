@@ -50,14 +50,19 @@ class GopherRequestHandler(SocketServer.StreamRequestHandler):
                      self.server, self, self.rfile, self.wfile, self.server.config)
         protohandler.handle()
 
-class MyServer(SocketServer.ForkingTCPServer):
+servertype = eval("SocketServer." + config.get("pygopherd", "servertype"))
+
+class MyServer(servertype):
     allow_reuse_address = 1
 
     def server_bind(self):
         """Override server_bind to store server name."""
-        SocketServer.ForkingTCPServer.server_bind(self)
+        servertype.server_bind(self)
         host, port = self.socket.getsockname()
-        self.server_name = socket.getfqdn(host)
+        if config.has_option("pygopherd", "servername"):
+            self.server_name = config.get("pygopherd", "servername")
+        else:
+            self.server_name = socket.getfqdn(host)
         self.server_port = port
         
 s = MyServer(('', config.getint('pygopherd', 'port')),
