@@ -16,7 +16,8 @@ class PYGHandler(Virtual):
                                       self.getfspath(),
                                       ('', '', imp.PY_SOURCE))
         self.pygclass = self.module.PYGMain
-        self.pygobject = self.pygclass(self.selector, self.protocol,
+        self.pygobject = self.pygclass(self.selector, self.searchrequest,
+                                       self.protocol,
                                        self.config, self.statresult)
         return self.pygobject.canhandlerequest()
         
