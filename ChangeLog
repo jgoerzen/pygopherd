@@ -1,3 +1,12 @@
+2002-07-02 11:03  jgoerzen
+
+	* pygopherd/: initialization.py, sighandlers.py: Added signal
+	handler mechanisms to foster orderly shutdowns.
+
+2002-05-02 10:24  jgoerzen
+
+	* ChangeLog: Release 0.9.12
+
 2002-05-02 10:23  jgoerzen
 
 	* pygopherd/initialization.py: Removed the exitfunc

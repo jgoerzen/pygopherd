@@ -24,7 +24,7 @@ from ConfigParser import ConfigParser
 import socket, os, sys, SocketServer, re, stat, os.path, UserDict, xreadlines, tempfile
 import time, atexit
 
-from pygopherd import handlers, protocols, GopherExceptions, logger
+from pygopherd import handlers, protocols, GopherExceptions, logger, sighandlers
 from pygopherd.protocols import *
 from pygopherd.protocols import ProtocolMultiplexer
 from pygopherd.handlers import *
@@ -161,6 +161,16 @@ def initpidfile(config):
         fd.write("%d\n" % os.getpid())
         fd.close()
 
+def initpgrp(config):
+    os.setpgrp()
+    pgrp = os.getpgrp()
+    logger.log("Process group is %d" % pgrp)
+    return pgrp
+
+def initsighandlers(config, pgrp):
+    sighandlers.setsighuphandler()
+    sighandlers.setsigtermhandler(pgrp)
+
 def initeverything(conffile):
     config = initconffile(conffile)
     initlogger(config, conffile)
@@ -169,6 +179,8 @@ def initeverything(conffile):
     s = getserverobject(config)
     initconditionaldetach(config)
     initpidfile(config)
+    pgrp = initpgrp(config)
+    initsighandlers(config, pgrp)
     initsecurity(config)
 
     logger.log("Running.  Root is '%s'" % config.get("pygopherd", "root"))
