@@ -17,15 +17,14 @@ class DirHandler(handlers.base.BaseHandler):
     def prepare(self):
         self.files = os.listdir(self.getfspath())
         self.files.sort()
+        self.fsbase = self.getfspath()
+        if self.fsbase == '/':
+            self.fsbase = ''                 # Avoid dup slashes
+        self.selectorbase = self.selector
+        if self.selectorbase == '/':
+            self.selectorbase = ''           # Avoid dup slashes
 
     def write(self, wfile):
-        selectorbase = self.selector
-        if selectorbase == '/':
-            selectorbase = ''           # Avoid dup slashes
-        fsbase = self.getfspath()
-        if fsbase == '/':
-            fsbase = ''                 # Avoid dup slashes
-
         ignorepatt = self.config.get("handlers.dir.DirHandler", "ignorepatt")
 
         startstr = self.protocol.renderdirstart(self.entry)
@@ -34,12 +33,12 @@ class DirHandler(handlers.base.BaseHandler):
 
         for file in self.files:
             # Skip files we're ignoring.
-            if re.search(ignorepatt, selectorbase + '/' + file):
+            if re.search(ignorepatt, self.selectorbase + '/' + file):
                 continue
             
-            fileentry = gopherentry.GopherEntry(selectorbase + '/' + file,
+            fileentry = gopherentry.GopherEntry(self.selectorbase + '/' + file,
                                           self.config)
-            fileentry.populatefromfs(fsbase + '/' + file)
+            fileentry.populatefromfs(self.fsbase + '/' + file)
             wfile.write(self.protocol.renderobjinfo(fileentry))
 
         endstr = self.protocol.renderdirend(self.entry)

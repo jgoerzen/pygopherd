@@ -51,6 +51,25 @@ class UMNDirHandler(DirHandler):
                 newfiles.append(filename)
         self.files = newfiles
 
+        # MERGE!
+
+        for linkentry in self.linkfiles:
+            # Find matching directory entry.
+            direntry = None
+            for direntrytry in self.files:
+                if linkentry.getpath() == direntrytry.getpath() and \
+                       linkentry.gethost() == direntrytry.gethost() and \
+                       linkentry.getport() == direntrytry.getport():
+                    direntry = direntrytry
+                    break
+            if direntry:                # It matches!
+                for field in ['selector', 'type', 'name', 'host', 'port']:
+                    if linkentry.getattr(field):
+                        direntry.setattr(field, linkentry.getattr(field))
+            else:
+                # No match -- add to the directory.
+                self.files.append(linkentry)
+
     def processLinkFile(self, filename):
         fd = open(filename, "rt")
         while 1:
