@@ -29,10 +29,7 @@ class GopherEntry:
     Gopher object."""
 
     def __init__(self, selector, config):
-        global mapping
         """Initialize object based on a selector and config."""
-        if not mapping:
-            mapping = eval(config.get("GopherEntry", "mapping"))
         self.selector = selector        # Gopher path to file
         self.config = config            # Our config object
         self.fspath = None              # Path to the obj in filesystem
@@ -102,11 +99,16 @@ class GopherEntry:
             self.mimetype = self.config.get("GopherEntry", "defaultmimetype")
 
         if self.mimetype and self.type == None:
-            self.type = 0
-            for maprule in mapping:
-                if re.match(maprule[0], self.mimetype):
-                    self.type = maprule[1]
-                    break
+            self.type = self.guesstype()
+
+    def guesstype(self):
+        global mapping
+        if not mapping:
+            mapping = eval(self.config.get("GopherEntry", "mapping"))
+        for maprule in mapping:
+            if re.match(maprule[0], self.mimetype):
+                return maprule[1]
+        return '0'
 
     def getselector(self, default = None):
         if self.selector == None:

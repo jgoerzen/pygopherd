@@ -53,15 +53,15 @@ class CompressedFileHandler(FileHandler):
     def canhandlerequest(self):
         self.initdecompressors()
         return FileHandler.canhandlerequest(self) and \
-               self.getentry().getencoding() and \
-               decompressors.has_key(self.getentry().getencoding)
+               self.getentry().realencoding and \
+               decompressors.has_key(self.getentry().realencoding)
 
     def getentry(self):
         if not self.entry:
             self.entry = FileHandler.getentry(self)
             self.entry.realencoding = None
             if self.entry.getencoding() and \
-               decompressors.has_key[self.entry.getencoding()] and \
+               decompressors.has_key(self.entry.getencoding()) and \
                self.entry.getencodedmimetype():
                 # When the client gets it, there will not be
                 # encoding.  Therefore, we remove the encoding and switch
@@ -70,6 +70,7 @@ class CompressedFileHandler(FileHandler):
                 self.entry.encodedmimetype = None
                 self.entry.realencoding = self.entry.encoding
                 self.entry.encoding = None
+                self.entry.type = self.entry.guesstype()
         return self.entry
     
     def initdecompressors(self):
