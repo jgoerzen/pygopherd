@@ -1,7 +1,9 @@
-# pygopherd -- Gopher-based protocol server in Python
-# module: directory marker
+#!/usr/bin/python2.2
+
+# Python-based gopher server
+# Module: test of fileext
+# COPYRIGHT #
 # Copyright (C) 2002 John Goerzen
-# <jgoerzen@complete.org>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,8 +18,20 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# END OF COPYRIGHT #
 
-__all__ = ['handlers', 'protocols', 'GopherExceptions',
-'GopherExceptionsTest', 'gopherentry',
-           'logger', 'fileext', 'fileextTest', 'pipe', 'initialization',
-           'initializationTest', 'testutil']
+import unittest
+from pygopherd import fileext, testutil, initialization
+
+class FileExtTestCase(unittest.TestCase):
+    def setUp(self):
+        config = testutil.getconfig()
+        initialization.initmimetypes(config)
+        
+    def testinit(self):
+        # Was already inited in the initmimetypes, so just do a sanity
+        # check.
+        self.assert_('.txt' in fileext.typemap['text/plain'])
+        self.assert_('.txt.gz' in fileext.typemap['text/plain'])
+        self.assert_(not ('.html' in fileext.typemap['text/plain']))
+        
