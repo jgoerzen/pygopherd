@@ -1,3 +1,9 @@
+pygopherd (0.9.15) unstable; urgency=low
+
+  * Fixed gophermap info-only lines that have no tabs.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 17 Jul 2002 19:32:32 -0500
+
 pygopherd (0.9.14) unstable; urgency=low
 
   * Fixed some more bugs -- HTMLParser.
