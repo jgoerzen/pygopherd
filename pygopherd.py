@@ -24,9 +24,11 @@
 from ConfigParser import ConfigParser
 import socket, os, sys, signal, SocketServer
 from rhandler import GopherRequestHandler
+import mimetypes
 
 config = ConfigParser()
 config.read("pygopherd.conf")
+mimetypes.init(config.get("serving", "mimetypes"))
 
 class MyServer(SocketServer.ForkingTCPServer):
     allow_reuse_address = 1
@@ -42,4 +44,7 @@ class MyServer(SocketServer.ForkingTCPServer):
 s = MyServer(('', config.getint('serving', 'port')),
              GopherRequestHandler)
 s.config = config
+s.mapping = eval(config.get("serving", "mapping"))
+s.defaulttype = config.get("serving", "defaulttype")
+print s.mapping
 s.serve_forever()
