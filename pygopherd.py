@@ -1,4 +1,4 @@
-#!/usr/bin/python2.2 -i
+#!/usr/bin/python2.2
 
 # Python-based gopher server
 # COPYRIGHT #
@@ -23,17 +23,23 @@
 
 from ConfigParser import ConfigParser
 import socket, os, sys, signal, SocketServer
+from rhandler import GopherRequestHandler
 
 config = ConfigParser()
 config.read("pygopherd.conf")
 
-class RHandler(SocketServer.StreamRequestHandler):
-    def handle(self):
-        self.wfile.write("Foo\n")
-
 class MyServer(SocketServer.ForkingTCPServer):
     allow_reuse_address = 1
 
+    def server_bind(self):
+        """Override server_bind to store server name."""
+        SocketServer.ForkingTCPServer.server_bind(self)
+        host, port = self.socket.getsockname()
+        self.server_name = socket.getfqdn(host)
+        self.server_port = port
+        
+
 s = MyServer(('', config.getint('serving', 'port')),
-             RHandler)
+             GopherRequestHandler)
+s.config = config
 s.serve_forever()
