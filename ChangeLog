@@ -1,3 +1,19 @@
+2002-04-10 19:29  jgoerzen
+
+	* pygopherd.py, conf/pygopherd.conf, pygopherd/GopherExceptions.py,
+	pygopherd/handlers/mbox.py: Added the ability to log backtraces in
+	more situations.
+	
+	Fixed a bug in mbox preventing folders from working.
+
+2002-04-10 19:23  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Fixed a software bug.
+
+2002-04-10 16:30  jgoerzen
+
+	* ChangeLog: VERSION 0.9.0 RELEASED
+
 2002-04-10 16:02  jgoerzen
 
 	* pygopherd/handlers/: UMN.py, dir.py: Fixed some more bugs: don't

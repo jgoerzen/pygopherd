@@ -1,3 +1,9 @@
+pygopherd (0.9.1) unstable; urgency=low
+
+  * Many routine bugfixes.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 10 Apr 2002 19:31:13 -0500
+
 pygopherd (0.9.0) unstable; urgency=low
 
   * Initial Release.  Closes: #142221.
