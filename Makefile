@@ -27,3 +27,9 @@ clean:
 
 changelog:
 	svn log -v > ChangeLog
+
+docs:
+	man -t -l pygopherd.8 > manual.ps
+	ps2pdf manual.ps
+	groff -Tascii -man pygopherd.8 | sed $$'s/.\b//g' > manual.txt
+	groff -Thtml -man pygopherd.8 > manual.html
