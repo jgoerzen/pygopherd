@@ -53,7 +53,7 @@ class BaseGopherProtocol:
         """Handles the request."""
         handler = self.gethandler()
         self.entry = handler.getentry()
-        entry.write(self, self.wfile)
+        handler.write(self, self.wfile)
         pass
 
     def renderobjinfo(self, entry):
