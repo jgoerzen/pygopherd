@@ -49,12 +49,12 @@ def getHandler(selector, searchrequest, protocol, config, handlerlist = None,
     #          [selector, "Requested document is outside the server root",
     #           protocol]
 
+    statresult = None
+    try:
+        statresult = vfs.stat(selector)
+    except OSError:
+        pass
     for handler in handlerlist:
-        statresult = None
-        try:
-            statresult = vfs.stat(selector)
-        except OSError:
-            pass
         htry = handler(selector, searchrequest, protocol, config, statresult,
                        vfs)
         if htry.isrequestforme():

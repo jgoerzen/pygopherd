@@ -23,6 +23,12 @@ from pygopherd import zipfile
 UNX_IFMT = 0170000L
 UNX_IFLNK = 0120000L
 
+### DEBUG
+import traceback
+TRENABLED = 1
+TRACEFD = open('traces', 'wb')
+##
+
 from pygopherd.handlers import base
 
 class VFS_Zip(base.VFS_Real):
@@ -122,6 +128,9 @@ class VFS_Zip(base.VFS_Real):
         return self._getfspathfinal(selector)
 
     def stat(self, selector):
+        if TRENABLED:
+            TRACEFD.write("******************************************************** " + selector + "\n")
+            traceback.print_stack(file = TRACEFD)
         if self._needschain(selector):
             return self.chain.stat(selector)
 

@@ -439,12 +439,14 @@ class ZipReader:
         fd = self.copyto(name, fd)
         return fd.getvalue()
 
+    def _open_zinfo(self, zi):
+        return FileSimulator(ZipDecompressor(self.fp, zi), None, -1)
+        
     def open(self, name):
         if not self.fp:
             raise RuntimeError, \
                   "Attempt to read ZIP archive that was already closed"
-        zinfo = self.getinfo(name)
-        return FileSimulator(ZipDecompressor(self.fp, zinfo), None, -1)
+        return self._open_zinfo(self.getinfo(name))
 
     def copyto(self, name, fd):
         """Copy the contents of the named file to the given descriptor."""
