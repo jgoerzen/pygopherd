@@ -24,7 +24,7 @@ set -e
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
-	start-stop-daemon --start --quiet --m -b --pidfile /var/run/$NAME.pid \
+	start-stop-daemon --start --quiet --pidfile /var/run/$NAME.pid \
 		--exec $DAEMON -- $CONF
 	echo "$NAME."
 	;;
@@ -55,7 +55,7 @@ case "$1" in
 	start-stop-daemon --stop --quiet --pidfile \
 		/var/run/$NAME.pid
 	sleep 1
-	start-stop-daemon --start --quiet -m -b --pidfile \
+	start-stop-daemon --start --quiet --pidfile \
 		/var/run/$NAME.pid --exec $DAEMON -- $CONF
 	echo "$NAME."
 	;;

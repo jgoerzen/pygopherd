@@ -1,3 +1,10 @@
+pygopherd (0.9.12) unstable; urgency=low
+
+  * Minor bugfixes.
+  * Added support for detached operation and pidfile writing.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed,  1 May 2002 11:46:19 -0500
+
 pygopherd (0.9.11) unstable; urgency=low
 
   * Added support for searches in HTTP handler.

@@ -147,14 +147,39 @@ def initsecurity(config):
         os.setreuid(idsetuid, idsetuid)
         logger.log("Switched to uid %d" % idsetuid)
 
+def initconditionaldetach(config):
+    if config.getboolean("pygopherd", "detach"):
+        pid = os.fork()
+        if pid:
+            logger.log("Parent process detaching; child is %d" % pid)
+            sys.exit(0)
+
+def initpidfile(config):
+    if config.has_option("pygopherd", "pidfile"):
+        pidfile = config.get("pygopherd", "pidfile")
+        fd = open(pidfile, "wt")
+        fd.write("%d\n" % os.getpid())
+        fd.close()
+
+        def exitfunc():
+            try:
+                os.unlink(pidfile)
+            except OSError:
+                pass
+
+        import atexit
+        atexit.register(exitfunc)
+
 def initeverything(conffile):
     config = initconffile(conffile)
     initlogger(config, conffile)
     initexceptions(config)
     initmimetypes(config)
     s = getserverobject(config)
+    initconditionaldetach(config)
+    initpidfile(config)
     initsecurity(config)
     
-    logger.log("Root is '%s'" % config.get("pygopherd", "root"))
+    logger.log("Running.  Root is '%s'" % config.get("pygopherd", "root"))
     return s
 
