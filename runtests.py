@@ -1,7 +1,8 @@
-# pygopherd -- Gopher-based protocol server in Python
-# module: directory marker
+#!/usr/bin/python2.2
+# Python-based gopher server
+# Module: main test runner
+# COPYRIGHT #
 # Copyright (C) 2002 John Goerzen
-# <jgoerzen@complete.org>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,7 +17,22 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# END OF COPYRIGHT #
 
-__all__ = ['handlers', 'protocols', 'GopherExceptions', 'gopherentry',
-           'logger', 'fileext', 'pipe', 'initialization',
-           'initializationTest']
+import sys
+# sys.path.insert("-1", "..")
+
+import unittest
+from pygopherd import *
+
+def suite():
+    tests = [initializationTest
+        ]
+    suite = unittest.TestSuite()
+    for module in tests:
+        suite.addTest(unittest.findTestCases(module))
+    return suite
+
+if __name__ == '__main__':
+    unittest.main(defaultTest='suite')
+

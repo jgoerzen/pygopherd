@@ -29,6 +29,5 @@ if len(sys.argv) > 1:
     conffile = sys.argv[1]
 
 s = initialization.initeverything(conffile)
-
 s.serve_forever()
 
