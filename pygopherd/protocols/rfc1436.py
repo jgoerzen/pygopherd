@@ -26,6 +26,8 @@ from pygopherd.protocols.base import BaseGopherProtocol
 class GopherProtocol(BaseGopherProtocol):
     """Implementation of basic protocol.  Will handle every query."""
     def canhandlerequest(self):
+        if len(self.requestlist) > 1:
+            self.searchrequest = self.requestlist[1]
         return 1
 
     def renderobjinfo(self, entry):

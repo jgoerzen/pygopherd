@@ -24,8 +24,9 @@ import os
 handlers = None
 rootpath = None
 
-def getHandler(selector, protocol, config):
+def getHandler(selector, searchrequest, protocol, config):
     global handlers, rootpath
+
     if not handlers:
         handlers = eval(config.get("handlers.HandlerMultiplexer", "handlers"))
         rootpath = config.get("pygopherd", "root")
@@ -36,7 +37,7 @@ def getHandler(selector, protocol, config):
             statresult = os.stat(rootpath + '/' + selector)
         except OSError:
             pass
-        htry = handler(selector, protocol, config, statresult)
+        htry = handler(selector, searchrequest, protocol, config, statresult)
         if htry.canhandlerequest():
             return htry
     

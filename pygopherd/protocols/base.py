@@ -45,8 +45,8 @@ class BaseGopherProtocol:
         self.server = server
         self.requesthandler = requesthandler
         self.requestlist = requestparts
+        self.searchrequest = None
 
-        self.requestlist = requestparts
         selector = requestparts[0]
 
         if re.match('\./', selector):    # Weed out ./ and ../
@@ -90,7 +90,7 @@ class BaseGopherProtocol:
 
     def gethandler(self):
         """Gets the handler for this object's selector."""
-        return HandlerMultiplexer.getHandler(self.selector,
+        return HandlerMultiplexer.getHandler(self.selector, self.searchrequest,
                                                self, self.config)
 
     def renderdirstart(self, entry):

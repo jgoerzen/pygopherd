@@ -8,8 +8,9 @@ class Virtual(BaseHandler):
     not be instantiated itself but it is designed to be instantiated by
     its children."""
 
-    def __init__(self, selector, protocol, config, statresult):
-        BaseHandler.__init__(self, selector, protocol, config, statresult)
+    def __init__(self, selector, searchrequest, protocol, config, statresult):
+        BaseHandler.__init__(self, selector, searchrequest,
+                             protocol, config, statresult)
 
         # These hold the "real" and the "argument" portion of the selector,
         # respectively.

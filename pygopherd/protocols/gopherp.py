@@ -31,19 +31,28 @@ class GopherPlusProtocol(GopherProtocol):
         """We can handle the request IF:
            * It has more than one parameter in the request list
            * The second parameter is ! or starts with + or $"""
-        return len(self.requestlist) > 1 and \
-               (self.requestlist[1][0] == '+' or \
-               self.requestlist[1] == '!' or \
-               self.requestlist[1][0] == '$')
+        if len(self.requestlist) < 2:
+            return 0
+        if len(self.requestlist) == 2:
+            self.gopherpstring = self.requestlist[1]
+        elif len(self.requestlist) == 3:
+            self.gopherpstring = self.requestlist[2]
+            self.searchrequest = self.requestlist[1]
+        else:
+            return 0                    # Too many params.
+
+        return self.gopherpstring[0] == '+' or \
+               self.gopherpstring == '!' or \
+               self.gopherpstring[0] == '$'
     
     def handle(self):
         """Handle Gopher+ request."""
         self.handlemethod = None
-        if self.requestlist[1][0] == '+':
+        if self.gopherpstring[0] == '+':
             self.handlemethod = 'documentonly'
-        elif self.requestlist[1] == '!':
+        elif self.gopherpstring == '!':
             self.handlemethod = 'infoonly'
-        elif self.requestlist[1][0] == '$':
+        elif self.gopherpstring[0] == '$':
             self.handlemethod = 'gopherplusdir'
 
         try:

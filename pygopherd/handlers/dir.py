@@ -62,7 +62,7 @@ class DirHandler(handlers.base.BaseHandler):
             # it to give us an entry object.
             fileentry = handlers.HandlerMultiplexer.\
                         getHandler(self.selectorbase + '/' \
-                                   + file, self.protocol,
+                                   + file, self.searchrequest, self.protocol,
                                    self.config).\
                         getentry()
             self.prep_entriesappend(file, fileentry)

@@ -26,7 +26,7 @@ rootpath = None
 
 class BaseHandler:
     """Skeleton handler -- includes commonly-used routines."""
-    def __init__(self, selector, protocol, config, statresult):
+    def __init__(self, selector, searchrequest, protocol, config, statresult):
         """Parameters are:
         selector -- requested selector.  The selector must always start
         with a slash and never end with a slash UNLESS it is a one-char
@@ -35,11 +35,13 @@ class BaseHandler:
 
         config -- config object."""
         self.selector = selector
+        self.searchrequest = searchrequest
         self.protocol = protocol
         self.config = config
         self.statresult = statresult
         self.fspath = None
         self.entry = None
+        self.searchrequest = searchrequest
 
     def canhandlerequest(self):
         """Decides whether or not a given request is valid for this

@@ -18,7 +18,6 @@ class ExecHandler(Virtual):
         return entry
 
     def write(self, wfile):
-        print "ScriptExec write."
         # We work on a separate thing to avoid contaminating our own
         # environment.  Just saying newenv = os.environ would still
         # do that.
@@ -30,6 +29,8 @@ class ExecHandler(Virtual):
         newenv['REMOTE_HOST'] = newenv['REMOTE_ADDR']
         newenv['SELECTOR'] = self.selector
         newenv['REQUEST'] = self.getselector()
+        if self.searchrequest:
+            newenv['SEARCHREQUEST'] = self.searchrequest
         wfile.flush()
         # ASSUMING WE ARE USING FORKING SERVER!
         # Set stdout to be the wfile.
