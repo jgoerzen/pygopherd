@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.2
+#!/usr/bin/env python2.3
 
 # $Id: setup.py,v 1.6 2002/04/11 21:12:12 jgoerzen Exp $
 
