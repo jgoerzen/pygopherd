@@ -13,449 +13,356 @@ PyGopherd \- Multiprotocol Information Server
 
 .SH "DESCRIPTION"
 .PP
-\fBOfflineIMAP\fR is  a  tool  to  simplify  your  e-mail
-reading.  With \fBOfflineIMAP\fR, you can read the same mailbox
-from multiple computers.  You get a current copy of your
-messages on each computer, and changes you make one place will be
-visible on all other systems.  For instance, you can delete a message
-on your home computer, and it will appear deleted on your work
-computer as well.  \fBOfflineIMAP\fR is also useful if you want to
-use a mail reader that does not have IMAP support, has poor IMAP
-support, or does not provide disconnected operation.
+Welcome to \fBPyGopherd\fR.  In a nutshell, \fBPyGopherd\fR
+is a modern dynamic
+multi-protocol hierarchical information server with a pluggable
+modularized extension system, 
+full flexible caching, virtual files and
+folders, and autodetection of file types -- all with support for
+standardized yet extensible per-document metadata. Whew! Read on for
+information on this what all these buzzwords mean.
+.SS "FEATURES"
 .PP
-\fBOfflineIMAP\fR is \fBFAST\fR; it synchronizes
-my two accounts with over 50 folders in 3 seconds.  Other
-similar tools might take over a minute, and achieve a
-less-reliable result.  Some mail readers can take over 10
-minutes to do the same thing, and some don't even support it
-at all.  Unlike other mail tools, \fBOfflineIMAP\fR features a
-multi-threaded synchronization algorithm that can dramatically
-speed up performance in many situations by synchronizing
-several different things simultaneously.
+Here are some of \fBPyGopherd\fR's features:
+.TP 0.2i
+\(bu
+Provides built-in support for multiple protocols:
+HTTP (Web), Gopher+, Gopher (RFC1436), Enhanced Gopher0,
+and WAP (mobile phones).  Protocols can be enabled or
+disabled as desired.
+.TP 0.2i
+\(bu
+Provides protocol autodetection.  That is,
+\fBPyGopherd\fR can listen for all the above protocols
+\fBon a single port\fR and will
+automatically respond using the protocol it detects the
+client is using.  Practical effects of this are that you
+can, for instance, give out a single URL and have it
+viewable normally on desktop Web browsers and in WAP
+mode on mobile phones -- and appropriately in various
+Gopher browsers.
+.TP 0.2i
+\(bu
+Metadata and site links can be entered in a
+variety of formats, including full UMN dotfile metadata
+formats as well as Bucktooth gophermap files.  Moreover,
+gophermap files are not limited to Gopher protocols, and
+can be used for all protocols.
+.TP 0.2i
+\(bu
+Support for inter-protocol linking (linking
+from Gopher sites to web sites)
+.TP 0.2i
+\(bu
+Virtual folder system lets you serve up
+anything as if it were regular files and directories.
+PyGopherd comes with the following virtual folder systems
+built in:
+.RS
+.TP 0.2i
+\(bu
+Can present any Unix MBOX, MMDF box, MH
+directory, Maildir directory, or Babyl mailbox as a
+virtual folder, the contents of which are the
+messages in the mailbox.
+.TP 0.2i
+\(bu
+Can use a configurable separator to
+split a file into multiple parts, the first line of each
+becoming the name for the virtual folder.
+.TP 0.2i
+\(bu
+Can peek inside a ZIP file and serve it
+up as first-class site citizens -- metadata can even be
+stored in the ZIP files.
+.TP 0.2i
+\(bu
+Can serve up the contents of a dictd
+server as a filesystem.
+.RE
+.TP 0.2i
+\(bu
+Modular, extensible design: you can use PyGopherd's own
+PYG extension format, or UMN- or Bucktooth-style
+executables.
+.TP 0.2i
+\(bu
+Runs on any platform supported by Python 2.2 or 2.3.
+This includes virtually every past and current flavor of
+Unix (Linux, *BSD, Solaris, SunOS), Windows, MacOS 9.x
+and X, and more.  Some features may not be available on
+non-Unix platforms.
+.TP 0.2i
+\(bu
+Runs on any platform supported by Java 1.1
+via the Jython Python implementation.
+.TP 0.2i
+\(bu
+Tunable server types via configuration
+directive -- forking or threading.
+.TP 0.2i
+\(bu
+Secure design with support for chrooted execution.
+.TP 0.2i
+\(bu
+Feature-complete, full implementations of:
+Gopher0 (RFC1435), Gopher+, HTTP, and WAP.
+.TP 0.2i
+\(bu
+Support for automatically finding the titles
+of HTML documents for presentation in a directory.
+.TP 0.2i
+\(bu
+Versatile configuration file format is both
+extensible and nicely complementary of the module system.
+.TP 0.2i
+\(bu
+Protocol-independant, handler-dependant
+caching.  This increases performance by letting handlers
+cache dynamically-generated information -- currently used by
+the directory handlers.  This can improve performance of
+directories by several orders of magnitude.  Because this is
+a handler cache only, all protococls share the single
+cache.  Since the processing time for the protocols is
+negligable, this works out very well.
+.TP 0.2i
+\(bu
+Autosensing of MIME types and gopher0 item
+types.  Both are completely configurable.  MIME type
+detection is done using a standard mime.types file, and
+gopher0 types are calculated by using a configurable
+regexp-based MIME-to-gophertype map.
+.TP 0.2i
+\(bu
+Heavy support of regular expressions in configuration.
+.TP 0.2i
+\(bu
+ProtocolMultiplexer and HandlerMultiplexer
+let you choose only those protocols and handlers that you
+wish your server to support and the order in which they are
+tried when a request comes in.
+.TP 0.2i
+\(bu
+Full logging via syslog.
+.SS "ABOUT GOPHER"
 .PP
-\fBOfflineIMAP\fR is \fBFLEXIBLE\fR; you can
-customize which folders are synced via regular expressions,
-lists, or Python expressions; a versatile and comprehensive
-configuration file is used to control behavior; two user
-interfaces are built-in; fine-tuning of synchronization
-performance is possible; internal or external automation is
-supported; SSL and PREAUTH tunnels are both supported; offline
-(or "unplugged") reading is supported; and esoteric IMAP
-features are supported to ensure compatibility with the widest
-variety of IMAP servers.
+\fBPyGopherd\fR started life as a server for the Gopher Internet
+protocol. With Gopher, you can mount a filesystem (viewing files and
+folders as if they were local),
+browse Gopherspace with a web browser,
+download files, and be interactive with searching.
 .PP
-\fBOfflineIMAP\fR is \fBSAFE\fR; it uses an
-algorithm designed to prevent mail loss at all costs.  Because
-of the design of this algorithm, even programming errors
-should not result in loss of mail.  I am so confident in the
-algorithm that I use my own personal and work accounts for
-testing of \fBOfflineIMAP\fR pre-release, development, and beta
-releases.  Of course, legally speaking, \fBOfflineIMAP\fR comes
-with no warranty, so I am not responsible if this turns out
-to be wrong.
-.SS "METHOD OF OPERATION"
+But this is only part of the story. The world of Gopher is more
+expansive than this. There are two major gopher protocols: Gopher0
+(also known as RFC1436) and Gopher+. Gopher0 is a small, simple,
+lightweight protocol that is very functional yet also extremely easy
+to implement. Gopher0 clients can be easily places in small embedded
+devices or in massive environments like a modern web browser.
 .PP
-\fBOfflineIMAP\fR traditionally 
-operates by maintaining a hierarchy of
-mail folders in Maildir format locally.  Your own mail
-reader will read mail from this tree, and need never know
-that the mail comes from IMAP.  \fBOfflineIMAP\fR will detect
-changes to the mail folders on your IMAP server and your own
-computer and bi-directionally synchronize them, copying,
-marking, and deleting messages as necessary.
-.PP
-With \fBOfflineIMAP\fR 4.0, a powerful new ability has been
-introduced -- the program can now synchronize two IMAP
-servers with each other, with no need to have a Maildir
-layer in-between.  Many people use this if they use a mail
-reader on their local machine that does not support
-Maildirs.  People may install an IMAP server on their local
-machine, and point both \fBOfflineIMAP\fR and their mail reader
-of choice at it.  This is often preferable to the mail
-reader's own IMAP support since \fBOfflineIMAP\fR supports many
-features (offline reading, for one) that most IMAP-aware
-readers don't.  However, this feature is not as time-tested
-as traditional syncing, so my advice is to stick with normal
-methods of operation for the time being.
+Gopher+ is based on Gopher0 but extends it by providing document
+metadata such as file size and MIME type. Gopher+ allows all sorts of
+neat features, such as configurable metadata (serving up a bunch of
+photos? Add a Subject field to your metadata to let
+a customized photo
+browser display who is pictured) and multiple
+views of a file (let the
+user select to view your photos as PNG or JPEG).
 .SH "QUICK START"
 .PP
-If you have already installed \fBOfflineIMAP\fR system-wide,
-or your system adminstrator has done that for you, your task
-for setting up \fBOfflineIMAP\fR for the first time is quite
-simple.  You just need to set up your configuration file, make
-your folder directory, and run it!
+If you have already installed \fBPyGopherd\fR system-wide, or your
+administrator has done that for you, your task for setting up
+\fBPyGopherd\fR for the first time is quite simple.  You just need
+to set up your configuration file, make your folder directory,
+and run it!
 .PP
-You can quickly set up your configuration file.  The distribution
-includes a file \fIofflineimap.conf.minimal\fR
-(Debian users
-may find this at
-\fI/usr/share/doc/offlineimap/examples/offlineimap.conf.minimal\fR) that is a basic example of setting of \fBOfflineIMAP\fR.  You can
-simply copy this file into your home directory and name it
-\fI.offlineimaprc\fR (note the leading period).  A
-command such as \fBcp offlineimap.conf.minimal ~/.offlineimaprc\fR will do it.  Or, if you prefer, you can just copy this text to
-\fI~/.offlineimaprc\fR:
-
-.nf
-[general]
-accounts = Test
-
-[Account Test]
-localrepository = Local
-remoterepository = Remote
-
-[Repository Local]
-type = Maildir
-localfolders = ~/Test
-
-[Repository Remote]
-type = IMAP
-remotehost = examplehost
-remoteuser = jgoerzen
-.fi
+You can quickly set up your configuration file.  The
+distribution includes two files of interest:
+\fIconf/pygopherd.conf\fR and
+\fIconf/mime.types\fR.  Debian users will find
+the configuration file pre-installed in
+\fI/etc/pygopherd/pygopherd.conf\fR and the
+\fImime.types\fR file provided by the system
+already.
 .PP
-Now, edit the \fI~/.offlineimaprc\fR file with
-your favorite editor.  All you have to do is specify a directory
-for your folders to be in (on the \fIlocalfolders\fR
-line), the host name of your IMAP server (on the
-\fIremotehost\fR line), and your login name on
-the remote (on the \fIremoteuser\fR line).  That's
-it!
+Open up \fIpygopherd.conf\fR in your editor and
+adjust to suit.  The file is heavily commented and you can
+refer to it for detailed information.  Some settings to take a
+look at include: \fIdetach\fR,
+\fIpidfile\fR, \fIport\fR, 
+\fIusechroot\fR, \fIsetuid\fR,
+\fIsetgid\fR, and \fIroot\fR.
+These may or may not work at their defaults for you.  The
+remaining ones should be fine for a basic setup.
 .PP
-To run \fBOfflineIMAP\fR, you just have to say
-\fBofflineimap\fR -- it will fire up, ask you for
-a login password if necessary, synchronize your folders, and exit.
-See?  You can just throw away the rest of this finely-crafted,
-perfectly-honed manual!  Of course, if you want to see how you can
-make \fBOfflineIMAP\fR FIVE TIMES FASTER FOR JUST $19.95 (err, well,
-$0), you have to read on!
+Invoke \fBPyGopherd\fR with \fBpygopherd
+path/to/configfile\fR (or
+\fB/etc/init.d/pygopherd start\fR on Debian).
+Place some files in the location specified by the
+\fIroot\fR directive in the config file and
+you're ready to run!
 .SH "INSTALLATION"
 .PP
-If you are reading this document via the "man" command, it is
-likely
-that you have no installation tasks to perform; your system
-administrator has already installed it.  If you need to install it
-yourself, you have three options: a system-wide installation with
-Debian, system-wide installation with other systems, and a single-user
-installation.  You can download the latest version of \fBOfflineIMAP\fR from
-the \fBOfflineIMAP\fR
-website <URL:http://quux.org/devel/offlineimap/>.
-.SS "PREREQUISITES"
-.PP
-In order to use \fBOfflineIMAP\fR, you need to have these conditions
-satisfied:
-.TP 0.2i
-\(bu
-Your mail server must support IMAP.  Most Internet Service
-Providers
-and corporate networks do, and most operating systems
-have an IMAP
-implementation readily available.
-.TP 0.2i
-\(bu
-You must have Python version 2.2.1 or above installed.
-If you are
-running on Debian GNU/Linux, this requirement will automatically be
-taken care of for you.  If you do not have Python already, check with
-your system administrator or operating system vendor; or, download it from
-the Python website <URL:http://www.python.org/>.
-If you intend to use the Tk interface, you must have Tkinter
-(python-tk) installed.  If you intend to use the SSL interface, your
-Python must have been built with SSL support.
-.TP 0.2i
-\(bu
-Have a mail reader that supports the Maildir mailbox
-format.  Most modern mail readers have this support
-built-in, so you can choose from a wide variety of mail
-servers.  This format is also known as the "qmail"
-format, so any mail reader compatible with it will work
-with \fBOfflineIMAP\fR.  If you do not have a mail reader
-that supports Maildir, you can often install a local
-IMAP server and point both \fBOfflineIMAP\fR and your mail
-reader at it.
-.SS "SYSTEM-WIDE INSTALLATION, DEBIAN"
+If  you  are  reading this document via the "man" command, it is likely
+that you have no installation tasks to perform; your system administra-
+tor  has already installed \fBPyGopherd\fR.  If you need to install it yourself, you
+have three options: a system-wide installation with Debian, system-wide
+installation  with  other systems, and a single-user installation.  You
+can    download    the    latest    version    of    PyGopherd
+from
+ <URL:http://quux.org/devel/gopher/pygopherd/>
+.SS "DEBIAN SYSTEM-WIDE INSTALLATION"
 .PP
 If you are tracking Debian unstable, you may install
-\fBOfflineIMAP\fR by simply running the following command as root:
+\fBPyGopherd\fR by simply running this command as root:
 .PP
-\fBapt-get install offlineimap\fR
+\fBapt-get install pygopherd\fR
 .PP
-If you are not tracking Debian unstable, download the Debian .deb
-package from the \fBOfflineIMAP\fR website <URL:http://quux.org/devel/offlineimap/>
-and then run \fBdpkg -i\fR to install the downloaded
-package.  Then, skip to [XRef to CONFIGURATION] below.  You will type \fBofflineimap\fR to
-invoke the program.
-.SS "SYSTEM-WIDE INSTALLATION, OTHER"
+If you are not tracking Debian unstable, download the .deb
+package from the \fBPyGopherd\fR website and then run
+\fBdpkg -i\fR to install the downloaded
+package.  Then, skip to the configuration section below.
+You will use \fB/etc/init.d/pygopherd start\fR
+to start the program.
+.SS "OTHER SYSTEM-WIDE INSTALLATION"
 .PP
-Download the tar.gz version of the package from the
-website <URL:http://quux.org/devel/offlineimap/>.
-Then run
-these commands, making sure that you are the "root" user first:
+Download the tar.gz version of the package from the website.  Make
+sure you have Python 2.2 or above installed; if now, download and
+install it from  <URL:http://www.python.org/>.  Then run these
+commands:
 
 .nf
-tar -zxvf offlineimap_x.y.z.tar.gz
-cd offlineimap-x.y.z
-python2.2 setup.py install
+	  \fBtar -zxvf pygopherd-x.y.z.tar.gz\fR
+	  \fBcd pygopherd-x.y.z\fR
+	  \fBpython2.2 setup.py\fR
+	
 .fi
 .PP
-On some systems, you will need to use
-\fBpython\fR instead of \fBpython2.2\fR.
-Next, proceed to [XRef to CONFIGURATION] below.  You will type \fBofflineimap\fR to
-invoke the program.
+Some systems will use \fBpython\fR or
+\fBpython2.3\fR in place of
+\fBpython2.2\fR.
+.PP
+Next, proceed to configuration.  Make sure that the
+\fI/etc/pygopherd/pygopherd.conf\fR file
+names valid users (\fIsetuid\fR and
+\fIsetgid\fR options) and a valid document
+root (\fIroot\fR option).
+.PP
+You will type \fIpygopherd\fR to invoke the
+program.
 .SS "SINGLE-ACCOUNT INSTALLATION"
 .PP
-Download the tar.gz version of the package from the
-website <URL:http://quux.org/devel/offlineimap/>.
-Then run these commands:
+Download the tar.gz version of the package from the website.  Make
+sure you have Python 2.2 or above installed; if now, download and
+install it from  <URL:http://www.python.org/>.  Then run these
+commands:
 
 .nf
-tar -zxvf offlineimap_x.y.z.tar.gz
-cd offlineimap-x.y.z
+	  \fBtar -zxvf pygopherd-z.y.z.tar.gz\fR
+	  \fBcd pygopherd-x.y.z\fR
+	
 .fi
 .PP
-When you want to run \fBOfflineIMAP\fR, you will issue the
+Modify \fIconf/pygopherd.conf\fR as follows:
+.TP 0.2i
+\(bu
+Set \fIusechroot = no\fR
+.TP 0.2i
+\(bu
+Comment out (add a # sign to the start of
+the line) the \fIpidfile\fR,
+\fIsetuid\fR, and
+\fIsetgid\fR lines.
+.TP 0.2i
+\(bu
+Set \fIroot\fR to osomething appropriate.
+.TP 0.2i
+\(bu
+Set \fIport\fR to a number
+greater than 1024.
+.PP
+When you want to run \fBPyGopherd\fR, you will issue the
 \fBcd\fR command as above and then type
-\fB./offlineimap.py\fR; there is no installation
-step necessary.
+\fBPYTHONPATH=. bin/pygopherd\fR.  There is no
+installation step necessary.
 .SH "CONFIGURATION"
 .PP
-\fBOfflineIMAP\fR is regulated by a configuration file that is normally 
-stored in \fI~/.offlineimaprc\fR.  \fBOfflineIMAP\fR
-ships with a file named \fIofflineimap.conf\fR
-that you should copy to that location and then edit.  This file is
-vital to proper operation of the system; it sets everything you need
-to run \fBOfflineIMAP\fR.  Full documentation for the configuration file
-is included within the sample file.
-.PP
-\fBOfflineIMAP\fR also ships a file named
-\fIofflineimap.conf.minimal\fR that you can also try.
-It's useful if you want to get started with
-the most basic feature set, and you can read about other features
-later with \fIofflineimap.conf\fR.
+\fBPyGopherd\fR is regulated by a configuratoin file normally
+stored in \fI/etc/pygopherd/pygopherd.conf\fR.
+You can specify an alternate configuration file on the command
+line.  The \fBPyGopherd\fR distribution ships
+with a sample \fIpygopherd.conf\fR file that
+thoroughly documents the configuration file options and
+settings.
 .SH "OPTIONS"
 .PP
-Most configuration is done via the configuration file.  Nevertheless,
-there are a few command-line options that you may set for
-\fBOfflineIMAP\fR.
+All \fBPyGopherd\fR configuratoin is done via the configuration
+file.  Therefore, the program has only one command-line
+option:
 .TP
-\fB-1\fR
-Disable most multithreading operations and use
-solely a single-connection
-sync.  This effectively sets the
-\fImaxsyncaccounts\fR
-and all \fImaxconnections\fR configuration file
-variables to 1.
+\fB\fIconfigfile\fB\fR
+This option argument specifies the location
+of the configuration file that \fBPyGopherd\fR is to use.
+.SH "HANDLERS"
+.PP
+\fBPyGopherd\fR defines several handlers which are responsible for
+finding data on your server and presenting it to the user.  The
+handlers are used to generate things like links to other documents and
+directory listings.  They are also responsible for serving up regular
+files and even virtual folders.
+.PP
+Handlers are specified with the \fIhandlers\fR
+option in \fIpygopherd.conf\fR.  This option is
+a list of handlers to use.  For each request that arrives,
+\fBPyGopherd\fR will ask each handler in
+turn whether or not it can handle the request, and will handle the
+request according to the first handler that is capable of doing so.
+If no handlers can handle the request, a file not found error is
+generated.  See the example configuration file for an example.
+.PP
+The remaining parts of this section describe the different
+handlers that ship with \fBPyGopherd\fR.
 .TP
-\fB-P \fIprofiledir\fB\fR
-Sets \fBOfflineIMAP\fR into profile mode.  The program
-will create \fIprofiledir\fR
-(it must not already exist).  As it runs, Python profiling 
-information
-about each thread is logged into profiledir.  Please note: This option
-is present for debugging and optimization only, and should NOT be used
-unless you have a specific reason to do so.  It will significantly
-slow program performance, may reduce reliability, and can generate
-huge amounts of data.  You must use the \fB-1\fR option when
-you use \fB-P\fR.
-.TP
-\fB-a \fIaccountlist\fB\fR
-Overrides the \fIaccounts\fR option
-in the \fIgeneral\fR section of the configuration
-file.  You might use this to exclude certain accounts, or to sync
-some accounts that you normally prefer not to.  Separate the
-accounts by commas, and use no embedded spaces.
-.TP
-\fB-c \fIconfigfile\fB\fR
-Specifies a configuration file to use in lieu of
-the default, \fI~/.offlineimaprc\fR.
-.TP
-\fB-d \fIdebugtype[,...]\fB\fR
-Enables debugging for OfflineIMAP.  This is useful if
-you are trying to track down a malfunction or figure out what is going
-on under the hood.  I suggest that you use this with
-\fB-1\fR to make the results more sensible.
+\fBdir.DirHandler\fR
+This handler is a basic one that generates menus based
+on the contents of a directory.  It is used for
+directories that contain neither a
+\fIgophermap\fR file nor UMN-style links
+files, or situations where you have no need for either
+of those.
 
-\fB-d\fR requires one or more debugtypes,
-separated by commas.  These define what exactly will be
-debugged, and include four options:
-\fIimap\fR,
-\fItraffic\fR,
-\fImaildir\fR, and \fIthread\fR.
-The \fIimap\fR
-option will enable IMAP activity debugging.  The
-\fItraffic\fR option will enable dumping
-of most traffic going back and forth between IMAP
-servers.  Note
-that the output may contain passwords, so take care to remove that
-from the debugging output before sending it to anyone else.  The
-\fImaildir\fR option will enable debugging for
-certain Maildir operations.  And \fIthread\fR
-will debug the threading model.
+This handler simply
+reads the contents of your on-disk directory, determines the
+appropriate types of each file, and sends the result to the client.
+The descriptions of each item are usually set to the filename, but the
+\fIhtml.HTMLFileTitleHandler\fR may
+override that.
 .TP
-\fB-l \fIfilename\fB\fR
-Enables logging to filename.  This will log everything
-that goes to the screen to the specified file.
-Additionally, if any debugging is specified with -d,
-then debug messages will not go to the screen, but
-instead to the logfile only.
-.TP
-\fB-o\fR
-Run only once, ignoring all
-\fIautorefresh\fR settings in the configuration
-file.
-.TP
-\fB-h\fR
-.TP
-\fB--help\fR
-Show summary of options.
-.TP
-\fB-u \fIinterface\fB\fR
-Specifies an alternative user interface module
-to use.  This overrides the defailt specified in the
-configuration file.  The pre-defined options are listed in
-the User Interfaces section.
-.SH "USER INTERFACES"
-.PP
-\fBOfflineIMAP\fR has a pluggable user interface system that lets you choose how the
-program communicates information to you.  There are two graphical
-interfaces, two terminal interfaces, and two noninteractive interfaces
-suitable for scripting or logging purposes.  The
-\fIui\fR option in the configuration file specifies
-user interface preferences.  The \fB-u\fR command-line
-option can override the configuration file setting.  The available
-values for the configuration file or command-line are described
-in this section.
-.SS "TK.BLINKENLIGHTS"
-.PP
-Tk.Blinkenlights is an interface designed to be sleek, fun to watch, and
-informative of the overall picture of what \fBOfflineIMAP\fR
-is doing.  I consider it to be the best general-purpose interface in
-\fBOfflineIMAP\fR.
-.PP
-Tk.Blinkenlights contains, by default, a small window with a row of
-LEDs, a small log, and a row of command buttons.
-The total size of the window is
-very small, so it uses little desktop space, yet it is quite
-functional.  The optional, toggleable, log shows more
-detail about what is happening and is color-coded to match the color
-of the lights.
-.PP
-Tk.Blinkenlights is the only user interface that has configurable
-parameters; see the example \fIofflineimap.conf\fR
-for more details.
-.PP
-Each light in the Blinkenlights interface represents a thread
-of execution -- that is, a particular task that \fBOfflineIMAP\fR
-is performing right now.  The colors indicate what task
-the particular thread is performing, and are as follows:
-.TP
-\fBBlack\fR
-indicates that this light's thread has terminated; it will light up
-again later when new threads start up.  So, black indicates no
-activity.
-.TP
-\fBRed (Meaning 1)\fR
-is the color of the main program's thread, which basically does
-nothing but monitor the others.  It might remind you of HAL 9000 in
-2001.
-.TP
-\fBGray\fR
-indicates that the thread is establishing a new connection to the IMAP
-server.
-.TP
-\fBPurple\fR
-is the color of an account synchronization thread that is monitoring
-the progress of the folders in that account (not generating any I/O).
-.TP
-\fBCyan\fR
-indicates that the thread is syncing a folder.
-.TP
-\fBGreen\fR
-means that a folder's message list is being loaded.
-.TP
-\fBBlue\fR
-is the color of a message synchronization controller thread.
-.TP
-\fBOrange\fR
-indicates that an actual message is being copied.
-(We use fuschia for fake messages.)
-.TP
-\fBRed (meaning 2)\fR
-indicates that a message is being deleted.
-.TP
-\fBYellow / bright orange\fR
-indicates that message flags are being added.
-.TP
-\fBPink / bright red\fR
-indicates that message flags are being removed.
-.TP
-\fBRed / Black Flashing\fR
-corresponds to the countdown timer that runs between
-synchronizations.
-.PP
-The name of this interfaces derives from a bit of computer
-history.  Eric Raymond's Jargon File defines
-\fIblinkenlights\fR, in part, as:
-.sp
-.RS
-.PP
-Front-panel diagnostic
-lights on a computer, esp. a dinosaur. Now that dinosaurs are rare,
-this term usually refers to status lights on a modem, network hub, or
-the like.
-.PP
-This term derives from the last word of the famous blackletter-Gothic
-sign in mangled pseudo-German that once graced about half the computer
-rooms in the English-speaking world. One version ran in its entirety as
-follows:
-.PP
-\fBACHTUNG!  ALLES LOOKENSPEEPERS!\fR
-.PP
-Das computermachine ist nicht fuer gefingerpoken und mittengrabben.
-Ist easy schnappen der springenwerk, blowenfusen und poppencorken
-mit spitzensparken.  Ist nicht fuer gewerken bei das dumpkopfen.
-Das rubbernecken sichtseeren keepen das cotten-pickenen hans in das
-pockets muss; relaxen und watchen das blinkenlichten.
-.RE
-.SS "CURSES.BLINKENLIGHTS"
-.PP
-Curses.Blinkenlights is an interface very similar to Tk.Blinkenlights,
-but is designed to be run in a console window (an xterm, Linux virtual
-terminal, etc.)  Since it doesn't have access to graphics, it isn't
-quite as pretty, but it still gets the job done.
-.PP
-Please see the Tk.Blinkenlights section above for more
-information about the colors used in this interface.
-.SS "TK.VERBOSEUI"
-.PP
-Tk.VerboseUI (formerly known as Tk.TkUI) is a graphical interface
-that presents a variable-sized window.  In the window, each
-currently-executing thread has a section where its name and current
-status are displayed.  This interface is best suited to people running
-on slower connections, as you get a lot of detail, but for fast
-connections, the detail may go by too quickly to be useful.  People
-with fast connections may wish to use Tk.Blinkenlights instead.
-.SS "TTY.TTYUI"
-.PP
-TTY.TTYUI interface is for people running in basic, non-color terminals.  It
-prints out basic status messages and is generally friendly to use on a console
-or xterm.
-.SS "NONINTERACTIVE.BASIC"
-.PP
-Noninteractive.Basic is designed for situations in which \fBOfflineIMAP\fR
-will be run non-attended and the status of its execution will be
-logged.  You might use it, for instance, to have the system run
-automatically and
-e-mail you the results of the synchronization.  This user interface
-is not capable of reading a password from the keyboard; account
-passwords must be specified using one of the configuration file options.
-.SS "NONINTERACTIVE.QUIET"
-.PP
-Noninteractive.Quiet is designed for non-attended running in situations
-where normal status messages are not desired.  It will output nothing
-except errors and serious warnings.  Like Noninteractive.Basic,
-this user interface
-is not capable of reading a password from the keyboard; account
-passwords must be specified using one of the configuration file options.
+\fBgophermap.BuckGophermapHandler\fR
+This handler is used to generate directory listings
+based on \fIgophermap\fR files.  It will
+not read the directory on-disk, instead serving content
+from the \fIgophermap\fR file only.
+Gophermaps are useful if you want to present a directory
+in which the files do not frequently change and there is
+general information to present.  Overall, if you only
+wish to present information particular to certain files,
+you should consider using the abstract feature of
+UMN.UMNDirHandler.
+
+The \fIgophermap\fR files contain two
+types of lines, which are described here using the same
+convention normally used for command line arguments.  In
+this section, the symbol \\t will be used to indicate a
+tab character, Control-I.
+
+ \fB\fIfull line of informational
+text\fB\fR
+
+
+ \fB\fIgophertypeDESCRIPTION\fB\fR [ \fB\\t\fIselector\fB [ \\t\fIhost\fB [ \\t\fIport\fB ] ]\fR ]
+
+
+Foo
 .SH "EXAMPLES"
 .PP
 Here are some example configurations for various situations.

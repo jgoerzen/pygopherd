@@ -16,7 +16,7 @@ ALINK="#0000FF"
 ><DIV
 CLASS="REFERENCE"
 ><A
-NAME="AEN1"
+NAME="PYGOPHERD"
 ></A
 ><DIV
 CLASS="TITLEPAGE"
@@ -70,459 +70,556 @@ CLASS="REPLACEABLE"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN23"
+NAME="DESCRIPTION"
 ></A
 ><H2
 >Description</H2
 ><P
-><SPAN
+>	Welcome to <SPAN
 CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> is  a  tool  to  simplify  your  e-mail
-	reading.  With <SPAN
+>PyGopherd</SPAN
+>.  In a nutshell, <SPAN
 CLASS="APPLICATION"
->OfflineIMAP</SPAN
->, you can read the same mailbox
-	from multiple computers.  You get a current copy of your
-	messages on each computer, and changes you make one place will be
-	visible on all other systems.  For instance, you can delete a message
-	on your home computer, and it will appear deleted on your work
-	computer as well.  <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> is also useful if you want to
-	use a mail reader that does not have IMAP support, has poor IMAP
-	support, or does not provide disconnected operation.
-      </P
-><P
-><SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> is <SPAN
-CLASS="emphasis"
-><I
-CLASS="EMPHASIS"
->FAST</I
-></SPAN
->; it synchronizes
-        my two accounts with over 50 folders in 3 seconds.  Other
-        similar tools might take over a minute, and achieve a
-        less-reliable result.  Some mail readers can take over 10
-        minutes to do the same thing, and some don't even support it
-        at all.  Unlike other mail tools, <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> features a
-        multi-threaded synchronization algorithm that can dramatically
-        speed up performance in many situations by synchronizing
-        several different things simultaneously.
-      </P
-><P
-><SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> is <SPAN
-CLASS="emphasis"
-><I
-CLASS="EMPHASIS"
->FLEXIBLE</I
-></SPAN
->; you can
-        customize which folders are synced via regular expressions,
-        lists, or Python expressions; a versatile and comprehensive
-        configuration file is used to control behavior; two user
-        interfaces are built-in; fine-tuning of synchronization
-        performance is possible; internal or external automation is
-        supported; SSL and PREAUTH tunnels are both supported; offline
-        (or "unplugged") reading is supported; and esoteric IMAP
-        features are supported to ensure compatibility with the widest
-        variety of IMAP servers.
-      </P
-><P
-><SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> is <SPAN
-CLASS="emphasis"
-><I
-CLASS="EMPHASIS"
->SAFE</I
-></SPAN
->; it uses an
-        algorithm designed to prevent mail loss at all costs.  Because
-        of the design of this algorithm, even programming errors
-        should not result in loss of mail.  I am so confident in the
-        algorithm that I use my own personal and work accounts for
-        testing of <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> pre-release, development, and beta
-	releases.  Of course, legally speaking, <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> comes
-        with no warranty, so I am not responsible if this turns out
-        to be wrong.
+>PyGopherd</SPAN
+>
+	is a modern dynamic
+	multi-protocol hierarchical information server with a pluggable
+	modularized extension system, 
+	full flexible caching, virtual files and
+	folders, and autodetection of file types -- all with support for
+	standardized yet extensible per-document metadata. Whew! Read on for
+	information on this what all these buzzwords mean.
       </P
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN41"
+NAME="DESCRIPTION.FEATURES"
 ></A
 ><H3
->Method of Operation</H3
+>Features</H3
 ><P
-><SPAN
+>	  Here are some of <SPAN
 CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> traditionally 
-	  operates by maintaining a hierarchy of
-	  mail folders in Maildir format locally.  Your own mail
-	  reader will read mail from this tree, and need never know
-	  that the mail comes from IMAP.  <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> will detect
-	  changes to the mail folders on your IMAP server and your own
-	  computer and bi-directionally synchronize them, copying,
-	  marking, and deleting messages as necessary.
-        </P
-><P
->	  With <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> 4.0, a powerful new ability has been
-	  introduced -- the program can now synchronize two IMAP
-	  servers with each other, with no need to have a Maildir
-	  layer in-between.  Many people use this if they use a mail
-	  reader on their local machine that does not support
-	  Maildirs.  People may install an IMAP server on their local
-	  machine, and point both <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> and their mail reader
-	  of choice at it.  This is often preferable to the mail
-	  reader's own IMAP support since <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> supports many
-	  features (offline reading, for one) that most IMAP-aware
-	  readers don't.  However, this feature is not as time-tested
-	  as traditional syncing, so my advice is to stick with normal
-	  methods of operation for the time being.
-	</P
-></DIV
-></DIV
-><DIV
-CLASS="REFSECT1"
-><A
-NAME="AEN50"
-></A
-><H2
->Quick Start</H2
-><P
->If you have already installed <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> system-wide,
-        or your system adminstrator has done that for you, your task
-        for setting up <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> for the first time is quite
-        simple.  You just need to set up your configuration file, make
-        your folder directory, and run it!
-      </P
-><P
->You can quickly set up your configuration file.  The distribution
-	  includes a file <TT
-CLASS="FILENAME"
->offlineimap.conf.minimal</TT
->
-	  (Debian users
-	  may find this at
-          <TT
-CLASS="FILENAME"
->/usr/share/doc/offlineimap/examples/offlineimap.conf.minimal</TT
->) that is a basic example of setting of <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
->.  You can
-	  simply copy this file into your home directory and name it
-	  <TT
-CLASS="FILENAME"
->.offlineimaprc</TT
-> (note the leading period).  A
-	  command such as <B
-CLASS="COMMAND"
->cp offlineimap.conf.minimal ~/.offlineimaprc</B
-> will do it.  Or, if you prefer, you can just copy this text to
-	  <TT
-CLASS="FILENAME"
->~/.offlineimaprc</TT
->:
-	</P
-><PRE
-CLASS="PROGRAMLISTING"
->[general]
-accounts = Test
-
-[Account Test]
-localrepository = Local
-remoterepository = Remote
-
-[Repository Local]
-type = Maildir
-localfolders = ~/Test
-
-[Repository Remote]
-type = IMAP
-remotehost = examplehost
-remoteuser = jgoerzen</PRE
-><P
->Now, edit the <TT
-CLASS="FILENAME"
->~/.offlineimaprc</TT
-> file with
-	  your favorite editor.  All you have to do is specify a directory
-	  for your folders to be in (on the <SPAN
-CLASS="PROPERTY"
->localfolders</SPAN
->
-	  line), the host name of your IMAP server (on the
-	  <SPAN
-CLASS="PROPERTY"
->remotehost</SPAN
-> line), and your login name on
-	  the remote (on the <SPAN
-CLASS="PROPERTY"
->remoteuser</SPAN
-> line).  That's
-	  it!</P
-><P
->To run <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
->, you just have to say
-	  <B
-CLASS="COMMAND"
->offlineimap</B
-> -- it will fire up, ask you for
-	  a login password if necessary, synchronize your folders, and exit.
-	  See?  You can just throw away the rest of this finely-crafted,
-	  perfectly-honed manual!  Of course, if you want to see how you can
-	  make <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> FIVE TIMES FASTER FOR JUST $19.95 (err, well,
-	  $0), you have to read on!
-	</P
-></DIV
-><DIV
-CLASS="REFSECT1"
-><A
-NAME="AEN72"
-></A
-><H2
->Installation</H2
-><P
->If you are reading this document via the "man" command, it is
-	likely
-	that you have no installation tasks to perform; your system
-	administrator has already installed it.  If you need to install it
-	yourself, you have three options: a system-wide installation with
-	Debian, system-wide installation with other systems, and a single-user
-	installation.  You can download the latest version of <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> from
-	<A
-HREF="http://quux.org/devel/offlineimap/"
-TARGET="_top"
->the <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
->
-	website</A
->.
-      </P
-><DIV
-CLASS="REFSECT2"
-><A
-NAME="AEN78"
-></A
-><H3
->Prerequisites</H3
-><P
->In order to use <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
->, you need to have these conditions
-	  satisfied:
+>PyGopherd</SPAN
+>'s features:
 	</P
 ><P
 ></P
 ><UL
 ><LI
 ><P
->Your mail server must support IMAP.  Most Internet Service
-	      Providers
-	      and corporate networks do, and most operating systems
-	      have an IMAP
-	      implementation readily available.
+>Provides built-in support for multiple protocols:
+	      HTTP (Web), Gopher+, Gopher (RFC1436), Enhanced Gopher0,
+	      and WAP (mobile phones).  Protocols can be enabled or
+	      disabled as desired.
 	    </P
 ></LI
 ><LI
 ><P
->	      You must have Python version 2.2.1 or above installed.
-	      If you are
-	      running on Debian GNU/Linux, this requirement will automatically be
-	      taken care of for you.  If you do not have Python already, check with
-	      your system administrator or operating system vendor; or, download it from
-	      <A
-HREF="http://www.python.org/"
-TARGET="_top"
->the Python website</A
->.
-	      If you intend to use the Tk interface, you must have Tkinter
-		(python-tk) installed.  If you intend to use the SSL interface, your
-		Python must have been built with SSL support.
+>Provides protocol autodetection.  That is,
+	      <SPAN
+CLASS="APPLICATION"
+>PyGopherd</SPAN
+> can listen for all the above protocols
+	      <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>on a single port</I
+></SPAN
+> and will
+	      automatically respond using the protocol it detects the
+	      client is using.  Practical effects of this are that you
+	      can, for instance, give out a single URL and have it
+	      viewable normally on desktop Web browsers and in WAP
+	      mode on mobile phones -- and appropriately in various
+	      Gopher browsers.
 	    </P
 ></LI
 ><LI
 ><P
->	      Have a mail reader that supports the Maildir mailbox
-	      format.  Most modern mail readers have this support
-	      built-in, so you can choose from a wide variety of mail
-	      servers.  This format is also known as the "qmail"
-	      format, so any mail reader compatible with it will work
-	      with <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
->.  If you do not have a mail reader
-	      that supports Maildir, you can often install a local
-	      IMAP server and point both <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> and your mail
-	      reader at it.
+>Metadata and site links can be entered in a
+	      variety of formats, including full UMN dotfile metadata
+	      formats as well as Bucktooth gophermap files.  Moreover,
+	      gophermap files are not limited to Gopher protocols, and
+	      can be used for all protocols.
 	    </P
+></LI
+><LI
+><P
+>Support for inter-protocol linking (linking
+	  from Gopher sites to web sites)</P
+></LI
+><LI
+><P
+>Virtual folder system lets you serve up
+	  anything as if it were regular files and directories.
+	  PyGopherd comes with the following virtual folder systems
+	      built in:</P
+><P
+></P
+><UL
+><LI
+><P
+>Can present any Unix MBOX, MMDF box, MH
+		  directory, Maildir directory, or Babyl mailbox as a
+		  virtual folder, the contents of which are the
+		  messages in the mailbox.
+		</P
+></LI
+><LI
+><P
+>Can use a configurable separator to
+		  split a file into multiple parts, the first line of each
+		  becoming the name for the virtual folder.</P
+></LI
+><LI
+><P
+>Can peek inside a ZIP file and serve it
+	      up as first-class site citizens -- metadata can even be
+	      stored in the ZIP files.
+		</P
+></LI
+><LI
+><P
+>Can serve up the contents of a dictd
+	      server as a filesystem.
+		</P
+></LI
+></UL
+></LI
+><LI
+><P
+>	      Modular, extensible design: you can use PyGopherd's own
+	      PYG extension format, or UMN- or Bucktooth-style
+	      executables.
+	    </P
+></LI
+><LI
+><P
+>	      Runs on any platform supported by Python 2.2 or 2.3.
+	      This includes virtually every past and current flavor of
+	      Unix (Linux, *BSD, Solaris, SunOS), Windows, MacOS 9.x
+	      and X, and more.  Some features may not be available on
+	      non-Unix platforms.
+	    </P
+></LI
+><LI
+><P
+>Runs on any platform supported by Java 1.1
+	  via the Jython Python implementation.</P
+></LI
+><LI
+><P
+>Tunable server types via configuration
+	  directive -- forking or threading.</P
+></LI
+><LI
+><P
+>Secure design with support for chrooted execution.</P
+></LI
+><LI
+><P
+>Feature-complete, full implementations of:
+	  Gopher0 (RFC1435), Gopher+, HTTP, and WAP.</P
+></LI
+><LI
+><P
+>Support for automatically finding the titles
+	  of HTML documents for presentation in a directory.</P
+></LI
+><LI
+><P
+>Versatile configuration file format is both
+	  extensible and nicely complementary of the module system.</P
+></LI
+><LI
+><P
+>Protocol-independant, handler-dependant
+	  caching.  This increases performance by letting handlers
+	  cache dynamically-generated information -- currently used by
+	  the directory handlers.  This can improve performance of
+	  directories by several orders of magnitude.  Because this is
+	  a handler cache only, all protococls share the single
+	  cache.  Since the processing time for the protocols is
+	  negligable, this works out very well.</P
+></LI
+><LI
+><P
+>Autosensing of MIME types and gopher0 item
+	  types.  Both are completely configurable.  MIME type
+	  detection is done using a standard mime.types file, and
+	  gopher0 types are calculated by using a configurable
+	  regexp-based MIME-to-gophertype map.</P
+></LI
+><LI
+><P
+>Heavy support of regular expressions in configuration.</P
+></LI
+><LI
+><P
+>ProtocolMultiplexer and HandlerMultiplexer
+	  let you choose only those protocols and handlers that you
+	  wish your server to support and the order in which they are
+	  tried when a request comes in.
+	    </P
+></LI
+><LI
+><P
+>Full logging via syslog.</P
 ></LI
 ></UL
 ></DIV
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN92"
+NAME="DESCRIPTION.ABOUTGOPHER"
 ></A
 ><H3
->System-Wide Installation, Debian</H3
+>About Gopher</H3
+><P
+>	  <SPAN
+CLASS="APPLICATION"
+>PyGopherd</SPAN
+> started life as a server for the Gopher Internet
+	  protocol. With Gopher, you can mount a filesystem (viewing files and
+	  folders as if they were local),
+	  browse Gopherspace with a web browser,
+	  download files, and be interactive with searching.
+	</P
+><P
+>	  But this is only part of the story. The world of Gopher is more
+	  expansive than this. There are two major gopher protocols: Gopher0
+	  (also known as RFC1436) and Gopher+. Gopher0 is a small, simple,
+	  lightweight protocol that is very functional yet also extremely easy
+	  to implement. Gopher0 clients can be easily places in small embedded
+	  devices or in massive environments like a modern web browser.
+	</P
+><P
+>	  Gopher+ is based on Gopher0 but extends it by providing document
+	  metadata such as file size and MIME type. Gopher+ allows all sorts of
+	  neat features, such as configurable metadata (serving up a bunch of
+	  photos? Add a Subject field to your metadata to let
+	  a customized photo
+	  browser display who is pictured) and multiple
+	  views of a file (let the
+	  user select to view your photos as PNG or JPEG).
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="QUICKSTART"
+></A
+><H2
+>Quick Start</H2
+><P
+>	If you have already installed <SPAN
+CLASS="APPLICATION"
+>PyGopherd</SPAN
+> system-wide, or your
+	administrator has done that for you, your task for setting up
+	<SPAN
+CLASS="APPLICATION"
+>PyGopherd</SPAN
+> for the first time is quite simple.  You just need
+	to set up your configuration file, make your folder directory,
+	and run it!
+      </P
+><P
+>	You can quickly set up your configuration file.  The
+	distribution includes two files of interest:
+	<TT
+CLASS="FILENAME"
+>conf/pygopherd.conf</TT
+> and
+	<TT
+CLASS="FILENAME"
+>conf/mime.types</TT
+>.  Debian users will find
+	the configuration file pre-installed in
+	<TT
+CLASS="FILENAME"
+>/etc/pygopherd/pygopherd.conf</TT
+> and the
+	<TT
+CLASS="FILENAME"
+>mime.types</TT
+> file provided by the system
+	already.
+      </P
+><P
+>	Open up <TT
+CLASS="FILENAME"
+>pygopherd.conf</TT
+> in your editor and
+	adjust to suit.  The file is heavily commented and you can
+	refer to it for detailed information.  Some settings to take a
+	look at include: <SPAN
+CLASS="PROPERTY"
+>detach</SPAN
+>,
+	<SPAN
+CLASS="PROPERTY"
+>pidfile</SPAN
+>, <SPAN
+CLASS="PROPERTY"
+>port</SPAN
+>, 
+	<SPAN
+CLASS="PROPERTY"
+>usechroot</SPAN
+>, <SPAN
+CLASS="PROPERTY"
+>setuid</SPAN
+>,
+	<SPAN
+CLASS="PROPERTY"
+>setgid</SPAN
+>, and <SPAN
+CLASS="PROPERTY"
+>root</SPAN
+>.
+	These may or may not work at their defaults for you.  The
+	remaining ones should be fine for a basic setup.
+      </P
+><P
+>	Invoke <SPAN
+CLASS="APPLICATION"
+>PyGopherd</SPAN
+> with <B
+CLASS="COMMAND"
+>pygopherd
+	  path/to/configfile</B
+> (or
+	<B
+CLASS="COMMAND"
+>/etc/init.d/pygopherd start</B
+> on Debian).
+	Place some files in the location specified by the
+	<SPAN
+CLASS="PROPERTY"
+>root</SPAN
+> directive in the config file and
+	you're ready to run!
+      </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="INSTALLATION"
+></A
+><H2
+>Installation</H2
+><P
+>	If  you  are  reading this document via the "man" command, it is likely
+	that you have no installation tasks to perform; your system administra-
+	tor  has already installed <SPAN
+CLASS="APPLICATION"
+>PyGopherd</SPAN
+>.  If you need to install it yourself, you
+	have three options: a system-wide installation with Debian, system-wide
+	installation  with  other systems, and a single-user installation.  You
+	can    download    the    latest    version    of    PyGopherd
+	from
+	<A
+HREF="http://quux.org/devel/gopher/pygopherd/"
+TARGET="_top"
+>http://quux.org/devel/gopher/pygopherd/</A
+>
+      </P
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="INSTALLATION.DEBIAN"
+></A
+><H3
+>Debian System-Wide Installation</H3
 ><P
 >	  If you are tracking Debian unstable, you may install
 	  <SPAN
 CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> by simply running the following command as root:
+>PyGopherd</SPAN
+> by simply running this command as root:
 	</P
 ><P
 >	  <B
 CLASS="COMMAND"
->apt-get install offlineimap</B
+>apt-get install pygopherd</B
 >
 	</P
 ><P
->	  If you are not tracking Debian unstable, download the Debian .deb
-	  package from the <A
-HREF="http://quux.org/devel/offlineimap/"
-TARGET="_top"
-><SPAN
+>	  If you are not tracking Debian unstable, download the .deb
+	  package from the <SPAN
 CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> website</A
->
-	  and then run <B
+>PyGopherd</SPAN
+> website and then run
+	  <B
 CLASS="COMMAND"
 >dpkg -i</B
 > to install the downloaded
-	  package.  Then, skip to <A
-HREF="#CONFIGURATION"
-><I
->Configuration</I
-></A
-> below.  You will type <B
+	  package.  Then, skip to the configuration section below.
+	  You will use <B
 CLASS="COMMAND"
->offlineimap</B
-> to
-	  invoke the program.
+>/etc/init.d/pygopherd start</B
+>
+	  to start the program.
 	</P
 ></DIV
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN104"
+NAME="INSTALLATION.OTHER"
 ></A
 ><H3
->System-Wide Installation, Other</H3
+>Other System-Wide Installation</H3
 ><P
->	  Download the tar.gz version of the package from the
-	  <A
-HREF="http://quux.org/devel/offlineimap/"
+>	  Download the tar.gz version of the package from the website.  Make
+	  sure you have Python 2.2 or above installed; if now, download and
+	  install it from <A
+HREF="http://www.python.org/"
 TARGET="_top"
->website</A
->.
-	  Then run
-	  these commands, making sure that you are the "root" user first:
+>http://www.python.org/</A
+>.  Then run these
+	  commands:
 	</P
 ><PRE
 CLASS="PROGRAMLISTING"
->tar -zxvf offlineimap_x.y.z.tar.gz
-cd offlineimap-x.y.z
-python2.2 setup.py install</PRE
-><P
->On some systems, you will need to use
+>	  <B
+CLASS="COMMAND"
+>tar -zxvf pygopherd-x.y.z.tar.gz</B
+>
 	  <B
 CLASS="COMMAND"
+>cd pygopherd-x.y.z</B
+>
+	  <B
+CLASS="COMMAND"
+>python2.2 setup.py</B
+>
+	</PRE
+><P
+>	  Some systems will use <B
+CLASS="COMMAND"
 >python</B
-> instead of <B
+> or
+	  <B
+CLASS="COMMAND"
+>python2.3</B
+> in place of
+	  <B
 CLASS="COMMAND"
 >python2.2</B
 >.
-	  Next, proceed to <A
-HREF="#CONFIGURATION"
-><I
->Configuration</I
-></A
-> below.  You will type <B
-CLASS="COMMAND"
->offlineimap</B
-> to
-	  invoke the program.
+	</P
+><P
+>	  Next, proceed to configuration.  Make sure that the
+	  <TT
+CLASS="FILENAME"
+>/etc/pygopherd/pygopherd.conf</TT
+> file
+	  names valid users (<SPAN
+CLASS="PROPERTY"
+>setuid</SPAN
+> and
+	  <SPAN
+CLASS="PROPERTY"
+>setgid</SPAN
+> options) and a valid document
+	  root (<SPAN
+CLASS="PROPERTY"
+>root</SPAN
+> option).
+	</P
+><P
+>	  You will type <TT
+CLASS="FILENAME"
+>pygopherd</TT
+> to invoke the
+	  program.
 	</P
 ></DIV
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN114"
+NAME="INSTALLATION.SINGLE"
 ></A
 ><H3
 >Single-Account Installation</H3
 ><P
->	  Download the tar.gz version of the package from the
-	  <A
-HREF="http://quux.org/devel/offlineimap/"
+>	  Download the tar.gz version of the package from the website.  Make
+	  sure you have Python 2.2 or above installed; if now, download and
+	  install it from <A
+HREF="http://www.python.org/"
 TARGET="_top"
->website</A
->.
-	  Then run these commands:
+>http://www.python.org/</A
+>.  Then run these
+	  commands:
 	</P
 ><PRE
 CLASS="PROGRAMLISTING"
->tar -zxvf offlineimap_x.y.z.tar.gz
-cd offlineimap-x.y.z</PRE
+>	  <B
+CLASS="COMMAND"
+>tar -zxvf pygopherd-z.y.z.tar.gz</B
+>
+	  <B
+CLASS="COMMAND"
+>cd pygopherd-x.y.z</B
+>
+	</PRE
 ><P
->When you want to run <SPAN
+>	  Modify <TT
+CLASS="FILENAME"
+>conf/pygopherd.conf</TT
+> as follows:
+	</P
+><P
+></P
+><UL
+><LI
+><P
+>Set <SPAN
+CLASS="PROPERTY"
+>usechroot = no</SPAN
+></P
+></LI
+><LI
+><P
+>Comment out (add a # sign to the start of
+	      the line) the <SPAN
+CLASS="PROPERTY"
+>pidfile</SPAN
+>,
+	      <SPAN
+CLASS="PROPERTY"
+>setuid</SPAN
+>, and
+	      <SPAN
+CLASS="PROPERTY"
+>setgid</SPAN
+> lines.</P
+></LI
+><LI
+><P
+>Set <SPAN
+CLASS="PROPERTY"
+>root</SPAN
+> to osomething appropriate.</P
+></LI
+><LI
+><P
+>Set <SPAN
+CLASS="PROPERTY"
+>port</SPAN
+> to a number
+	      greater than 1024.</P
+></LI
+></UL
+><P
+>	  When you want to run <SPAN
 CLASS="APPLICATION"
->OfflineIMAP</SPAN
+>PyGopherd</SPAN
 >, you will issue the
 	  <B
 CLASS="COMMAND"
@@ -530,9 +627,9 @@ CLASS="COMMAND"
 > command as above and then type
 	  <B
 CLASS="COMMAND"
->./offlineimap.py</B
->; there is no installation
-	  step necessary.
+>PYTHONPATH=. bin/pygopherd</B
+>.  There is no
+	  installation step necessary.
 	</P
 ></DIV
 ></DIV
@@ -546,58 +643,39 @@ NAME="CONFIGURATION"
 ><P
 >	<SPAN
 CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> is regulated by a configuration file that is normally 
+>PyGopherd</SPAN
+> is regulated by a configuratoin file normally
 	stored in <TT
 CLASS="FILENAME"
->~/.offlineimaprc</TT
->.  <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
->
-	ships with a file named <TT
-CLASS="FILENAME"
->offlineimap.conf</TT
->
-	that you should copy to that location and then edit.  This file is
-	vital to proper operation of the system; it sets everything you need
-	to run <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
->.  Full documentation for the configuration file
-	is included within the sample file.
-      </P
-><P
->	<SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> also ships a file named
-	<TT
-CLASS="FILENAME"
->offlineimap.conf.minimal</TT
-> that you can also try.
-	  It's useful if you want to get started with
-	  the most basic feature set, and you can read about other features
-	  later with <TT
-CLASS="FILENAME"
->offlineimap.conf</TT
+>/etc/pygopherd/pygopherd.conf</TT
 >.
+	You can specify an alternate configuration file on the command
+	line.  The <SPAN
+CLASS="APPLICATION"
+>PyGopherd</SPAN
+> distribution ships
+	with a sample <TT
+CLASS="FILENAME"
+>pygopherd.conf</TT
+> file that
+	thoroughly documents the configuration file options and
+	settings.
       </P
 ></DIV
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN135"
+NAME="OPTIONS"
 ></A
 ><H2
 >Options</H2
 ><P
->	Most configuration is done via the configuration file.  Nevertheless,
-	there are a few command-line options that you may set for
-	<SPAN
+>	All <SPAN
 CLASS="APPLICATION"
->OfflineIMAP</SPAN
->.
+>PyGopherd</SPAN
+> configuratoin is done via the configuration
+	file.  Therefore, the program has only one command-line
+	option:
       </P
 ><P
 ></P
@@ -605,190 +683,17 @@ CLASS="APPLICATION"
 CLASS="VARIABLELIST"
 ><DL
 ><DT
->-1</DT
-><DD
-><P
->Disable most multithreading operations and use
-	    solely a single-connection
-	    sync.  This effectively sets the
-	      <SPAN
-CLASS="PROPERTY"
->maxsyncaccounts</SPAN
->
-	    and all <SPAN
-CLASS="PROPERTY"
->maxconnections</SPAN
-> configuration file
-	    variables to 1.
-	  </P
-></DD
-><DT
->-P <VAR
-CLASS="REPLACEABLE"
->profiledir</VAR
-></DT
-><DD
-><P
->Sets <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> into profile mode.  The program
-	    will create <VAR
-CLASS="REPLACEABLE"
->profiledir</VAR
->
-	    (it must not already exist).  As it runs, Python profiling 
-	    information
-	    about each thread is logged into profiledir.  Please note: This option
-	    is present for debugging and optimization only, and should NOT be used
-	    unless you have a specific reason to do so.  It will significantly
-	    slow program performance, may reduce reliability, and can generate
-	    huge amounts of data.  You must use the <VAR
-CLASS="OPTION"
->-1</VAR
-> option when
-	    you use <VAR
-CLASS="OPTION"
->-P</VAR
->.
-	  </P
-></DD
-><DT
->-a <VAR
-CLASS="REPLACEABLE"
->accountlist</VAR
-></DT
-><DD
-><P
->Overrides the <SPAN
-CLASS="PROPERTY"
->accounts</SPAN
-> option
-	    in the <SPAN
-CLASS="PROPERTY"
->general</SPAN
-> section of the configuration
-	    file.  You might use this to exclude certain accounts, or to sync
-	    some accounts that you normally prefer not to.  Separate the
-	    accounts by commas, and use no embedded spaces.
-	  </P
-></DD
-><DT
->-c <VAR
+><VAR
 CLASS="REPLACEABLE"
 >configfile</VAR
 ></DT
 ><DD
 ><P
->Specifies a configuration file to use in lieu of
-	    the default, <TT
-CLASS="FILENAME"
->~/.offlineimaprc</TT
->.
-	  </P
-></DD
-><DT
->-d <VAR
-CLASS="REPLACEABLE"
->debugtype[,...]</VAR
-></DT
-><DD
-><P
->Enables debugging for OfflineIMAP.  This is useful if
-	    you are trying to track down a malfunction or figure out what is going
-	    on under the hood.  I suggest that you use this with
-	    <VAR
-CLASS="OPTION"
->-1</VAR
-> to make the results more sensible.</P
-><P
-><VAR
-CLASS="OPTION"
->-d</VAR
-> requires one or more debugtypes,
-	      separated by commas.  These define what exactly will be
-	      debugged, and include four options:
-	      <SPAN
-CLASS="PROPERTY"
->imap</SPAN
->,
-	      <SPAN
-CLASS="PROPERTY"
->traffic</SPAN
->,
-	      <SPAN
-CLASS="PROPERTY"
->maildir</SPAN
->, and <SPAN
-CLASS="PROPERTY"
->thread</SPAN
->.
-	      The <SPAN
-CLASS="PROPERTY"
->imap</SPAN
->
-	      option will enable IMAP activity debugging.  The
-	      <SPAN
-CLASS="PROPERTY"
->traffic</SPAN
-> option will enable dumping
-	      of most traffic going back and forth between IMAP
-	      servers.  Note
-	      that the output may contain passwords, so take care to remove that
-	      from the debugging output before sending it to anyone else.  The
-	      <SPAN
-CLASS="PROPERTY"
->maildir</SPAN
-> option will enable debugging for
-	      certain Maildir operations.  And <SPAN
-CLASS="PROPERTY"
->thread</SPAN
->
-	      will debug the threading model.
-	    </P
-></DD
-><DT
->-l
-	  <VAR
-CLASS="REPLACEABLE"
->filename</VAR
-></DT
-><DD
-><P
->	      Enables logging to filename.  This will log everything
-	      that goes to the screen to the specified file.
-	      Additionally, if any debugging is specified with -d,
-	      then debug messages will not go to the screen, but
-	      instead to the logfile only.</P
-></DD
-><DT
->-o</DT
-><DD
-><P
->Run only once, ignoring all
-	      <SPAN
-CLASS="PROPERTY"
->autorefresh</SPAN
-> settings in the configuration
-	      file.</P
-></DD
-><DT
->-h, --help</DT
-><DD
-><P
->Show summary of options.</P
-></DD
-><DT
->-u <VAR
-CLASS="REPLACEABLE"
->interface</VAR
-></DT
-><DD
-><P
->Specifies an alternative user interface module
-	      to use.  This overrides the defailt specified in the
-	      configuration file.  The pre-defined options are listed in
-	      the User Interfaces section.</P
+>This option argument specifies the location
+	      of the configuration file that <SPAN
+CLASS="APPLICATION"
+>PyGopherd</SPAN
+> is to use.</P
 ></DD
 ></DL
 ></DIV
@@ -796,311 +701,138 @@ CLASS="REPLACEABLE"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN204"
+NAME="HANDLERS"
 ></A
 ><H2
->User Interfaces</H2
+>Handlers</H2
 ><P
-><SPAN
+>	<SPAN
 CLASS="APPLICATION"
->OfflineIMAP</SPAN
-> has a pluggable user interface system that lets you choose how the
-	program communicates information to you.  There are two graphical
-	interfaces, two terminal interfaces, and two noninteractive interfaces
-	suitable for scripting or logging purposes.  The
-	<SPAN
+>PyGopherd</SPAN
+> defines several handlers which are responsible for
+	finding data on your server and presenting it to the user.  The
+	handlers are used to generate things like links to other documents and
+	directory listings.  They are also responsible for serving up regular
+	files and even virtual folders.
+      </P
+><P
+>	Handlers are specified with the <SPAN
 CLASS="PROPERTY"
->ui</SPAN
-> option in the configuration file specifies
-	user interface preferences.  The <VAR
-CLASS="OPTION"
->-u</VAR
-> command-line
-	option can override the configuration file setting.  The available
-	values for the configuration file or command-line are described
-	in this section.</P
-><DIV
-CLASS="REFSECT2"
-><A
-NAME="AEN210"
-></A
-><H3
->Tk.Blinkenlights</H3
-><P
->Tk.Blinkenlights is an interface designed to be sleek, fun to watch, and
-	  informative of the overall picture of what <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
+>handlers</SPAN
 >
-	  is doing.  I consider it to be the best general-purpose interface in
-	  <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
->.
-	</P
-><P
->	  Tk.Blinkenlights contains, by default, a small window with a row of
-	  LEDs, a small log, and a row of command buttons.
-	  The total size of the window is
-	  very small, so it uses little desktop space, yet it is quite
-	  functional.  The optional, toggleable, log shows more
-	  detail about what is happening and is color-coded to match the color
-	  of the lights.
-	</P
-><P
->	  Tk.Blinkenlights is the only user interface that has configurable
-	  parameters; see the example <TT
+	option in <TT
 CLASS="FILENAME"
->offlineimap.conf</TT
->
-	  for more details.
-	</P
-><P
->	  Each light in the Blinkenlights interface represents a thread
-	  of execution -- that is, a particular task that <SPAN
+>pygopherd.conf</TT
+>.  This option is
+	a list of handlers to use.  For each request that arrives,
+	<SPAN
 CLASS="APPLICATION"
->OfflineIMAP</SPAN
->
-	  is performing right now.  The colors indicate what task
-	  the particular thread is performing, and are as follows:
-	</P
+>PyGopherd</SPAN
+> will ask each handler in
+	turn whether or not it can handle the request, and will handle the
+	request according to the first handler that is capable of doing so.
+	If no handlers can handle the request, a file not found error is
+	generated.  See the example configuration file for an example.
+      </P
+><P
+>	The remaining parts of this section describe the different
+	handlers that ship with <SPAN
+CLASS="APPLICATION"
+>PyGopherd</SPAN
+>.
+      </P
 ><P
 ></P
 ><DIV
 CLASS="VARIABLELIST"
 ><DL
 ><DT
->Black</DT
+>dir.DirHandler</DT
 ><DD
 ><P
->indicates that this light's thread has terminated; it will light up
-	      again later when new threads start up.  So, black indicates no
-	      activity.
+>	      This handler is a basic one that generates menus based
+	      on the contents of a directory.  It is used for
+	      directories that contain neither a
+	      <TT
+CLASS="FILENAME"
+>gophermap</TT
+> file nor UMN-style links
+	      files, or situations where you have no need for either
+	      of those.</P
+><P
+>	      This handler simply
+	      reads the contents of your on-disk directory, determines the
+	      appropriate types of each file, and sends the result to the client.
+	      The descriptions of each item are usually set to the filename, but the
+	      <SPAN
+CLASS="PROPERTY"
+>html.HTMLFileTitleHandler</SPAN
+> may
+	      override that.
 	    </P
 ></DD
 ><DT
->Red (Meaning 1)</DT
+>gophermap.BuckGophermapHandler</DT
 ><DD
 ><P
->is the color of the main program's thread, which basically does
-	      nothing but monitor the others.  It might remind you of HAL 9000 in
-	      [<SPAN
-CLASS="CITATION"
->2001</SPAN
->].
+>	      This handler is used to generate directory listings
+	      based on <TT
+CLASS="FILENAME"
+>gophermap</TT
+> files.  It will
+	      not read the directory on-disk, instead serving content
+	      from the <TT
+CLASS="FILENAME"
+>gophermap</TT
+> file only.
+	      Gophermaps are useful if you want to present a directory
+	      in which the files do not frequently change and there is
+	      general information to present.  Overall, if you only
+	      wish to present information particular to certain files,
+	      you should consider using the abstract feature of
+	      UMN.UMNDirHandler.
 	    </P
-></DD
-><DT
->Gray</DT
-><DD
 ><P
->indicates that the thread is establishing a new connection to the IMAP
-	      server.
+>	      The <TT
+CLASS="FILENAME"
+>gophermap</TT
+> files contain two
+	      types of lines, which are described here using the same
+	      convention normally used for command line arguments.  In
+	      this section, the symbol \t will be used to indicate a
+	      tab character, Control-I.
 	    </P
-></DD
-><DT
->Purple</DT
-><DD
 ><P
->is the color of an account synchronization thread that is monitoring
-	      the progress of the folders in that account (not generating any I/O).
-	    </P
-></DD
-><DT
->Cyan</DT
-><DD
+> <VAR
+CLASS="REPLACEABLE"
+>full line of informational
+		text</VAR
+> </P
 ><P
->indicates that the thread is syncing a folder.
-	    </P
-></DD
-><DT
->Green</DT
-><DD
+> <VAR
+CLASS="REPLACEABLE"
+>gophertypeDESCRIPTION</VAR
+>  [\t<VAR
+CLASS="REPLACEABLE"
+>selector</VAR
+> [\t<VAR
+CLASS="REPLACEABLE"
+>host</VAR
+> [\t<VAR
+CLASS="REPLACEABLE"
+>port</VAR
+>]]]</P
 ><P
->means that a folder's message list is being loaded.
-	    </P
-></DD
-><DT
->Blue</DT
-><DD
-><P
->is the color of a message synchronization controller thread.
-	    </P
-></DD
-><DT
->Orange</DT
-><DD
-><P
->indicates that an actual message is being copied.
-	      (We use fuschia for fake messages.)
-	    </P
-></DD
-><DT
->Red (meaning 2)</DT
-><DD
-><P
->indicates that a message is being deleted.
-	    </P
-></DD
-><DT
->Yellow / bright orange</DT
-><DD
-><P
->indicates that message flags are being added.
-	    </P
-></DD
-><DT
->Pink / bright red</DT
-><DD
-><P
->indicates that message flags are being removed.
-	    </P
-></DD
-><DT
->Red / Black Flashing</DT
-><DD
-><P
->corresponds to the countdown timer that runs between
-	      synchronizations.
+>	      Foo
 	    </P
 ></DD
 ></DL
-></DIV
-><P
->The name of this interfaces derives from a bit of computer
-	  history.  Eric Raymond's [<SPAN
-CLASS="CITATION"
->Jargon File</SPAN
->] defines
-	  <I
-CLASS="FIRSTTERM"
->blinkenlights</I
->, in part, as:
-	</P
-><A
-NAME="AEN273"
-></A
-><BLOCKQUOTE
-CLASS="BLOCKQUOTE"
-><P
->Front-panel diagnostic
-	    lights on a computer, esp. a dinosaur. Now that dinosaurs are rare,
-	    this term usually refers to status lights on a modem, network hub, or
-	    the like.
-	  </P
-><P
->	    This term derives from the last word of the famous blackletter-Gothic
-	    sign in mangled pseudo-German that once graced about half the computer
-	    rooms in the English-speaking world. One version ran in its entirety as
-	    follows:
-	  </P
-><P
->	    <SPAN
-CLASS="emphasis"
-><I
-CLASS="EMPHASIS"
->ACHTUNG!  ALLES LOOKENSPEEPERS!</I
-></SPAN
->
-	  </P
-><P
->	    Das computermachine ist nicht fuer gefingerpoken und mittengrabben.
-	    Ist easy schnappen der springenwerk, blowenfusen und poppencorken
-	    mit spitzensparken.  Ist nicht fuer gewerken bei das dumpkopfen.
-	    Das rubbernecken sichtseeren keepen das cotten-pickenen hans in das
-	    pockets muss; relaxen und watchen das blinkenlichten.
-	  </P
-></BLOCKQUOTE
-></DIV
-><DIV
-CLASS="REFSECT2"
-><A
-NAME="AEN279"
-></A
-><H3
->Curses.Blinkenlights</H3
-><P
->	  Curses.Blinkenlights is an interface very similar to Tk.Blinkenlights,
-	  but is designed to be run in a console window (an xterm, Linux virtual
-	  terminal, etc.)  Since it doesn't have access to graphics, it isn't
-	  quite as pretty, but it still gets the job done.
-	</P
-><P
->Please see the Tk.Blinkenlights section above for more
-	  information about the colors used in this interface.
-	</P
-></DIV
-><DIV
-CLASS="REFSECT2"
-><A
-NAME="AEN283"
-></A
-><H3
->Tk.VerboseUI</H3
-><P
->	  Tk.VerboseUI (formerly known as Tk.TkUI) is a graphical interface
-	  that presents a variable-sized window.  In the window, each
-	  currently-executing thread has a section where its name and current
-	  status are displayed.  This interface is best suited to people running
-	  on slower connections, as you get a lot of detail, but for fast
-	  connections, the detail may go by too quickly to be useful.  People
-	  with fast connections may wish to use Tk.Blinkenlights instead.
-	</P
-></DIV
-><DIV
-CLASS="REFSECT2"
-><A
-NAME="AEN286"
-></A
-><H3
->TTY.TTYUI</H3
-><P
->	  TTY.TTYUI interface is for people running in basic, non-color terminals.  It
-	  prints out basic status messages and is generally friendly to use on a console
-	  or xterm.
-	</P
-></DIV
-><DIV
-CLASS="REFSECT2"
-><A
-NAME="AEN289"
-></A
-><H3
->Noninteractive.Basic</H3
-><P
->	  Noninteractive.Basic is designed for situations in which <SPAN
-CLASS="APPLICATION"
->OfflineIMAP</SPAN
->
-	  will be run non-attended and the status of its execution will be
-	  logged.  You might use it, for instance, to have the system run
-	  automatically and
-	  e-mail you the results of the synchronization.  This user interface
-	  is not capable of reading a password from the keyboard; account
-	  passwords must be specified using one of the configuration file options.
-	</P
-></DIV
-><DIV
-CLASS="REFSECT2"
-><A
-NAME="AEN293"
-></A
-><H3
->Noninteractive.Quiet</H3
-><P
->	  Noninteractive.Quiet is designed for non-attended running in situations
-	  where normal status messages are not desired.  It will output nothing
-	  except errors and serious warnings.  Like Noninteractive.Basic,
-	  this user interface
-	  is not capable of reading a password from the keyboard; account
-	  passwords must be specified using one of the configuration file options.
-	</P
 ></DIV
 ></DIV
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN296"
+NAME="AEN229"
 ></A
 ><H2
 >Examples</H2
@@ -1112,7 +844,7 @@ NAME="AEN296"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN299"
+NAME="AEN232"
 ></A
 ><H3
 >Multiple Accounts with Mutt</H3
@@ -1185,7 +917,7 @@ spoolfile=+Personal/INBOX</PRE
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN318"
+NAME="AEN251"
 ></A
 ><H3
 >UW-IMAPD and References</H3
@@ -1244,7 +976,7 @@ holdconnectionopen = no</PRE
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN326"
+NAME="AEN259"
 ></A
 ><H3
 >pythonfile Configuration File Option</H3
@@ -1310,7 +1042,7 @@ CLASS="PROPERTY"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN339"
+NAME="AEN272"
 ></A
 ><H2
 >Errors</H2
@@ -1321,7 +1053,7 @@ NAME="AEN339"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN342"
+NAME="AEN275"
 ></A
 ><H3
 >UID validity problem for folder</H3
@@ -1434,7 +1166,7 @@ TARGET="_top"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN367"
+NAME="AEN300"
 ></A
 ><H2
 >Other Frequently Asked Questions</H2
@@ -1716,7 +1448,7 @@ CLASS="PROPERTY"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN469"
+NAME="AEN402"
 ></A
 ><H2
 >Conforming To</H2
@@ -1755,14 +1487,14 @@ TARGET="_top"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN482"
+NAME="AEN415"
 ></A
 ><H2
 >Notes</H2
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN484"
+NAME="AEN417"
 ></A
 ><H3
 >Deleting Local Folders</H3
@@ -1794,7 +1526,7 @@ CLASS="APPLICATION"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN491"
+NAME="AEN424"
 ></A
 ><H3
 >Multiple Instances</H3
@@ -1823,7 +1555,7 @@ CLASS="PROPERTY"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN498"
+NAME="AEN431"
 ></A
 ><H3
 >Copying Messages Between Folders</H3
@@ -1853,7 +1585,7 @@ CLASS="APPLICATION"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN504"
+NAME="AEN437"
 ></A
 ><H3
 >Use with Evolution</H3
@@ -1889,7 +1621,7 @@ CLASS="APPLICATION"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN512"
+NAME="AEN445"
 ></A
 ><H3
 >Use with KMail</H3
@@ -1923,7 +1655,7 @@ CLASS="APPLICATION"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN520"
+NAME="AEN453"
 ></A
 ><H3
 >Mailing List</H3
@@ -1942,7 +1674,7 @@ TARGET="_top"
 ><DIV
 CLASS="REFSECT2"
 ><A
-NAME="AEN524"
+NAME="AEN457"
 ></A
 ><H3
 >Bugs</H3
@@ -2031,7 +1763,7 @@ CLASS="APPLICATION"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN544"
+NAME="AEN477"
 ></A
 ><H2
 >Copyright</H2
@@ -2069,7 +1801,7 @@ CLASS="APPLICATION"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN553"
+NAME="AEN486"
 ></A
 ><H2
 >Author</H2
@@ -2121,7 +1853,7 @@ TARGET="_top"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN565"
+NAME="AEN498"
 ></A
 ><H2
 >See Also</H2
@@ -2139,7 +1871,7 @@ CLASS="APPLICATION"
 ><DIV
 CLASS="REFSECT1"
 ><A
-NAME="AEN570"
+NAME="AEN503"
 ></A
 ><H2
 >History</H2

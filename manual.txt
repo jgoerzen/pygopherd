@@ -10,395 +10,288 @@ SYNOPSIS
 
 
 DESCRIPTION
-       OfflineIMAP  is   a   tool   to   simplify  your  e-mail reading.  With
-       OfflineIMAP, you can read the same  mailbox  from  multiple  computers.
-       You  get  a current copy of your messages on each computer, and changes
-       you make one place will be visible on all other systems.  For instance,
-       you  can  delete  a  message  on your home computer, and it will appear
-       deleted on your work computer as well.  OfflineIMAP is also  useful  if
-       you want to use a mail reader that does not have IMAP support, has poor
-       IMAP support, or does not provide disconnected operation.
+       Welcome  to  PyGopherd.   In  a nutshell, PyGopherd is a modern dynamic
+       multi-protocol hierarchical information server with a  pluggable  modu-
+       larized  extension  system,  full  flexible  caching, virtual files and
+       folders, and autodetection of file types -- all with support for  stan-
+       dardized yet extensible per-document metadata. Whew! Read on for infor-
+       mation on this what all these buzzwords mean.
 
-       OfflineIMAP is FAST; it synchronizes my two accounts with over 50 fold-
-       ers  in  3  seconds.  Other similar tools might take over a minute, and
-       achieve a less-reliable result.  Some mail readers  can  take  over  10
-       minutes  to  do  the same thing, and some don't even support it at all.
-       Unlike other mail tools, OfflineIMAP features a multi-threaded synchro-
-       nization  algorithm  that can dramatically speed up performance in many
-       situations by synchronizing several different things simultaneously.
+   FEATURES
+       Here are some of PyGopherd's features:
 
-       OfflineIMAP is FLEXIBLE; you can customize which folders are synced via
-       regular expressions, lists, or Python expressions; a versatile and com-
-       prehensive configuration file is used to  control  behavior;  two  user
-       interfaces  are built-in; fine-tuning of synchronization performance is
-       possible; internal or external automation is supported; SSL and PREAUTH
-       tunnels  are  both  supported; offline (or "unplugged") reading is sup-
-       ported; and esoteric IMAP features are supported to ensure  compatibil-
-       ity with the widest variety of IMAP servers.
+       o Provides  built-in  support  for  multiple  protocols:  HTTP   (Web),
+         Gopher+, Gopher (RFC1436), Enhanced Gopher0, and WAP (mobile phones).
+         Protocols can be enabled or disabled as desired.
 
-       OfflineIMAP is SAFE; it uses an algorithm designed to prevent mail loss
-       at all costs.  Because of the design of this algorithm,  even  program-
-       ming  errors  should  not result in loss of mail.  I am so confident in
-       the algorithm that I use my own personal and work accounts for  testing
-       of OfflineIMAP pre-release, development, and beta releases.  Of course,
-       legally speaking, OfflineIMAP comes with  no  warranty,  so  I  am  not
-       responsible if this turns out to be wrong.
+       o Provides protocol autodetection.  That is, PyGopherd can  listen  for
+         all  the  above  protocols  on  a  single port and will automatically
+         respond using the protocol it detects the client is using.  Practical
+         effects of this are that you can, for instance, give out a single URL
+         and have it viewable normally on desktop Web browsers and in WAP mode
+         on mobile phones -- and appropriately in various Gopher browsers.
 
-   METHOD OF OPERATION
-       OfflineIMAP  traditionally  operates by maintaining a hierarchy of mail
-       folders in Maildir format locally.  Your own mail reader will read mail
-       from  this  tree,  and  need  never know that the mail comes from IMAP.
-       OfflineIMAP will detect changes to the mail folders on your IMAP server
-       and  your  own computer and bi-directionally synchronize them, copying,
-       marking, and deleting messages as necessary.
+       o Metadata  and  site  links  can  be  entered in a variety of formats,
+         including full UMN dotfile metadata  formats  as  well  as  Bucktooth
+         gophermap files.  Moreover, gophermap files are not limited to Gopher
+         protocols, and can be used for all protocols.
 
-       With OfflineIMAP 4.0, a powerful new ability has been introduced -- the
-       program  can  now synchronize two IMAP servers with each other, with no
-       need to have a Maildir layer in-between.  Many people use this if  they
-       use  a  mail  reader  on  their  local  machine  that  does not support
-       Maildirs.  People may install an IMAP server on  their  local  machine,
-       and point both OfflineIMAP and their mail reader of choice at it.  This
-       is often preferable  to  the  mail  reader's  own  IMAP  support  since
-       OfflineIMAP supports many features (offline reading, for one) that most
-       IMAP-aware readers don't.  However, this feature is not as  time-tested
-       as traditional syncing, so my advice is to stick with normal methods of
-       operation for the time being.
+       o Support for inter-protocol linking (linking from Gopher sites to  web
+         sites)
+
+       o Virtual  folder system lets you serve up anything as if it were regu-
+         lar files and directories.  PyGopherd comes with the  following  vir-
+         tual folder systems built in:
+
+         o Can  present  any Unix MBOX, MMDF box, MH directory, Maildir direc-
+           tory, or Babyl mailbox as a virtual folder, the contents  of  which
+           are the messages in the mailbox.
+
+         o Can  use  a  configurable  separator  to split a file into multiple
+           parts, the first line of each becoming the  name  for  the  virtual
+           folder.
+
+         o Can peek inside a ZIP file and serve it up as first-class site cit-
+           izens -- metadata can even be stored in the ZIP files.
+
+         o Can serve up the contents of a dictd server as a filesystem.
+
+       o Modular, extensible design: you can use PyGopherd's own PYG extension
+         format, or UMN- or Bucktooth-style executables.
+
+       o Runs  on  any platform supported by Python 2.2 or 2.3.  This includes
+         virtually every  past  and  current  flavor  of  Unix  (Linux,  *BSD,
+         Solaris,  SunOS),  Windows, MacOS 9.x and X, and more.  Some features
+         may not be available on non-Unix platforms.
+
+       o Runs on any platform supported by Java  1.1  via  the  Jython  Python
+         implementation.
+
+       o Tunable  server  types  via  configuration  directive  --  forking or
+         threading.
+
+       o Secure design with support for chrooted execution.
+
+       o Feature-complete,  full  implementations   of:   Gopher0   (RFC1435),
+         Gopher+, HTTP, and WAP.
+
+       o Support  for  automatically  finding the titles of HTML documents for
+         presentation in a directory.
+
+       o Versatile configuration file format is  both  extensible  and  nicely
+         complementary of the module system.
+
+       o Protocol-independant, handler-dependant caching.  This increases per-
+         formance by letting handlers cache dynamically-generated  information
+         --  currently  used by the directory handlers.  This can improve per-
+         formance of directories by several orders of magnitude.  Because this
+         is  a  handler  cache  only,  all  protococls share the single cache.
+         Since the processing time for the protocols is negligable, this works
+         out very well.
+
+       o Autosensing  of  MIME  types  and  gopher0 item types.  Both are com-
+         pletely configurable.  MIME type detection is done using  a  standard
+         mime.types  file, and gopher0 types are calculated by using a config-
+         urable regexp-based MIME-to-gophertype map.
+
+       o Heavy support of regular expressions in configuration.
+
+       o ProtocolMultiplexer and HandlerMultiplexer let you choose only  those
+         protocols  and  handlers that you wish your server to support and the
+         order in which they are tried when a request comes in.
+
+       o Full logging via syslog.
+
+   ABOUT GOPHER
+       PyGopherd started life as a server for the  Gopher  Internet  protocol.
+       With  Gopher,  you can mount a filesystem (viewing files and folders as
+       if they were local), browse Gopherspace with a  web  browser,  download
+       files, and be interactive with searching.
+
+       But  this is only part of the story. The world of Gopher is more expan-
+       sive than this. There are two major  gopher  protocols:  Gopher0  (also
+       known  as RFC1436) and Gopher+. Gopher0 is a small, simple, lightweight
+       protocol that is very functional yet also extremely easy to  implement.
+       Gopher0  clients  can  be easily places in small embedded devices or in
+       massive environments like a modern web browser.
+
+       Gopher+ is based on Gopher0 but extends it by providing document  meta-
+       data  such as file size and MIME type. Gopher+ allows all sorts of neat
+       features, such as configurable metadata (serving up a bunch of  photos?
+       Add  a Subject field to your metadata to let a customized photo browser
+       display who is pictured) and multiple views of a  file  (let  the  user
+       select to view your photos as PNG or JPEG).
 
 QUICK START
-       If you have already installed OfflineIMAP system-wide, or  your  system
-       adminstrator   has  done  that  for  you,  your  task  for  setting  up
-       OfflineIMAP for the first time is quite simple.  You just need  to  set
-       up your configuration file, make your folder directory, and run it!
+       If  you  have already installed PyGopherd system-wide, or your adminis-
+       trator has done that for you, your task for setting  up  PyGopherd  for
+       the  first time is quite simple.  You just need to set up your configu-
+       ration file, make your folder directory, and run it!
 
-       You  can  quickly  set  up  your  configuration file.  The distribution
-       includes a file offlineimap.conf.minimal (Debian users may find this at
-       /usr/share/doc/offlineimap/examples/offlineimap.conf.minimal) that is a
-       basic example of setting of OfflineIMAP.  You can simply copy this file
-       into  your  home directory and name it .offlineimaprc (note the leading
-       period).    A   command    such    as    cp    offlineimap.conf.minimal
-       ~/.offlineimaprc will do it.  Or, if you prefer, you can just copy this
-       text to ~/.offlineimaprc:
+       You can quickly set  up  your  configuration  file.   The  distribution
+       includes    two    files    of    interest:   conf/pygopherd.conf   and
+       conf/mime.types.  Debian users will find the  configuration  file  pre-
+       installed in /etc/pygopherd/pygopherd.conf and the mime.types file pro-
+       vided by the system already.
 
-       [general]
-       accounts = Test
+       Open up pygopherd.conf in your editor and adjust to suit.  The file  is
+       heavily  commented  and  you  can refer to it for detailed information.
+       Some settings to take a look at include: detach, pidfile, port,  usech-
+       root,  setuid,  setgid,  and  root.  These may or may not work at their
+       defaults for you.  The remaining ones should be fine for a basic setup.
 
-       [Account Test]
-       localrepository = Local
-       remoterepository = Remote
-
-       [Repository Local]
-       type = Maildir
-       localfolders = ~/Test
-
-       [Repository Remote]
-       type = IMAP
-       remotehost = examplehost
-       remoteuser = jgoerzen
-
-       Now, edit the ~/.offlineimaprc file with your favorite editor.  All you
-       have  to  do  is  specify a directory for your folders to be in (on the
-       localfolders line), the host name of your IMAP server (on  the  remote-
-       host line), and your login name on the remote (on the remoteuser line).
-       That's it!
-
-       To run OfflineIMAP, you just have to say offlineimap --  it  will  fire
-       up,  ask  you for a login password if necessary, synchronize your fold-
-       ers, and exit.  See?  You can just throw away the rest of this  finely-
-       crafted, perfectly-honed manual!  Of course, if you want to see how you
-       can make OfflineIMAP FIVE TIMES FASTER FOR JUST $19.95 (err, well, $0),
-       you have to read on!
+       Invoke     PyGopherd     with    pygopherd    path/to/configfile    (or
+       /etc/init.d/pygopherd start on Debian).  Place some files in the  loca-
+       tion  specified  by  the  root  directive in the config file and you're
+       ready to run!
 
 INSTALLATION
        If  you  are  reading this document via the "man" command, it is likely
        that you have no installation tasks to perform; your system administra-
-       tor  has already installed it.  If you need to install it yourself, you
-       have three options: a system-wide installation with Debian, system-wide
-       installation  with  other systems, and a single-user installation.  You
-       can download the latest version of  OfflineIMAP  from  the  OfflineIMAP
-       website <URL:http://quux.org/devel/offlineimap/>.
+       tor  has already installed PyGopherd.  If you need to install it  your-
+       self,  you  have three options: a system-wide installation with Debian,
+       system-wide  installation   with   other  systems,  and  a  single-user
+       installation.   You  can     download    the    latest    version    of
+       PyGopherd from
+        <URL:http://quux.org/devel/gopher/pygopherd/>
 
-   PREREQUISITES
-       In  order  to use OfflineIMAP, you need to have these conditions satis-
-       fied:
+   DEBIAN SYSTEM-WIDE INSTALLATION
+       If you are tracking Debian unstable, you may install PyGopherd by  sim-
+       ply running this command as root:
 
-       o Your mail server must support IMAP.  Most Internet Service  Providers
-         and  corporate  networks  do, and most operating systems have an IMAP
-         implementation readily available.
+       apt-get install pygopherd
 
-       o You must have Python version 2.2.1 or above installed.   If  you  are
-         running  on  Debian GNU/Linux, this requirement will automatically be
-         taken care of for you.  If you do not have Python already, check with
-         your system administrator or operating system vendor; or, download it
-         from the Python website <URL:http://www.python.org/>.  If you  intend
-         to use the Tk interface, you must have Tkinter (python-tk) installed.
-         If you intend to use the SSL interface, your Python  must  have  been
-         built with SSL support.
+       If you are not tracking Debian unstable, download the .deb package from
+       the PyGopherd website and then run dpkg -i to  install  the  downloaded
+       package.   Then, skip to the configuration section below.  You will use
+       /etc/init.d/pygopherd start to start the program.
 
-       o Have  a  mail  reader that supports the Maildir mailbox format.  Most
-         modern mail readers have this support built-in,  so  you  can  choose
-         from  a  wide  variety of mail servers.  This format is also known as
-         the "qmail" format, so any mail reader compatible with it  will  work
-         with  OfflineIMAP.   If  you  do not have a mail reader that supports
-         Maildir, you can often install a local IMAP  server  and  point  both
-         OfflineIMAP and your mail reader at it.
+   OTHER SYSTEM-WIDE INSTALLATION
+       Download the tar.gz version of the package from the website.  Make sure
+       you have Python 2.2 or above installed; if now, download and install it
+       from  <URL:http://www.python.org/>.  Then run these commands:
 
-   SYSTEM-WIDE INSTALLATION, DEBIAN
-       If  you  are  tracking  Debian unstable, you may install OfflineIMAP by
-       simply running the following command as root:
+              tar -zxvf pygopherd-x.y.z.tar.gz
+              cd pygopherd-x.y.z
+              python2.2 setup.py
 
-       apt-get install offlineimap
 
-       If you are not tracking Debian unstable, download the Debian .deb pack-
-       age           from           the           OfflineIMAP          website
-       <URL:http://quux.org/devel/offlineimap/>  and  then  run  dpkg  -i   to
-       install  the downloaded package.  Then, skip to [XRef to CONFIGURATION]
-       below.  You will type offlineimap to invoke the program.
+       Some systems will use python or python2.3 in place of python2.2.
 
-   SYSTEM-WIDE INSTALLATION, OTHER
-       Download  the  tar.gz  version  of  the  package   from   the   website
-       <URL:http://quux.org/devel/offlineimap/>.   Then  run  these  commands,
-       making sure that you are the "root" user first:
+       Next,  proceed  to  configuration.   Make  sure  that  the   /etc/pygo-
+       pherd/pygopherd.conf file names valid users (setuid and setgid options)
+       and a valid document root (root option).
 
-       tar -zxvf offlineimap_x.y.z.tar.gz
-       cd offlineimap-x.y.z
-       python2.2 setup.py install
-
-       On some systems, you will need to  use  python  instead  of  python2.2.
-       Next,  proceed  to  [XRef  to  CONFIGURATION]  below.   You  will  type
-       offlineimap to invoke the program.
+       You will type pygopherd to invoke the program.
 
    SINGLE-ACCOUNT INSTALLATION
-       Download  the  tar.gz  version  of  the  package   from   the   website
-       <URL:http://quux.org/devel/offlineimap/>.  Then run these commands:
+       Download the tar.gz version of the package from the website.  Make sure
+       you have Python 2.2 or above installed; if now, download and install it
+       from  <URL:http://www.python.org/>.  Then run these commands:
 
-       tar -zxvf offlineimap_x.y.z.tar.gz
-       cd offlineimap-x.y.z
+              tar -zxvf pygopherd-z.y.z.tar.gz
+              cd pygopherd-x.y.z
 
-       When  you  want  to  run  OfflineIMAP, you will issue the cd command as
-       above and then type ./offlineimap.py; there  is  no  installation  step
-       necessary.
+
+       Modify conf/pygopherd.conf as follows:
+
+       o Set usechroot = no
+
+       o Comment out (add a # sign to the start  of  the  line)  the  pidfile,
+         setuid, and setgid lines.
+
+       o Set root to osomething appropriate.
+
+       o Set port to a number greater than 1024.
+
+       When  you want to run PyGopherd, you will issue the cd command as above
+       and then type PYTHONPATH=. bin/pygopherd.   There  is  no  installation
+       step necessary.
 
 CONFIGURATION
-       OfflineIMAP  is  regulated  by  a  configuration  file that is normally
-       stored in  ~/.offlineimaprc.   OfflineIMAP  ships  with  a  file  named
-       offlineimap.conf  that  you should copy to that location and then edit.
-       This file is vital to proper operation of the system;  it  sets  every-
-       thing you need to run OfflineIMAP.  Full documentation for the configu-
-       ration file is included within the sample file.
-
-       OfflineIMAP also ships a file named offlineimap.conf.minimal  that  you
-       can  also  try.   It's  useful if you want to get started with the most
-       basic feature set, and you can read about  other  features  later  with
-       offlineimap.conf.
+       PyGopherd  is  regulated  by  a  configuratoin  file normally stored in
+       /etc/pygopherd/pygopherd.conf.  You can specify an alternate configura-
+       tion file on the command line.  The PyGopherd distribution ships with a
+       sample pygopherd.conf file that thoroughly documents the  configuration
+       file options and settings.
 
 OPTIONS
-       Most  configuration  is done via the configuration file.  Nevertheless,
-       there are a few command-line options that you may set for  OfflineIMAP.
+       All PyGopherd configuratoin is done via the configuration file.  There-
+       fore, the program has only one command-line option:
 
-       -1     Disable  most multithreading operations and use solely a single-
-              connection sync.  This effectively sets the maxsyncaccounts  and
-              all maxconnections configuration file variables to 1.
+       configfile
+              This option argument specifies the location of the configuration
+              file that PyGopherd is to use.
 
-       -P profiledir
-              Sets  OfflineIMAP  into  profile  mode.  The program will create
-              profiledir (it must not already exist).  As it runs, Python pro-
-              filing  information about each thread is logged into profiledir.
-              Please note: This option is present for debugging and  optimiza-
-              tion  only,  and  should  NOT be used unless you have a specific
-              reason to do so.  It will  significantly  slow  program  perfor-
-              mance,  may reduce reliability, and can generate huge amounts of
-              data.  You must use the -1 option when you use -P.
+HANDLERS
+       PyGopherd  defines  several  handlers which are responsible for finding
+       data on your server and presenting it to the user.   The  handlers  are
+       used  to  generate  things  like links to other documents and directory
+       listings.  They are also responsible for serving up regular  files  and
+       even virtual folders.
 
-       -a accountlist
-              Overrides the accounts option in the general section of the con-
-              figuration   file.   You  might  use  this  to  exclude  certain
-              accounts, or to sync some accounts that you normally prefer  not
-              to.   Separate  the  accounts  by  commas,  and  use no embedded
-              spaces.
+       Handlers  are  specified  with  the  handlers option in pygopherd.conf.
+       This option is a list of  handlers  to  use.   For  each  request  that
+       arrives,  PyGopherd will ask each handler in turn whether or not it can
+       handle the request, and will handle the request according to the  first
+       handler  that  is  capable  of doing so.  If no handlers can handle the
+       request, a file not found error is generated.  See the example configu-
+       ration file for an example.
 
-       -c configfile
-              Specifies a configuration file to use in lieu  of  the  default,
-              ~/.offlineimaprc.
+       The  remaining  parts  of  this section describe the different handlers
+       that ship with PyGopherd.
 
-       -d debugtype[,...]
-              Enables  debugging  for  OfflineIMAP.  This is useful if you are
-              trying to track down a malfunction or figure out what  is  going
-              on  under the hood.  I suggest that you use this with -1 to make
-              the results more sensible.
+       dir.DirHandler
+              This handler is a basic one that generates menus  based  on  the
+              contents  of  a directory.  It is used for directories that con-
+              tain neither a gophermap file nor UMN-style links files, or sit-
+              uations where you have no need for either of those.
 
-              -d requires one or more debugtypes, separated by commas.   These
-              define  what exactly will be debugged, and include four options:
-              imap, traffic, maildir, and thread.  The imap option will enable
-              IMAP activity debugging.  The traffic option will enable dumping
-              of most traffic going back and forth between IMAP servers.  Note
-              that  the  output  may contain passwords, so take care to remove
-              that from the debugging output before sending it to anyone else.
-              The  maildir  option  will  enable debugging for certain Maildir
-              operations.  And thread will debug the threading model.
+              This  handler  simply  reads the contents of your on-disk direc-
+              tory, determines the appropriate types of each file,  and  sends
+              the  result  to  the  client.  The descriptions of each item are
+              usually set to the filename, but  the  html.HTMLFileTitleHandler
+              may override that.
 
-       -l filename
-              Enables logging to filename.  This will log everything that goes
-              to  the  screen  to  the  specified  file.  Additionally, if any
-              debugging is specified with -d, then debug messages will not  go
-              to the screen, but instead to the logfile only.
+       gophermap.BuckGophermapHandler
+              This  handler  is  used  to generate directory listings based on
+              gophermap files.   It  will  not  read  the  directory  on-disk,
+              instead   serving   content   from   the  gophermap  file  only.
+              Gophermaps are useful if you want  to  present  a  directory  in
+              which  the  files  do not frequently change and there is general
+              information to present.  Overall, if you only  wish  to  present
+              information  particular  to  certain  files, you should consider
+              using the abstract feature of UMN.UMNDirHandler.
 
-       -o     Run only once, ignoring all autorefresh settings in the configu-
-              ration file.
+              The gophermap files  contain  two  types  of  lines,  which  are
+              described  here using the same convention normally used for com-
+              mand line arguments.  In this section, the  symbol  \t  will  be
+              used to indicate a tab character, Control-I.
 
-       -h
-
-       --help Show summary of options.
-
-       -u interface
-              Specifies an alternative user interface  module  to  use.   This
-              overrides  the defailt specified in the configuration file.  The
-              pre-defined options are listed in the User Interfaces section.
-
-USER INTERFACES
-       OfflineIMAP has a pluggable user interface system that lets you  choose
-       how the program communicates information to you.  There are two graphi-
-       cal interfaces, two terminal interfaces, and two noninteractive  inter-
-       faces suitable for scripting or logging purposes.  The ui option in the
-       configuration file specifies user interface preferences.  The  -u  com-
-       mand-line  option  can  override  the  configuration file setting.  The
-       available  values  for  the  configuration  file  or  command-line  are
-       described in this section.
-
-   TK.BLINKENLIGHTS
-       Tk.Blinkenlights  is  an  interface designed to be sleek, fun to watch,
-       and informative of the overall picture of what OfflineIMAP is doing.  I
-       consider it to be the best general-purpose interface in OfflineIMAP.
-
-       Tk.Blinkenlights  contains,  by  default,  a small window with a row of
-       LEDs, a small log, and a row of command buttons.  The total size of the
-       window  is very small, so it uses little desktop space, yet it is quite
-       functional.  The optional, toggleable, log shows more detail about what
-       is happening and is color-coded to match the color of the lights.
-
-       Tk.Blinkenlights  is  the  only  user  interface  that has configurable
-       parameters; see the example offlineimap.conf for more details.
-
-       Each light in the Blinkenlights interface represents a thread of execu-
-       tion -- that is, a particular task that OfflineIMAP is performing right
-       now.  The colors indicate what task the particular thread  is  perform-
-       ing, and are as follows:
-
-       Black  indicates that this light's thread has terminated; it will light
-              up again later when new threads start up.  So,  black  indicates
-              no activity.
-
-       Red (Meaning 1)
-              is  the color of the main program's thread, which basically does
-              nothing but monitor the others.  It might remind you of HAL 9000
-              in 2001.
-
-       Gray   indicates  that  the  thread is establishing a new connection to
-              the IMAP server.
-
-       Purple is the color of an account synchronization thread that is  moni-
-              toring the progress of the folders in that account (not generat-
-              ing any I/O).
-
-       Cyan   indicates that the thread is syncing a folder.
-
-       Green  means that a folder's message list is being loaded.
-
-       Blue   is the color of a message synchronization controller thread.
-
-       Orange indicates that an actual  message  is  being  copied.   (We  use
-              fuschia for fake messages.)
-
-       Red (meaning 2)
-              indicates that a message is being deleted.
-
-       Yellow / bright orange
-              indicates that message flags are being added.
-
-       Pink / bright red
-              indicates that message flags are being removed.
-
-       Red / Black Flashing
-              corresponds  to  the  countdown timer that runs between synchro-
-              nizations.
-
-       The name of this interfaces derives from a  bit  of  computer  history.
-       Eric Raymond's Jargon File defines blinkenlights, in part, as:
+               full line of informational text
 
 
-              Front-panel  diagnostic  lights  on a computer, esp. a dinosaur.
-              Now that dinosaurs are rare, this term usually refers to  status
-              lights on a modem, network hub, or the like.
+               gophertypeDESCRIPTION [ \tselector [ \thost [ \tport ] ] ]
 
-              This  term derives from the last word of the famous blackletter-
-              Gothic sign in mangled pseudo-German that once graced about half
-              the  computer  rooms  in the English-speaking world. One version
-              ran in its entirety as follows:
 
-              ACHTUNG!  ALLES LOOKENSPEEPERS!
-
-              Das computermachine ist nicht  fuer  gefingerpoken  und  mitten-
-              grabben.   Ist  easy schnappen der springenwerk, blowenfusen und
-              poppencorken mit spitzensparken.  Ist nicht  fuer  gewerken  bei
-              das dumpkopfen.  Das rubbernecken sichtseeren keepen das cotten-
-              pickenen hans in das  pockets  muss;  relaxen  und  watchen  das
-              blinkenlichten.
-
-   CURSES.BLINKENLIGHTS
-       Curses.Blinkenlights  is an interface very similar to Tk.Blinkenlights,
-       but is designed to be run in a console window (an xterm, Linux  virtual
-       terminal,  etc.)   Since  it  doesn't have access to graphics, it isn't
-       quite as pretty, but it still gets the job done.
-
-       Please see the Tk.Blinkenlights  section  above  for  more  information
-       about the colors used in this interface.
-
-   TK.VERBOSEUI
-       Tk.VerboseUI  (formerly known as Tk.TkUI) is a graphical interface that
-       presents a variable-sized window.  In the window,  each  currently-exe-
-       cuting  thread has a section where its name and current status are dis-
-       played.  This interface is best suited to people running on slower con-
-       nections,  as  you  get  a lot of detail, but for fast connections, the
-       detail may go by too quickly to be useful.  People  with  fast  connec-
-       tions may wish to use Tk.Blinkenlights instead.
-
-   TTY.TTYUI
-       TTY.TTYUI  interface  is  for people running in basic, non-color termi-
-       nals.  It prints out basic status messages and is generally friendly to
-       use on a console or xterm.
-
-   NONINTERACTIVE.BASIC
-       Noninteractive.Basic  is  designed  for situations in which OfflineIMAP
-       will be run non-attended and  the  status  of  its  execution  will  be
-       logged.   You  might use it, for instance, to have the system run auto-
-       matically and e-mail you the results of the synchronization.  This user
-       interface  is  not  capable  of  reading  a password from the keyboard;
-       account passwords must be specified using one of the configuration file
-       options.
-
-   NONINTERACTIVE.QUIET
-       Noninteractive.Quiet is designed for non-attended running in situations
-       where normal status messages are not desired.  It will  output  nothing
-       except  errors  and  serious warnings.  Like Noninteractive.Basic, this
-       user interface is not capable of reading a password from the  keyboard;
-       account passwords must be specified using one of the configuration file
-       options.
+              Foo
 
 EXAMPLES
        Here are some example configurations for various situations.  Please e-
        mail any other examples you have that may be useful to me.
 
    MULTIPLE ACCOUNTS WITH MUTT
-       This  example shows you how to set up OfflineIMAP to synchronize multi-
+       This example shows you how to set up OfflineIMAP to synchronize  multi-
        ple accounts with the mutt mail reader.
 
-       Start by creating a directory to hold your  folders  by  running  mkdir
+       Start  by  creating  a  directory to hold your folders by running mkdir
        ~/Mail.  Then, in your ~/.offlineimaprc, specify:
 
        accounts = Personal, Work
 
-       Make  sure  that  you  have  both an [Account Personal] and an [Account
-       Work] section.   The  local  repository  for  each  account  must  have
-       different localfolder path names.  Also, make sure to enable [mbnames].
+       Make sure that you have both an  [Account  Personal]  and  an  [Account
+       Work] section.  The local repository for each account must have differ-
+       ent localfolder path names.  Also, make sure to enable [mbnames].
 
        In each local repository section, write something like this:
 
