@@ -22,6 +22,7 @@
 
 
 from pygopherd import initialization, logger
+from pygopherd.protocols import ProtocolMultiplexer
 from StringIO import StringIO
 import os
 
@@ -53,7 +54,7 @@ def gettestinghandler(rfile, wfile, config = None):
 
     # Kludge to pass to the handler init.
     
-    class request:
+    class requestClass:
         def __init__(self, rfile, wfile):
             self.rfile = rfile
             self.wfile = wfile
@@ -63,8 +64,24 @@ def gettestinghandler(rfile, wfile, config = None):
             return self.wfile
 
     s = gettestingserver(config)
-    rhandler = initialization.GopherRequestHandler(request(rfile, wfile),
+    rhandler = initialization.GopherRequestHandler(requestClass(rfile, wfile),
                                                    ('10.77.77.77', '7777'),
                                                    s)
     return rhandler
 
+def gettestingprotocol(request, config = None):
+    config = config or getconfig()
+
+    rfile = StringIO(request)
+    # Pass fake rfile, wfile to gettestinghandler -- they'll be closed before
+    # we can get the info, and some protocols need to read more from them.
+    
+    handler = gettestinghandler(StringIO(), StringIO(), config)
+    # Now override.
+    handler.rfile = rfile
+    return ProtocolMultiplexer.getProtocol(rfile.readline(),
+                                           handler.server,
+                                           handler,
+                                           handler.rfile,
+                                           handler.wfile,
+                                           config)

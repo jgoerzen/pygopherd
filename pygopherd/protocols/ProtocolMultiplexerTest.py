@@ -12,9 +12,11 @@ class ProtocolMultiplexerTestCase(unittest.TestCase):
     # sure we find the right one.
 
     def getproto(self, request):
-        handler = testutil.gettestinghandler(StringIO(request), StringIO(),
+        rfile = StringIO(request)
+        wfile = StringIO()
+        handler = testutil.gettestinghandler(rfile, wfile,
                                              self.config)
-        return ProtocolMultiplexer.getProtocol(request,
+        return ProtocolMultiplexer.getProtocol(file.readline(),
                                                handler.server,
                                                handler,
                                                handler.rfile,
@@ -22,5 +24,13 @@ class ProtocolMultiplexerTestCase(unittest.TestCase):
                                                self.config)
 
     def testGoToGopher(self):
-        assert isinstance(self.getproto("/gopher0-request.txt\n"), pygopherd.protocols.rfc1436.GopherProtocol)
-        
+        assert isinstance(testutil.gettestingprotocol("/gopher0-request.txt\n"), pygopherd.protocols.rfc1436.GopherProtocol)
+
+    def testGoToHTTP(self):
+        assert isinstance(testutil.gettestingprotocol("GET /http-request.txt HTTP/1.0\n\n"),
+                          pygopherd.protocols.http.HTTPProtocol)
+
+    def testGoToGopherPlus(self):
+        assert isinstance(testutil.gettestingprotocol("/gopher+-request.txt\t+\n"),
+                          pygopherd.protocols.gopherp.GopherPlusProtocol)
+    

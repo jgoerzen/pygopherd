@@ -4,6 +4,7 @@ clean:
 	-rm -f `find . -name "*.pyc"`
 	-rm -f `find . -name "*.class"`
 	-rm -f `find . -name "*.bak"`
+	-rm -f `find . -name ".cache*"`
 
 changelog:
 	cvs2cl
