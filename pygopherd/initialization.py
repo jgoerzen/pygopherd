@@ -80,7 +80,7 @@ class GopherRequestHandler(SocketServer.StreamRequestHandler):
                      self.server, self, self.rfile, self.wfile, self.server.config)
         try:
             protohandler.handle()
-        except socket.error e:
+        except socket.error, e:
             if not (e[0] in [errno.ECONNREST, errno.EPIPE]):
                 traceback.print_exc()
             GopherExceptions.log(sys.exc_info()[1], protohandler, None)
