@@ -23,6 +23,7 @@ import os, stat, os.path, mimetypes, urllib
 from pygopherd import protocols, handlers
 
 mapping = None
+eaexts = None
 
 class GopherEntry:
     """The entry object for Gopher.  It holds information about each
@@ -124,6 +125,8 @@ class GopherEntry:
         self.mtime = self.mtime or statval[8]
         self.name = self.name or os.path.basename(self.selector)
 
+        self.handleeaext()
+
         if stat.S_ISDIR(statval[0]):
             self.type = self.type or '1'
             self.mimetype = self.mimetype or 'application/gopher-menu'
@@ -155,6 +158,23 @@ class GopherEntry:
             if re.match(maprule[0], self.mimetype):
                 return maprule[1]
         return '0'
+
+    def handleeaext(self):
+        """Handle getting extended attributes from the filesystem."""
+        global eaexts
+        if eaexts == None:
+            eaexts = eval(self.config.get("GopherEntry", "eaexts"))
+
+        for extension, blockname in eaexts.items():
+            if self.ea.has_key(blockname):
+                continue
+            try:
+                rfile = open(self.fspath + extension, "rt")
+                self.setea(blockname, "\n".join(
+                           [x.strip() for x in rfile.readlines(20480)]))
+            except IOError:
+                pass
+                         
 
     def getselector(self, default = None):
         if self.selector == None:
@@ -283,3 +303,4 @@ class GopherEntry:
 
     def setea(self, name, value):
         self.ea[name] = value
+
