@@ -1,3 +1,25 @@
+2002-05-02 10:23  jgoerzen
+
+	* pygopherd/initialization.py: Removed the exitfunc
+
+2002-05-02 10:20  jgoerzen
+
+	* pygopherd/initialization.py: More exitfunc work
+
+2002-05-02 10:18  jgoerzen
+
+	* pygopherd/initialization.py: Amplified the exitfunc.
+
+2002-05-02 10:13  jgoerzen
+
+	* README, conf/pygopherd.conf, debian/changelog, debian/init.d,
+	pygopherd/initialization.py, pygopherd/version.py: Added support
+	for detached operation and pidfile writing.
+
+2002-05-01 11:45  jgoerzen
+
+	* ChangeLog: Updated.
+
 2002-05-01 11:43  jgoerzen
 
 	* debian/control: Added a dep on a non-buggy python2.2

@@ -22,7 +22,7 @@ from ConfigParser import ConfigParser
 
 # Import lots of stuff so it's here before chrooting.
 import socket, os, sys, SocketServer, re, stat, os.path, UserDict, xreadlines, tempfile
-import time
+import time, atexit
 
 from pygopherd import handlers, protocols, GopherExceptions, logger
 from pygopherd.protocols import *
@@ -161,15 +161,6 @@ def initpidfile(config):
         fd.write("%d\n" % os.getpid())
         fd.close()
 
-        def exitfunc():
-            try:
-                os.unlink(pidfile)
-            except OSError:
-                pass
-
-        import atexit
-        atexit.register(exitfunc)
-
 def initeverything(conffile):
     config = initconffile(conffile)
     initlogger(config, conffile)
@@ -179,7 +170,7 @@ def initeverything(conffile):
     initconditionaldetach(config)
     initpidfile(config)
     initsecurity(config)
-    
+
     logger.log("Running.  Root is '%s'" % config.get("pygopherd", "root"))
     return s
 
