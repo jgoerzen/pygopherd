@@ -1,8 +1,11 @@
+# -*-Python-*-
 import sys, string
-sys.path.append('/home/jgoerzen/tree/pygopherd/pyg')
 from pygopherd.handlers.pyg import PYGBase
 from pygopherd.gopherentry import GopherEntry, getinfoentry
 import dictclient
+
+def matchsort(x, y):
+    return cmp(x.lower(), y.lower())
 
 class PYGMain(PYGBase):
     def canhandlerequest(self):
@@ -11,15 +14,23 @@ class PYGMain(PYGBase):
             arglist = self.selectorargs.split("/")
         self.dbname = None
         self.dbcommand = None
-        self.commandargs = None
+        self.commandargs = []
         if len(arglist) >= 2:
             self.dbname = arglist[1]
         if len(arglist) >= 3:
             self.dbcommand = arglist[2]
         if len(arglist) >= 4:
             self.commandargs = arglist[3:]
+        if self.searchrequest:
+            self.commandargs.append(self.searchrequest)
+
+        print "dbcommand", self.dbcommand
+        print "commandargs", self.commandargs
+            
         if self.dbcommand == 'DEFINE':
-            self.__class__ = Define
+            self.__class__ = DefineMenu
+        elif self.dbcommand == 'DEFINITION':
+            self.__class__ = Definition
         elif self.dbcommand == 'MATCH':
             self.__class__ = Match
         elif self.dbcommand == 'DBINFO':
@@ -131,3 +142,74 @@ class Browse(PYGMain):
     def getdirlist(self):
         return self.entries
 
+class DefineMenu(PYGMain):
+    def prepare(self):
+        self.db = dictclient.Connection()
+        self.entries = []
+
+        entry = getinfoentry("Definitions for '%s' in database '%s'" % \
+                             (self.commandargs[0], self.dbname), self.config)
+        self.entries.append(entry)
+
+        defs = self.db.define(self.dbname, self.commandargs[0])
+
+        if len(defs):
+            selector = self.genargsselector("/%s/DEFINITION/%s" %
+                                            (self.dbname, self.commandargs[0]))
+            entry = GopherEntry(selector, self.config)
+            entry.type = '0'
+            entry.mimetype = 'text/plain'
+            entry.name = 'All %d definitions on a single page' % len(defs)
+            self.entries.append(entry)
+        else:
+            entry = getinfoentry("No definitions found.", self.config)
+            self.entries.append(entry)
+
+        for i in range(len(defs)):
+            selector = self.genargsselector("/%s/DEFINITION/%s" % \
+                                            (defs[i].getdb().getname(),
+                                             defs[i].getword()))
+            entry = GopherEntry(selector, self.config)
+            entry.type = '0'
+            entry.mimetype = 'text/plain'
+            entry.name = "'%s' in %s" % (defs[i].getword(),
+                                         defs[i].getdb().getdescription())
+            self.entries.append(entry)
+
+        self.entries.append(getinfoentry(" ", self.config))
+        self.entries.append(getinfoentry("Definitions for similar words:",
+                                         self.config))
+
+        matches = self.db.match(self.dbname, 'lev', self.commandargs[0])
+        matchlist = unique([x.getword() for x in matches])
+        matchlist.sort(matchsort)
+
+        if not len(matchlist):
+            self.entries.append(getinfoentry("No similar definitions found.",
+                                             self.config))
+
+        for matchword in matchlist:
+            selector = self.genargsselector("/%s/DEFINE/%s" % \
+                                            (self.dbname, matchword))
+            entry = GopherEntry(selector, self.config)
+            entry.type = '1'
+            entry.mimetype = 'application/gopher-dir'
+            entry.name = matchword
+            self.entries.append(entry)
+
+    def isdir(self):
+        return 1
+
+    def getdirlist(self):
+        return self.entries
+
+def unique(input):
+    """Return a list of the elements in input, but without duplicates.
+    Performs a case-insensitive check."""
+    retval = []
+    check  = []
+    for item in input:
+        if not item.lower() in check:
+            retval.append(item)
+            check.append(item.lower())
+    return retval
