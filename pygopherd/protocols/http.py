@@ -57,9 +57,9 @@ class HTTPProtocol(BaseGopherProtocol):
         if icon:
             iconname = icon.group(1)
             if icons.has_key(iconname):
-                self.wfile.write("HTTP/1.0 200 OK\n")
-                self.wfile.write("Last-Modified: Fri, 14 Dec 2001 21:19:47 GMT\n")
-                self.wfile.write("Content-Type: image/gif\n\n")
+                self.wfile.write("HTTP/1.0 200 OK\r\n")
+                self.wfile.write("Last-Modified: Fri, 14 Dec 2001 21:19:47 GMT\r\n")
+                self.wfile.write("Content-Type: image/gif\r\n\r\n")
                 if self.requestparts[0] == 'HEAD':
                     return
                 self.wfile.write(binascii.unhexlify(icons[iconname]))
@@ -70,14 +70,14 @@ class HTTPProtocol(BaseGopherProtocol):
             self.log(handler)
             self.entry = handler.getentry()
             handler.prepare()
-            self.wfile.write("HTTP/1.0 200 OK\n")
+            self.wfile.write("HTTP/1.0 200 OK\r\n")
             if self.entry.getmtime() != None:
                 gmtime = time.gmtime(self.entry.getmtime())
                 mtime = time.strftime("%a, %d %b %Y %H:%M:%S GMT", gmtime)
-                self.wfile.write("Last-Modified: " + mtime + "\n")
+                self.wfile.write("Last-Modified: " + mtime + "\r\n")
             mimetype = self.entry.getmimetype()
             mimetype = self.adjustmimetype(mimetype)
-            self.wfile.write("Content-Type: " + mimetype + "\n\n")
+            self.wfile.write("Content-Type: " + mimetype + "\r\n\r\n")
             if self.requestparts[0] == 'GET':
                 if handler.isdir():
                     self.writedir(self.entry, handler.getdirlist())

@@ -48,27 +48,31 @@ class WAPProtocol(HTTPProtocol):
     def getrenderstr(self, entry, url):
         retstr = ''
         if not entry.gettype() in ['i', '7']:
-            retstr += '<A HREF="%s">' % url
+            retstr += '<a href="%s">' % url
         if entry.getname() != None:
             retstr += cgi.escape(entry.getname())
         else:
             retstr += cgi.escape(etry.getselector())
         if not entry.gettype() in ['i', '7']:
-            retstr += '</A>'
-        retstr += '<BR/>'
+            retstr += '</a>'
+        retstr += "<br/>\n"
         return retstr
 
     def renderdirstart(self, entry):
-        retval = '<?xml version="1.0"?><!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN" "http://www.wapforum.org/DTD/wml_1.1.xml"><wml>'
+        retval = """<?xml version="1.0"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN"
+"http://www.wapforum.org/DTD/wml_1.1.xml">
+<wml>
+"""
         title = 'Gopher'
         if self.entry.getname():
             title = cgi.escape(self.entry.getname())
         retval += '<card id="index" title="%s" newcontext="true">' % \
                   cgi.escape(title)
         
-        retval += '<p>'
+        retval += "\n<p>\n"
         return retval
 
     def renderdirend(self, entry):
-        return "</p></card></wml>\n"
+        return "</p>\n</card>\n</wml>\n"
     
