@@ -23,6 +23,7 @@
 
 from ConfigParser import ConfigParser
 import socket, os, sys, signal, SocketServer, handlers, protocols
+import protocols.gopherp, protocols.rfc1436
 import mimetypes
 
 config = ConfigParser()
@@ -36,7 +37,7 @@ class GopherRequestHandler(SocketServer.StreamRequestHandler):
         protos = [protocols.gopherp.GopherPlusProtocol,
                   protocols.rfc1436.GopherProtocol]
         for protocol in protos:
-            protohandler = protocol(path, request, self.server,
+            protohandler = protocol(request, self.server,
                                     self.rfile, self.wfile,
                                     self.server.config)
             if (protohandler.canhandlerequest()):

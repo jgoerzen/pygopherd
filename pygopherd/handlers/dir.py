@@ -1,8 +1,9 @@
 import SocketServer
 import re
-import os, stat, os.path, mimetypes, protocols, handlers
+import os, stat, os.path, mimetypes, protocols
+import handlers, handlers.base
 
-class DirHandler(handlers.BaseHandler):
+class DirHandler(handlers.base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a file."""
         return os.path.isdir(self.getfspath())

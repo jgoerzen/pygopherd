@@ -1,8 +1,9 @@
 import SocketServer
 import re
 import os, stat, os.path, mimetypes, protocols, handlers
+import handlers.base
 
-class FileHandler(handlers.BaseHandler):
+class FileHandler(handlers.base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a file."""
         return os.path.isfile(self.getfspath())

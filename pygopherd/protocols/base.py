@@ -1,10 +1,11 @@
 import SocketServer
 import re
 import os, stat, os.path, mimetypes, handlers
+import handlers.HandlerMultiplexer
 
 class BaseGopherProtocol:
     """Skeleton protocl -- includes commonly-used routines."""
-    def __init__(self, requeststr, server, rfile, wfile, config):
+    def __init__(self, request, server, rfile, wfile, config):
         """Parameters are:
         request -- the raw request string.
 

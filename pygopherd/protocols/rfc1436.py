@@ -1,8 +1,9 @@
 import SocketServer
 import re
 import os, stat, os.path, mimetypes, handlers, protocols
+import protocols.base
 
-class GopherProtocol(protocols.BaseGopherProtocol):
+class GopherProtocol(protocols.base.BaseGopherProtocol):
     """Implementation of basic protocol.  Will handle every query."""
     def canhandlerequest(self):
         return 1

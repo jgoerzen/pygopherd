@@ -1,6 +1,7 @@
 import SocketServer
 import re
 import os, stat, os.path, mimetypes, handlers, protocols
+import protocols.rfc1436
 
 class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
     """Implementation of Gopher+ protocol.  Will handle Gopher+
@@ -19,11 +20,11 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
         """Handle Gopher+ request."""
         self.handlemethod = None
         if self.requestlist[1][0] == '+':
-            self.handlemethod = 'documentonly'
+            self.handlemethod == 'documentonly'
         elif self.requestlist[1] == '!':
-            self.handlemethod = 'infoonly'
+            self.handlemethod == 'infoonly'
         elif self.requestlist[1][0] == '$':
-            self.handlemethod = 'gopherplusdir'
+            self.handlemethod == 'gopherplusdir'
 
         handler = self.gethandler()
         self.entry = handler.getentry()
@@ -38,7 +39,7 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
     def renderobjinfo(self, entry):
         if entry.getmimetype() == 'application/gopher-menu':
             entry.mimetype = 'application/gopher+-menu'
-        if self.handlemethod = 'documentonly':
+        if self.handlemethod == 'documentonly':
             # It's a Gopher+ request for a gopher0 menu entry.
             retstr = protocols.rfc1436.GopherProtocol.renderobjinfo(self, entry)
             # Strip off the \r\n from the rfc1436 string.  Add our gopher+
