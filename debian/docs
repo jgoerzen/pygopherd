@@ -1,5 +1,6 @@
 ChangeLog
-manual.txt
-manual.ps
-manual.pdf
-manual.html
+doc/pygopherd.txt
+doc/pygopherd.ps
+doc/pygopherd.pdf
+doc/pygopherd.html
+README
