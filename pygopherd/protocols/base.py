@@ -20,7 +20,7 @@
 import SocketServer
 import re
 import os, stat, os.path, mimetypes
-from pygopherd import handlers, GopherExceptions
+from pygopherd import handlers, GopherExceptions, logger
 from pygopherd.handlers import HandlerMultiplexer
 
 class BaseGopherProtocol:
@@ -68,16 +68,25 @@ class BaseGopherProtocol:
         protocol.  Should be overridden by all subclasses."""
         return 0
 
+    def log(self, handler):
+        logger.log("%s [%s/%s]: %s" % \
+                   (self.requesthandler.client_address[0],
+                    re.search("[^.]+$", str(self.__class__)).group(0),
+                    re.search("[^.]+$", str(handler.__class__)).group(0),
+                    self.selector))
+
     def handle(self):
         """Handles the request."""
         try:
             handler = self.gethandler()
+            self.log(handler)
             self.entry = handler.getentry()
             handler.prepare()
             handler.write(self.wfile)
         except GopherExceptions.FileNotFound, e:
             self.filenotfound(str(e))
         except IOError, e:
+            GopherExceptions.log(e, self, None)
             self.filenotfound(e[1])
 
     def filenotfound(self, msg):

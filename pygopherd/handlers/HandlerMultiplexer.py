@@ -17,9 +17,9 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from pygopherd import handlers, GopherExceptions
+from pygopherd import handlers, GopherExceptions, logger
 from pygopherd.handlers import *
-import os
+import os, re
 
 handlers = None
 rootpath = None
@@ -41,4 +41,5 @@ def getHandler(selector, searchrequest, protocol, config):
         if htry.canhandlerequest():
             return htry
     
-    raise GopherExceptions.FileNotFound, [selector, "no handler found"]
+    raise GopherExceptions.FileNotFound, \
+          [selector, "no handler found", protocol]

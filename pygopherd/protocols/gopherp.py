@@ -57,6 +57,7 @@ class GopherPlusProtocol(GopherProtocol):
 
         try:
             handler = self.gethandler()
+            self.log(handler)
             self.entry = handler.getentry()
             
             if self.handlemethod == 'infoonly':
@@ -69,6 +70,7 @@ class GopherPlusProtocol(GopherProtocol):
         except GopherExceptions.FileNotFound, e:
             self.filenotfound(str(e))
         except IOError, e:
+            GopherExceptions.log(e, self, None)
             self.filenotfound(e[1])
 
     def getsupportedblocknames(self):

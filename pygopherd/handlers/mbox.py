@@ -138,7 +138,7 @@ class MBoxFolderHandler(FolderHandler):
         if self.selectorargs:
             return 0
         
-        if not S_ISREG(self.statresult[ST_MODE]):
+        if not (self.statresult and S_ISREG(self.statresult[ST_MODE])):
             return 0
         try:
             fd = open(self.getfspath(), "rt")
@@ -172,7 +172,7 @@ class MaildirFolderHandler(FolderHandler):
     def canhandlerequest(self):
         if self.selectorargs:
             return 0
-        if not S_ISDIR(self.statresult[ST_MODE]):
+        if not (self.statresult and S_ISDIR(self.statresult[ST_MODE])):
             return 0
         return os.path.isdir(self.getfspath() + "/new") and \
                os.path.isdir(self.getfspath() + "/cur")

@@ -56,6 +56,7 @@ class HTTPProtocol(BaseGopherProtocol):
 
         try:
             handler = self.gethandler()
+            self.log(handler)
             self.entry = handler.getentry()
             handler.prepare()
             self.wfile.write("HTTP/1.0 200 OK\n")
@@ -74,6 +75,7 @@ class HTTPProtocol(BaseGopherProtocol):
         except GopherExceptions.FileNotFound, e:
             self.filenotfound(str(e))
         except IOError, e:
+            GopherExceptions.log(e, self, None)
             self.filenotfound(e[1])
 
     def renderobjinfo(self, entry):

@@ -17,19 +17,41 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import types
+import types, re
+from pygopherd import logger
 
+def log(exception, protocol, handler):
+    protostr = 'None'
+    handlerstr = 'None'
+    ipaddr = 'unknown-address'
+    exceptionclass = re.search("[^.]+$", str(exception.__class__)).group(0)
+    if protocol:
+        protostr = re.search("[^.]+$", str(protocol.__class__)).group(0)
+        ipaddr = protocol.requesthandler.client_address[0]
+    if handler:
+        handlerstr = re.search("[^.]+$", str(handler.__class__)).group(0)
+    
+    logger.log("%s [%s/%s] %s: %s" % \
+               (ipaddr, protostr, handlerstr, exceptionclass,
+                str(exception)))
+            
 class FileNotFound:
     def __init__(self, arg):
         self.selector = arg
         self.comments = ''
+        self.protocol = ''
 
         if type(arg) != types.StringType:
             self.selector = arg[0]
             self.comments = arg[1]
-            
+            if len(arg) > 2 and arg[2]:
+                self.protocol = arg[2]
+
+        log(self, self.protocol, None)
+
     def __str__(self):
-        retval = "'%s' does not exist" % self.selector
+        retval = "'%s' does not exist" % (self.selector)
         if self.comments:
             retval += " (%s)" % self.comments
+
         return retval

@@ -25,11 +25,14 @@ from ConfigParser import ConfigParser
 import socket, os, sys, SocketServer
 from pygopherd import handlers, protocols
 from pygopherd.protocols import ProtocolMultiplexer
+from pygopherd import logger
 import mimetypes
 
 config = ConfigParser()
 config.read("pygopherd.conf")
 mimetypes.init([config.get("pygopherd", "mimetypes")])
+logger.init(config)
+logger.log("Pygopherd started.")
 
 class GopherRequestHandler(SocketServer.StreamRequestHandler):
     def handle(self):
