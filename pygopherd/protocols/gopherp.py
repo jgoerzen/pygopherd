@@ -91,15 +91,12 @@ class GopherPlusProtocol(protocols.rfc1436.GopherProtocol):
         return retstr
 
     def renderobjinfo(self, entry):
-        if entry.getmimetype() == 'application/gopher-menu':
+        if entry.getmimetype('FAKE') == 'application/gopher-menu' and \
+               entry.getgopherpsupport():
             entry.mimetype = 'application/gopher+-menu'
         if self.handlemethod == 'documentonly':
             # It's a Gopher+ request for a gopher0 menu entry.
             retstr = protocols.rfc1436.GopherProtocol.renderobjinfo(self, entry)
-            # Strip off the \r\n from the rfc1436 string.  Add our gopher+
-            # thing and return.
-            retstr = retstr.rstrip()
-            retstr += "\t+\r\n"
             return retstr
         else:
             return self.getallblocks(entry)
