@@ -284,7 +284,7 @@ class ZipReader:
     def __init__(self, file):
         """Open the ZIP file with mode read "r", write "w" or append "a"."""
         self.debug = 0  # Level of printing: 0 through 3
-        self.locationmap = {'': -1} # Map to location of central dir header
+        self.locationmap = {} 
 
         # Check if we were passed a file-like object
         if type(file) in _STRING_TYPES:
@@ -296,12 +296,13 @@ class ZipReader:
             self.fp = file
             self.filename = getattr(file, 'name', None)
 
-
-        self._GetContents()
-
-    def _GetContents(self):
+    def GetContents(self):
         """Read the directory, making sure we close the file if the format
-        is bad."""
+        is bad.
+
+
+        Must use before trying to access any included files by name!
+        """
         try:
             self._RealGetContents()
         except BadZipfile:
@@ -337,8 +338,6 @@ class ZipReader:
             filename = fp.read(centdir[_CD_FILENAME_LENGTH])
 
             self.locationmap[filename] = self.start_dir + total
-            components = filename.split('/')
-            self.locationmap['/'.join(filename.split('/')[:-1])] = -1
             # Skip past the other stuff.
             total = (total + 46 + centdir[_CD_FILENAME_LENGTH]
                      + centdir[_CD_EXTRA_FIELD_LENGTH]

@@ -16,29 +16,13 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import re, zipfile, time, stat, unittest, os.path, struct, types, copy
-import cPickle, fcntl
+import re, zipfile, time, stat, unittest, os.path, struct, types, copy, fcntl
 from StringIO import StringIO
 
 UNX_IFMT = 0170000L
 UNX_IFLNK = 0120000L
 
 from pygopherd.handlers import base
-
-def GetPicklableZipFile(zipfile, chain, zipfilename, dircache):
-    pzf = copy.copy(zipfile)
-    pzf.fp = None
-    return (pzf, chain, zipfilename, dircache)
-
-def UnpickleZipFileObject(pickleobj):
-    """Warning: if read-write ZIPs are ever implemented along with
-    nested zips, this or the above may break.
-
-    Returns a new (ZipFile, dircache) object."""
-
-    (zipfile, chain, zipfilename, dircache) = pickleobj
-    zipfile.fp = chain.open(zipfilename)
-    return (zipfile, dircache)
 
 class VFS_Zip(base.VFS_Real):
     def __init__(self, config, chain, zipfilename):
@@ -117,40 +101,70 @@ class VFS_Zip(base.VFS_Real):
             return 0
 
     def _getcacheentry(self, fspath):
-        cur = self.dircache
+        inode = '0'
         if fspath == '':
-            return cur
+            return inode
         for item in fspath.split('/'):
-            if type(cur) != types.DictType:
+            directory = self.dircache[inode]
+            # right now, directory holds the directory from the *last* iteration.
+            if type(directory) != types.DictType:
                 raise KeyError, "Call for %s: couldn't find %s" % (fspath, item)
             try:
-                cur = cur[item]
+                # Now, inode holds the inode number.
+                inode = directory[item]
             except KeyError:
                 raise KeyError, "Call for %s: Couldn't find %s" % (fspath, item)
-        return cur
+        return inode
 
     def _cachedir(self):
         if self.dircache != None:
             return
 
-        self.dircache = {}
+        self.dircache = {'': '0', '0': {}}
+        self.symlinkinodes = []
+        nextinode = 1
+        self.zip.GetContents()
 
-        for (file, info) in self.memberinfo.iteritems():
+        for (file, location) in self.zip.locationmap.iteritems():
+            info = self.zip.getinfo(file)
             (dir, filename) = os.path.split(file)
             if dir == '/':
                 dir == ''
 
-            dirlevel = self.dircache
+            dirlevel = self.dircache['0']
             for level in dir.split('/'):
                 if level == '':
                     continue
                 if not dirlevel.has_key(level):
-                    dirlevel[level] = {}
-                dirlevel = dirlevel[level]
+                    self.dircache[str(nextinode)] = {}
+                    dirlevel[level] = str(nextinode)
+                    nextinode += 1
+                dirlevel = self.dircache[dirlevel[level]]
 
             if len(filename):
-                dirlevel[filename] = info
+                if self._islinkinfo(info):
+                    symlinkinodes.append({'dirlevel': dirlevel,
+                                          'filename': filename,
+                                          'dest': self._readlinkfspath(file)})
+                else:
+                    dirlevel[filename] = str(nextinode)
+                    self.dircache[str(nextinode)] = location
+                    nextinode += 1
 
+        lastsymlinklen = 0
+        while len(symlinkinodes) and len(symlinkinodes) != lastsymlinklen:
+            lastsymlinklen = len(symlinkinodes)
+            newsymlinkinodes = []
+            for item in symlinkinodes:
+                if self._isentryincache(item['dest']):
+                    item['dirlevel'][item['filename']] = \
+                        self._getcacheentry(item['dest'])
+                else:
+                    newsymlinkinodes.append(item)
+            symlinkinodes = newsymlinkinodes
+                                                         
+                                                       
+            
     def _needschain(self, selector):
         return not selector.startswith(self.zipfilename)
 
