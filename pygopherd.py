@@ -23,12 +23,23 @@
 
 from ConfigParser import ConfigParser
 import socket, os, sys, signal, SocketServer
-from handlers import GopherRequestHandler
 import mimetypes
 
 config = ConfigParser()
 config.read("pygopherd.conf")
 mimetypes.init(config.get("serving", "mimetypes"))
+
+class GopherRequestHandler(SocketServer.StreamRequestHandler):
+    def handle(self):
+        request = self.rfile.readline()
+
+        protos = [protocols.GopherPlusProtocol, protocols.GopherProtocol]
+        for protocol in protos:
+            protohandler = protocol(path, requestparts, self.server,
+                                    self.server.config)
+            if (protohandler.canhandlerequest()):
+                protohandler.handle(self.rfile, self.wfile)
+                break
 
 class MyServer(SocketServer.ForkingTCPServer):
     allow_reuse_address = 1
@@ -48,3 +59,4 @@ s.mapping = eval(config.get("serving", "mapping"))
 s.defaulttype = config.get("serving", "defaulttype")
 print s.mapping
 s.serve_forever()
+

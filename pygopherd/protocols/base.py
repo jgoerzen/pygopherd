@@ -63,4 +63,5 @@ class BaseGopherProtocol:
 
     def gethandler(self):
         """Gets the handler for this object's selector."""
-        handlers.HandlerMultiplexer.getHandler(self.selector, self.config)
+        handlers.HandlerMultiplexer.getHandler(self.selector,
+                                               self, self.config)

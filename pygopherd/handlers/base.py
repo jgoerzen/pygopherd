@@ -4,7 +4,7 @@ import os, stat, os.path, mimetypes, protocols, handlers, entry
 
 class BaseHandler:
     """Skeleton handler -- includes commonly-used routines."""
-    def __init__(self, selector, config):
+    def __init__(self, selector, protocol, config):
         """Parameters are:
         selector -- requested selector.  The selector must always start
         with a slash and never end with a slash UNLESS it is a one-char
@@ -13,6 +13,7 @@ class BaseHandler:
 
         config -- config object."""
         self.selector = selector
+        self.protocol = protocol
         self.config = config
         self.fspath = None
         self.entry = None
