@@ -1,3 +1,10 @@
+pygopherd (1.1.1) unstable; urgency=low
+
+  * Added ability to serve up files ending in ".gophermap" as
+    Gophermap files.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri, 21 Feb 2003 15:14:03 -0600
+
 pygopherd (1.1.0) unstable; urgency=low
 
   * Added new configuration option: advertisedport.

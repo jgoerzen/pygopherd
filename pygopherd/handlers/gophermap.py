@@ -30,7 +30,9 @@ class BuckGophermapHandler(base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a directory AND
         the directory has a gophermap file."""
-        return os.path.isfile(self.getfspath() + '/gophermap')
+        return os.path.isfile(self.getfspath() + '/gophermap') or \
+               (self.statresult and S_ISREG(self.statresult[ST_MODE]) and \
+                self.getfspath().endswith(".gophermap"))
 
     def getentry(self):
         if not self.entry:
@@ -46,7 +48,11 @@ class BuckGophermapHandler(base.BaseHandler):
         if self.fsbase == '/':
             self.fsbase = ''                 # Avoid dup slashes
 
-        self.rfile = open(self.fsbase + '/gophermap', 'rb')
+        if self.getfspath().endswith(".gophermap") and \
+           self.statresult and S_ISREG(self.statresult[ST_MODE]):
+            self.rfile = open(self.getfspath(), 'rb')
+        else:
+            self.rfile = open(self.fsbase + '/gophermap', 'rb')
 
         self.entries = []
 
