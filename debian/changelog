@@ -1,3 +1,10 @@
+pygopherd (2.0.13) unstable; urgency=low
+
+  * Applied patch from Tim to clean up some typos in the docs.
+  * Manpage was missing from .deb.  Fixed.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat, 19 Feb 2005 12:05:48 -0600
+
 pygopherd (2.0.12) unstable; urgency=low
 
   * Cleaner handling of connection reset by peer

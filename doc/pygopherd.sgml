@@ -11,7 +11,7 @@
     full flexible caching, virtual files and
     folders, and autodetection of file types -- all with support for
     standardized yet extensible per-document metadata. Whew! Read on for
-    information on this what all these buzzwords mean.
+    information on what all these buzzwords mean.
   </para>
   
   <sect1 id="features">
@@ -86,7 +86,7 @@
       </listitem>
       
       <listitem><para>
-	  Runs on any platform supported by Python 2.2 or 2.3.
+	  Runs on any platform supported by Python 2.2, 2.3, or 2.4.
 	  This includes virtually every past and current flavor of
 	  Unix (Linux, *BSD, Solaris, SunOS), Windows, MacOS 9.x
 	  and X, and more.  Some features may not be available on
@@ -117,14 +117,14 @@
 	  extensible and nicely complementary of the module system.</para>
       </listitem>
       
-      <listitem><para>Protocol-independant, handler-dependant
+      <listitem><para>Protocol-independent, handler-dependent
 	  caching.  This increases performance by letting handlers
 	  cache dynamically-generated information -- currently used by
 	  the directory handlers.  This can improve performance of
 	  directories by several orders of magnitude.  Because this is
-	  a handler cache only, all protococls share the single
+	  a handler cache only, all protocols share the single
 	  cache.  Since the processing time for the protocols is
-	  negligable, this works out very well.</para>
+	  negligible, this works out very well.</para>
       </listitem>
       
       <listitem><para>Autosensing of MIME types and gopher0 item
@@ -164,7 +164,7 @@
       expansive than this. There are two major gopher protocols: Gopher0
       (also known as RFC1436) and Gopher+. Gopher0 is a small, simple,
       lightweight protocol that is very functional yet also extremely easy
-      to implement. Gopher0 clients can be easily places in small embedded
+      to implement. Gopher0 clients can be easily placed in small embedded
       devices or in massive environments like a modern web browser.
     </para>
     
@@ -190,8 +190,8 @@
   <title>Installation</title>
   <para>
     If  you  are  reading this document via the "man" command, it is likely
-    that you have no installation tasks to perform; your system administra-
-    tor  has already installed &PyGopherd;.  If you need to install it yourself, you
+    that you have no installation tasks to perform; your system administrator
+    has already installed &PyGopherd;.  If you need to install it yourself, you
     have three options: a system-wide installation with Debian, system-wide
     installation  with  other systems, and a single-user installation.  You
     can    download    the    latest    version    of    PyGopherd
@@ -225,7 +225,7 @@
     <title>Other System-Wide Installation</title>
     <para>
       Download the tar.gz version of the package from the website.  Make
-      sure you have Python 2.2 or above installed; if now, download and
+      sure you have Python 2.2 or above installed; if not, download and
       install it from <ulink
 	url="http://www.python.org/"></ulink>.  Then run these
       commands:
@@ -284,7 +284,7 @@
 	  <property>setgid</property> lines.</para>
 	  </listitem>
       
-      <listitem><para>Set <property>root</property> to osomething appropriate.</para>
+      <listitem><para>Set <property>root</property> to something appropriate.</para>
       </listitem>
       
       <listitem><para>Set <property>port</property> to a number
@@ -303,7 +303,7 @@
 <chapter id="configuration">
   <title>Configuration</title>
   <para>
-    &PyGopherd; is regulated by a configuratoin file normally
+    &PyGopherd; is regulated by a configuration file normally
     stored in <filename>/etc/pygopherd/pygopherd.conf</filename>.
     You can specify an alternate configuration file on the command
     line.  The &PyGopherd; distribution ships
@@ -577,7 +577,7 @@
     </para>
     <para>
       At present, documentation on writing PYGs is not
-      provides, but you may find examples in the
+      provided, but you may find examples in the
       <property>pygfarm</property> directory included with the
       &PyGopherd; distribution.
     </para>
@@ -739,7 +739,7 @@ Host=zippy.micro.umn.edu
 	Numb= specifies that this entry should be presented first
 	in the directory list (instead of being alphabetized).
 	The "Numb=" line is optional.  If it is present it cannot
-	be the last line of the link.  The "Port=" and "Host="
+	be the last line of the link.  The "Host=" and "Port="
 	lines specify a fully qualified domain name (FQDN) and a
 	port respectively.  You may substitute a plus '+' for
 	these two parameters if you wish.  The server will insert
@@ -851,10 +851,10 @@ Path=./fred
       </programlisting>
 
       <para>
-	by overriding default type to be "X".  This kind of
-	hideouts may be usefull, when for some reason there are
+	by overriding default type to be "X".  This
+	may be useful, when for some reason there are
 	symlinks (or whatever) in the directory at which
-	&PyGopherd; looks at, and those entries are not desired to
+	&PyGopherd; looks, and those entries are not desired to
 	be shown at all.
       </para>
     </sect2>
