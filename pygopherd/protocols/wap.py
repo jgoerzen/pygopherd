@@ -20,18 +20,17 @@
 from http import HTTPProtocol
 import cgi, re
 
+accesskeys = '1234567890#*'
+
 class WAPProtocol(HTTPProtocol):
     # canhandlerequest inherited
     def canhandlerequest(self):
-        print "wapcanhandlerequest"
         ishttp = HTTPProtocol.canhandlerequest(self)
         if not ishttp:
             return 0
 
         waptop = self.config.get("protocols.wap.WAPProtocol",
                                  "waptop")
-        print "waptop", waptop
-        print "rp1", self.requestparts[1]
         if self.requestparts[1].startswith(waptop):
             self.requestparts[1] = self.requestparts[1][len(waptop):]
             return 1
@@ -46,9 +45,16 @@ class WAPProtocol(HTTPProtocol):
         return mimetype
 
     def getrenderstr(self, entry, url):
+        global accesskeys
         retstr = ''
+        if not hasattr(self, 'accesskeyidx'):
+            self.accesskeyidx
         if not entry.gettype() in ['i', '7']:
-            retstr += '<a href="%s">' % url
+            retstr += '<a '
+            if self.accesskeyidx < len(accesskeys):
+                retstr += 'accesskey="%s" ' % accesskeys[accesskeyidx]
+                self.accesskeyidx += 1
+            retstr += 'href="%s">' % url
         if entry.getname() != None:
             retstr += cgi.escape(entry.getname())
         else:
@@ -71,6 +77,7 @@ class WAPProtocol(HTTPProtocol):
                   cgi.escape(title)
         
         retval += "\n<p>\n"
+        retval += "<b>%s</b><br/>\n" % cgi.escape(title)
         return retval
 
     def renderdirend(self, entry):
