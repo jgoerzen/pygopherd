@@ -72,23 +72,23 @@ def initmimetypes(config):
 
     pygopherd.fileext.init()
 
-def getserverclass(config):
-    class GopherRequestHandler(SocketServer.StreamRequestHandler):
-        def handle(self):
-            request = self.rfile.readline()
+class GopherRequestHandler(SocketServer.StreamRequestHandler):
+    def handle(self):
+        request = self.rfile.readline()
 
-            protohandler = \
-                         ProtocolMultiplexer.getProtocol(request, \
-                         self.server, self, self.rfile, self.wfile, self.server.config)
-            try:
-                protohandler.handle()
-            except:
-                if GopherExceptions.tracebacks:
-                    # Yes, this may be invalid.  Not much else we can do.
-                    traceback.print_exc(file = self.wfile)
-                    traceback.print_exc()
-                GopherExceptions.log(sys.exc_info()[1], protohandler, None)
+        protohandler = \
+                     ProtocolMultiplexer.getProtocol(request, \
+                     self.server, self, self.rfile, self.wfile, self.server.config)
+        try:
+            protohandler.handle()
+        except:
+            if GopherExceptions.tracebacks:
+                # Yes, this may be invalid.  Not much else we can do.
+                traceback.print_exc(file = self.wfile)
+                traceback.print_exc()
+            GopherExceptions.log(sys.exc_info()[1], protohandler, None)
 
+def getserverobject(config):
     # Pick up the server type from the config.
 
     servertype = eval("SocketServer." + config.get("pygopherd", "servertype"))
@@ -152,7 +152,7 @@ def initeverything(conffile):
     initlogger(config, conffile)
     initexceptions(config)
     initmimetypes(config)
-    s = getserverclass(config)
+    s = getserverobject(config)
     initsecurity(config)
     
     logger.log("Root is '%s'" % config.get("pygopherd", "root"))

@@ -12,10 +12,11 @@ class initializationConfigTestCase(unittest.TestCase):
         config = initialization.initconffile('conf/pygopherd.conf')
         assert not config.has_option("pygopherd", "servername"), \
                "servername should be disabled by default"
-        assert config.getint("pygopherd", "port") == 70, \
-               "Port should be 70"
-        assert config.get("pygopherd", "servertype") == "ForkingTCPServer",\
-               "Servertype should be ForkingTCPServer"
+        self.assertEqual(config.getint("pygopherd", "port"), 70,
+               "Port should be 70")
+        self.assertEqual(config.get("pygopherd", "servertype"),
+                         "ForkingTCPServer",
+                         "Servertype should be ForkingTCPServer")
         assert config.getboolean("pygopherd", "tracebacks"), \
                "Tracebacks should be enabled."
 
@@ -37,13 +38,13 @@ class initializationGeneralTestCase(unittest.TestCase):
         self.config.set("logger", "logmethod", "none")
         initialization.initlogger(self.config, 'TESTING')
         initialization.initmimetypes(self.config)
-        assert mimetypes.types_map['.txt'] == 'text/plain'
-        assert mimetypes.encodings_map['.bz2'] == 'bzip2'
+        self.assertEqual(mimetypes.types_map['.txt'], 'text/plain')
+        self.assertEqual(mimetypes.encodings_map['.bz2'], 'bzip2')
         assert '.txt' in fileext.typemap['text/plain']
 
-    def testgetserverclass(self):
+    def testgetserverobject(self):
         self.config.set("pygopherd", "port", "22270")
-        s = initialization.getserverclass(self.config)
+        s = initialization.getserverobject(self.config)
         assert isinstance(s, SocketServer.ForkingTCPServer)
 
     def testinitsecurity(self):
