@@ -113,8 +113,14 @@ def getserverobject(config):
     if config.has_option('pygopherd', 'interface'):
         servername = config.get('pygopherd', 'interface')
 
-    s = MyServer((interface, config.getint('pygopherd', 'port')),
-                 GopherRequestHandler)
+    try:
+        s = MyServer((interface, config.getint('pygopherd', 'port')),
+                     GopherRequestHandler)
+    except:
+        GopherExceptions.log(sys.exc_info()[1], None, None)
+        logger.log("Application startup NOT successful!")
+        raise
+        
     s.config = config
     return s
 

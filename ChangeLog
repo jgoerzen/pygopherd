@@ -1,3 +1,17 @@
+2002-07-02 11:34  jgoerzen
+
+	* pygopherd/: GopherExceptions.py, handlers/html.py: Really fixed
+	the bug this time.
+
+2002-07-02 11:30  jgoerzen
+
+	* debian/changelog, debian/rules, pygopherd/version.py,
+	pygopherd/handlers/html.py: Fixed a bug with HTML processing
+
+2002-07-02 11:04  jgoerzen
+
+	* ChangeLog: Prep for 0.9.13
+
 2002-07-02 11:03  jgoerzen
 
 	* pygopherd/: initialization.py, sighandlers.py: Added signal

@@ -1,3 +1,11 @@
+pygopherd (0.9.14) unstable; urgency=low
+
+  * Fixed some more bugs -- HTMLParser.
+  * Detect failure to allocate a socket and log it.  And still scream about
+    it.
+
+ -- John Goerzen <jgoerzen@complete.org>  Tue,  2 Jul 2002 11:45:20 -0500
+
 pygopherd (0.9.13) unstable; urgency=low
 
   * Added signal handlers so shutdowns work properly.
