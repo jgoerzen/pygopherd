@@ -2,6 +2,7 @@
 import re
 import os, stat, os.path, mimetypes, protocols, gopherentry
 import handlers, handlers.base
+from handlers.dir import DirHandler
 
 def sgn(a):
     """Returns -1 if less than 0, 1 if greater than 0, and 0 if
@@ -34,27 +35,43 @@ def entrycmp(entry1, entry2):
     else:
         return 1
 
-class UMNLinkFile:
-    def __init__(self, filename, config, pathname, selector = None):
-        """Args: filename of the file to process.
-        The global config file.
-        The name of the directory we are looking at.
-        An optional selector default [deprecated]"""
-        self.fd = open(filename, "rt")
-        self.filename = filename
-        self.config = config
-        self.pathname = pathname
-        self.selector = selector
+class UMNDirHandler(DirHandler):
+    """This module strives to be bug-compatible with UMN gopherd."""
+    def prepare(self):
+        self.linkfiles = []
+        DirHandler.prepare(self)
+        self.processLinkFiles()
+        
+    def processLinkFiles(self):
+        newfiles = []
+        for filename in self.files:
+            if filename[0] == '.' and not os.path.isdir(self.fsbase + '/' + filename):
+                self.processLinkFile(self.fsbase + '/' + filename)
+            else:
+                newfiles.append(filename)
+        self.files = newfiles
 
-    def getLinkItem(self):
+    def processLinkFile(self, filename):
+        fd = open(filename, "rt")
+        while 1:
+            nextstep, entry = self.getLinkItem(fd)
+            if entry:
+                self.linkfiles.append(entry)
+            if nextstep == 'stop':
+                break
+    
+        
+    def getLinkItem(self, fd):
         """This is an almost exact clone of UMN's GSfromLink function."""
-        entry = GopherEntry(self.selector, self.config)
+        entry = GopherEntry(self.entry.selector, self.config)
+        nextstep = 'continue'
 
         done = {'path' : 0, 'type' : 0, 'name' : 0, 'host' : 0, 'port' : 0}
         
         while 1:
-            line = self.fd.readline()
+            line = fd.readline()
             if not line:
+                nextstep = 'stop'
                 break
             line = line.strip()
 
@@ -90,63 +107,15 @@ class UMNLinkFile:
                 done['port'] = 1
             elif line[0:5] == 'Numb=':
                 entry.setnum(int(line[5:]))
+            elif line[0:9] == 'Abstract=' or \
+                 line[0:6] == 'Admin=' or \
+                 line[0:4] == 'URL=' or \
+                 line[0:4] == 'TTL=':
+                pass
+            else:
+                break
             ### FIXME: Handle Abstract, Admin, URL, TTL
 
         if done['path']:
-            return entry
-        return None
-
-class UMNDirHandler(handlers.dir.DirHandler):
-
-class DirHandler(handlers.base.BaseHandler):
-    def canhandlerequest(self):
-        """We can handle the request if it's for a directory."""
-        return os.path.isdir(self.getfspath())
-
-    def getentry(self):
-        if not self.entry:
-            self.entry = gopherentry.GopherEntry(self.selector, self.config)
-            self.entry.populatefromfs(self.getfspath())
-        return self.entry
-
-    def prepare(self):
-        self.files = os.listdir(self.getfspath())
-        self.files.sort()
-
-    def write(self, wfile):
-        selectorbase = self.selector
-        if selectorbase == '/':
-            selectorbase = ''           # Avoid dup slashes
-        fsbase = self.getfspath()
-        if fsbase == '/':
-            fsbase = ''                 # Avoid dup slashes
-
-        ignorepatt = self.config.get("handlers.dir.DirHandler", "ignorepatt")
-
-        startstr = self.protocol.renderdirstart(self.entry)
-        if (startstr):
-            wfile.write(startstr)
-
-        for file in self.files:
-            # Skip files we're ignoring.
-            if re.search(ignorepatt, selectorbase + '/' + file):
-                continue
-            
-            fileentry = gopherentry.GopherEntry(selectorbase + '/' + file,
-                                          self.config)
-            fileentry.populatefromfs(fsbase + '/' + file)
-            wfile.write(self.protocol.renderobjinfo(fileentry))
-
-        endstr = self.protocol.renderdirend(self.entry)
-        if (endstr):
-            wfile.write(endstr)
-
-            
-
-
-##################################################
-# Port from UMN C source
-##################################################
-
-def GSfromLink(gs, fio, host, port, directory, peer):
-    
+            return (nextstep, entry)
+        return (nextstep, None)
