@@ -1,0 +1,110 @@
+#LyX 1.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 218
+\textclass docbook-book
+\language english
+\inputencoding auto
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+pygopherd: A Multiprotocol Information Server
+\layout Author
+
+John Goerzen
+\layout Author
+
+<jgoerzen@complete.org>
+\layout Date
+
+$Date: 2002/04/05 23:55:50 $
+\layout Part
+
+Introduction
+\layout Standard
+
+Welcome to pygopherd.
+ In a nutshell, pygopherd is a modern dynamic multi-protocol hierarchical
+ information server with a pluggable modularized extension system, full
+ flexible caching, virtual files and folders, and autodetection of file
+ types -- all with support for standardized yet extensible per-document
+ metadata.
+ Whew! Read on for information on this what all these buzzwords mean.
+\layout Chapter
+
+Features of pygopherd
+\layout Section
+
+Basic
+\layout Standard
+
+Pygopherd is designed to serve up files using the Gopher Internet protocol.
+ With Gopher, you can mount a filesystem (viewing files and folders as if
+ they were local), browse Gopherspace with a web browser, download files,
+ and be interactive with searching.
+\layout Standard
+
+But this is only part of the story.
+ The world of Gopher is more expansive than this.
+ There are two major gopher protocols: Gopher0 (also known as RFC1436) and
+ Gopher+.
+ Gopher0 is a small, simple, lightweight protocol that is very functional
+ yet also extremely easy to implement.
+ Gopher0 clients can be easily places in small embedded devices or in massive
+ environments like a modern web browser.
+\layout Standard
+
+Gopher+ is based on Gopher0 but extends it by providing document metadata
+ such as file size and MIME type.
+ Gopher+ allows all sorts of neat features, such as configurable metadata
+ (serving up a bunch of photos? Add a Subject field to your metadata to
+ let a customized photo browser display who is pictured) and multiple views
+ of a file (let the user select to view your photos as PNG or JPEG).
+\layout Standard
+
+Pygopherd supports both.
+\layout Standard
+
+Pygopherd also fully natively supports HTTP, the protocol used on the Internet
+ for most Web transactions.
+ So, you can access a pygopherd server using anything from a small, 20-line
+ client in mobile phone to a massive 50-MB web browser.
+\layout Section
+
+Modularity
+\layout Standard
+
+Pygopherd is designed in an extremely modular fashion.
+ In fact, all protocols in pygopherd and all handlers are modules.
+ You can easily select which modules to use and which to exclude, and the
+ order in which they are tried.
+ Protocol modules implement different ways of speaking to clients (HTTP,
+ Gopher+, Gopher0) and handler modules implement different ways of handling
+ data on the local machine (files, directories, links, mailboxes, etc.)
+\layout Section
+
+Feature list
+\layout Standard
+
+Here are some of pygopherd's features:
+\layout Standard
+
+\layout Author
+
+\the_end
