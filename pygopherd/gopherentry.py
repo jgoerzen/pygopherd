@@ -164,20 +164,17 @@ class GopherEntry:
 
     def handleeaext(self, selector, vfs):
         """Handle getting extended attributes from the filesystem."""
-        print vfs
         global eaexts
         if eaexts == None:
             eaexts = eval(self.config.get("GopherEntry", "eaexts"))
         if vfs == None:
             from pygopherd.handlers.base import VFS_Real
             vfs = VFS_Real(self.config)
-        print vfs
 
         for extension, blockname in eaexts.items():
             if self.ea.has_key(blockname):
                 continue
             try:
-                print "Opening", selector + extension
                 rfile = vfs.open(selector + extension, "rt")
                 self.setea(blockname, "\n".join(
                            [x.strip() for x in rfile.readlines(20480)]))
