@@ -243,7 +243,7 @@ class UMNDirHandler(DirHandler):
         if done['path']:
             if entry.getneedsabspath() and \
                    entry.gethost() == None and entry.getport() == None:
-                entry.setselector(self.selectorbase + "/" + entry.getselector())
+                entry.setselector(os.path.normpath(self.selectorbase + "/" + entry.getselector()))
             return (nextstep, entry)
         return (nextstep, None)
 
