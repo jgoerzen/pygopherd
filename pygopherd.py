@@ -22,49 +22,18 @@
 #
 
 from ConfigParser import ConfigParser
-import socket, os, sys, signal
+import socket, os, sys, signal, SocketServer
 
 config = ConfigParser()
 config.read("pygopherd.conf")
 
+class RHandler(SocketServer.StreamRequestHandler):
+    def handle(self):
+        self.wfile.write("Foo\n")
 
-# Initialize server.
+class MyServer(SocketServer.ForkingTCPServer):
+    allow_reuse_address = 1
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.bind(('', config.getint('serving', 'port')))
-s.listen(25)
-
-
-def closeupshop(signum, frame):
-    s.close()
-    print "Closeupshop."
-    sys.exit(0)
-
-def waitchildren(signum, frame):
-    os.waitpid(-1, os.WNOHANG)
-    return
-    try:
-        while (os.waitpid(-1, os.WNOHANG)):
-            print "Reaped a child process."
-    except OSError:
-        return
-
-signal.signal(signal.SIGINT, closeupshop)
-signal.signal(signal.SIGQUIT, closeupshop)
-signal.signal(signal.SIGCHLD, waitchildren)
-
-while 1:
-    conn, addr = s.accept()
-    if os.fork():
-        print "Parent.  Closing conn."
-        conn.close()
-    else:
-        print "Child.  Closing s."
-        s.close()
-        print conn
-        print addr
-        conn.send("foo\n")
-        conn.shutdown(2)
-        conn.close()
-        sys.exit(0)
+s = MyServer(('', config.getint('serving', 'port')),
+             RHandler)
+s.serve_forever()
