@@ -23,6 +23,7 @@
 
 from pygopherd import initialization, logger
 from StringIO import StringIO
+import os
 
 def getconfig():
     config = initialization.initconffile('conf/pygopherd.conf')

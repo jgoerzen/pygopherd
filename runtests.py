@@ -28,7 +28,8 @@ from pygopherd import *
 def suite():
     tests = [initializationTest,
              GopherExceptionsTest,
-             fileextTest
+             fileextTest,
+             gopherentryTest
         ]
     suite = unittest.TestSuite()
     for module in tests:
