@@ -22,6 +22,8 @@ class PYGMain(PYGBase):
             self.__class__ = Define
         elif self.dbcommand == 'MATCH':
             self.__class__ = Match
+        elif self.dbcommand == 'DBINFO':
+            self.__class__ = DBInfo
         elif self.dbname:
             self.__class__ = Browse
         else:
@@ -88,6 +90,16 @@ class Browse(PYGMain):
         for item in intro:
             self.entries.append(getinfoentry(item, self.config))
 
+        if self.dbname != '*':
+            selector = self.genargsselector("/%s/DBINFO" % self.dbname)
+            entry = GopherEntry(selector, self.config)
+            entry.type = '0'
+            entry.mimetype = 'text/plain'
+            dictconn = dictclient.Connection()
+            entry.name = 'About ' + \
+                         dictclient.Database(dictconn, self.dbname).getdescription()
+            self.entries.append(entry)
+
         selector = self.genargsselector("/%s/MATCH/re/^[^a-zA-Z]" % \
                                         self.dbname)
         entry = GopherEntry(selector, self.config)
@@ -119,5 +131,3 @@ class Browse(PYGMain):
     def getdirlist(self):
         return self.entries
 
-    
-            
