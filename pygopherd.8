@@ -2,7 +2,9 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH OFFLINEIMAP 1 "July 12, 2002" "John Goerzen" "OfflineIMAP manual"
+.\" **************************************************
+.TH PYGOPHERD 8 "August 8, 2002" "John Goerzen" "PyGopherd Manual"
+.\" **************************************************
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -15,98 +17,151 @@
 .\" .br        insert line break
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
+.\"
+.\" **********************************************************************
 .SH NAME
-OfflineIMAP \- Powerful IMAP/Maildir synchronization and reader support
+PyGopherd \- Multiprotocol Information Server
+.\" **********************************************************************
 .SH SYNOPSIS
-.B offlineimap
-[
-.BI \-1
-]
-[
-.BI \-P \ profiledir
-]
-[
-.BI \-a \ accountlist
-]
-[
-.BI \-c \ configfile
-]
-.\".br
-[
-.BI \-d \ debugtype[,debugtype...]
-]
-[
-.BI \-o
-]
-[
-.BI \-u " interface"
-]
-
-.\".RI [ -c \ foo ]
-.\".RI [ options ] " files" ...
-.br
-.B offlineimap
-.B \-h 
-|
-.B \-\-help
-.\".RI [ options ] " files" ...
+.BI pygopherd\  [configfile]
+.\" **********************************************************************
 .SH DESCRIPTION
-.B OfflineIMAP
-is a tool to simplify your e-mail reading.  With 
-.B OfflineIMAP,
-you can read the same mailbox from multiple computers.  You get a
-current copy of your messages on each computer, and changes you make
-one place will be visible on all other systems.  For instance, you can
-delete a message on your home computer, and it will appear deleted on
-your work computer as well.
-.B OfflineIMAP
-is also useful if you want to use a mail reader that does not have
-IMAP support, has poor IMAP support, or does not provide disconnected
-operation.
-.PP
-.B OfflineIMAP
-is
-.I FAST;
-it synchronizes my two accounts with over 50 folders in 3 seconds.
-Other similar tools might take over a minute, and achieve a
-less-reliable result.  Some mail readers can take over 10 minutes to
-do the same thing, and some don't even support it at all.  Unlike
-other mail tools,
-.B OfflineIMAP
-features a multi-threaded synchronization algorithm that can
-dramatically speed up performance in many situations by synchronizing
-several different things simultaneously.
-.PP
-.B OfflineIMAP
-is
-.I FLEXIBLE;
-you can customize which folders are synced via regular expressions, lists, or
-Python expressions; a versatile and comprehensive configuration file
-is used to control behavior; two user interfaces are built-in;
-fine-tuning of synchronization performance is possible; internal or
-external automation is supported; SSL and PREAUTH tunnels are both
-supported; offline (or "unplugged") reading is supported; and
-esoteric IMAP features are supported to ensure compatibility with the
-widest variety of IMAP servers.
-.PP
-.B OfflineIMAP
-is
-.I SAFE;
-it uses an algorithm designed to prevent mail loss at all costs.
-Because of the design of this algorithm, even programming errors
-should not result in loss of mail.  I am so confident in the algorithm
-that I use my own personal and work accounts for testing of
-.B OfflineIMAP
-pre-release, development, and beta releases.
-.SS "METHOD OF OPERATION"
-.B OfflineIMAP
-operates by maintaining a hierarchy of mail folders in Maildir format
-locally.  Your own mail reader will read mail from this tree, and need
-never know that the mail comes from IMAP.
-.B OfflineIMAP
-will detect changes to the mail folders on your IMAP server and your
-own computer and bi-directionally synchronize them, copying, marking,
-and deleting messages as necessary.
+
+Welcome to \fBPyGopherd\fP. In a nutshell, \fBPyGopherd\fP is a modern dynamic
+multi-protocol hierarchical information server with a pluggable
+modularized extension system, full flexible caching, virtual files and
+folders, and autodetection of file types -- all with support for
+standardized yet extensible per-document metadata. Whew! Read on for
+information on this what all these buzzwords mean.
+
+\fBPyGopherd\fP is designed to serve up files using the Gopher Internet
+protocol. With Gopher, you can mount a filesystem (viewing files and
+folders as if they were local), browse Gopherspace with a web browser,
+download files, and be interactive with searching.
+
+But this is only part of the story. The world of Gopher is more
+expansive than this. There are two major gopher protocols: Gopher0
+(also known as RFC1436) and Gopher+. Gopher0 is a small, simple,
+lightweight protocol that is very functional yet also extremely easy
+to implement. Gopher0 clients can be easily places in small embedded
+devices or in massive environments like a modern web browser.
+
+Gopher+ is based on Gopher0 but extends it by providing document
+metadata such as file size and MIME type. Gopher+ allows all sorts of
+neat features, such as configurable metadata (serving up a bunch of
+photos? Add a Subject field to your metadata to let a customized photo
+browser display who is pictured) and multiple views of a file (let the
+user select to view your photos as PNG or JPEG).
+
+\fBPyGopherd\fP supports both.
+
+\fBPyGopherd\fP also fully natively supports HTTP, the protocol used
+on the Internet for most Web transactions. So, you can access a
+\fBPyGopherd\fP server using anything from a small, 20-line client in
+mobile phone to a massive 50-MB web browser.
+
+.SS MODULARITY
+
+\fBPyGopherd\fP is designed in an extremely modular fashion. In fact, all
+protocols in \fBPyGopherd\fP and all handlers are modules. You can easily
+select which modules to use and which to exclude, and the order in
+which they are tried. Protocol modules implement different ways of
+speaking to clients (HTTP, Gopher+, Gopher0) and handler modules
+implement different ways of handling data on the local machine (files,
+directories, links, mailboxes, etc.)
+
+.SS FEATURE LIST
+
+Here are some of \fBPyGopherd\fP's features:
+
+.IP \(em
+Runs on any platform supported by Python 2.2. This includes virtually
+every past and current flavor of Unix (Linux, *BSD, Solaris, SunOS),
+Windows, MacOS 9.x and 10.x, and more. Some features may not be
+available on non-Unix platforms, however.
+
+.IP \(em
+Runs on any platform supported by Java 1.1 via the Jython Python
+implementation.
+
+.IP \(em
+Tunable server types via configuration directive -- forking or
+threading.
+
+.IP \(em
+Secure design with support for chrooted execution.
+
+.IP \(em
+Feature-complete, full implementations of Gopher0 (RFC1436), Gopher+,
+and HTTP/1.0.
+
+.IP \(em
+Complete support Bucktooth-style gophermap files.
+
+.IP \(em
+Complete support for UMN-type .Links, .names, etc. files and support
+for .cap directories.
+
+.IP \(em
+Support for automatically finding the titles of HTML documents for
+presentation in a directory.
+
+.IP \(em
+Virtual folder support can present many different types of files as
+folders. Some examples are:
+
+.RS
+
+.IP \(em
+Can present any Unix MBOX, MMDF box, MH directory, Maildir directory,
+or Babyl mailbox as a virtual folder, the contents of which are the
+messages in the mailbox.
+
+.IP \(em
+Can use a configurable separator to split a file into multiple
+parts, the first line of each becoming the name for the virtual
+folder.
+
+.RE
+
+.IP \(em
+Versatile configuration file format is both extensible and nicely
+complementary of the module system.
+
+.IP \(em
+Several options for running external programs to generate dynamic
+content: UMN-style execution, Bucktooth-style execution, or Pygopher
+PYG objects.
+
+.IP \(em
+Protocol-independant, handler-dependant caching. This speeds up time
+by letting handlers cache dynamically-generated information --
+currently used by the two directory handlers. This can improve
+performance of directories by several orders of magnitude. Because
+this is a handler cache only, all protocols can share the single cache
+-- and since the processing time of the protocols is negligable
+anyway, it works very well.
+
+.IP \(em
+Autosensing of MIME types and gopher0 item types. Both are completely
+configurable. MIME type detection is done using a standard mime.types
+file, and gopher0 types are calculated by using a configurable
+regexp-based MIME-to-gophertype map.
+
+.IP \(em
+Heavy support of regular expressions in configuration.
+
+.IP \(em
+ProtocolMultiplexer and HandlerMultiplexer let you choose only those
+protocols and handlers that you wish your server to support and the
+order in which they are tried when a request comes in.
+
+.IP \(em
+Modular architecture permits rapid prototyping of new capabilities.
+
+.IP \(em
+Full logging via syslog.
+
 .SH INSTALLATION
 If you are reading this document via the "man" command, it is likely
 that you have no installation tasks to perform; your system
