@@ -16,9 +16,24 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import re, time, stat, unittest, os.path, struct, types, fcntl, shelve
+import re, time, stat, unittest, os.path, struct, types, fcntl, shelve, marshal
 from StringIO import StringIO
 from pygopherd import zipfile
+
+class MarshalingShelf(shelve.Shelf):
+    def __getitem__(self, key):
+        return marshal.loads(self.dict[key])
+
+    def __setitem__(self, key, value):
+        self.dict[key] = marshal.dumps(value)
+
+class DbfilenameShelf(MarshalingShelf):
+    def __init__(self, filename, flag='c'):
+        import anydbm
+        MarshalingShelf.__init__(self, anydbm.open(filename, flag))
+
+def shelveopen(filename, flag='c'):
+    return DbfilenameShelf(filename, flag)
 
 UNX_IFMT = 0170000L
 UNX_IFLNK = 0120000L
@@ -54,7 +69,7 @@ class VFS_Zip(base.VFS_Real):
                 return 0
             
             try:
-                self.dircache = shelve.open(fspath, 'r')
+                self.dircache = shelveopen(fspath, 'r')
             except:
                 self._createcache(fspath)
                 return 0
@@ -64,8 +79,9 @@ class VFS_Zip(base.VFS_Real):
     def _createcache(self, fspath):
         self.dircache = {}
         try:
-            self.dbdircache = shelve.open(fspath, 'n')
+            self.dbdircache = shelveopen(fspath, 'n')
         except:
+            #raise
             return 0
 
     def _savecache(self):
@@ -328,8 +344,8 @@ class VFS_Zip(base.VFS_Real):
         return retobj.keys()
 
 
-#class TestVFS_Zip_huge(unittest.TestCase):
-class DISABLED_TestVFS_Zip_huge:
+class TestVFS_Zip_huge(unittest.TestCase):
+#class DISABLED_TestVFS_Zip_huge:
     def setUp(self):
         from pygopherd import testutil
         from pygopherd.protocols.rfc1436 import GopherProtocol
