@@ -21,7 +21,40 @@
 
 #
 
-import ConfigParser
+from ConfigParser import ConfigParser
+import socket, os, sys, signal
 
 config = ConfigParser()
 config.read("pygopherd.conf")
+
+
+# Initialize server.
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+s.bind(('', config.getint('serving', 'port')))
+s.listen(25)
+
+def closeupshop(signum, frame):
+    s.close()
+    print "Closeupshop."
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, closeupshop)
+signal.signal(signal.SIGQUIT, closeupshop)
+
+
+while 1:
+    conn, addr = s.accept()
+    if os.fork():
+        print "Parent.  Closing conn."
+        conn.close()
+    else:
+        print "Child.  Closing s."
+        s.close()
+        print conn
+        print addr
+        conn.send("foo\n")
+        conn.shutdown(2)
+        conn.close()
+        sys.exit(0)
