@@ -24,7 +24,7 @@ from pygopherd import handlers, GopherExceptions, logger, gopherentry
 from pygopherd.handlers import HandlerMultiplexer
 
 class BaseGopherProtocol:
-    """Skeleton protocl -- includes commonly-used routines."""
+    """Skeleton protocol -- includes commonly-used routines."""
     def __init__(self, request, server, requesthandler, rfile, wfile, config):
         """Parameters are:
         request -- the raw request string.

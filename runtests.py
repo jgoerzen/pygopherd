@@ -26,6 +26,8 @@ import unittest
 from pygopherd import *
 import pygopherd.protocols
 import pygopherd.protocols.ProtocolMultiplexerTest
+import pygopherd.protocols.baseTest
+import pygopherd.protocols
 
 def suite():
     tests = [initializationTest,
@@ -34,7 +36,8 @@ def suite():
              gopherentryTest,
              loggerTest,
              pipeTest,
-             pygopherd.protocols.ProtocolMultiplexerTest
+             pygopherd.protocols.ProtocolMultiplexerTest,
+             pygopherd.protocols.baseTest
         ]
     suite = unittest.TestSuite()
     for module in tests:
