@@ -1,3 +1,63 @@
+2002-04-10 16:02  jgoerzen
+
+	* pygopherd/handlers/: UMN.py, dir.py: Fixed some more bugs: don't
+	crash if we have no perms to create a cache file, handle relative
+	Path= lines correctly.
+
+2002-04-10 15:56  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Fixed a relative path handling bug.
+
+2002-04-10 15:53  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Fixed a bug in Numb handling.
+
+2002-04-10 15:51  jgoerzen
+
+	* pygopherd/handlers/UMN.py: Fixed a bug with type=X
+
+2002-04-10 15:39  jgoerzen
+
+	* pygopherd.py, pygopherd/gopherentry.py,
+	pygopherd/handlers/file.py: Additional bugfixes and enhancements
+
+2002-04-10 15:22  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/handlers/file.py: Added
+	decompresspatt support.
+
+2002-04-10 15:13  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/gopherentry.py,
+	pygopherd/handlers/file.py: Additional fixes for extension and
+	encoding support.
+
+2002-04-10 15:05  jgoerzen
+
+	* pygopherd/handlers/file.py: Forgot to make getentry() return
+	something.
+
+2002-04-10 15:03  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/fileext.py,
+	pygopherd/handlers/UMN.py, pygopherd/handlers/file.py,
+	pygopherd/protocols/rfc1436.py: More updates and features with
+	extensions and stuff.
+
+2002-04-10 14:43  jgoerzen
+
+	* pygopherd/: gopherentry.py, handlers/file.py: Modified encoding
+	handling: default is to now set application/octet-stream of there
+	is any encoding UNLESS the CompressedFileHandler is used.
+
+2002-04-10 14:26  jgoerzen
+
+	* Makefile: Renamed changelog target
+
+2002-04-10 14:19  jgoerzen
+
+	* ChangeLog: Updated.
+
 2002-04-10 14:18  jgoerzen
 
 	* pygopherd/: __init__.py, pipe.py: Added pipe.py
