@@ -5,6 +5,10 @@ pygopherd (1.99.0) unstable; urgency=low
     (as was the only option in the past)
   * Implemented VFS_ZIP, the VFS module for ZIP archives.
   * New handler ZIP to work with VFS_ZIP.
+  * Implemented symlink capabilities for VFS_ZIP.
+  * Implemented directory symlink capabilities for VFS_ZIP.
+  * Wrote extensive test battery for VFS_ZIP and VFS_ZIP's symlink handling.
+    All tests pass.
 
  -- John Goerzen <jgoerzen@complete.org>  Wed,  5 Mar 2003 22:24:43 -0600
 
