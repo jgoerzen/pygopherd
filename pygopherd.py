@@ -25,7 +25,7 @@
 from ConfigParser import ConfigParser
 
 # Import lots of stuff so it's here before chrooting.
-import socket, os, sys, SocketServer, re, stat, os.path, UserDict, xreadlines
+import socket, os, sys, SocketServer, re, stat, os.path, UserDict, xreadlines, tempfile
 import time
 
 from pygopherd import handlers, protocols

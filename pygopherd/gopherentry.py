@@ -86,7 +86,7 @@ class GopherEntry:
             self.size = statval[6]          # Only set this if it's not a dir.
         mimetype, encoding = mimetypes.guess_type(self.selector, strict = 0)
 
-        if mimetype and (not self.mimetype) and encoding and (not self.encoding):
+        if (not self.mimetype) and encoding and (not self.encoding):
             self.mimetype = 'application/octet-stream'
             self.encoding = encoding
             self.encodedmimetype = mimetype

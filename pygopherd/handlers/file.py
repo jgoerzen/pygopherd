@@ -53,10 +53,11 @@ decompresspatt = None
 class CompressedFileHandler(FileHandler):
     def canhandlerequest(self):
         self.initdecompressors()
+        
         return FileHandler.canhandlerequest(self) and \
                self.getentry().realencoding and \
                decompressors.has_key(self.getentry().realencoding) and \
-               re.search(decompresspatt, self.getentry().getselector())
+               re.search(decompresspatt, self.selector)
 
     def getentry(self):
         if not self.entry:
@@ -82,8 +83,8 @@ class CompressedFileHandler(FileHandler):
                 eval(self.config.get("handlers.file.CompressedFileHandler",
                                      "decompressors"))
             decompresspatt = \
-                eval(self.config.get("handlers.file.CompressedFileHandler",
-                                     "decompresspatt"))
+                self.config.get("handlers.file.CompressedFileHandler",
+                                "decompresspatt")
 
     def write(self, wfile):
         global decompressors
