@@ -56,14 +56,14 @@ class TopMenu(PYGMain):
         selector = self.genargsselector("/*/DEFINE")
         entry = GopherEntry(selector, self.config)
         entry.type = '7'
-        entry.mimetype = 'application/gopher-dir'
+        entry.mimetype = 'application/gopher-menu'
         entry.name = 'Definition Lookup -- All Databases'
         self.entries.append(entry)
 
         selector = self.genargsselector("/*/MATCHMENU")
         entry = GopherEntry(selector, self.config)
         entry.type = '1'
-        entry.mimetype = 'application/gopher-dir'
+        entry.mimetype = 'application/gopher-menu'
         entry.name = 'Advanced Search -- All Databases'
         self.entries.append(entry)
 
@@ -79,14 +79,14 @@ class TopMenu(PYGMain):
             selector = self.genargsselector("/%s" % name)
             entry = GopherEntry(selector, self.config)
             entry.type = '1'
-            entry.mimetype = 'application/gopher-dir'
+            entry.mimetype = 'application/gopher-menu'
             entry.name = desc
             self.entries.append(entry)
 
     def getentry(self):
         entry = GopherEntry(self.selector, self.config)
         entry.type = '1'
-        entry.mimetype = 'application/gopher-dir'
+        entry.mimetype = 'application/gopher-menu'
         entry.name = 'Dictionary Search'
         return entry
 
@@ -111,14 +111,14 @@ class Browse(PYGMain):
         selector = self.genargsselector("/%s/DEFINE" % self.dbname)
         entry = GopherEntry(selector, self.config)
         entry.type = '7'
-        entry.mimetype = 'application/gopher-dir'
+        entry.mimetype = 'application/gopher-menu'
         entry.name = 'Search This Database'
         self.entries.append(entry)
 
         selector = self.genargsselector("/%s/MATCHMENU" % self.dbname)
         entry = GopherEntry(selector, self.config)
         entry.type = '1'
-        entry.mimetype = 'application/gopher-dir'
+        entry.mimetype = 'application/gopher-menu'
         entry.name = 'Advanced Search for This Database'
         self.entries.append(entry)
 
@@ -136,7 +136,7 @@ class Browse(PYGMain):
                                         self.dbname)
         entry = GopherEntry(selector, self.config)
         entry.type = '1'
-        entry.mimetype = 'application/gopher-dir'
+        entry.mimetype = 'application/gopher-menu'
         entry.name = "Items that do not begin with a letter"
         self.entries.append(entry)
         
@@ -146,14 +146,14 @@ class Browse(PYGMain):
                                             letter.lower()))
             entry = GopherEntry(selector, self.config)
             entry.type = '1'
-            entry.mimetype = 'application/gopher-dir'
+            entry.mimetype = 'application/gopher-menu'
             entry.name = letter
             self.entries.append(entry)
 
     def getentry(self):
         entry = GopherEntry(self.selector, self.config)
         entry.type = '1'
-        entry.mimetype = 'application/gopher-dir'
+        entry.mimetype = 'application/gopher-menu'
         entry.name = 'Dictionary Database Browse'
         return entry
 
@@ -167,7 +167,7 @@ class DefineMenu(PYGMain):
     def getentry(self):
         entry = GopherEntry(self.selector, self.config)
         entry.type = '1'
-        entry.mimetype = 'application/gopher-dir'
+        entry.mimetype = 'application/gopher-menu'
         entry.name = 'Definition Menu for %s' % self.commandargs[0]
         return entry
     
@@ -221,7 +221,7 @@ class DefineMenu(PYGMain):
                                             (self.dbname, matchword))
             entry = GopherEntry(selector, self.config)
             entry.type = '1'
-            entry.mimetype = 'application/gopher-dir'
+            entry.mimetype = 'application/gopher-menu'
             entry.name = matchword
             self.entries.append(entry)
 
@@ -264,7 +264,7 @@ class Match(PYGMain):
     def getentry(self):
         entry = GopherEntry(self.selector, self.config)
         entry.type = '1'
-        entry.mimetype = 'application/gopher-dir'
+        entry.mimetype = 'application/gopher-menu'
         entry.name = 'Match menu for %s' % self.commandargs[1]
         return entry
 
@@ -287,7 +287,7 @@ class Match(PYGMain):
                                             (self.dbname, matchword))
             entry = GopherEntry(selector, self.config)
             entry.type = '1'
-            entry.mimetype = 'application/gopher-dir'
+            entry.mimetype = 'application/gopher-menu'
             entry.name = matchword
             self.entries.append(entry)
 
@@ -301,7 +301,7 @@ class MatchMenu(PYGMain):
     def getentry(self):
         entry = GopherEntry(self.selector, self.config)
         entry.type = '1'
-        entry.mimetype = 'application/gopher-dir'
+        entry.mimetype = 'application/gopher-menu'
         entry.name = 'Advanced Search Options for %s' % self.dbname
         return entry
 
@@ -317,7 +317,7 @@ class MatchMenu(PYGMain):
                                             (self.dbname, name))
             entry = GopherEntry(selector, self.config)
             entry.type = '7'
-            entry.mimetype = 'application/gopher-dir'
+            entry.mimetype = 'application/gopher-menu'
             entry.name = 'Search with %s (%s)' % (name, desc)
             self.entries.append(entry)
 

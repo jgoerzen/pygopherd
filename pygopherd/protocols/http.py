@@ -1,6 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: serve up gopherspace via http
-# $Id: http.py,v 1.18 2002/04/16 14:44:32 jgoerzen Exp $
+# $Id: http.py,v 1.19 2002/04/18 16:57:33 jgoerzen Exp $
 # Copyright (C) 2002 John Goerzen
 # <jgoerzen@complete.org>
 #
@@ -67,10 +67,12 @@ class HTTPProtocol(BaseGopherProtocol):
                 mtime = time.strftime("%a, %d %b %Y %H:%M:%S GMT", gmtime)
                 self.wfile.write("Last-Modified: " + mtime + "\n")
             mimetype = self.entry.getmimetype()
+            print "mimetype init", mimetype
             if mimetype == None:
                 mimetype = 'text/plain'
             if mimetype == 'application/gopher-menu':
                 mimetype = 'text/html'
+            print "mimetype final: '%s'", mimetype
             self.wfile.write("Content-Type: " + mimetype + "\n\n")
             if self.requestparts[0] == 'GET':
                 if handler.isdir():
