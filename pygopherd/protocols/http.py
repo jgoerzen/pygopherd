@@ -28,7 +28,7 @@ import cgi
 class HTTPProtocol(BaseGopherProtocol):
     def canhandlerequest(self):
         self.requestparts = map(lambda arg: arg.strip(), self.request.split(" "))
-        canhandle = len(self.requestparts) == 3 and \
+        return len(self.requestparts) == 3 and \
                (self.requestparts[0] == 'GET' or self.requestparts[0] == 'HEAD') and \
                self.requestparts[2][0:5] == 'HTTP/'
 
