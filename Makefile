@@ -27,12 +27,22 @@ clean:
 changelog:
 	svn log -v > ChangeLog
 
-docs:
-	docbook2man pygopherd.sgml
-	docbook2man pygopherd.sgml
-	docbook2html -u pygopherd.sgml
-	mv pygopherd.html manual.html
-	man -t -l pygopherd.8 > manual.ps
-	ps2pdf manual.ps
-	groff -Tascii -man pygopherd.8 | sed $$'s/.\b//g' > manual.txt
+docs: doc/pygopherd.8 doc/pygopherd.html doc/pygopherd.ps \
+	doc/pygopherd.pdf doc/pygopherd.txt
+
+doc/pygopherd.8: doc/pygopherd.sgml:
+	docbook2man doc/pygopherd.sgml
+	docbook2man doc/pygopherd.sgml
 	-rm manpage.links manpage.refs
+
+doc/pygopherd.html: doc/pygopherd.sgml
+	docbook2html -u doc/pygopherd.sgml
+
+doc/pygopherd.ps: doc/pygopherd.8
+	man -t -l pygopherd.8 > doc/pygopherd.ps
+
+doc/pygopherd.pdf: doc/pygopherd.ps
+	ps2pdf doc/pygopherd.ps
+
+doc/pygopherd.txt:
+	groff -Tascii -man doc/pygopherd.8 | sed $$'s/.\b//g' > doc/pygopherd.txt
