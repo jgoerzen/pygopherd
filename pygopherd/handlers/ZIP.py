@@ -35,9 +35,12 @@ class VFS_Zip(base.VFS_Real):
         (dir, file) = os.path.split(self.zipfilename)
         return os.path.join(dir, '.cache.pygopherd.zip.' + file)
 
-    def _loadcache(self):
+    def _initcache(self):
+        """Returns 1 if a cache was found existing; 0 if not."""
         filename = self._getcachefilename()
-        if self.chain.iswritable(filename):
+        if isinstance(base.VFS_Real, self.chain) and \
+               self.chain.iswritable(filename):
+            fspath = self.chain.getfspath(filename)
             zipfilemtime = self.chain.stat(self.zipfilename)[stat.ST_MTIME]
             try:
                 cachemtime = self.chain.stat(filename)[stat.ST_MTIME]
@@ -48,50 +51,30 @@ class VFS_Zip(base.VFS_Real):
                 return 0
             
             try:
-                fd = self.chain.open(filename)
-            except OSError:
+                self.dircache = shelve.open(fspath, 'r')
+            except:
+                # Need to create it.
+                try:
+                    self.dircache = shelve.open(fspath, 'c')
+                    # Initialize
+                    self.dircache['0'] = {}
+                except:
+                    pass
                 return 0
 
-            fcntl.flock(fd, fcntl.LOCK_SH)
-            (self.zip, self.dircache) = \
-                           UnpickleZipFileObject(cPickle.load(fd))
-            fcntl.flock(fd, fcntl.LOCK_UN)
             return 1
 
-    def _savecache(self):
-        filename = self._getcachefilename()
-        if not self.chain.iswritable(filename):
-            return
-
-        try:
-            fd = self.chain.open(filename, 'wb')
-        except OSError:
-            return
-
-        fcntl.flock(fd, fcntl.LOCK_EX)
-        try:
-            cPickle.dump(GetPicklableZipFile(self.zip, self.chain,
-                                             self.zipfilename, self.dircache),
-                         fd, 1)
-        except:
-            self.chain.unlink(filename)
-            fd.close()
-            raise
-
-        fd.close()
-
     def _initzip(self):
-        if self._loadcache():
-            self.memberinfo = self.zip.NameToInfo
-        else:
-            # For reading from a new Zip file.
-            zipfd = self.chain.open(self.zipfilename)
-            self.zip = zipfile.ZipFile(zipfd, 'r')
+        zipfd = self.chain.open(self.zipfilename)
+        self.zip = zipfile.ZipFile(zipfd, 'r')
+        # Initialize dircache.  If _initcache doesn't load anything,
+        # then we'll need this for _cachedir.
+        self.dircache = {'0': {}}
+        if not self._initcache():
             self.dircache = None
             # For reloading an existing one.  Must be called before _cachedir.
             self.memberinfo = self.zip.NameToInfo
             self._cachedir()
-            self._savecache()
 
     def _isentryincache(self, fspath):
         try:
@@ -120,7 +103,7 @@ class VFS_Zip(base.VFS_Real):
         if self.dircache != None:
             return
 
-        self.dircache = {'': '0', '0': {}}
+        self.dircache = {'0': {}}
         self.symlinkinodes = []
         nextinode = 1
         self.zip.GetContents()

@@ -1,3 +1,11 @@
+pygopherd (1.99.4) unstable; urgency=low
+
+  * Wrote my own ZIP file reader and heavily optimized it.  This reduced run
+    times for certain torture cases from over 100 seconds to somewhere
+    around 20, and others from over 200 seconds to around 80.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri,  7 Mar 2003 16:03:35 -0600
+
 pygopherd (1.99.3) unstable; urgency=low
 
   * Backed out ZIP content cache.  Was slower than the ZIP file itself.
