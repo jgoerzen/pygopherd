@@ -1,1942 +1,2205 @@
-<html>
-<head>
-<meta name="generator" content="groff -Thtml, see www.gnu.org">
-<meta name="Content-Style" content="text/css">
-<title>PYGOPHERD</title>
-</head>
-<body>
-
-<h1 align=center>PYGOPHERD</h1>
-<a href="#NAME">NAME</a><br>
-<a href="#SYNOPSIS">SYNOPSIS</a><br>
-<a href="#DESCRIPTION">DESCRIPTION</a><br>
-<a href="#INSTALLATION">INSTALLATION</a><br>
-<a href="#CONFIGURATION">CONFIGURATION</a><br>
-<a href="#OPTIONS">OPTIONS</a><br>
-<a href="#HANDLERS">HANDLERS</a><br>
-<a href="#GOPHER ITEM TYPES">GOPHER ITEM TYPES</a><br>
-<a href="#CONFORMING TO">CONFORMING TO</a><br>
-<a href="#BUGS">BUGS</a><br>
-<a href="#COPYRIGHT">COPYRIGHT</a><br>
-<a href="#AUTHOR">AUTHOR</a><br>
-<a href="#SEE ALSO">SEE ALSO</a><br>
-
-<hr>
-<!-- Creator     : groff version 1.17.2 -->
-<!-- CreationDate: Thu Aug  8 16:38:29 2002 -->
-<a name="NAME"></a>
-<h2>NAME</h2>
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-PyGopherd - Multiprotocol Information Server</td></table>
-<a name="SYNOPSIS"></a>
-<h2>SYNOPSIS</h2>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>pygopherd</b> <i>[configfile]</i></td></table>
-<a name="DESCRIPTION"></a>
-<h2>DESCRIPTION</h2>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Welcome to <b>PyGopherd</b>. In a nutshell, <b>PyGopherd</b>
-is a modern dynamic multi-protocol hierarchical information
-server with a pluggable modularized extension system, full
-flexible caching, virtual files and folders, and
-autodetection of file types -- all with support for
-standardized yet extensible per-document metadata. Whew!
-Read on for information on this what all these buzzwords
-mean.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>PyGopherd</b> is designed to serve up files using the
-Gopher Internet protocol. With Gopher, you can mount a
-filesystem (viewing files and folders as if they were
-local), browse Gopherspace with a web browser, download
-files, and be interactive with searching.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-But this is only part of the story. The world of Gopher is
-more expansive than this. There are two major gopher
-protocols: Gopher0 (also known as RFC1436) and Gopher+.
-Gopher0 is a small, simple, lightweight protocol that is
-very functional yet also extremely easy to implement.
-Gopher0 clients can be easily places in small embedded
-devices or in massive environments like a modern web
-browser.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Gopher+ is based on Gopher0 but extends it by providing
-document metadata such as file size and MIME type. Gopher+
-allows all sorts of neat features, such as configurable
-metadata (serving up a bunch of photos? Add a Subject field
-to your metadata to let a customized photo browser display
-who is pictured) and multiple views of a file (let the user
-select to view your photos as PNG or JPEG).</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>PyGopherd</b> supports both.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>PyGopherd</b> also fully natively supports HTTP, the
-protocol used on the Internet for most Web transactions. So,
-you can access a <b>PyGopherd</b> server using anything from
-a small, 20-line client in mobile phone to a massive 50-MB
-web browser.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>MODULARITY</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>PyGopherd</b> is designed in an extremely modular
-fashion. In fact, all protocols in <b>PyGopherd</b> and all
-handlers are modules. You can easily select which modules to
-use and which to exclude, and the order in which they are
-tried. Protocol modules implement different ways of speaking
-to clients (HTTP, Gopher+, Gopher0) and handler modules
-implement different ways of handling data on the local
-machine (files, directories, links, mailboxes,
-etc.)</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>FEATURE LIST</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Here are some of <b>PyGopherd</b>'s features:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Runs on any platform supported by Python 2.2. This includes
-virtually every past and current flavor of Unix (Linux,
-*BSD, Solaris, SunOS), Windows, MacOS 9.x and 10.x, and
-more. Some features may not be available on non-Unix
-platforms, however.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Runs on any platform supported by Java 1.1 via the Jython
-Python implementation.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Tunable server types via configuration directive -- forking
-or threading.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Secure design with support for chrooted
-execution.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Feature-complete, full implementations of Gopher0 (RFC1436),
-Gopher+, and HTTP/1.0.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Complete support Bucktooth-style gophermap
-files.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Complete support for UMN-type .Links, .names, etc. files and
-support for .cap directories.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Support for automatically finding the titles of HTML
-documents for presentation in a directory.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Virtual folder support can present many different types of
-files as folders. Some examples are:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="32%"></td><td width="68%">
-Can present any Unix MBOX, MMDF box, MH directory, Maildir
-directory, or Babyl mailbox as a virtual folder, the
-contents of which are the messages in the
-mailbox.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="32%"></td><td width="68%">
-Can use a configurable separator to split a file into
-multiple parts, the first line of each becoming the name for
-the virtual folder.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Versatile configuration file format is both extensible and
-nicely complementary of the module system.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Several options for running external programs to generate
-dynamic content: UMN-style execution, Bucktooth-style
-execution, or Pygopher PYG objects.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Protocol-independant, handler-dependant caching. This speeds
-up time by letting handlers cache dynamically-generated
-information -- currently used by the two directory handlers.
-This can improve performance of directories by several
-orders of magnitude. Because this is a handler cache only,
-all protocols can share the single cache -- and since the
-processing time of the protocols is negligable anyway, it
-works very well.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Autosensing of MIME types and gopher0 item types. Both are
-completely configurable. MIME type detection is done using a
-standard mime.types file, and gopher0 types are calculated
-by using a configurable regexp-based MIME-to-gophertype
-map.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Heavy support of regular expressions in
-configuration.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-ProtocolMultiplexer and HandlerMultiplexer let you choose
-only those protocols and handlers that you wish your server
-to support and the order in which they are tried when a
-request comes in.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Modular architecture permits rapid prototyping of new
-capabilities.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
---</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Full logging via syslog.</td></table>
-<a name="INSTALLATION"></a>
-<h2>INSTALLATION</h2>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-If you are reading this document via the &quot;man&quot;
-command, it is likely that you have no installation tasks to
-perform; your system administrator has already installed it.
-If you need to install it yourself, you have three options:
-a system-wide installation with Debian, system-wide
-installation with other systems, and a single-user
-installation. You can download the latest version of
-<b>PyGopherd</b> from
-http://quux.org/devel/gopher/pygopherd/.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>DEBIAN SYSTEM-WIDE INSTALLATION</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-If you are tracking Debian unstable, you may install
-<b>PyGopherD</b> by simply running the following command as
-root:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>apt-get install pygopherd</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-If you are not tracking Debian unstable, download the Debian
-.deb package from the <b>PyGopherd</b> website and then run
-<b>dpkg -i</b> to install the downloaded package. Then, go
-to CONFIGURATION below. You will use
-<b>/etc/init.d/pygopherd start</b> to start the
-program.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>OTHER SYSTEM-WIDE INSTALLATION</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Download the tar.gz version of the package from the website.
-Make sure you have Python 2.2 or above installed; if now,
-download and install it from www.python.org. Then run these
-commands:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>tar -zxvf pygopherd-x.y.z.tar.gz<br>
-cd pygopherd-x.y.z<br>
-python2.2 setup.py</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Some systems will need to use <b>python</b> instead of
-<b>python2.2.</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Next, proceed to configuration. Make sure that the
-<i>/etc/pygopherd/pygopherd.conf</i> file names valid users
-(<b>setuid</b> and <b>setgid</b> options) and a valid
-document root (<b>root</b> option).</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-You will type <b>pygopherd</b> to invoke the
-program.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>SINGLE-ACCOUNT INSTALLATION</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Download the tar.gz version of the package from the website.
-Make sure you have Python 2.2 installed; if not, download it
-from www.python.org Then run these commands:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>tar -zxvf pygopherd-x.y.z.tar.gz<br>
-cd pygopherd-x.y.z</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Modify <i>conf/pygopherd.conf</i> as follows:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Set <b>usechroot = no</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Comment out (add a # sign to the start of the line) the
-<b>pidfile</b>, <b>setuid</b>, and <b>setgid</b>
-lines.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Set <b>mimetypes = ./conf/mime.types</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Set <b>root =</b> to something appropriate.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Set <b>port</b> to a number greater than 1024.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-When you want to run <b>PyGopherd,</b> you will issue the
-<b>cd</b> command as above and then type
-<b>./bin/pygopherd;</b> there is no installation step
-necessary.</td></table>
-<a name="CONFIGURATION"></a>
-<h2>CONFIGURATION</h2>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>PyGopherd</b> is regulated by a configuration file that
-is normally stored in <i>/etc/pygopherd/pygopherd.conf</i>.
-You can specify alternate configuration files on the
-command-line. The <b>PyGopherd</b> distribution ships with a
-sample <i>pygopherd.conf</i> file that thoroughly documents
-the configuration file options and settings.</td></table>
-<a name="OPTIONS"></a>
-<h2>OPTIONS</h2>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-All <b>PyGopherd</b> configuration is done via the
-configuration file. Therefore, the program has only one
-command-line option.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<i>configfile</i></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-This optional argument specifies the location of the
-configuration file that <b>PyGopherD</b> is to
-use.</td></table>
-<a name="HANDLERS"></a>
-<h2>HANDLERS</h2>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>PyGopherd</b> defines several handlers which are
-responsible for finding data on your server and presenting
-it to the user. The handlers are used to generate things
-like links to other documents and directory listings. They
-are also responsible for serving up regular files and even
-virtual folders.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Handlers are specified with the <b>handlers</b> option in
-<i>pygopherd.conf</i>. This option is a list of handlers to
-use. For each request that arrives, <b>PyGopherd</b> will
-ask each handler in turn whether or not it can handle the
-request, and will handle the request according to the first
-handler that is capable of doing so. If no handlers can
-handle the request, a file not found error is generated. See
-the example configuration file for an example.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The remaining parts of this section describe the different
-handlers that ship with PyGopherd.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>dir.DirHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-This handler is a basic one that is used for directories
-that contain neither a <i>gophermap</i> file nor UMN-style
-links files, or situations where you have no need for either
-of those. It simply reads the contents of your on-disk
-directory, determines the appropriate types of each file,
-and sends the result to the client. The descriptions of each
-item are usually set to the filename, but the
-<b>html.HTMLFileTitleHandler</b> may override
-that.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>gophermap.BuckGophermapHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-This handler is used to generate gopher directory listings
-based on <i>gophermap</i> files. It will not read the
-directory on-disk, instead serving content from the
-<i>gophermap</i> file only. Gophermaps are useful if you
-want to present a directory where the files do not
-frequently change and there is general information to
-present. Overall, if you only wish to present information
-particular to certain files, you should consider using the
-abstract feature of the UMN.UMNDirHandler
-handler.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The <i>gophermap</i> files contain two types of lines, which
-are described here using the same convention normally used
-for command-line arguments. In this section, the symbol t
-will be used to indicate a tab character,
-Control-I.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<i>full line of informational text<br>
-
-gophertypeDESCRIPTION</i>t[<i>selector</i>[t<i>host</i>[t<i>port</i>]]]</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The informational text must not contain any tab characters.
-If present, it will be rendered with gopher type <b>i</b>,
-which willl cause it to be displayed on a client's screen at
-its particular position in the file.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The second type of line represents a link to a gopher file
-or directory. It begins with a single-character gopher type
-(see GOPHER ITEM TYPES below) followed immediately by a
-description and a tab character. There is no space or other
-separator between the gopher type and the
-description.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The remaining arguments are optional, but only to the extent
-that arguments may be omitted only if all arguments after
-them are also omitted. These arguments are:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The <i>selector</i> is the name of the file on the gopher
-server. If it begins with a slash, it is an absolute path;
-if it does not, it is interpreted relative to the directory
-that the gophermap file is in. If no selector is specified,
-the description is also used as the selector.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The <i>host</i> specifies the host on which this resource is
-located. If not specified, defaults to the current
-server.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The <i>port</i> specifies the port on which the resource is
-located. If not specified, defaults to the port the current
-server is listening on.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-An example of a gophermap to help illustrate the concept is
-included with the <b>PyGopherd</b> distribution in the file
-<i>examples/gophermap</i>.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>file.CompressedFileHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-In order to save space, you might want to store documents
-on-disk in a compressed format. But then clients would
-ordinarily have to decompress the files themselves. It would
-be nice to have the server automatically decompress the
-files on the fly, sending that result to the client. That's
-where <b>file.CompressedFileHandler</b> comes
-in.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-This handler will take compressed files, pipe them through
-your chosen decompression program, and send the result
-directly to clients -- completely
-transparently.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-To use this handler, set the <b>decompressors</b> option in
-the configuration file. That option defines a mapping from
-MIME encodings (as defined with the <b>encoding</b> option)
-to decompression programs. Files that are not encoded, or
-which have an encoding that does not occur in the
-<b>decompressors</b> map, will not be decompressed by this
-handler.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Please see the sample configuration file for more examples
-and details about the configuration of this
-handler.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>file.FileHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The <b>file.FileHandler</b> is just that -- its duty is to
-serve up regular files to clients.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>html.HTMLFileTitleHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-This handler is used when generating directories and will
-set the description of HTML files to the HTML title defined
-in them rather than let it be the default filename. Other
-than that, it has no effect. UMN gopherd implements a
-similar policy.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>mbox.MaildirFolderHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>mbox.MaildirMessageHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>mbox.MBoxMessageHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>mbox.MBoxFolderHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-These four handlers provide a unique &quot;virtual
-folder&quot; service. They allow you to present mailboxes as
-if they were folders, the items of the folders being the
-messages in the mailbox, organized by subject. This is
-useful for presenting mail archives or just making e-mail
-accessible in a nice and easy fashion.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-All you have to do to use these handlers is enable them in
-your <b>handlers</b> section. They will automatically detect
-requests for mailboxes and handle them
-appropriately.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The different handlers are for traditional Unix mbox
-mailboxes (all messages in a single file) and new
-qmail-stype Maildir mailboxes. You can enable only the two
-handlers for the specific mailbox type that you use, if
-desired.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>pyg.PYGHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-PYG (short for PYGopherd) is a mechanism that provides a
-tremendous amount of flexibility. Rather than just letting
-you execute a script like other Gopher or HTTP servers, PYGs
-are actually loaded up into PyGopherd and become
-fully-capable first-class virtual handlers. Yet they need
-not be known ahead of time, and are loaded
-dynamically.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-With a PYG handler, you can generate gopher directories,
-handle searches, generate files, and more on the fly. You
-can create entire virtual directory trees (for instance, to
-interface with NNTP servers or with DICT servers), and
-access them all using the standard Gopher protocol. All of
-this without having to modify even one line of PyGopherd
-code.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-If enabled, the <b>pyg.PYGHandler</b> will look for files
-with the extension .pyg that are marked executable. If
-found, they will be loaded and run as PYGs.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Please note: this module provides the capability to execute
-arbitrary code. Please consider the security ramifications
-of that before enabling it.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-See the <b>virtual.Virtual</b> handler for more information
-about passing data to your scripts at runtime.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-At present, documentation on writing PYGs is not provided,
-but you may find examples in the <i>pygfarm</i> directory
-included with the <b>PyGopherd</b>
-distribution.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>scriptexec.ExecHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-This handler implements &quot;old-style&quot; script
-execution; that is, executing arbitrary programs and piping
-the result to the client. It is, for the most part,
-compatible with both scripts written for UMN gopherd and the
-Bucktooth gopher server. If enabled, it will execute any
-file that is marked executable in the filesystem. It will
-normally list scripts as returning plain text, but you may
-create a custom link to the script that defines it as
-returning whatever kind of file you desire. Unlike PYGs,
-this type must be known in advance.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The <b>scriptexec.ExecHandler</b> will set environment
-variables for your scripts to use. They are as
-follows:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>SERVER_NAME</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The name of this server as defined in the configuration file
-or detected from the operating system.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>SERVER_PORT</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The port this server is listening on.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>REMOTE_ADDR</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The IP address of the client.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>REMOTE_PORT</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The port number of the client.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>REMOTE_HOST</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The same value as <b>REMOTE_ADDR</b>.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>SELECTOR</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The file that was requested; that is, the relative path to
-this script. If the selector included additional parameters
-after a ?, they will be included in this string as
-well.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>REQUEST</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The &quot;base&quot; part of the selector; that is, the part
-leading up to the ?.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>SEARCHREQUEST</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Included only if the client specified search data, this is
-used if the client is searching for something.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-See the <b>virtual.Virtual</b> handler for more information
-about passing data to your scripts at runtime.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Please note: this module provides the capability to execute
-arbitrary code. Please consider the security ramifications
-of that before enabling it.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>UMN.UMNDirHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-This is one of the most powerful workhorse handlers in
-<b>PyGopherd</b>. It is designed to emulate most of the ways
-in which the UMN gopherd distribution generates directories,
-even going so far as to be bug-compatible in some cases.
-Generating directories with this handler is often the best
-general-purpose way to make nice directories in
-gopherspace.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The remainder of the description of the
-<b>UMN.UMNDirHandler</b>, except for the ABSTRACTS AND INFO
-section, is lifted directly from the original UMN gopherd
-documentation, with light editing, because this handler
-implements it so exactly that there was no point in
-rewriting all that documentation :-)</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>LINKS</b><br>
-You can override the default view of a directory as
-generated by <b>dir.DirHandler</b> by creating what are
-known as <i>Links</i> in the Gopher data directory
-tree.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The ability to make links to other hosts is how gopher
-distributes itself among multiple hosts. There are two
-different ways to make a link. The first and simplest is to
-create a link file that contains the data needed by the
-server. By default all files in the gopher data directory
-starting with a period are taken to be link files. A link
-file can contain multiple links. To define a link you need
-to put five lines in a link file that define the needed
-characteristics for the document. Here is an example of a
-link.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="15%"></td><td width="85%">
-Name=Cheese Ball Recipes Numb=1 Type=1 Port=150
-Path=1/Moo/Cheesy Host=zippy.micro.umn.edu</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The Name= line is what the user will see when cruising
-through the database. In this case the name is &quot;Cheese
-Ball Recipes&quot;. The &quot;Type=&quot; defines what kind
-of document this object is. For a list of all defined types,
-see GOPHER ITEM TYPES below. For Gopher+ and HTTP, a MIME
-type is also used, which is determined automatically based
-on the type you specify.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The &quot;Path=&quot; line contains the selector string that
-the client will use to retrieve the actual document. The
-Numb= specifies that this entry should be presented first in
-the directory list (instead of being alphabetized). The
-&quot;Numb=&quot; line is optional. If it is present it
-cannot be the last line of the link. The &quot;Port=&quot;
-and &quot;Host=&quot; lines specify a fully qualified domain
-name (FQDN) and a port respectively. You may substitute a
-plus '+' for these two parameters if you wish. The server
-will insert the current hostname and the current port when
-it sees a plus in either of these two fields.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-An easy way to retrieve links is to use the Curses Gopher
-Client. By pressing '=' You can get information suitable for
-inclusion in a link file.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>OVERRIDING DEFAULTS</b><br>
-The server looks for a directory called <i>.cap</i> when
-parsing a directory. The server then checks to see if the
-.cap directory contains a file with the same name as the
-file it's parsing. If this file exists then the server will
-open it for reading. The server parses this file just like a
-link file. However instead of making a new object, the
-parameters inside the .cap/ file are used to override any of
-the server supplied default values.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-For instance say you wanted to change the Title of a text
-file for gopher, but don't want to change the filename. You
-also don't want it alphabetized, instead you want it second
-in the directory listing. You could make a set-aside file in
-the .cap directory with the same filename that contained the
-following lines:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="15%"></td><td width="85%">
-Name=New Long Cool Name Numb=2</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-The replacement (and default) for .cap files are extended
-link files. The equivilant is to create a file that begins
-with a dot (.) in the <i>same</i> directory as the file you
-wish to override. If the name of the file was
-<i>file-to-change</i> then you could create a file called
-<i>.names</i> with the following contents</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="15%"></td><td width="85%">
-Path=./file-to-change Name=New Long Cool Name
-Numb=2</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>ADDING COOL LINKS</b><br>
-One cool thing you can do with .Links is to add neato
-services to your gopher server. Adding a link like
-this:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="15%"></td><td width="85%">
-Name=Cool ftp directory Type=h
-Path=/URL:ftp://hostname/path/ Host=+ Port=+</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="15%"></td><td width="85%">
-Name=Cool web site Type=h Path=/URL:http://hostname/ Host=+
-Port=+</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Will allow you to link in any FTP or Web site to your
-gopher.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-You can easily add a finger site to your gopher server
-thusly:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="15%"></td><td width="85%">
-Name=Finger information Type=0 Path=lindner
-Host=mudhoney.micro.umn.edu Port=79</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>HIDING AN ENTRY</b><br>
-This kind of trick may be necessary in some cases, and thus
-for object &quot;fred&quot;, the overriding .names file
-entry would be:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="15%"></td><td width="85%">
-Type=X Path=./fred</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-by overriding default type to be &quot;X&quot;. This kind of
-hideouts may be usefull, when for some reason there are
-symlinks (or whatever) in the directory at which
-<b>PyGopherd</b> looks at, and those entries are not desired
-to be shown at all.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>ABSTRACTS AND INFO</b><br>
-Many modern gopher server maintainers like to intersperse
-gopher directory listings with other information -- often,
-additional information about the contents of files in the
-directory. The gophermap system provides one way to do that,
-and abstracts used with UMN gopher directories provides
-another.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Subject to the <b>abstract_headers</b> and
-<b>abstract_entries</b> configuration file options, this
-feature allows you to define that extra information. You can
-do that by simply creating a file named
-<i>filename</i>.abstract right alongside the regular file in
-your directory. The file will be interpreted as the
-abstract. For a directory, create a file named .abstract in
-the directory. Simple as that!</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>url.HTMLURLHandler</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>PyGopherd</b> provides ways for you to link to pages
-outside Gopherspace -- that is, web pages, FTP sites, and
-the like. This is accomplished according to the Links to URL
-specification (see CONFORMING TO below for details). In
-order to link to a URL (EXCEPT gopher URLs), you create a
-link of type h (regardless of the actual type of the
-resource that you are linking to) in your gophermap or
-.Links file that looks like this:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>/URL:http://www.complete.org/</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Modern Gopher clients that follow the Links to URL
-specification will automatically follow that link when you
-select it. The rest need some help, and that's where this
-handler comes in.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-For Gopher clients that do not follow the Links to URL
-specification, the <b>url.HTMLURLHandler</b> will
-automatically generate an HTML document for them on the fly.
-This document includes a refresh code that will send them to
-the proper page. You should not disable this
-handler.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>url.URLTypeRewriter</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Some people wish to serve HTML documents from their Gopher
-server. One problem with that is that links in Gopherspace
-include an extra type character at the beginning, whereas
-links in HTTP do not. This handler will remove the extra
-type character from HTTP requests that come in, allowing a
-single relative-to-root link to work for both.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="4%"></td><td width="96%">
-<b>virtual.Virtual</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-This handler is not intended to ever be used directly, but
-is used by many other handlers such as the mbox support, PYG
-handlers, and others. It is used to generate virtual entries
-in the directory hierarchy -- that is, entries that look
-normal to a Gopher client, but do not actually correspond to
-a file on disk.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-One special feature of the <b>virtual.Virtual</b> handler is
-that you can send information to it at runtime in a manner
-similar to a CGI script on the web. You do this by adding a
-question mark after the regular selector, followed by any
-arbitrary data that you wish to have sent to the virtual
-request handler.</td></table>
-<a name="GOPHER ITEM TYPES"></a>
-<h2>GOPHER ITEM TYPES</h2>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-When you construct links to files via .Links files or
-gophermap files, or modify the <b>mapping</b> in the
-configuration file, you will need to know these. Items
-bearing the &quot;not implemented&quot; text are not served
-up by <b>PyGopherd</b> as it ships, generally due to
-requirements of customized per-site software, but may be
-served up via PYG extension modules or other gopher
-servers.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-This list was prepared based on RFC1436, the UMN gopherd(1)
-manpage, and best current practices.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>0</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Plain text file</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>1</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Directory</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>2</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-CSO phone book server (not implemented by
-<b>PyGopherd</b>)</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>3</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Error condition; text that follows in plain
-text.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>4</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Macintosh file, BinHex format</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>5</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-DOS binary archive (not implemented by <b>PyGopherd</b>; use
-type 9 instead)</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>6</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-uuencoded file; not directly generated by <b>PyGopherd</b>
-automatically, but can be linked to manually. Most gopher
-clients will handle this better as type 1.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>7</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-A Gopher search</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>8</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-A telnet link</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>9</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Binary file</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>+</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Redundant server (not implemented by
-<b>PyGopherd</b>)</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>c</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Calendar (not implemented by <b>PyGopherd</b>)</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>e</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Event (not implemented by <b>PyGopherd</b>)</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>g</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-GIF-format graphic</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>h</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-An HTML file</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>I</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Any kind of graphic file other than GIF</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>i</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Informational text included in a directory that is displayed
-but does not link to any actual file.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>M</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-A MIME multipart/mixed file</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>s</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Any kind of sound file</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>T</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-tn3270 link</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>X, -</b></td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-UMN-specific -- signifies that this entry should not be
-displayed in a directory entry, but may be accessed via a
-direct link. This value is never transmitted in any Gopher
-protocol.</td></table>
-<a name="CONFORMING TO"></a>
-<h2>CONFORMING TO</h2>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The Internet Gopher Protocol as specified in
-RFC1436</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The Gopher+ upward-compatible enhancements to the Internet
-Gopher Protocol from the University of Minnesota as laid out
-at
-gopher://gopher.quux.org/0/Archives/mirrors/boombox.micro.umn.edu/pub/gopher/gopher_protocol/Gopher+/Gopher+.txt</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The gophermap file format as originally implemented in the
-Bucktooth gopher server and described at
-gopher://gopher.floodgap.com/0/buck/dbrowse%3Ffaquse%201</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The Links to URL specification as laid out by John Goerzen
-at
-gopher://gopher.quux.org/0/Archives/Mailing%20Lists/gopher/gopher.2002-02%3f/MBOX-MESSAGE/34</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The UMN format for specifying object attributes and links
-with .cap, .Links, .abstract, and similar files as specified
-elsewhere in this document and implemented by UMN
-gopherd.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The PYG format for extensible Python gopher objects as
-created for <b>PyGopherd</b>.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Hypertext Transfer Protocol HTTP/1.0 as specified in
-RFC1945</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Hypertext Markup Language (HTML) 3.2 and 4.0 Transitional as
-specified in RFC1866 and RFC2854.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Maildir as specified in
-http://www.qmail.org/qmail-manual-html/man5/maildir.html and
-http://cr.yp.to/proto/maildir.html.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-The mbox mail storage format as specified in
-http://www.qmail.org/qmail-manual-html/man5/mbox.html</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Registered MIME media types as specified in
-RFC2048.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Script execution conforming to both UMN standards as laid
-out in UMN gopherd(1) and Bucktooth standards as specified
-at
-gopher://gopher.floodgap.com:70/0/buck/dbrowse%3ffaquse%202
-so far as each can be implemented consistent with secure
-design principles.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="21%"></td><td width="79%">
-Standard Python 2.2.1 as implemented on POSIX-compliant
-systems.</td></table>
-<a name="BUGS"></a>
-<h2>BUGS</h2>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Reports of bugs should be sent via e-mail to the
-<b>PyGopherd</b> bug-tracking system (BTS) at
-pygopherd@bugs.complete.org or submitted on-line using the
-Web interface at http://bugs.complete.org/. The Web site
-also lists all current bugs, where you can check their
-status or contribute to fixing them.</td></table>
-<a name="COPYRIGHT"></a>
-<h2>COPYRIGHT</h2>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>PyGopherd</b> is Copyright (C) 2002 John
-Goerzen.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-This program is free software; you can redistribute it
-and/or modify it under the terms of the GNU General Public
-License as published by the Free Software Foundation; either
-version 2 of the License, or (at your option) any later
-version.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-This program is distributed in the hope that it will be
-useful, but WITHOUT ANY WARRANTY; without even the implied
-warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE. See the GNU General Public License for more
-details.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-You should have received a copy of the GNU General Public
-License along with this program; if not, write
-to:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Free Software Foundation, Inc.<br>
-59 Temple Place<br>
-Suite 330<br>
-Boston, MA 02111-1307<br>
-USA</td></table>
-<a name="AUTHOR"></a>
-<h2>AUTHOR</h2>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>PyGopherd,</b> its libraries, documentation, and all
-included files (except where noted) was written by John
-Goerzen &lt;jgoerzen@complete.org&gt; and copyright is held
-as stated in the COPYRIGHT section.</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Portions of this manual (specifically relating to certian
-UMN gopherd features and characteristics that PyGopherd
-emulates) are modified versions of the original gopherd(1)
-manpage accompanying the UMN gopher distribution. That
-document is distributed under the same terms as this, and
-bears the following copyright notices:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-Copyright (C) 1991-2000 University of Minnesota<br>
-Copyright (C) 2000-2002 John Goerzen and other
-developers</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>PyGopherd</b> may be downloaded, and information found,
-from its homepage via either Gopher or HTTP:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-gopher://quux.org/1/devel/gopher/pygopherd<br>
-http://quux.org/devel/gopher/pygopherd</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>PyGopherd</b> may also be downloaded using Subversion.
-Additionally, the distributed tar.gz may be updated with a
-simple &quot;svn update&quot; command; it is ready to go.
-For information on getting <b>PyGopherd</b> with Subversion,
-please visit:</td></table>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-http://svn.complete.org/</td></table>
-<a name="SEE ALSO"></a>
-<h2>SEE ALSO</h2>
-
-<table width="100%" border=0 rules="none" frame="void"
-       cols="2" cellspacing="0" cellpadding="0">
-<tr valign="top" align="left">
-<td width="10%"></td><td width="90%">
-<b>python</b>(1).</td></table>
-<hr>
-</body>
-</html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>PyGopherd Manual</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"></HEAD
+><BODY
+CLASS="REFERENCE"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="REFERENCE"
+><A
+NAME="AEN1"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+>I. PyGopherd Manual</H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="#AEN3"
+>pygopherd</A
+>&nbsp;--&nbsp;Multiprotocol Information Server</DT
+></DL
+></DIV
+></DIV
+><H1
+><A
+NAME="AEN3"
+></A
+>pygopherd</H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN15"
+></A
+><H2
+>Name</H2
+>PyGopherd&nbsp;--&nbsp;Multiprotocol Information Server</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN18"
+></A
+><H2
+>Synopsis</H2
+><P
+><B
+CLASS="COMMAND"
+>pygopherd</B
+>  [<VAR
+CLASS="REPLACEABLE"
+>configfile</VAR
+>]</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN23"
+></A
+><H2
+>Description</H2
+><P
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> is  a  tool  to  simplify  your  e-mail
+	reading.  With <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>, you can read the same mailbox
+	from multiple computers.  You get a current copy of your
+	messages on each computer, and changes you make one place will be
+	visible on all other systems.  For instance, you can delete a message
+	on your home computer, and it will appear deleted on your work
+	computer as well.  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> is also useful if you want to
+	use a mail reader that does not have IMAP support, has poor IMAP
+	support, or does not provide disconnected operation.
+      </P
+><P
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> is <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>FAST</I
+></SPAN
+>; it synchronizes
+        my two accounts with over 50 folders in 3 seconds.  Other
+        similar tools might take over a minute, and achieve a
+        less-reliable result.  Some mail readers can take over 10
+        minutes to do the same thing, and some don't even support it
+        at all.  Unlike other mail tools, <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> features a
+        multi-threaded synchronization algorithm that can dramatically
+        speed up performance in many situations by synchronizing
+        several different things simultaneously.
+      </P
+><P
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> is <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>FLEXIBLE</I
+></SPAN
+>; you can
+        customize which folders are synced via regular expressions,
+        lists, or Python expressions; a versatile and comprehensive
+        configuration file is used to control behavior; two user
+        interfaces are built-in; fine-tuning of synchronization
+        performance is possible; internal or external automation is
+        supported; SSL and PREAUTH tunnels are both supported; offline
+        (or "unplugged") reading is supported; and esoteric IMAP
+        features are supported to ensure compatibility with the widest
+        variety of IMAP servers.
+      </P
+><P
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> is <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>SAFE</I
+></SPAN
+>; it uses an
+        algorithm designed to prevent mail loss at all costs.  Because
+        of the design of this algorithm, even programming errors
+        should not result in loss of mail.  I am so confident in the
+        algorithm that I use my own personal and work accounts for
+        testing of <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> pre-release, development, and beta
+	releases.  Of course, legally speaking, <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> comes
+        with no warranty, so I am not responsible if this turns out
+        to be wrong.
+      </P
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN41"
+></A
+><H3
+>Method of Operation</H3
+><P
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> traditionally 
+	  operates by maintaining a hierarchy of
+	  mail folders in Maildir format locally.  Your own mail
+	  reader will read mail from this tree, and need never know
+	  that the mail comes from IMAP.  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> will detect
+	  changes to the mail folders on your IMAP server and your own
+	  computer and bi-directionally synchronize them, copying,
+	  marking, and deleting messages as necessary.
+        </P
+><P
+>	  With <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> 4.0, a powerful new ability has been
+	  introduced -- the program can now synchronize two IMAP
+	  servers with each other, with no need to have a Maildir
+	  layer in-between.  Many people use this if they use a mail
+	  reader on their local machine that does not support
+	  Maildirs.  People may install an IMAP server on their local
+	  machine, and point both <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> and their mail reader
+	  of choice at it.  This is often preferable to the mail
+	  reader's own IMAP support since <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> supports many
+	  features (offline reading, for one) that most IMAP-aware
+	  readers don't.  However, this feature is not as time-tested
+	  as traditional syncing, so my advice is to stick with normal
+	  methods of operation for the time being.
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN50"
+></A
+><H2
+>Quick Start</H2
+><P
+>If you have already installed <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> system-wide,
+        or your system adminstrator has done that for you, your task
+        for setting up <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> for the first time is quite
+        simple.  You just need to set up your configuration file, make
+        your folder directory, and run it!
+      </P
+><P
+>You can quickly set up your configuration file.  The distribution
+	  includes a file <TT
+CLASS="FILENAME"
+>offlineimap.conf.minimal</TT
+>
+	  (Debian users
+	  may find this at
+          <TT
+CLASS="FILENAME"
+>/usr/share/doc/offlineimap/examples/offlineimap.conf.minimal</TT
+>) that is a basic example of setting of <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>.  You can
+	  simply copy this file into your home directory and name it
+	  <TT
+CLASS="FILENAME"
+>.offlineimaprc</TT
+> (note the leading period).  A
+	  command such as <B
+CLASS="COMMAND"
+>cp offlineimap.conf.minimal ~/.offlineimaprc</B
+> will do it.  Or, if you prefer, you can just copy this text to
+	  <TT
+CLASS="FILENAME"
+>~/.offlineimaprc</TT
+>:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>[general]
+accounts = Test
+
+[Account Test]
+localrepository = Local
+remoterepository = Remote
+
+[Repository Local]
+type = Maildir
+localfolders = ~/Test
+
+[Repository Remote]
+type = IMAP
+remotehost = examplehost
+remoteuser = jgoerzen</PRE
+><P
+>Now, edit the <TT
+CLASS="FILENAME"
+>~/.offlineimaprc</TT
+> file with
+	  your favorite editor.  All you have to do is specify a directory
+	  for your folders to be in (on the <SPAN
+CLASS="PROPERTY"
+>localfolders</SPAN
+>
+	  line), the host name of your IMAP server (on the
+	  <SPAN
+CLASS="PROPERTY"
+>remotehost</SPAN
+> line), and your login name on
+	  the remote (on the <SPAN
+CLASS="PROPERTY"
+>remoteuser</SPAN
+> line).  That's
+	  it!</P
+><P
+>To run <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>, you just have to say
+	  <B
+CLASS="COMMAND"
+>offlineimap</B
+> -- it will fire up, ask you for
+	  a login password if necessary, synchronize your folders, and exit.
+	  See?  You can just throw away the rest of this finely-crafted,
+	  perfectly-honed manual!  Of course, if you want to see how you can
+	  make <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> FIVE TIMES FASTER FOR JUST $19.95 (err, well,
+	  $0), you have to read on!
+	</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN72"
+></A
+><H2
+>Installation</H2
+><P
+>If you are reading this document via the "man" command, it is
+	likely
+	that you have no installation tasks to perform; your system
+	administrator has already installed it.  If you need to install it
+	yourself, you have three options: a system-wide installation with
+	Debian, system-wide installation with other systems, and a single-user
+	installation.  You can download the latest version of <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> from
+	<A
+HREF="http://quux.org/devel/offlineimap/"
+TARGET="_top"
+>the <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	website</A
+>.
+      </P
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN78"
+></A
+><H3
+>Prerequisites</H3
+><P
+>In order to use <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>, you need to have these conditions
+	  satisfied:
+	</P
+><P
+></P
+><UL
+><LI
+><P
+>Your mail server must support IMAP.  Most Internet Service
+	      Providers
+	      and corporate networks do, and most operating systems
+	      have an IMAP
+	      implementation readily available.
+	    </P
+></LI
+><LI
+><P
+>	      You must have Python version 2.2.1 or above installed.
+	      If you are
+	      running on Debian GNU/Linux, this requirement will automatically be
+	      taken care of for you.  If you do not have Python already, check with
+	      your system administrator or operating system vendor; or, download it from
+	      <A
+HREF="http://www.python.org/"
+TARGET="_top"
+>the Python website</A
+>.
+	      If you intend to use the Tk interface, you must have Tkinter
+		(python-tk) installed.  If you intend to use the SSL interface, your
+		Python must have been built with SSL support.
+	    </P
+></LI
+><LI
+><P
+>	      Have a mail reader that supports the Maildir mailbox
+	      format.  Most modern mail readers have this support
+	      built-in, so you can choose from a wide variety of mail
+	      servers.  This format is also known as the "qmail"
+	      format, so any mail reader compatible with it will work
+	      with <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>.  If you do not have a mail reader
+	      that supports Maildir, you can often install a local
+	      IMAP server and point both <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> and your mail
+	      reader at it.
+	    </P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN92"
+></A
+><H3
+>System-Wide Installation, Debian</H3
+><P
+>	  If you are tracking Debian unstable, you may install
+	  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> by simply running the following command as root:
+	</P
+><P
+>	  <B
+CLASS="COMMAND"
+>apt-get install offlineimap</B
+>
+	</P
+><P
+>	  If you are not tracking Debian unstable, download the Debian .deb
+	  package from the <A
+HREF="http://quux.org/devel/offlineimap/"
+TARGET="_top"
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> website</A
+>
+	  and then run <B
+CLASS="COMMAND"
+>dpkg -i</B
+> to install the downloaded
+	  package.  Then, skip to <A
+HREF="#CONFIGURATION"
+><I
+>Configuration</I
+></A
+> below.  You will type <B
+CLASS="COMMAND"
+>offlineimap</B
+> to
+	  invoke the program.
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN104"
+></A
+><H3
+>System-Wide Installation, Other</H3
+><P
+>	  Download the tar.gz version of the package from the
+	  <A
+HREF="http://quux.org/devel/offlineimap/"
+TARGET="_top"
+>website</A
+>.
+	  Then run
+	  these commands, making sure that you are the "root" user first:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>tar -zxvf offlineimap_x.y.z.tar.gz
+cd offlineimap-x.y.z
+python2.2 setup.py install</PRE
+><P
+>On some systems, you will need to use
+	  <B
+CLASS="COMMAND"
+>python</B
+> instead of <B
+CLASS="COMMAND"
+>python2.2</B
+>.
+	  Next, proceed to <A
+HREF="#CONFIGURATION"
+><I
+>Configuration</I
+></A
+> below.  You will type <B
+CLASS="COMMAND"
+>offlineimap</B
+> to
+	  invoke the program.
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN114"
+></A
+><H3
+>Single-Account Installation</H3
+><P
+>	  Download the tar.gz version of the package from the
+	  <A
+HREF="http://quux.org/devel/offlineimap/"
+TARGET="_top"
+>website</A
+>.
+	  Then run these commands:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>tar -zxvf offlineimap_x.y.z.tar.gz
+cd offlineimap-x.y.z</PRE
+><P
+>When you want to run <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>, you will issue the
+	  <B
+CLASS="COMMAND"
+>cd</B
+> command as above and then type
+	  <B
+CLASS="COMMAND"
+>./offlineimap.py</B
+>; there is no installation
+	  step necessary.
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="CONFIGURATION"
+></A
+><H2
+>Configuration</H2
+><P
+>	<SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> is regulated by a configuration file that is normally 
+	stored in <TT
+CLASS="FILENAME"
+>~/.offlineimaprc</TT
+>.  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	ships with a file named <TT
+CLASS="FILENAME"
+>offlineimap.conf</TT
+>
+	that you should copy to that location and then edit.  This file is
+	vital to proper operation of the system; it sets everything you need
+	to run <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>.  Full documentation for the configuration file
+	is included within the sample file.
+      </P
+><P
+>	<SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> also ships a file named
+	<TT
+CLASS="FILENAME"
+>offlineimap.conf.minimal</TT
+> that you can also try.
+	  It's useful if you want to get started with
+	  the most basic feature set, and you can read about other features
+	  later with <TT
+CLASS="FILENAME"
+>offlineimap.conf</TT
+>.
+      </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN135"
+></A
+><H2
+>Options</H2
+><P
+>	Most configuration is done via the configuration file.  Nevertheless,
+	there are a few command-line options that you may set for
+	<SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>.
+      </P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>-1</DT
+><DD
+><P
+>Disable most multithreading operations and use
+	    solely a single-connection
+	    sync.  This effectively sets the
+	      <SPAN
+CLASS="PROPERTY"
+>maxsyncaccounts</SPAN
+>
+	    and all <SPAN
+CLASS="PROPERTY"
+>maxconnections</SPAN
+> configuration file
+	    variables to 1.
+	  </P
+></DD
+><DT
+>-P <VAR
+CLASS="REPLACEABLE"
+>profiledir</VAR
+></DT
+><DD
+><P
+>Sets <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> into profile mode.  The program
+	    will create <VAR
+CLASS="REPLACEABLE"
+>profiledir</VAR
+>
+	    (it must not already exist).  As it runs, Python profiling 
+	    information
+	    about each thread is logged into profiledir.  Please note: This option
+	    is present for debugging and optimization only, and should NOT be used
+	    unless you have a specific reason to do so.  It will significantly
+	    slow program performance, may reduce reliability, and can generate
+	    huge amounts of data.  You must use the <VAR
+CLASS="OPTION"
+>-1</VAR
+> option when
+	    you use <VAR
+CLASS="OPTION"
+>-P</VAR
+>.
+	  </P
+></DD
+><DT
+>-a <VAR
+CLASS="REPLACEABLE"
+>accountlist</VAR
+></DT
+><DD
+><P
+>Overrides the <SPAN
+CLASS="PROPERTY"
+>accounts</SPAN
+> option
+	    in the <SPAN
+CLASS="PROPERTY"
+>general</SPAN
+> section of the configuration
+	    file.  You might use this to exclude certain accounts, or to sync
+	    some accounts that you normally prefer not to.  Separate the
+	    accounts by commas, and use no embedded spaces.
+	  </P
+></DD
+><DT
+>-c <VAR
+CLASS="REPLACEABLE"
+>configfile</VAR
+></DT
+><DD
+><P
+>Specifies a configuration file to use in lieu of
+	    the default, <TT
+CLASS="FILENAME"
+>~/.offlineimaprc</TT
+>.
+	  </P
+></DD
+><DT
+>-d <VAR
+CLASS="REPLACEABLE"
+>debugtype[,...]</VAR
+></DT
+><DD
+><P
+>Enables debugging for OfflineIMAP.  This is useful if
+	    you are trying to track down a malfunction or figure out what is going
+	    on under the hood.  I suggest that you use this with
+	    <VAR
+CLASS="OPTION"
+>-1</VAR
+> to make the results more sensible.</P
+><P
+><VAR
+CLASS="OPTION"
+>-d</VAR
+> requires one or more debugtypes,
+	      separated by commas.  These define what exactly will be
+	      debugged, and include four options:
+	      <SPAN
+CLASS="PROPERTY"
+>imap</SPAN
+>,
+	      <SPAN
+CLASS="PROPERTY"
+>traffic</SPAN
+>,
+	      <SPAN
+CLASS="PROPERTY"
+>maildir</SPAN
+>, and <SPAN
+CLASS="PROPERTY"
+>thread</SPAN
+>.
+	      The <SPAN
+CLASS="PROPERTY"
+>imap</SPAN
+>
+	      option will enable IMAP activity debugging.  The
+	      <SPAN
+CLASS="PROPERTY"
+>traffic</SPAN
+> option will enable dumping
+	      of most traffic going back and forth between IMAP
+	      servers.  Note
+	      that the output may contain passwords, so take care to remove that
+	      from the debugging output before sending it to anyone else.  The
+	      <SPAN
+CLASS="PROPERTY"
+>maildir</SPAN
+> option will enable debugging for
+	      certain Maildir operations.  And <SPAN
+CLASS="PROPERTY"
+>thread</SPAN
+>
+	      will debug the threading model.
+	    </P
+></DD
+><DT
+>-l
+	  <VAR
+CLASS="REPLACEABLE"
+>filename</VAR
+></DT
+><DD
+><P
+>	      Enables logging to filename.  This will log everything
+	      that goes to the screen to the specified file.
+	      Additionally, if any debugging is specified with -d,
+	      then debug messages will not go to the screen, but
+	      instead to the logfile only.</P
+></DD
+><DT
+>-o</DT
+><DD
+><P
+>Run only once, ignoring all
+	      <SPAN
+CLASS="PROPERTY"
+>autorefresh</SPAN
+> settings in the configuration
+	      file.</P
+></DD
+><DT
+>-h, --help</DT
+><DD
+><P
+>Show summary of options.</P
+></DD
+><DT
+>-u <VAR
+CLASS="REPLACEABLE"
+>interface</VAR
+></DT
+><DD
+><P
+>Specifies an alternative user interface module
+	      to use.  This overrides the defailt specified in the
+	      configuration file.  The pre-defined options are listed in
+	      the User Interfaces section.</P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN204"
+></A
+><H2
+>User Interfaces</H2
+><P
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> has a pluggable user interface system that lets you choose how the
+	program communicates information to you.  There are two graphical
+	interfaces, two terminal interfaces, and two noninteractive interfaces
+	suitable for scripting or logging purposes.  The
+	<SPAN
+CLASS="PROPERTY"
+>ui</SPAN
+> option in the configuration file specifies
+	user interface preferences.  The <VAR
+CLASS="OPTION"
+>-u</VAR
+> command-line
+	option can override the configuration file setting.  The available
+	values for the configuration file or command-line are described
+	in this section.</P
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN210"
+></A
+><H3
+>Tk.Blinkenlights</H3
+><P
+>Tk.Blinkenlights is an interface designed to be sleek, fun to watch, and
+	  informative of the overall picture of what <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	  is doing.  I consider it to be the best general-purpose interface in
+	  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>.
+	</P
+><P
+>	  Tk.Blinkenlights contains, by default, a small window with a row of
+	  LEDs, a small log, and a row of command buttons.
+	  The total size of the window is
+	  very small, so it uses little desktop space, yet it is quite
+	  functional.  The optional, toggleable, log shows more
+	  detail about what is happening and is color-coded to match the color
+	  of the lights.
+	</P
+><P
+>	  Tk.Blinkenlights is the only user interface that has configurable
+	  parameters; see the example <TT
+CLASS="FILENAME"
+>offlineimap.conf</TT
+>
+	  for more details.
+	</P
+><P
+>	  Each light in the Blinkenlights interface represents a thread
+	  of execution -- that is, a particular task that <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	  is performing right now.  The colors indicate what task
+	  the particular thread is performing, and are as follows:
+	</P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>Black</DT
+><DD
+><P
+>indicates that this light's thread has terminated; it will light up
+	      again later when new threads start up.  So, black indicates no
+	      activity.
+	    </P
+></DD
+><DT
+>Red (Meaning 1)</DT
+><DD
+><P
+>is the color of the main program's thread, which basically does
+	      nothing but monitor the others.  It might remind you of HAL 9000 in
+	      [<SPAN
+CLASS="CITATION"
+>2001</SPAN
+>].
+	    </P
+></DD
+><DT
+>Gray</DT
+><DD
+><P
+>indicates that the thread is establishing a new connection to the IMAP
+	      server.
+	    </P
+></DD
+><DT
+>Purple</DT
+><DD
+><P
+>is the color of an account synchronization thread that is monitoring
+	      the progress of the folders in that account (not generating any I/O).
+	    </P
+></DD
+><DT
+>Cyan</DT
+><DD
+><P
+>indicates that the thread is syncing a folder.
+	    </P
+></DD
+><DT
+>Green</DT
+><DD
+><P
+>means that a folder's message list is being loaded.
+	    </P
+></DD
+><DT
+>Blue</DT
+><DD
+><P
+>is the color of a message synchronization controller thread.
+	    </P
+></DD
+><DT
+>Orange</DT
+><DD
+><P
+>indicates that an actual message is being copied.
+	      (We use fuschia for fake messages.)
+	    </P
+></DD
+><DT
+>Red (meaning 2)</DT
+><DD
+><P
+>indicates that a message is being deleted.
+	    </P
+></DD
+><DT
+>Yellow / bright orange</DT
+><DD
+><P
+>indicates that message flags are being added.
+	    </P
+></DD
+><DT
+>Pink / bright red</DT
+><DD
+><P
+>indicates that message flags are being removed.
+	    </P
+></DD
+><DT
+>Red / Black Flashing</DT
+><DD
+><P
+>corresponds to the countdown timer that runs between
+	      synchronizations.
+	    </P
+></DD
+></DL
+></DIV
+><P
+>The name of this interfaces derives from a bit of computer
+	  history.  Eric Raymond's [<SPAN
+CLASS="CITATION"
+>Jargon File</SPAN
+>] defines
+	  <I
+CLASS="FIRSTTERM"
+>blinkenlights</I
+>, in part, as:
+	</P
+><A
+NAME="AEN273"
+></A
+><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>Front-panel diagnostic
+	    lights on a computer, esp. a dinosaur. Now that dinosaurs are rare,
+	    this term usually refers to status lights on a modem, network hub, or
+	    the like.
+	  </P
+><P
+>	    This term derives from the last word of the famous blackletter-Gothic
+	    sign in mangled pseudo-German that once graced about half the computer
+	    rooms in the English-speaking world. One version ran in its entirety as
+	    follows:
+	  </P
+><P
+>	    <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>ACHTUNG!  ALLES LOOKENSPEEPERS!</I
+></SPAN
+>
+	  </P
+><P
+>	    Das computermachine ist nicht fuer gefingerpoken und mittengrabben.
+	    Ist easy schnappen der springenwerk, blowenfusen und poppencorken
+	    mit spitzensparken.  Ist nicht fuer gewerken bei das dumpkopfen.
+	    Das rubbernecken sichtseeren keepen das cotten-pickenen hans in das
+	    pockets muss; relaxen und watchen das blinkenlichten.
+	  </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN279"
+></A
+><H3
+>Curses.Blinkenlights</H3
+><P
+>	  Curses.Blinkenlights is an interface very similar to Tk.Blinkenlights,
+	  but is designed to be run in a console window (an xterm, Linux virtual
+	  terminal, etc.)  Since it doesn't have access to graphics, it isn't
+	  quite as pretty, but it still gets the job done.
+	</P
+><P
+>Please see the Tk.Blinkenlights section above for more
+	  information about the colors used in this interface.
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN283"
+></A
+><H3
+>Tk.VerboseUI</H3
+><P
+>	  Tk.VerboseUI (formerly known as Tk.TkUI) is a graphical interface
+	  that presents a variable-sized window.  In the window, each
+	  currently-executing thread has a section where its name and current
+	  status are displayed.  This interface is best suited to people running
+	  on slower connections, as you get a lot of detail, but for fast
+	  connections, the detail may go by too quickly to be useful.  People
+	  with fast connections may wish to use Tk.Blinkenlights instead.
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN286"
+></A
+><H3
+>TTY.TTYUI</H3
+><P
+>	  TTY.TTYUI interface is for people running in basic, non-color terminals.  It
+	  prints out basic status messages and is generally friendly to use on a console
+	  or xterm.
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN289"
+></A
+><H3
+>Noninteractive.Basic</H3
+><P
+>	  Noninteractive.Basic is designed for situations in which <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	  will be run non-attended and the status of its execution will be
+	  logged.  You might use it, for instance, to have the system run
+	  automatically and
+	  e-mail you the results of the synchronization.  This user interface
+	  is not capable of reading a password from the keyboard; account
+	  passwords must be specified using one of the configuration file options.
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN293"
+></A
+><H3
+>Noninteractive.Quiet</H3
+><P
+>	  Noninteractive.Quiet is designed for non-attended running in situations
+	  where normal status messages are not desired.  It will output nothing
+	  except errors and serious warnings.  Like Noninteractive.Basic,
+	  this user interface
+	  is not capable of reading a password from the keyboard; account
+	  passwords must be specified using one of the configuration file options.
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN296"
+></A
+><H2
+>Examples</H2
+><P
+>Here are some example configurations for various situations.
+	Please e-mail any other examples you have that may be useful to
+	me.
+      </P
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN299"
+></A
+><H3
+>Multiple Accounts with Mutt</H3
+><P
+>	  This example shows you how to set up <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> to
+	  synchronize multiple accounts with the mutt mail reader.
+	</P
+><P
+>	  Start by creating a directory to hold your folders by running
+	  <B
+CLASS="COMMAND"
+>mkdir ~/Mail</B
+>.  Then, in your
+	  <TT
+CLASS="FILENAME"
+>~/.offlineimaprc</TT
+>, specify:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>accounts = Personal, Work</PRE
+><P
+>	  Make sure that you have both an
+	  <SPAN
+CLASS="PROPERTY"
+>[Account Personal]</SPAN
+>
+	  and an <SPAN
+CLASS="PROPERTY"
+>[Account Work]</SPAN
+> section.  The
+	  local repository for each account must have different
+	  <SPAN
+CLASS="PROPERTY"
+>localfolder</SPAN
+> path names.
+	  Also, make sure
+	  to enable <SPAN
+CLASS="PROPERTY"
+>[mbnames]</SPAN
+>.
+	</P
+><P
+>	  In each local repository section, write something like this:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>localfolders = ~/Mail/Personal</PRE
+><P
+>	  Finally, add these lines to your <TT
+CLASS="FILENAME"
+>~/.muttrc</TT
+>:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>source ~/path-to-mbnames-muttrc-mailboxes
+folder-hook Personal set from="youremail@personal.com"
+folder-hook Work set from="youremail@work.com"
+set mbox_type=Maildir
+set folder=$HOME/Mail
+spoolfile=+Personal/INBOX</PRE
+><P
+>	  That's it!
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN318"
+></A
+><H3
+>UW-IMAPD and References</H3
+><P
+>Some users with a UW-IMAPD server need to use <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>'s
+	  "reference" feature to get at their mailboxes, specifying a reference
+	  of "~/Mail" or "#mh/" depending on the configuration.  The below
+	  configuration from (originally from docwhat@gerf.org)
+	  shows using a <SPAN
+CLASS="PROPERTY"
+>reference</SPAN
+> of Mail, a <SPAN
+CLASS="PROPERTY"
+>nametrans</SPAN
+>
+	  that strips
+	  the leading Mail/ off incoming folder names, and a
+	  <SPAN
+CLASS="PROPERTY"
+>folderfilter</SPAN
+> that
+	  limits the folders synced to just three.
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>[Account Gerf]
+localrepository = GerfLocal
+remoterepository = GerfRemote
+
+[Repository GerfLocal]
+type = Maildir
+localfolders = ~/Mail
+
+[Repository GerfRemote]
+type = IMAP
+remotehost = gerf.org
+ssl = yes
+remoteuser = docwhat
+reference = Mail
+# Trims off the preceeding Mail on all the folder names.
+nametrans = lambda foldername: \
+            re.sub('^Mail/', '', foldername)
+# Yeah, you have to mention the Mail dir, even though it
+# would seem intuitive that reference would trim it.
+folderfilter = lambda foldername: foldername in [
+      'Mail/INBOX',
+      'Mail/list/zaurus-general',
+      'Mail/list/zaurus-dev',
+      ]
+maxconnections = 1
+holdconnectionopen = no</PRE
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN326"
+></A
+><H3
+>pythonfile Configuration File Option</H3
+><P
+>You can have <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	  load up a Python file before evaluating the
+	  configuration file options that are Python expressions.  This example
+	  is based on one supplied by Tommi Virtanen for this feature.
+	</P
+><P
+>	  In <TT
+CLASS="FILENAME"
+>~/.offlineimap.rc</TT
+>, he adds these options:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>[general]
+pythonfile=~/.offlineimap.py
+[Repository foo]
+foldersort=mycmp</PRE
+><P
+>	  Then, the <TT
+CLASS="FILENAME"
+>~/.offlineimap.py</TT
+> file will
+	  contain:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>prioritized = ['INBOX', 'personal', 'announce', 'list']
+
+def mycmp(x, y):
+   for prefix in prioritized:
+       if x.startswith(prefix):
+           return -1
+       elif y.startswith(prefix):
+           return +1
+   return cmp(x, y)
+
+def test_mycmp():
+   import os, os.path
+   folders=os.listdir(os.path.expanduser('~/data/mail/tv@hq.yok.utu.fi'))
+   folders.sort(mycmp)
+   print folders</PRE
+><P
+>	  This code snippet illustrates how the <SPAN
+CLASS="PROPERTY"
+>foldersort</SPAN
+>
+	  option can be customized with a Python function from the
+	  <SPAN
+CLASS="PROPERTY"
+>pythonfile</SPAN
+> to always synchronize certain
+	  folders first.
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN339"
+></A
+><H2
+>Errors</H2
+><P
+>	If you get one of some frequently-encountered or confusing errors,
+	please check this section.
+      </P
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN342"
+></A
+><H3
+>UID validity problem for folder</H3
+><P
+>IMAP servers use a unique ID (UID) to refer to a specific message.
+	  This number is guaranteed to be unique to a particular message
+	  <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>forever</I
+></SPAN
+>.
+	  No other message in the same folder will ever get the same
+	  UID.  UIDs are an integral part of <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>'s synchronization
+	  scheme; they are used to match up messages on your computer to
+	  messages on the server.
+	</P
+><P
+>	  Sometimes, the UIDs on the server might get reset.  Usually this will
+	  happen if you delete and then recreate a folder.  When you create a
+	  folder, the server will often start the UID back from 1.  But
+	  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> might still have the UIDs from the previous folder by the
+	  same name stored.  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> will detect this condition and skip the
+	  folder.  This is GOOD, because it prevents data loss.
+	</P
+><P
+>	  You can fix it by removing your local folder and cache data.  For
+	  instance, if your folders are under <TT
+CLASS="FILENAME"
+>~/Folders</TT
+>
+	  and the folder with the problem is INBOX, you'd type this:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>rm -r ~/Folders/INBOX
+rm -r ~/.offlineimap/Account-<VAR
+CLASS="REPLACEABLE"
+>AccountName</VAR
+>
+rm -r ~/.offlineimap/Repository-<VAR
+CLASS="REPLACEABLE"
+>RepositoryName</VAR
+></PRE
+><P
+>	  (Of course, replace AccountName and RepositoryName 
+	  with the names as specified
+	  in <TT
+CLASS="FILENAME"
+>~/.offlineimaprc</TT
+>).
+	</P
+><P
+>Next time you run <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>, it will re-download
+	  the folder with the
+	  new UIDs.  Note that the procedure specified above will lose any local
+	  changes made to the folder.
+	</P
+><P
+>	  Some IMAP servers are broken and do not support UIDs properly.  If you
+	  continue to get this error for all your folders even after performing
+	  the above procedure, it is likely that your IMAP server falls into
+	  this category.  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> is incompatible with such servers.
+	  Using <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> with them will not destroy any mail, but at the same time,
+	  it will not actually synchronize it either.  (<SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> will detect
+	  this condition and abort prior to synchronization.)
+	</P
+><P
+>	  This question comes up frequently on the
+	  <A
+HREF="http://lists.complete.org/offlineimap@complete.org/"
+TARGET="_top"
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	  mailing list</A
+>.  You can find a
+	  <A
+HREF="http://lists.complete.org/offlineimap@complete.org/2003/04/msg00012.html.gz"
+TARGET="_top"
+>detailed
+	  discussion</A
+> of the problem there.
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN367"
+></A
+><H2
+>Other Frequently Asked Questions</H2
+><P
+>There are some other FAQs that might not fit into another section
+	of the document, so they are discussed here.
+      </P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>What platforms does <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> run on?</DT
+><DD
+><P
+>	    It should run on most platforms supported by Python, which are quite a
+	    few.
+	  </P
+></DD
+><DT
+>I'm using Mutt.  Other IMAP sync programs require me to use "set maildir_trash=yes".  Do I need to do that with <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>?</DT
+><DD
+><P
+>	    No.  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> is smart enough to figure out message deletion without this extra
+	    crutch.  You'll get the best results if you don't use this setting, in
+	    fact.
+	  </P
+></DD
+><DT
+>I've upgraded and now <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	crashes when I start it up!  Why?</DT
+><DD
+><P
+>You need to upgrade your configuration
+	file.  See  at the end of this
+	      manual.
+	    </P
+></DD
+><DT
+>How do I specify the names of my folders?</DT
+><DD
+><P
+>	    You do not need to.  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> is smart
+	    enough to automatically figure out what folders are present
+	    on the IMAP server and synchronize them.  You can use the
+	    <SPAN
+CLASS="PROPERTY"
+>folderfilter</SPAN
+> and <SPAN
+CLASS="PROPERTY"
+>foldertrans</SPAN
+>
+	    configuration file options to request certain folders and rename them
+	    as they come in if you like.
+	  </P
+></DD
+><DT
+>How can I prevent certain folders from being synced?</DT
+><DD
+><P
+>	    Use the <SPAN
+CLASS="PROPERTY"
+>folderfilter</SPAN
+> option in the configuration file.
+	  </P
+></DD
+><DT
+>How can I add or delete a folder?</DT
+><DD
+><P
+>	    <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> does not currently provide this feature, but if you create a new
+	    folder on the IMAP server, it will be created locally automatically.
+	  </P
+></DD
+><DT
+>Are there any other warnings that I should be aware of?</DT
+><DD
+><P
+>	    Yes; see the Notes section below.
+	  </P
+></DD
+><DT
+>What is the mailbox name recorder (mbnames) for?</DT
+><DD
+><P
+>Some mail readers, such as Mutt, are not capable
+	    of automatically determining the names of your mailboxes.
+	    <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> can help these programs by writing the names
+	    of the folders ni a format you specify.  See the example
+	    <TT
+CLASS="FILENAME"
+>offlineimap.conf</TT
+> for details.
+	  </P
+></DD
+><DT
+>Can I synchronize multiple accounts with <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>?</DT
+><DD
+><P
+>Sure.  Just name them all in the
+	    <SPAN
+CLASS="PROPERTY"
+>accounts</SPAN
+> line in the <SPAN
+CLASS="PROPERTY"
+>general</SPAN
+>
+	    section of the configuration file, and add a per-account section
+	    for each one.
+	  </P
+></DD
+><DT
+>Does <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> support POP?</DT
+><DD
+><P
+>No.  POP is not robust enough to do a completely reliable
+	    multi-machine synchronization like <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> can do.  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	    will not support it.
+	  </P
+></DD
+><DT
+>Does <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> support mailbox formats other than Maildir?</DT
+><DD
+><P
+>Not at present.  There is no technical reason not to; just no
+	    demand yet.  Maildir is a superior format anyway.
+	      However, <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> can sync between two IMAP
+	  servers, and some IMAP servers support other formats.  You
+	  could install an IMAP server on your local machine and have
+	  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> sync to that.
+	  </P
+></DD
+><DT
+>[technical] Why are your Maildir message filenames so huge?</DT
+><DD
+><P
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> has two relevant principles: 1) never modifying your
+	    messages in any way and 2) ensuring 100% reliable synchronizations.
+	    In order to do a reliable sync, <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	    must have a way to
+	    uniquely identify each e-mail.  Three pieces of information are
+	    required to do this: your account name, the folder name, and the
+	    message UID.  The account name can be calculated from the path in
+	    which your messages are.  The folder name can usually be as well, BUT
+	    some mail clients move messages between folders by simply moving the
+	    file, leaving the name intact.
+	  </P
+><P
+>	    So, <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> must store both a UID folder ID.  The folder ID is
+	    necessary so <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> can detect a message moved to a different
+	    folder.  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> stores the UID (U= number) and an md5sum of the
+	    foldername (FMD5= number) to facilitate this.
+	  </P
+></DD
+><DT
+>What is the speed of <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>'s sync?</DT
+><DD
+><P
+>OfflineIMAP
+	    versions 2.0 and above contain a multithreaded system.  A good way to
+	    experiment is by setting <SPAN
+CLASS="PROPERTY"
+>maxsyncaccounts</SPAN
+> to 3 and <SPAN
+CLASS="PROPERTY"
+>maxconnections</SPAN
+> to 3
+	    in each account clause.
+	  </P
+><P
+>This lets OfflineIMAP open up multiple connections simultaneously.
+	    That will let it process multiple folders and messages at once.  In
+	    most cases, this will increase performance of the sync.
+	  </P
+><P
+>Don't set the number too high.  If you do that, things might actually
+	    slow down as your link gets saturated.  Also, too many connections can
+	    cause mail servers to have excessive load.  Administrators might take
+	    unkindly to this, and the server might bog down.  There are many
+	    variables in the optimal setting; experimentation may help.
+	  </P
+><P
+>An informal benchmark yields these results for my setup:
+	  </P
+><P
+></P
+><UL
+><LI
+><P
+>10 minutes with MacOS X Mail.app "manual cache"
+	      </P
+></LI
+><LI
+><P
+>5 minutes with GNUS agent sync</P
+></LI
+><LI
+><P
+>20 seconds with OfflineIMAP 1.x</P
+></LI
+><LI
+><P
+>9 seconds with OfflineIMAP 2.x</P
+></LI
+><LI
+><P
+>3 seconds with OfflineIMAP 3.x "cold start"</P
+></LI
+><LI
+><P
+>2 seconds with OfflineIMAP 3.x "held connection"</P
+></LI
+></UL
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN469"
+></A
+><H2
+>Conforming To</H2
+><P
+></P
+><UL
+><LI
+><P
+>Internet Message Access Protocol version 4rev1 (IMAP 4rev1) as
+	  specified in RFC2060 and RFC3501</P
+></LI
+><LI
+><P
+>CRAM-MD5 as specified in RFC2195</P
+></LI
+><LI
+><P
+>Maildir as specified in
+	  <A
+HREF="http://www.qmail.org/qmail-manual-html/man5/maildir.html"
+TARGET="_top"
+>the Maildir manpage</A
+> and
+	  <A
+HREF="http://cr.yp.to/proto/maildir.html"
+TARGET="_top"
+>the qmail website</A
+>.</P
+></LI
+><LI
+><P
+>Standard Python 2.2.1 as implemented on POSIX-compliant systems.</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN482"
+></A
+><H2
+>Notes</H2
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN484"
+></A
+><H3
+>Deleting Local Folders</H3
+><P
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> does a two-way synchronization.  That is, if you
+	  make a change to the mail on the server, it will be propogated to your
+	  local copy, and vise-versa.  Some people might think that it would be
+	  wise to just delete all their local mail folders periodically.  If you
+	  do this with <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>, remember to also remove your local status
+	  cache (<TT
+CLASS="FILENAME"
+>~/.offlineimap</TT
+> by default).  Otherwise, <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> will take
+	  this as an intentional deletion of many messages and will interpret
+	  your action as requesting them to be deleted from the server as well.
+	  (If you don't understand this, don't worry; you probably won't
+	  encounter this situation)
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN491"
+></A
+><H3
+>Multiple Instances</H3
+><P
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> is not designed to have several instances (for instance, a cron job and an interactive invocation) run over the same
+	  mailbox simultaneously.  It will perform a check on startup and
+	  abort if another <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> is already running.  If you need
+	  to schedule synchronizations, please use the
+	  <SPAN
+CLASS="PROPERTY"
+>autorefresh</SPAN
+> settings rather than cron.
+	  Alternatively, you can set a separate <SPAN
+CLASS="PROPERTY"
+>metadata</SPAN
+>
+	  directory for each instance.
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN498"
+></A
+><H3
+>Copying Messages Between Folders</H3
+><P
+>	  Normally, when you copy a message between folders or add a new message
+	  to a folder locally, <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	  will just do the right thing.  However, sometimes this can be tricky
+	  -- if your IMAP server does not provide the SEARCH command, or does
+	  not return something useful, <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	  cannot determine the new UID of the message.  So, in these rare
+	  instances, OfflineIMAP will upload the message to the IMAP server and
+	  delete it from your local folder.  Then, on your next sync, the
+	  message will be re-downloaded with the proper UID.
+	  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> makes sure that the message was properly uploaded before deleting it,
+	  so there should be no risk of data loss.
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN504"
+></A
+><H3
+>Use with Evolution</H3
+><P
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> can work with Evolution.  To do so, first configure
+	  your <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> account to have
+	  <VAR
+CLASS="OPTION"
+>sep = /</VAR
+> in its configuration.  Then, configure
+	  Evolution with the
+	  "Maildir-format mail directories" server type.  For the path, you will need to
+	  specify the name of the top-level folder
+	  <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>inside</I
+></SPAN
+> your <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> storage location.
+	  You're now set!
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN512"
+></A
+><H3
+>Use with KMail</H3
+><P
+>At this time, I believe that <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> with Maildirs
+	  is not compatible
+	  with KMail.  KMail cannot work in any mode other than to move
+	  all messages out of all folders immediately, which (besides being annoying
+	  and fundamentally broken) is incompatible with
+	<SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>.
+	</P
+><P
+>	  However, I have made KMail version 3 work well with
+	  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> by installing an IMAP server on my local
+	  machine, having <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> sync to that, and pointing
+	  KMail at the same server.
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN520"
+></A
+><H3
+>Mailing List</H3
+><P
+>There is an OfflineIMAP mailing list available.
+	  To subscribe, send the text "Subscribe" in the subject of a mail to
+	  offlineimap-request@complete.org.  To post, send the message to
+	  offlineimap@complete.org.  Archives are available at
+	  <A
+HREF="http://lists.complete.org/offlineimap@complete.org/"
+TARGET="_top"
+>http://lists.complete.org/offlineimap@complete.org/</A
+>.
+	</P
+></DIV
+><DIV
+CLASS="REFSECT2"
+><A
+NAME="AEN524"
+></A
+><H3
+>Bugs</H3
+><P
+>Reports of bugs should be sent via e-mail to the
+	  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> bug-tracking system (BTS) at
+	  offlineimap@bugs.complete.org or submitted online using
+	  the <A
+HREF="http://bugs.complete.org/"
+TARGET="_top"
+>web interface</A
+>.
+	</P
+><P
+>	  The Web site also lists all current bugs, where you can check their
+	  status or contribute to fixing them.
+	</P
+></DIV
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="UPGRADING.4.0"
+></A
+><H2
+>Upgrading to 4.0</H2
+><P
+>	If you are upgrading from a version of <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> prior to
+	3.99.12, you will find that you will get errors when
+	<SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> starts up (relating to ConfigParser or
+	AccountHashGenerator) and the
+	configuration file.  This is because the config file format
+	had to change to accomodate new features in 4.0.  Fortunately,
+	it's not difficult to adjust it to suit.
+      </P
+><P
+>	First thing you need to do is stop any running <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+	instance, making sure first that it's synced all your mail.
+	Then, modify your
+	<TT
+CLASS="FILENAME"
+>~/.offlineimaprc</TT
+> file.  You'll need to
+	split up each account section (make sure that it now starts
+	with "Account ") into two Repository sections (one for the
+	local side and another for the remote side.)  See the files
+	<TT
+CLASS="FILENAME"
+>offlineimap.conf.minimal</TT
+> and
+	<TT
+CLASS="FILENAME"
+>offlineimap.conf</TT
+> in the distribution if
+	you need more assistance.
+      </P
+><P
+>	<SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>'s status directory area has also changed.
+	Therefore, you should delete everything in ~/.offlineimap as
+	well as your local mail folders.
+      </P
+><P
+>	When you start up <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> 4.0, it will re-download all
+	your mail from the server and then you can continue using it
+	like normal.
+      </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN544"
+></A
+><H2
+>Copyright</H2
+><P
+>OfflineIMAP, and this manual, are Copyright &copy; 2002, 2003 John Goerzen.</P
+><P
+>	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+      </P
+><P
+>	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+      </P
+><P
+>	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA</P
+><P
+>imaplib.py comes from the Python dev tree and is licensed under
+	the GPL-compatible PSF license as stated in the file
+	<TT
+CLASS="FILENAME"
+>COPYRIGHT</TT
+> in the <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>
+         distribution.
+      </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN553"
+></A
+><H2
+>Author</H2
+><P
+><SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>, its libraries, documentation, and all included files, except where
+	noted, was written by John Goerzen <CODE
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:jgoerzen@complete.org"
+>jgoerzen@complete.org</A
+>&#62;</CODE
+> and
+	copyright is held as stated in the COPYRIGHT section.
+      </P
+><P
+>	<SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> may be downloaded, and information found, from its
+	homepage via either <A
+HREF="gopher://quux.org/1/devel/offlineimap"
+TARGET="_top"
+>Gopher</A
+>
+	or <A
+HREF="http://quux.org/devel/offlineimap"
+TARGET="_top"
+>HTTP</A
+>.
+      </P
+><P
+>	<SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> may also be downloaded using Subversion.  Additionally,
+	the distributed tar.gz may be updated with a simple "svn update"
+	command; it is ready to go.  For information on getting OfflineIMAP
+	with Subversion, please visit the
+	<A
+HREF="http://svn.complete.org/"
+TARGET="_top"
+>complete.org Subversion page</A
+>.
+      </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN565"
+></A
+><H2
+>See Also</H2
+><P
+><SPAN
+CLASS="APPLICATION"
+>mutt</SPAN
+>(1),
+	<SPAN
+CLASS="APPLICATION"
+>python</SPAN
+>(1)
+      </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN570"
+></A
+><H2
+>History</H2
+><P
+>	Detailed history may be found in the file ChangeLog in the
+	<SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> distribution.  Feature and bug histories may be
+	found in the file debian/changelog which, despite its name, is
+	not really Debian-specific.  This section provides a large
+	overview.
+      </P
+><P
+>	Development on <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> began on June 18, 2002.  Version
+	1.0.0 was released three days later on June 21, 2002.  Point
+	releases followed, including speed optimizations and some
+	compatibility fixes.
+      </P
+><P
+>Version 2.0.0 was released on July 3, 2002, and
+	represented the first time the synchronization became
+	multithreaded and, to the best of my knowledge, the first
+	multithreaded IMAP syncrhonizing application in existance.
+	The last 2.0.x release, 2.0.8, was made on July 9.
+      </P
+><P
+>	Version 3.0.0 was released on July 11, 2002, and introduced
+	modular user interfaces and the first GUI interface for
+	<SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+>.  This manual also was introduced with 3.0.0,
+	along with many command-line options.  Version 3.1.0 was
+	released on July 21, adding the Noninteractive user
+	interfaces, profiling support, and several bugfixes.  3.2.0
+	was released on July 24, adding support for the Blinkenlights
+	GUI interface.  <SPAN
+CLASS="APPLICATION"
+>OfflineIMAP</SPAN
+> entered maintenance mode for
+	awhile, as it had reached a feature-complete milestone in my
+	mind.
+      </P
+><P
+>	The 3.99.x branch began in on October 7, 2002, to begin work
+	for 4.0.  The Curses.Blinkenlights interface was added in
+	3.99.6, and many architectural changes were made.
+      </P
+><P
+>	4.0.0 was released on July 18, 2003, including the ability to
+            synchronize directly between two IMAP servers, the first
+            re-architecting of the configuration file to refine the
+            notion of an account, and the new Curses interface.
+      </P
+></DIV
+></DIV
+></BODY
+></HTML
+>
