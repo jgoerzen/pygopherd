@@ -107,7 +107,7 @@ class UMNDirHandler(DirHandler):
             capinfo = self.processLinkFile(capfilename,
                                            fileentry.getselector())
             if len(capinfo) >= 1:       # We handle one and only one entry.
-                if capinfo[0].gettype() == 'X':
+                if capinfo[0].gettype() == 'X' or capinfo[0].gettype() == '-':
                     return              # Type X -- don't append.
                 else:
                     self.mergeentries(fileentry, capinfo[0])

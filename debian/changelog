@@ -1,11 +1,13 @@
-pygopherd (1.0.1) unstable; urgency=low
+pygopherd (1.1.0) unstable; urgency=low
 
   * Added new configuration option: advertisedport.
   * Removed TODO file (now contained in bug-tracking system)
   * Moved pygopherd.py to bin/pygopherd to make installation clearer
     and testing smoother.
+  * Extensive new manual that thoroughly documents the system.
+  * UMN Compatibility: type - will also hide things in the fashion of X.
 
- -- John Goerzen <jgoerzen@complete.org>  Mon, 22 Jul 2002 06:17:17 -0500
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 08 Aug 2002 20:17:17 -0500
 
 pygopherd (1.0.0) unstable; urgency=low
 

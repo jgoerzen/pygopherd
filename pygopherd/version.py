@@ -1,5 +1,5 @@
 productname = 'PyGopherd'
-versionstr = "1.0.0"
+versionstr = "1.1.0"
 
 versionlist = versionstr.split(".")
 major = versionlist[0]
