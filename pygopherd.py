@@ -37,7 +37,7 @@ class GopherRequestHandler(SocketServer.StreamRequestHandler):
 
         protohandler = \
                      ProtocolMultiplexer.getProtocol(request, \
-                     self.server, self.rfile, self.wfile, self.server.config)
+                     self.server, self, self.rfile, self.wfile, self.server.config)
         protohandler.handle()
 
 class MyServer(SocketServer.ForkingTCPServer):

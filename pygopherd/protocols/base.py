@@ -25,7 +25,7 @@ from pygopherd.handlers import HandlerMultiplexer
 
 class BaseGopherProtocol:
     """Skeleton protocl -- includes commonly-used routines."""
-    def __init__(self, request, server, rfile, wfile, config):
+    def __init__(self, request, server, requesthandler, rfile, wfile, config):
         """Parameters are:
         request -- the raw request string.
 
@@ -43,6 +43,7 @@ class BaseGopherProtocol:
         self.wfile = wfile
         self.config = config
         self.server = server
+        self.requesthandler = requesthandler
         self.requestlist = requestparts
 
         self.requestlist = requestparts

@@ -20,10 +20,10 @@
 from pygopherd import handlers, protocols
 from pygopherd.protocols import *
 
-def getProtocol(request, server, rfile, wfile, config):
+def getProtocol(request, server, requesthandler, rfile, wfile, config):
     p = eval(config.get("protocols.ProtocolMultiplexer", "protocols"))
 
     for protocol in p:
-        ptry = protocol(request, server, rfile, wfile, config)
+        ptry = protocol(request, server, requesthandler, rfile, wfile, config)
         if ptry.canhandlerequest():
             return ptry

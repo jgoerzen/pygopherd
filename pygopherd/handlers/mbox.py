@@ -31,7 +31,7 @@ from stat import *
 # Basic mailbox support
 ###########################################################################
 
-class FolderHandler(VirtualFolder):
+class FolderHandler(Virtual):
     def getentry(self):
         ## Return my own entry.
         if not self.entry:
@@ -63,7 +63,7 @@ class FolderHandler(VirtualFolder):
         if (endstr):
             wfile.write(endstr)
 
-class MessageHandler(VirtualFolder):
+class MessageHandler(Virtual):
     def canhandlerequest(self):
         """We put MBOX-MESSAGE in here so we don't have to re-check
         the first line of the mbox file before returning a true or false

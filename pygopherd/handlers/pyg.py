@@ -4,7 +4,7 @@ from pygopherd.handlers.virtual import Virtual
 from stat import *
 import imp, re
 
-class PYGHandler(VirtualFolder):
+class PYGHandler(Virtual):
     def canhandlerequest(self):
         if not (self.statresult and S_ISREG(self.statresult[ST_MODE]) and \
                (S_IMODE(self.statresult[ST_MODE]) & S_IXOTH) and \
@@ -29,7 +29,7 @@ class PYGHandler(VirtualFolder):
     def write(self, wfile):
         self.pygobject.write(wfile)
 
-class PYGBase(VirtualFolder):
+class PYGBase(Virtual):
     pass
 
         
