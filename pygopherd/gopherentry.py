@@ -18,7 +18,7 @@ class GopherEntry:
         self.mimetype = None
         self.size = None
         self.encoding = None
-        self.mapping = eval(config.get("entry", "mapping"))
+        self.mapping = eval(config.get("GopherEntry", "mapping"))
         self.populated = 0
         self.language = None
         self.ctime = None
@@ -52,7 +52,7 @@ class GopherEntry:
             self.encoding = encoding
 
         if not self.mimetype:
-            self.mimetype = self.config.get("entry", "defaultmimetype")
+            self.mimetype = self.config.get("GopherEntry", "defaultmimetype")
 
         if self.mimetype and self.type == None:
             self.type = 0

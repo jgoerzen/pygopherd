@@ -25,7 +25,13 @@ class DirHandler(handlers.base.BaseHandler):
         if fsbase == '/':
             fsbase = ''                 # Avoid dup slashes
 
+        ignorepatt = self.config.get("handlers.dir.DirHandler", "ignorepatt")
+
         for file in files:
+            # Skip files we're ignoring.
+            if re.search(ignorepatt, selectorbase + '/' + file):
+                continue
+            
             fileentry = gopherentry.GopherEntry(selectorbase + '/' + file,
                                           self.config)
             fileentry.populatefromfs(fsbase + '/' + file)

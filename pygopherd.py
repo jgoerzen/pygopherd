@@ -23,26 +23,21 @@
 
 from ConfigParser import ConfigParser
 import socket, os, sys, signal, SocketServer, handlers, protocols
-import protocols.gopherp, protocols.rfc1436
+from protocols import ProtocolMultiplexer
 import mimetypes
 
 config = ConfigParser()
 config.read("pygopherd.conf")
-mimetypes.init([config.get("serving", "mimetypes")])
+mimetypes.init([config.get("pygopherd", "mimetypes")])
 
 class GopherRequestHandler(SocketServer.StreamRequestHandler):
     def handle(self):
         request = self.rfile.readline()
 
-        protos = [protocols.gopherp.GopherPlusProtocol,
-                  protocols.rfc1436.GopherProtocol]
-        for protocol in protos:
-            protohandler = protocol(request, self.server,
-                                    self.rfile, self.wfile,
-                                    self.server.config)
-            if (protohandler.canhandlerequest()):
-                protohandler.handle()
-                break
+        protohandler = \
+                     ProtocolMultiplexer.getProtocol(request, \
+                     self.server, self.rfile, self.wfile, self.server.config)
+        protohandler.handle()
 
 class MyServer(SocketServer.ForkingTCPServer):
     allow_reuse_address = 1
@@ -55,7 +50,7 @@ class MyServer(SocketServer.ForkingTCPServer):
         self.server_port = port
         
 
-s = MyServer(('', config.getint('serving', 'port')),
+s = MyServer(('', config.getint('pygopherd', 'port')),
              GopherRequestHandler)
 s.config = config
 s.serve_forever()

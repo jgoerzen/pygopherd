@@ -34,7 +34,7 @@ class BaseHandler:
         if self.fspath:
             return self.fspath
 
-        self.fspath = self.config.get("serving", "root") + \
+        self.fspath = self.config.get("pygopherd", "root") + \
                       self.selector
 
         return self.fspath
