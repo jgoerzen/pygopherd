@@ -1,6 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: serve up gopherspace via http
-# $Id: http.py,v 1.19 2002/04/18 16:57:33 jgoerzen Exp $
+# $Id: http.py,v 1.20 2002/04/18 17:13:29 jgoerzen Exp $
 # Copyright (C) 2002 John Goerzen
 # <jgoerzen@complete.org>
 #
@@ -41,8 +41,16 @@ class HTTPProtocol(BaseGopherProtocol):
         # Slurp up remaining lines.
         while len(self.rfile.readline().strip()):
             pass
-            
-        self.selector = urllib.unquote(self.requestparts[1])
+
+        splitted = self.requestparts[1].split('?')
+        self.selector = splitted[0]
+        self.selector = urllib.unquote(self.selector)
+        self.formvals = {}
+        if len(splitted) >= 2:
+            self.formvals = cgi.parse_qs(splitted[1])
+
+        if self.formvals.has_key('searchrequest'):
+            self.searchrequest = self.formvals['searchrequest'][0]
 
         icon = re.match('/PYGOPHERD-HTTPPROTO-ICONS/(.+)$', self.selector)
         if icon:
@@ -67,12 +75,10 @@ class HTTPProtocol(BaseGopherProtocol):
                 mtime = time.strftime("%a, %d %b %Y %H:%M:%S GMT", gmtime)
                 self.wfile.write("Last-Modified: " + mtime + "\n")
             mimetype = self.entry.getmimetype()
-            print "mimetype init", mimetype
             if mimetype == None:
                 mimetype = 'text/plain'
             if mimetype == 'application/gopher-menu':
                 mimetype = 'text/html'
-            print "mimetype final: '%s'", mimetype
             self.wfile.write("Content-Type: " + mimetype + "\n\n")
             if self.requestparts[0] == 'GET':
                 if handler.isdir():
@@ -103,7 +109,7 @@ class HTTPProtocol(BaseGopherProtocol):
         retstr = '<TR><TD>'
         retstr += self.getimgtag(entry)
         retstr += "</TD>\n<TD>&nbsp;"
-        if entry.gettype() != 'i':
+        if entry.gettype() != 'i' and entry.gettype() != '7':
             retstr += '<A HREF="%s">' % url
         retstr += "<TT>"
         if entry.getname() != None:
@@ -111,8 +117,13 @@ class HTTPProtocol(BaseGopherProtocol):
         else:
             retstr += cgi.escape(entry.getselector())
         retstr += "</TT>"
-        if entry.gettype() != 'i':
+        if entry.gettype() != 'i' and entry.gettype() != '7':
             retstr += '</A>'
+        if (entry.gettype() == '7'):
+            retstr += '<BR><FORM METHOD="GET" ACTION="%s">' % url
+            retstr += '<INPUT TYPE="text" NAME="searchrequest" SIZE="30">'
+            retstr += '<INPUT TYPE="submit" NAME="Submit" VALUE="Submit">'
+            retstr += '</FORM>'
         retstr += '</TD><TD><FONT SIZE="-2">'
         if entry.getmimetype():
             subtype = re.search('/.+$', entry.getmimetype())
