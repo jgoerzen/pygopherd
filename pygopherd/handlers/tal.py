@@ -29,11 +29,16 @@ except:
     haslogging = 0
 
 if haslogging:
+    import os
+    try:
+        hdlrFilename = os.path.join(os.environ['TEMP'], 'mylog.log')
+    except:
+        hdlrFilename = '/tmp/mylog.log'
     logger = logging.getLogger('simpleTAL.HTMLTemplateCompiler')
-    hdlr = logging.FileHandler('/tmp/myapp.log')
+    hdlr = logging.FileHandler(hdlrFilename)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
     hdlr.setFormatter(formatter)
-    logger.addHandler(hdlr) 
+    logger.addHandler(hdlr)
     logger.setLevel(logging.INFO)
 
 
@@ -61,7 +66,7 @@ class TALLoader:
     #def getchildren(self):
     #    return [self.__class__(self.vfs, os.path.join(self.path, item)) \
     #            for item in self.getchildrennames()]
-                               
+
 
     def __getattr__(self, key):
         fq = os.path.join(self.path, key)
@@ -108,7 +113,7 @@ class TALFileHandler(FileHandler):
             self.entry.realencoding = self.entry.encoding
             self.entry.encoding = None
             self.entry.type = self.entry.guesstype()
-            
+
         return self.entry
 
     def write(self, wfile):

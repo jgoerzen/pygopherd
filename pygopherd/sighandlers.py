@@ -44,12 +44,13 @@ def termhandler(signum, frame):
         os._exit(7)                     # So we don't raise SystemExit
 
 def setsighuphandler():
-    signal.signal(signal.SIGHUP, huphandler)
+    if 'SIGHUP' in signal.__dict__:
+        signal.signal(signal.SIGHUP, huphandler)
 
 def setsigtermhandler(newpgrp):
     global pgrp, pid
     pgrp = newpgrp
     pid = os.getpid()
     signal.signal(signal.SIGTERM, termhandler)
-    
-    
+
+

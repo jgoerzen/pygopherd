@@ -37,7 +37,7 @@ import traceback
 def initconffile(conffile):
     if not (os.path.isfile(conffile) and os.access(conffile, os.R_OK)):
         raise Exception, "Could NOT access config file %s\nPlease specify config file as a command-line argument\n" % conffile
-            
+
     config = ConfigParser()
     config.read(conffile)
     return config
@@ -122,7 +122,7 @@ def getserverobject(config):
         GopherExceptions.log(sys.exc_info()[1], None, None)
         logger.log("Application startup NOT successful!")
         raise
-        
+
     s.config = config
     return s
 
@@ -170,10 +170,14 @@ def initpidfile(config):
         fd.close()
 
 def initpgrp(config):
-    os.setpgrp()
-    pgrp = os.getpgrp()
-    logger.log("Process group is %d" % pgrp)
-    return pgrp
+    if 'setpgrp' in os.__dict__:
+        os.setpgrp()
+        pgrp = os.getpgrp()
+        logger.log("Process group is %d" % pgrp)
+        return pgrp
+    else:
+        logger.log("setpgrp() unavailable; not initializing process group")
+        return None
 
 def initsighandlers(config, pgrp):
     sighandlers.setsighuphandler()

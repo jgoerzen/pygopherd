@@ -1,3 +1,10 @@
+pygopherd (2.0.10) unstable; urgency=low
+
+  * Some modifications to make more Windows friendly, based on patch from
+    Grant D. Watson.
+
+ -- John Goerzen <jgoerzen@complete.org>  Mon, 30 Aug 2004 14:49:15 -0500
+
 pygopherd (2.0.9) unstable; urgency=low
 
   * Don't crash if simpletal is unavailable. 
