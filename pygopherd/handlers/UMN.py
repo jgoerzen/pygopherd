@@ -24,6 +24,7 @@ from pygopherd import protocols, gopherentry, handlers
 from pygopherd.gopherentry import GopherEntry
 from pygopherd.handlers.dir import DirHandler
 from stat import *
+import pygopherd.fileext
 
 ###########################################################################
 # UMN Directory handler
@@ -69,17 +70,16 @@ class UMNDirHandler(DirHandler):
         else:
             return 0                    # Parent returned 0, do the same.
 
-    def prep_entriesappend(self, file, fileentry):
+    def prep_entriesappend(self, file, handler, fileentry):
         """Overridden to process .cap files and modify extensions.
         This is called by the
         parent's prepare to append an entry to the list.  Here, we check
         to see if there's a .cap file right before adding it."""
 
-        if isinstance(fileentry, handlers.file.FileHandler):
-            i = fileentry.getname().find(".")
-            if i != -1:
-                # If there's an extension, strip it off.
-                fileentry.setname(fileentry.getname()[0:i])
+        if isinstance(handler, handlers.file.FileHandler):
+            fileentry.setname(
+                pygopherd.fileext.extstrip(file, fileentry.getmimetype()))
+            # If it's a file, has a MIME type, and we know about it..
         
         capfilename = self.fsbase + '/.cap/' + file
         
@@ -93,7 +93,7 @@ class UMNDirHandler(DirHandler):
                     self.mergeentries(fileentry, capinfo[0])
         except IOError:                 # Ignore no capfile situation
             pass
-        DirHandler.prep_entriesappend(self, file, fileentry)
+        DirHandler.prep_entriesappend(self, file, handler, fileentry)
 
     def MergeLinkFiles(self):
         """Called to merge the files from .Links and .names into the

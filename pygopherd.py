@@ -34,6 +34,7 @@ from pygopherd.protocols import ProtocolMultiplexer
 from pygopherd.handlers import *
 from pygopherd.handlers import HandlerMultiplexer
 from pygopherd import *
+import pygopherd.fileext
 import mimetypes
 
 import traceback
@@ -69,9 +70,18 @@ if not mimetypesfiles:
     logger.log(errmsg)
     sys.stderr.write(errmsg + "\n")
     sys.exit(201)
-    
+
+
+configencoding = eval(config.get("pygopherd", "encoding"))
+mimetypes.encodings_map.clear()
+for key, value in configencoding:
+    mimetypes.encodings_map[key] = value
 mimetypes.init(mimetypesfiles)
 logger.log("mimetypes initialized with files: " + str(mimetypesfiles))
+
+# Set up the inverse mapping file.
+
+pygopherd.fileext.init()
 
 ###########################################################################
 # Declare the server classes.

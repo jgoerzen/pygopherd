@@ -60,14 +60,14 @@ class DirHandler(handlers.base.BaseHandler):
         for file in self.files:
             # We look up the appropriate handler for this object, and ask
             # it to give us an entry object.
-            fileentry = handlers.HandlerMultiplexer.\
+            handler = handlers.HandlerMultiplexer.\
                         getHandler(self.selectorbase + '/' \
                                    + file, self.searchrequest, self.protocol,
-                                   self.config).\
-                        getentry()
-            self.prep_entriesappend(file, fileentry)
+                                   self.config)
+            fileentry = handler.getentry()
+            self.prep_entriesappend(file, handler, fileentry)
 
-    def prep_entriesappend(self, file, fileentry):
+    def prep_entriesappend(self, file, handler, fileentry):
         """Subclasses can override to do post-processing on the entry while
         we still have the filename around.
         IE, for .cap files."""
