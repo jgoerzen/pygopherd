@@ -32,7 +32,7 @@ class GopherProtocol(BaseGopherProtocol):
     def renderobjinfo(self, entry):
         #print entry.gettype(), entry.getname(), entry.getselector(), \
         #      entry.gethost(), entry.getport(), entry.getgopherpsupport()
-        retval = entry.gettype() + \
+        retval = entry.gettype('0') + \
                  entry.getname() + "\t" + \
                  entry.getselector() + "\t" + \
                  entry.gethost(default = self.server.server_name) + "\t" + \

@@ -1,3 +1,9 @@
+pygopherd (2.0.11) unstable; urgency=medium
+
+  * Work around a bug that occurs when a type is missing.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri, 14 Jan 2005 09:35:25 -0600
+
 pygopherd (2.0.10) unstable; urgency=low
 
   * Some modifications to make more Windows friendly, based on patch from
