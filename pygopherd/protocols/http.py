@@ -45,7 +45,7 @@ class HTTPProtocol(BaseGopherProtocol):
                 break
             line = line.strip()
             if not len(line):
-                continue
+                break
             splitline = line.split(':', 1)
             if len(splitline) == 2:
                 self.httpheaders[splitline[0].lower()] = splitline[1]
