@@ -62,16 +62,20 @@ install: build
 	$(PYTHON) setup.py install --root=`pwd`/debian/$(PACKAGE) --no-compile
 
 
-# Build architecture-independent files here.
-binary-indep: build install
-# We have nothing to do by default.
-
 # Build architecture-dependent files here.
 binary-arch: build install
+# We have nothing to do by default.
+
+# Build architecture-independent files here.
+binary-indep: build install
 	dh_testdir
 	dh_testroot
 #	dh_installdebconf	
 	dh_installdocs
+	mv debian/pygopherd/usr/bin/pygopherd.py \
+		debian/pygopherd/usr/sbin/pygopherd
+	rm debian/pygopherd/etc/pygopherd/mime.types
+	ln -s ../mime.types debian/pygopherd/etc/pygopherd/mime.types
 	dh_installexamples
 	dh_installmenu
 #	dh_installlogrotate

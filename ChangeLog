@@ -1,3 +1,42 @@
+2002-04-10 10:35  jgoerzen
+
+	* debian/rules: More changelog tweaking.
+
+2002-04-10 10:34  jgoerzen
+
+	* setup.py, debian/docs, debian/rules: Made setup.py include
+	handlers and protocols too.  Updated debian code.
+
+2002-04-10 10:27  jgoerzen
+
+	* debian/rules: Removed setup.py configure call
+
+2002-04-10 10:26  jgoerzen
+
+	* README, setup.py, debian/control: Updated.
+
+2002-04-10 10:20  jgoerzen
+
+	* pygopherd.py, conf/pygopherd.conf: Added ability to specify
+	aliased server name.
+
+2002-04-10 10:13  jgoerzen
+
+	* TODO: Updated.
+
+2002-04-10 10:13  jgoerzen
+
+	* README: Added.
+
+2002-04-10 10:12  jgoerzen
+
+	* ChangeLog, Makefile, setup.py, conf/pygopherd.conf,
+	debian/changelog, debian/conffiles, debian/conffiles.ex,
+	debian/control, debian/copyright, debian/init.d, debian/init.d.ex,
+	debian/postinst, debian/postinst.ex, debian/rules: Many
+	modifications to permit system-wide installations, Debian package
+	support, etc.
+
 2002-04-10 09:10  jgoerzen
 
 	* setup.py: Updated.
@@ -21,12 +60,13 @@
 
 2002-04-09 22:29  jgoerzen
 
-	* Makefile, conf/pygopherd.conf, pygopherd/handlers/scriptexec.py:
-	More security enhancements and stuff.
+	* Makefile, pygopherd.py, conf/pygopherd.conf,
+	pygopherd/handlers/scriptexec.py: More security enhancements and
+	stuff.
 
 2002-04-09 21:44  jgoerzen
 
-	* conf/pygopherd.conf, pygopherd/GopherExceptions.py,
+	* pygopherd.py, conf/pygopherd.conf, pygopherd/GopherExceptions.py,
 	pygopherd/__init__.py, pygopherd/logger.py,
 	pygopherd/handlers/HandlerMultiplexer.py,
 	pygopherd/handlers/mbox.py, pygopherd/protocols/base.py,
@@ -42,6 +82,10 @@
 	* pygopherd/handlers/pyg.py: Fixed an error with searchrequest
 	support.
 
+2002-04-09 16:09  jgoerzen
+
+	* pygopherd.py: Removed outdated import of "signal"
+
 2002-04-09 15:42  jgoerzen
 
 	* conf/pygopherd.conf, pygopherd/handlers/HandlerMultiplexer.py,
@@ -52,9 +96,9 @@
 
 2002-04-09 15:18  jgoerzen
 
-	* conf/pygopherd.conf, pygopherd/handlers/__init__.py,
-	pygopherd/handlers/mbox.py, pygopherd/handlers/pyg.py,
-	pygopherd/handlers/scriptexec.py,
+	* pygopherd.py, conf/pygopherd.conf,
+	pygopherd/handlers/__init__.py, pygopherd/handlers/mbox.py,
+	pygopherd/handlers/pyg.py, pygopherd/handlers/scriptexec.py,
 	pygopherd/protocols/ProtocolMultiplexer.py,
 	pygopherd/protocols/base.py: More updates for vfolder rename. 
 	Added scriptexec capability.
@@ -83,14 +127,17 @@
 
 2002-04-06 16:08  jgoerzen
 
-	* pygopherd/: __init__.py, gopherentry.py,
-	handlers/HandlerMultiplexer.py, handlers/UMN.py,
-	handlers/__init__.py, handlers/base.py, handlers/dir.py,
-	handlers/file.py, handlers/gophermap.py, handlers/html.py,
-	handlers/mbox.py, handlers/url.py,
-	protocols/ProtocolMultiplexer.py, protocols/base.py,
-	protocols/enhanced.py, protocols/gopherp.py, protocols/http.py,
-	protocols/rfc1436.py: Updated for module moving.
+	* pygopherd.py, pygopherd/__init__.py, pygopherd/gopherentry.py,
+	pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/UMN.py, pygopherd/handlers/__init__.py,
+	pygopherd/handlers/base.py, pygopherd/handlers/dir.py,
+	pygopherd/handlers/file.py, pygopherd/handlers/gophermap.py,
+	pygopherd/handlers/html.py, pygopherd/handlers/mbox.py,
+	pygopherd/handlers/url.py,
+	pygopherd/protocols/ProtocolMultiplexer.py,
+	pygopherd/protocols/base.py, pygopherd/protocols/enhanced.py,
+	pygopherd/protocols/gopherp.py, pygopherd/protocols/http.py,
+	pygopherd/protocols/rfc1436.py: Updated for module moving.
 
 2002-04-06 15:31  jgoerzen
 
@@ -376,7 +423,7 @@
 
 2002-03-26 13:50  jgoerzen
 
-	* conf/pygopherd.conf, pygopherd/gopherentry.py,
+	* pygopherd.py, conf/pygopherd.conf, pygopherd/gopherentry.py,
 	pygopherd/handlers/HandlerMultiplexer.py,
 	pygopherd/handlers/base.py,
 	pygopherd/protocols/ProtocolMultiplexer.py,
@@ -385,7 +432,8 @@
 
 2002-03-26 12:45  jgoerzen
 
-	* TODO, conf/pygopherd.conf, pygopherd/gopherentry.py: Updated.
+	* TODO, pygopherd.py, conf/pygopherd.conf,
+	pygopherd/gopherentry.py: Updated.
 
 2002-03-26 12:24  jgoerzen
 
@@ -414,14 +462,17 @@
 
 2002-03-26 11:46  jgoerzen
 
-	* pygopherd/: handlers/HandlerMultiplexer.py, handlers/base.py,
-	handlers/dir.py, handlers/file.py, protocols/base.py,
-	protocols/gopherp.py, protocols/rfc1436.py: Bugfixes
+	* pygopherd.py, pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/base.py, pygopherd/handlers/dir.py,
+	pygopherd/handlers/file.py, pygopherd/protocols/base.py,
+	pygopherd/protocols/gopherp.py, pygopherd/protocols/rfc1436.py:
+	Bugfixes
 
 2002-03-26 11:31  jgoerzen
 
-	* pygopherd/: handlers/HandlerMultiplexer.py, handlers/__init__.py,
-	handlers/__init__.py, protocols/__init__.py: [no log message]
+	* pygopherd.py, pygopherd/handlers/HandlerMultiplexer.py,
+	pygopherd/handlers/__init__.py, pygopherd/handlers/__init__.py,
+	pygopherd/protocols/__init__.py: [no log message]
 
 2002-03-26 11:25  jgoerzen
 
@@ -431,7 +482,8 @@
 2002-03-26 11:17  jgoerzen
 
 	* pygopherd/handlers/base.py, pygopherd/handlers/dir.py,
-	handlers.py, pygopherd/protocols/base.py: [no log message]
+	handlers.py, pygopherd.py, pygopherd/protocols/base.py: [no log
+	message]
 
 2002-03-26 11:09  jgoerzen
 
@@ -477,8 +529,8 @@
 
 2002-03-25 18:58  jgoerzen
 
-	* handlers.py, protocols.py, rhandler.py: Rearranged code -- split
-	rhandler.py into handlers.py and protocols.py
+	* handlers.py, protocols.py, pygopherd.py, rhandler.py: Rearranged
+	code -- split rhandler.py into handlers.py and protocols.py
 
 2002-03-25 16:47  jgoerzen
 
@@ -498,15 +550,32 @@
 
 2002-03-25 13:21  jgoerzen
 
-	* rhandler.py, conf/pygopherd.conf: Basic functionality is working.
+	* pygopherd.py, rhandler.py, conf/pygopherd.conf: Basic
+	functionality is working.
 
 2002-03-25 12:17  jgoerzen
 
-	* rhandler.py: Some updates.
+	* pygopherd.py, rhandler.py: Some updates.
 
 2002-03-25 12:14  jgoerzen
 
-	* rhandler.py, conf/pygopherd.conf: Updated.
+	* pygopherd.py, rhandler.py, conf/pygopherd.conf: Updated.
+
+2002-03-25 11:29  jgoerzen
+
+	* pygopherd.py: Updated.
+
+2002-03-25 11:08  jgoerzen
+
+	* pygopherd.py: This version.
+
+2002-03-25 10:55  jgoerzen
+
+	* pygopherd.py: Working prototype.
+
+2002-03-25 10:29  jgoerzen
+
+	* pygopherd.py: Skeletal work
 
 2002-03-25 10:09  jgoerzen
 
