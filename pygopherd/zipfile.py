@@ -2,9 +2,13 @@
 # Written by James C. Ahlstrom jim@interet.com
 # All rights transferred to CNRI pursuant to the Python contribution agreement
 
-import struct, os, time
+import struct, os, time, types
 import binascii
 from StringIO import StringIO
+
+_STRING_TYPES = (types.StringType,)
+if hasattr(types, "UnicodeType"):
+    _STRING_TYPES = _STRING_TYPES + (types.UnicodeType,)
 
 try:
     import zlib # We may need its compression method
@@ -171,7 +175,7 @@ else:
 
 class ZipDecompressor:
     def __init__(self, fd, zinfo):
-        self.fd = fd
+        self.fp = fd
         self.zinfo = zinfo
         self.buffer = ''
         self.bytesread = 0
@@ -216,7 +220,7 @@ class ZipDecompressor:
         self.fp.seek(self.zinfo.file_offset + self.bytesread)
         retval = ''
         while self.bytesread < count:
-            data = self.fd.read(min(4096, count - self.bytesread))
+            data = self.fp.read(min(4096, count - self.bytesread))
             retval += data
             self.bytesread += len(data)
         self.byteswritten = self.bytesread
@@ -236,7 +240,7 @@ class ZipDecompressor:
 
         # First, fill up the buffer.
         while len(self.buffer) < count:
-            bytes = self.fd.read(min(self.zinfo.compress_size - self.bytesread, 4096))
+            bytes = self.fp.read(min(self.zinfo.compress_size - self.bytesread, 4096))
             self.bytesread += len(bytes)
             result = self.dc.decompress(bytes)
             if len(result):
@@ -244,7 +248,7 @@ class ZipDecompressor:
                 self.crc = binascii.crc32(result, self.crc)
 
             if self.bytesread == self.zinfo.compress_size:
-                bytes = dc.decompress('Z') + dc.flush()
+                bytes = self.dc.decompress('Z') + dc.flush()
                 result += bytes
                 if len(result):
                     self.buffer += result
@@ -277,10 +281,10 @@ class ZipReader:
         """Open the ZIP file with mode read "r", write "w" or append "a"."""
         self.debug = 0  # Level of printing: 0 through 3
         self.locationmap = {}           # Map to location of central dir header
-        self.compression = compression  # Method of compression
+        self.directorymap = {'': {}}
 
         # Check if we were passed a file-like object
-        if isinstance(file, basestring):
+        if type(file) in _STRING_TYPES:
             self._filePassed = 0
             self.filename = file
             self.fp = open(file, 'rb')
@@ -329,7 +333,12 @@ class ZipReader:
             centdir = self._getcentdir() # Reads 46 bytes
             filename = fp.read(centdir[_CD_FILENAME_LENGTH])
 
-            self.locationmap{filename} = self.start_dir + total
+            self.locationmap[filename] = self.start_dir + total
+            dname = os.path.dirname(filename)
+            if self.directorymap.has_key(dname):
+                self.directorymap[dname][filename] = self.start_dir + total
+            else:
+                self.directorymap[dname] = {filename: self.start_dir + total}
             # Skip past the other stuff.
             total = (total + 46 + centdir[_CD_FILENAME_LENGTH]
                      + centdir[_CD_EXTRA_FIELD_LENGTH]
@@ -390,9 +399,6 @@ class ZipReader:
         x = ZipInfo(filename)
         x.extra = fp.read(centdir[_CD_EXTRA_FIELD_LENGTH])
         x.comment = fp.read(centdir[_CD_COMMENT_LENGTH])
-        total = (total + centdir[_CD_FILENAME_LENGTH]
-                 + centdir[_CD_EXTRA_FIELD_LENGTH]
-                 + centdir[_CD_COMMENT_LENGTH])
         x.header_offset = centdir[_CD_LOCAL_HEADER_OFFSET] + self.concat
         # file_offset must be computed below...
         (x.create_version, x.create_system, x.extract_version, x.reserved,
@@ -436,18 +442,11 @@ class ZipReader:
             raise RuntimeError, \
                   "Attempt to read ZIP archive that was already closed"
         zinfo = self.getinfo(name)
-        return ZipDecompressor(self.fd, zinfo)
+        return ZipDecompressor(self.fp, zinfo)
 
     def copyto(self, name, fd):
         """Copy the contents of the named file to the given descriptor."""
         self.open(name).copyto(fd)
-
-                  "Unsupported compression method %d for file %s" % \
-            (zinfo.compress_type, name)
-        if crc != zinfo.CRC:
-            raise BadZipfile, "Bad CRC-32 for file %s" % name
-        self.fp.seek(filepos, 0)
-        return bytes
 
     def __del__(self):
         """Call the "close()" method in case the user forgot."""
