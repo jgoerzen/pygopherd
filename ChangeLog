@@ -1,3 +1,65 @@
+2002-04-10 11:07  jgoerzen
+
+	* pygopherd.py: Renamed mimetypes -> mimetypesfiles -- was
+	conflicting with the module.
+
+2002-04-10 11:05  jgoerzen
+
+	* pygopherd.py: Silly -- use the conffile actually!
+
+2002-04-10 11:04  jgoerzen
+
+	* pygopherd.py, debian/init.d: Pygopherd: Fixed ordering of logger
+	and config init.  init.d: added proper quotes
+
+2002-04-10 11:01  jgoerzen
+
+	* debian/: postinst, rules: Added installinit
+
+2002-04-10 11:00  jgoerzen
+
+	* ChangeLog: Updated
+
+2002-04-10 11:00  jgoerzen
+
+	* debian/postinst: More work
+
+2002-04-10 10:58  jgoerzen
+
+	* debian/postinst: More robust homedir creation.
+
+2002-04-10 10:55  jgoerzen
+
+	* conf/pygopherd.conf, debian/rules: Modified pygopherd.conf with a
+	new mimetypes default.	Removed the /etc/pygopherd/mime.types
+	symlink from debian/rules.
+
+2002-04-10 10:53  jgoerzen
+
+	* pygopherd.py: Modified to do some more checking, to permit
+	colon-separated MIME types, etc.
+
+2002-04-10 10:41  jgoerzen
+
+	* debian/rules: Modified to use the system's mime.types.
+
+2002-04-10 10:39  jgoerzen
+
+	* Makefile: Added rules to deal with .bak files
+
+2002-04-10 10:38  jgoerzen
+
+	* debian/copyright: Noted location of GPLv2.
+
+2002-04-10 10:37  jgoerzen
+
+	* setup.py: Docs were wrong, distutils calls the var "license", not
+	"licence"
+
+2002-04-10 10:36  jgoerzen
+
+	* ChangeLog: Updated.
+
 2002-04-10 10:35  jgoerzen
 
 	* debian/rules: More changelog tweaking.

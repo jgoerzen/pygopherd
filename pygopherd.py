@@ -35,11 +35,44 @@ import mimetypes
 
 import traceback
 
+###########################################################################
+# Initialize the config file.
+###########################################################################
+
+conffile = '/etc/pygopherd/pygopherd.conf'
+
+if len(sys.argv) > 1:
+    conffile = sys.argv[1]
+
+if not (os.path.isfile(conffile) and os.access(conffile, os.R_OK)):
+    sys.stderr.write("Could NOT access config file %s\nPlease specify config file as a command-line argument\n" % conffile)
+    sys.exit(200)
+
 config = ConfigParser()
-config.read("pygopherd.conf")
-mimetypes.init([config.get("pygopherd", "mimetypes")])
+config.read(conffile)
 logger.init(config)
-logger.log("Pygopherd started.")
+logger.log("Pygopherd starting, using configuration file %s" % conffile)
+
+###########################################################################
+# Initialize the MIME types file.
+###########################################################################
+
+mimetypesfiles = config.get("pygopherd", "mimetypes").split(":")
+mimetypesfiles = filter(lambda x: os.path.isfile(x) and os.access(x, os.R_OK),
+                        mimetypesfiles)
+
+if not mimetypesfiles:
+    errmsg = "Could not find any mimetypes files; check mimetypes option in config."
+    logger.log(errmsg)
+    sys.stderr.write(errmsg + "\n")
+    sys.exit(201)
+    
+mimetypes.init(mimetypesfiles)
+logger.log("mimetypes initialized with files: " + str(mimetypesfiles))
+
+###########################################################################
+# Declare the server classes.
+###########################################################################
 
 class GopherRequestHandler(SocketServer.StreamRequestHandler):
     def handle(self):
@@ -49,6 +82,8 @@ class GopherRequestHandler(SocketServer.StreamRequestHandler):
                      ProtocolMultiplexer.getProtocol(request, \
                      self.server, self, self.rfile, self.wfile, self.server.config)
         protohandler.handle()
+
+# Pick up the server type from the config.
 
 servertype = eval("SocketServer." + config.get("pygopherd", "servertype"))
 
@@ -65,9 +100,16 @@ class MyServer(servertype):
             self.server_name = socket.getfqdn(host)
         self.server_port = port
         
+# Instantiate a server.  Has to be done before the security so we can
+# get a privileged port if necessary.
+
 s = MyServer(('', config.getint('pygopherd', 'port')),
              GopherRequestHandler)
 s.config = config
+
+###########################################################################
+# Handle security -- dropping privileges.
+###########################################################################
 
 idsetuid = None
 idsetgid = None
@@ -98,6 +140,10 @@ if idsetuid != None:
     logger.log("Switched to uid %d" % idsetuid)
 
 logger.log("Root is '%s'" % config.get("pygopherd", "root"))
+
+###########################################################################
+# Start it up!
+###########################################################################
 
 s.serve_forever()
 

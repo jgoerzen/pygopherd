@@ -14,7 +14,7 @@
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/pygopherd
 NAME=pygopherd
-DESC=Python Gopher Server
+DESC="Python Gopher Server"
 CONF=/etc/pygopherd/pygopherd.conf
 
 test -f $DAEMON || exit 0
