@@ -47,26 +47,29 @@ class LinkEntry(GopherEntry):
 
 class UMNDirHandler(DirHandler):
     """This module strives to be bug-compatible with UMN gopherd."""
+
     def prepare(self):
+        """Override parent to do a few more things and override sort order."""
         self.linkentries = []
         DirHandler.prepare(self)
-        self.processLinkFiles()
+        self.MergeLinkFiles()
         self.fileentries.sort(entrycmp)
         
-    def processLinkFiles(self):
-        newfiles = []
-        for filename in self.files:
-            print "self.fsbase: ", self.fsbase
-            print "self.selectorbase: ", self.selectorbase
-            print "filename: ", filename
-            if filename[0] == '.' and not os.path.isdir(self.fsbase + '/' + filename):
-                self.processLinkFile(self.fsbase + '/' + filename)
-            else:
-                newfiles.append(filename)
-        self.files = newfiles
+    def prep_initfiles_canaddfile(self, ignorepatt, pattern, file):
+        """Override the parent to process dotfiles and keep them out
+        of the list."""
+        if DirHandler.prep_initfiles_canaddfile(self, ignorepatt, pattern,
+                                                 file):
+            # If the parent says it's OK, then let's see if it's
+            # a link file.  If yes, process it and return false.
+            if file[0] == '.' and not os.path.isdir(self.fsbase + '/' + file):
+                self.processLinkFile(self.fsbase + '/' + file)
+                return 0
+            return 1
+        else:
+            return 0
 
-        # MERGE!
-
+    def MergeLinkFiles(self):
         for linkentry in self.linkentries:
             if not linkentry.getneedsmerge():
                 self.fileentries.append(linkentry)

@@ -20,8 +20,13 @@ class DirHandler(handlers.base.BaseHandler):
         dirfiles = os.listdir(self.getfspath())
         ignorepatt = self.config.get("handlers.dir.DirHandler", "ignorepatt")
         for file in dirfiles:
-            if not re.search(ignorepatt, self.selectorbase + '/' + file):
+            if self.prep_initfiles_canaddfile(ignorepatt,
+                                              self.selectorbase + '/' + file,
+                                              file):
                 self.files.append(file)
+
+    def prep_initfiles_canaddfile(self, ignorepatt, pattern, file):
+        return not re.search(ignorepatt, pattern)
 
     def prep_entries(self):
         "Generate entries from the list."
