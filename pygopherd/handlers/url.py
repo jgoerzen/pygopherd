@@ -33,7 +33,7 @@ class HTMLURLHandler(handlers.base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for something that starts
         with http or https."""
-        return re.search("^(/|)URL:(http|https)://", self.selector)
+        return re.search("^(/|)URL:.+://", self.selector)
 
     def getentry(self):
         if not self.entry:

@@ -20,7 +20,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # END OF COPYRIGHT #
 
-import unittest, os, stat
+import unittest, os, stat, re
 from pygopherd import testutil
 from pygopherd.gopherentry import GopherEntry
 
@@ -236,6 +236,7 @@ class GopherEntryTestCase(unittest.TestCase):
             self.assertEquals(entry.guesstype(), type,
                               "Failure for %s: got %s, expected %s" % \
                               (mimetype, entry.guesstype(), type))
+
     def test_gets_sets(self):
         """Tests a bunch of gets that operate on values that are None
         to start with, and take a default."""
@@ -257,4 +258,26 @@ class GopherEntryTestCase(unittest.TestCase):
             self.assertEquals(getfunc(), 'NewValue' + field)
             self.assertEquals(getfunc('DEFAULT'), 'NewValue' + field)
 
-    
+    def testgeturl(self):
+        expected = {
+            '/URL:http://www.complete.org/%20/': 'http://www.complete.org/%20/',
+            'URL:telnet://foo.com/%20&foo=bar': 'telnet://foo.com/%20&foo=bar',
+            '/foo' : 'gopher://MISSINGHOST:70/0/foo',
+            '/About Me.txt' : 'gopher://MISSINGHOST:70/0/About%20Me.txt',
+            '/' : 'gopher://MISSINGHOST:70/0/'}
+        for selector, url in expected.items():
+            entry = GopherEntry(selector, self.config)
+            entry.settype('0')
+            self.assertEquals(url, entry.geturl())
+            self.assertEquals(re.sub('MISSINGHOST', 'NEWHOST', url),
+                              entry.geturl('NEWHOST'))
+            self.assertEquals(re.sub('70', '10101', url),
+                              entry.geturl(defaultport = 10101))
+            entry.sethost('newhost')
+            self.assertEquals(re.sub('MISSINGHOST', 'newhost', url),
+                              entry.geturl())
+            entry.setport(80)
+            self.assertEquals(re.sub('MISSINGHOST:70', 'newhost:80', url),
+                              entry.geturl())
+
+        

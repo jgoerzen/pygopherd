@@ -243,7 +243,15 @@ class GopherEntry:
     def setpopulated(self, arg):
         self.populated = arg
     
-    def geturl(self, defaulthost = 'MISSINGHOST', defaultport = 0):
+    def geturl(self, defaulthost = 'MISSINGHOST', defaultport = 70):
+        """If this selector is a URL: one, then we just return the rest of
+        it.  Otherwise, generate a gopher:// URL and quote it."""
+        if re.search("^(/|)URL:.+://", self.selector):
+            if self.selector[0] == '/':
+                return self.selector[5:]
+            else:
+                return self.selector[4:]
+            
         retval = 'gopher://%s:%d/' % (self.gethost(defaulthost),
                                       self.getport(defaultport))
         retval += urllib.quote('%s%s' % (self.gettype(), self.getselector()))
