@@ -126,7 +126,7 @@ class UMNDirHandler(DirHandler):
             if fileentriesdict.has_key(linkentry.selector):
                 if linkentry.gettype() == 'X':
                     # It's special code to hide something.
-                    self.fileentries.remove(linkentry)
+                    self.fileentries.remove(fileentriesdict[linkentry.selector])
                 else:
                     self.mergeentries(fileentriesdict[linkentry.selector],
                                       linkentry)
@@ -198,6 +198,8 @@ class UMNDirHandler(DirHandler):
                 if line[5:7] == './' or line[5:7] == '~/':
                     entry.setselector(self.selectorbase + "/" + pathname[2:])
                     entry.setneedsmerge(1)
+                elif pathname[0] != '/':
+                    entry.setselector(self.selectorbase + "/" + pathname[1:])
                 else:
                     entry.setselector(pathname)
                 done['path'] = 1
@@ -247,7 +249,7 @@ class UMNDirHandler(DirHandler):
 
         # Same signs: use plain numeric comparison.
         if (self.sgn(entry1.num) == self.sgn(entry2.num)):
-            return cmp(entry1.num, entry2.getnum)
+            return cmp(entry1.num, entry2.num)
 
         # Different signs: other comparison.
         if entry1.num > entry2.num:
