@@ -60,20 +60,25 @@ class WAPProtocol(HTTPProtocol):
             else:
                 retstr += '<a href="%s">' % url
         if entry.getname() != None:
-            retstr += cgi.escape(entry.getname())
+            thisname = cgi.escape(entry.getname())
         else:
-            retstr += cgi.escape(etry.getselector())
+            thisname = cgi.escape(etry.getselector())
+        retstr += thisname
         if not entry.gettype() in ['i', '7']:
             retstr += '</a>'
         if entry.gettype() == '7':
-            retstr += '<do type="accept">\n'
-            retstr += '  <input type="text" name="sr%d" size="30"/>\n' % \
+            retstr += '<br/>\n'
+            retstr += '  <input name="sr%d"/>\n' % \
                       self.postfieldidx
-            retstr += '  <go href="%s">\n' % url
-            retstr += '    <postfield name="searchrequest" value="$sr%d"/>\n' % \
+            retstr += '<anchor>Go\n'
+            #retstr += '<do type="accept">\n'
+            retstr += '  <go method="get" href="%s">\n' % url#.replace('%', '%25')
+            retstr += '    <postfield name="searchrequest" value="$(sr%d)"/>\n' % \
                       self.postfieldidx
+            #retstr += '    <postfield name="text" value="1234"/>\n'
             retstr += '  </go>\n'
-            retstr += '</do>\n'
+            #retstr += '</do>\n'
+            retstr += '</anchor>\n'
         retstr += "<br/>\n"
         self.postfieldidx += 1
         return retstr
