@@ -71,9 +71,12 @@ class UMNDirHandler(DirHandler):
                                                  file):
             # If the parent says it's OK, then let's see if it's
             # a link file.  If yes, process it and return false.
-            if file[0] == '.' and not os.path.isdir(self.fsbase + '/' + file):
-                self.linkentries.extend(self.processLinkFile(self.fsbase + '/' + file))
-                return 0
+            if file[0] == '.':
+                if not os.path.isdir(self.fsbase + '/' + file):
+                    self.linkentries.extend(self.processLinkFile(self.fsbase + '/' + file))
+                    return 0
+                else:
+                    return 0            # A "dot dir" -- ignore.
             return 1                    # Not a dot file -- return true
         else:
             return 0                    # Parent returned 0, do the same.
