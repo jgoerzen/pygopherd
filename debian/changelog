@@ -1,3 +1,10 @@
+pygopherd (0.9.10) unstable; urgency=low
+
+  * Added handling of abstracts and other extended attributes.
+  * More test cases.
+
+ -- John Goerzen <jgoerzen@complete.org>  Mon, 15 Apr 2002 19:20:04 -0500
+
 pygopherd (0.9.4) unstable; urgency=low
 
   * Moved security handling to the handler base.

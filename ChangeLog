@@ -1,3 +1,76 @@
+2002-04-15 19:19  jgoerzen
+
+	* runtests.py, pygopherd/protocols/rfc1436Test.py: Updated.
+
+2002-04-15 16:08  jgoerzen
+
+	* pygopherd/: GopherExceptionsTest.py, testutil.py,
+	protocols/base.py, protocols/baseTest.py: Finished baseTest and
+	passes all tests.
+
+2002-04-15 15:37  jgoerzen
+
+	* runtests.py, pygopherd/protocols/__init__.py,
+	pygopherd/protocols/base.py, pygopherd/protocols/baseTest.py:
+	Beginnings of baseTest.
+
+2002-04-15 15:20  jgoerzen
+
+	* Makefile: Updated.
+
+2002-04-15 15:19  jgoerzen
+
+	* pygopherd/: testutil.py, protocols/ProtocolMultiplexerTest.py:
+	Added ProtocolMultiplexerTest
+
+2002-04-15 14:58  jgoerzen
+
+	* runtests.py, pygopherd/protocols/ProtocolMultiplexerTest.py,
+	pygopherd/protocols/__init__.py: Added ProtocolMultiplexerTest
+
+2002-04-15 14:44  jgoerzen
+
+	* runtests.py, pygopherd/__init__.py, pygopherd/gopherentryTest.py,
+	pygopherd/pipe.py, pygopherd/pipeTest.py,
+	testdata/pygopherd/pipetest.sh, testdata/pygopherd/pipetestdata:
+	Added pipeTest.
+
+2002-04-15 14:09  jgoerzen
+
+	* testdata/: .abstract, testfile.txt.gz.abstract: Updated for new
+	abstract tests
+
+2002-04-15 14:03  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/GopherExceptionsTest.py,
+	pygopherd/gopherentry.py, pygopherd/handlers/gophermap.py,
+	pygopherd/protocols/base.py, pygopherd/protocols/gopherp.py,
+	pygopherd/protocols/http.py: Many updates to abstract support
+
+2002-04-15 12:55  jgoerzen
+
+	* conf/pygopherd.conf, pygopherd/gopherentry.py: Added the ability
+	to read block contents from the filesystem.
+
+2002-04-15 10:21  jgoerzen
+
+	* pygopherd/: handlers/UMN.py, protocols/gopherp.py: Added
+	beginnings of support for Abstract and other info.
+
+2002-04-15 09:37  jgoerzen
+
+	* pygopherd/: gopherentry.py, handlers/base.py, handlers/dir.py,
+	handlers/gophermap.py, handlers/mbox.py, handlers/pyg.py,
+	protocols/base.py, protocols/gopherp.py, protocols/http.py: Redid
+	the directory handling mechanism.  Now, handlers define isdir() and
+	getdirlist().  Protocols ask for a list of all entries in the
+	directory, rather than having the handler do a callback for each
+	entry.
+
+2002-04-14 22:59  jgoerzen
+
+	* ChangeLog: Updated.
+
 2002-04-14 22:34  jgoerzen
 
 	* pygopherd/handlers/UMN.py: Fixed a bug with handling empty Path=

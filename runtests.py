@@ -27,6 +27,7 @@ from pygopherd import *
 import pygopherd.protocols
 import pygopherd.protocols.ProtocolMultiplexerTest
 import pygopherd.protocols.baseTest
+import pygopherd.protocols.rfc1436Test
 import pygopherd.protocols
 
 def suite():
@@ -37,7 +38,8 @@ def suite():
              loggerTest,
              pipeTest,
              pygopherd.protocols.ProtocolMultiplexerTest,
-             pygopherd.protocols.baseTest
+             pygopherd.protocols.baseTest,
+             pygopherd.protocols.rfc1436Test
         ]
     suite = unittest.TestSuite()
     for module in tests:
