@@ -22,7 +22,7 @@
 #
 
 from ConfigParser import ConfigParser
-import socket, os, sys, signal, SocketServer
+import socket, os, sys, signal, SocketServer, handlers, protocols
 import mimetypes
 
 config = ConfigParser()
@@ -33,12 +33,14 @@ class GopherRequestHandler(SocketServer.StreamRequestHandler):
     def handle(self):
         request = self.rfile.readline()
 
-        protos = [protocols.GopherPlusProtocol, protocols.GopherProtocol]
+        protos = [protocols.gopherp.GopherPlusProtocol,
+                  protocols.rfc1436.GopherProtocol]
         for protocol in protos:
-            protohandler = protocol(path, requestparts, self.server,
+            protohandler = protocol(path, request, self.server,
+                                    self.rfile, self.wfile,
                                     self.server.config)
             if (protohandler.canhandlerequest()):
-                protohandler.handle(self.rfile, self.wfile)
+                protohandler.handle()
                 break
 
 class MyServer(SocketServer.ForkingTCPServer):
@@ -55,8 +57,5 @@ class MyServer(SocketServer.ForkingTCPServer):
 s = MyServer(('', config.getint('serving', 'port')),
              GopherRequestHandler)
 s.config = config
-s.mapping = eval(config.get("serving", "mapping"))
-s.defaulttype = config.get("serving", "defaulttype")
-print s.mapping
 s.serve_forever()
 
