@@ -1,3 +1,19 @@
+pygopherd (1.99.5) unstable; urgency=low
+
+  * Introduced new "inode-like" caching system for ZIP files.
+    Now, the first time a ZIP file is accessed, it will be scanned.
+    Links will be resolved immediately.  A dictionary tree is built up;
+    values being either file offsets in the ZIP file or dictionaries
+    (for subdirectories).  This dictionary is then cached on-disk using
+    a binary database and marshal algorithm derived from Python's shelve
+    module.  We do not need to use pickle for this task since we are saving
+    only simple structures.  The performance gain for large ZIP files using
+    this method is tremendous.  The only time a ZIP file's central
+    directory structure must be scanned now is the very first time it is
+    ever accessed.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 13 Mar 2003 09:49:39 -0600
+
 pygopherd (1.99.4) unstable; urgency=low
 
   * Wrote my own ZIP file reader and heavily optimized it.  This reduced run
