@@ -86,12 +86,9 @@ class VFS_Zip(base.VFS_Real):
         if selector.endswith('/subdir/2'):
             raise NotImplementedError, 'DEBUG'
 
-        print selector
-
         while (not self._needschain(selector)) and \
                   self._islinkname(selector):
             linkdest = self._readlink(selector)
-            print "linkdest = %s" % selector
             if linkdest.startswith('/'):
                 selector = os.path.normpath(linkdest)
             else:
@@ -99,7 +96,6 @@ class VFS_Zip(base.VFS_Real):
                 selector = os.path.normpath(selector)
 
 
-        print "Calling finalizing on %s" % selector
         return self._getfspathfinal(selector)
 
     def stat(self, selector):
@@ -188,7 +184,6 @@ class VFS_Zip(base.VFS_Real):
             return self.chain.listdir(selector)
 
         fspath = self.getfspath(selector)
-        print "Running listdir for %s" % fspath
         if not len(fspath):
             candidates = self.members
         else:
