@@ -28,7 +28,7 @@ from ConfigParser import ConfigParser
 import socket, os, sys, SocketServer, re, stat, os.path, UserDict, xreadlines, tempfile
 import time
 
-from pygopherd import handlers, protocols
+from pygopherd import handlers, protocols, GopherExceptions
 from pygopherd.protocols import *
 from pygopherd.protocols import ProtocolMultiplexer
 from pygopherd.handlers import *
@@ -56,6 +56,8 @@ config = ConfigParser()
 config.read(conffile)
 logger.init(config)
 logger.log("Pygopherd starting, using configuration file %s" % conffile)
+
+GopherExceptions.init(config.getboolean("pygopherd", "tracebacks"))
 
 ###########################################################################
 # Initialize the MIME types file.
@@ -94,7 +96,14 @@ class GopherRequestHandler(SocketServer.StreamRequestHandler):
         protohandler = \
                      ProtocolMultiplexer.getProtocol(request, \
                      self.server, self, self.rfile, self.wfile, self.server.config)
-        protohandler.handle()
+        try:
+            protohandler.handle()
+        except:
+            if GopherExceptions.tracebacks:
+                # Yes, this may be invalid.  Not much else we can do.
+                traceback.print_exc(file = self.wfile)
+                traceback.print_exc()
+            GopherExceptions.log(sys.exc_info()[1], protohandler, None)
 
 # Pick up the server type from the config.
 

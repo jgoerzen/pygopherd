@@ -20,6 +20,8 @@
 import types, re
 from pygopherd import logger
 
+tracebacks = 0
+
 def log(exception, protocol, handler):
     protostr = 'None'
     handlerstr = 'None'
@@ -34,7 +36,11 @@ def log(exception, protocol, handler):
     logger.log("%s [%s/%s] %s: %s" % \
                (ipaddr, protostr, handlerstr, exceptionclass,
                 str(exception)))
-            
+
+def init(backtraceenabled):
+    global tracebacks
+    tracebacks = backtraceenabled
+
 class FileNotFound:
     def __init__(self, arg):
         self.selector = arg

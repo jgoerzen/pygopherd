@@ -54,8 +54,8 @@ class FolderHandler(Virtual):
             if not message:
                 break
             handler = MessageHandler(self.genargsselector(self.getargflag() + \
-                                     str(count)), self.protocol, self.config,
-                                     None)
+                                     str(count)), self.searchrequest,
+                                     self.protocol, self.config, None)
             wfile.write(self.protocol.renderobjinfo(handler.getentry(message)))
             count += 1
 
