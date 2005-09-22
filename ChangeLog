@@ -1,3 +1,20 @@
+Thu Sep 22 07:48:19 CDT 2005  John Goerzen <jgoerzen@complete.org>
+  * ChangeLog is now generated from Darcs.
+
+    M ./Makefile -1 +1
+
+Thu Sep 22 07:48:09 CDT 2005  John Goerzen <jgoerzen@complete.org>
+  * Updated metadata for 2.0.14
+
+    M ./debian/changelog +7
+    M ./pygopherd/version.py -1 +1
+
+Thu Sep 22 07:47:16 CDT 2005  John Goerzen <jgoerzen@complete.org>
+  * Updated ChangeLog
+  (it hadn't been updated since 2003, eep.)
+
+    M ./ChangeLog -2068 +1928
+
 Thu Sep 22 07:37:24 CDT 2005  John Goerzen <jgoerzen@complete.org>
   * Fixed a bug where no subject line would crash the handler
 
