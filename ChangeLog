@@ -1,2623 +1,2483 @@
-------------------------------------------------------------------------
-r299 | jgoerzen | 2003-10-09 16:48:13 -0500 (Thu, 09 Oct 2003) | 1 line
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/debian/docs
-
-Updated debian/docs
-------------------------------------------------------------------------
-r298 | jgoerzen | 2003-10-09 11:11:33 -0500 (Thu, 09 Oct 2003) | 1 line
-Changed paths:
-   M /pygopherd/head/debian/changelog
-
-Added build-dep on python2.3-dev
-------------------------------------------------------------------------
-r297 | jgoerzen | 2003-08-25 22:29:52 -0500 (Mon, 25 Aug 2003) | 4 lines
-Changed paths:
-   A /pygopherd/head/doc/book.sgml
-   A /pygopherd/head/doc/manpage.sgml
-   A /pygopherd/head/doc/quickstart.sgml
-   M /pygopherd/head/pygopherd/handlers/tal.py
-
-Added missing docs
-
-Misc. tal stuff
-
-------------------------------------------------------------------------
-r296 | jgoerzen | 2003-08-25 20:42:14 -0500 (Mon, 25 Aug 2003) | 4 lines
-Changed paths:
-   M /pygopherd/head/Makefile
-   M /pygopherd/head/doc/pygopherd.ps
-   M /pygopherd/head/doc/pygopherd.sgml
-   M /pygopherd/head/local.dsl
-   M /pygopherd/head/pygopherd/handlers/tal.py
-
-Added dir, macro capability to tal.py
-
-Some work on the manual -- splitting up into sections
-
-------------------------------------------------------------------------
-r295 | jgoerzen | 2003-08-25 18:56:15 -0500 (Mon, 25 Aug 2003) | 4 lines
-Changed paths:
-   M /pygopherd/head/Makefile
-   A /pygopherd/head/local.dsl
-   A /pygopherd/head/printlocal.dsl
-
-Make is a little more aggressive about cleaning...
-
-... added stylesheets.
-
-------------------------------------------------------------------------
-r294 | jgoerzen | 2003-08-25 17:01:38 -0500 (Mon, 25 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/Makefile
-   M /pygopherd/head/doc/pygopherd.8
-   M /pygopherd/head/doc/pygopherd.html
-   M /pygopherd/head/doc/pygopherd.pdf
-   M /pygopherd/head/doc/pygopherd.ps
-
-Doc updates
-
-------------------------------------------------------------------------
-r293 | jgoerzen | 2003-08-25 16:17:38 -0500 (Mon, 25 Aug 2003) | 2 lines
-Changed paths:
-   D /pygopherd/head/doc/manual.ps
-   A /pygopherd/head/doc/pygopherd.ps (from /pygopherd/head/doc/manual.ps:291)
-
-Finalizing the document renaming
-
-------------------------------------------------------------------------
-r292 | jgoerzen | 2003-08-25 16:17:23 -0500 (Mon, 25 Aug 2003) | 2 lines
-Changed paths:
-   D /pygopherd/head/doc/manual.html
-   D /pygopherd/head/doc/manual.pdf
-   D /pygopherd/head/doc/manual.txt
-   A /pygopherd/head/doc/pygopherd.html (from /pygopherd/head/doc/manual.html:291)
-   A /pygopherd/head/doc/pygopherd.pdf (from /pygopherd/head/doc/manual.pdf:291)
-   A /pygopherd/head/doc/pygopherd.txt (from /pygopherd/head/doc/manual.txt:291)
-
-More document renaming
-
-------------------------------------------------------------------------
-r291 | jgoerzen | 2003-08-25 16:14:52 -0500 (Mon, 25 Aug 2003) | 1 line
-Changed paths:
-   M /pygopherd/head/Makefile
-   A /pygopherd/head/doc/manual.html (from /pygopherd/head/manual.html:287)
-   A /pygopherd/head/doc/manual.pdf (from /pygopherd/head/manual.pdf:287)
-   A /pygopherd/head/doc/manual.ps (from /pygopherd/head/manual.ps:287)
-   A /pygopherd/head/doc/manual.txt (from /pygopherd/head/manual.txt:287)
-   A /pygopherd/head/doc/pygopherd.8 (from /pygopherd/head/pygopherd.8:287)
-   A /pygopherd/head/doc/pygopherd.sgml (from /pygopherd/head/pygopherd.sgml:287)
-   D /pygopherd/head/manual.html
-   D /pygopherd/head/manual.pdf
-   D /pygopherd/head/manual.ps
-   D /pygopherd/head/manual.txt
-   D /pygopherd/head/pygopherd.8
-   D /pygopherd/head/pygopherd.sgml
-
-
-------------------------------------------------------------------------
-r290 | jgoerzen | 2003-08-25 16:10:38 -0500 (Mon, 25 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/control
-
-Fixed up Python2.3 support -- and added dep on simpletal
-
-------------------------------------------------------------------------
-r289 | jgoerzen | 2003-08-25 15:17:36 -0500 (Mon, 25 Aug 2003) | 2 lines
-Changed paths:
-   A /pygopherd/head/examples/talsample.html.tal
-
-Added a TAL example
-
-------------------------------------------------------------------------
-r288 | jgoerzen | 2003-08-25 15:15:58 -0500 (Mon, 25 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/bin/pygopherd
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   A /pygopherd/head/pygopherd/handlers/tal.py (from /pygopherd/head/pygopherd/handlers/file.py:285)
-   M /pygopherd/head/setup.py
-
-Added beginnings of TAL support.  More to come.
-
-------------------------------------------------------------------------
-r287 | jgoerzen | 2003-08-25 13:47:40 -0500 (Mon, 25 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/manual.html
-   M /pygopherd/head/manual.pdf
-   M /pygopherd/head/manual.ps
-   M /pygopherd/head/manual.txt
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd.8
-   M /pygopherd/head/pygopherd.sgml
-
-Documented the ZIP handler
-
-------------------------------------------------------------------------
-r286 | jgoerzen | 2003-08-25 10:31:58 -0500 (Mon, 25 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd.sgml
-
-Work on documenting the handlers
-
-------------------------------------------------------------------------
-r285 | jgoerzen | 2003-08-24 20:38:33 -0500 (Sun, 24 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/manual.html
-   M /pygopherd/head/manual.pdf
-   M /pygopherd/head/manual.ps
-   M /pygopherd/head/manual.txt
-   M /pygopherd/head/pygopherd.8
-   M /pygopherd/head/pygopherd.sgml
-
-Some work on the docs
-
-------------------------------------------------------------------------
-r284 | jgoerzen | 2003-08-24 18:17:20 -0500 (Sun, 24 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/manual.html
-   M /pygopherd/head/manual.pdf
-   M /pygopherd/head/manual.ps
-   M /pygopherd/head/manual.txt
-   M /pygopherd/head/pygopherd.8
-   M /pygopherd/head/pygopherd.sgml
-
-Updated
-
-------------------------------------------------------------------------
-r283 | jgoerzen | 2003-08-24 17:34:16 -0500 (Sun, 24 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/Makefile
-   A /pygopherd/head/pygopherd.sgml
-
-Added SGML docs.
-
-------------------------------------------------------------------------
-r282 | jgoerzen | 2003-08-24 17:30:10 -0500 (Sun, 24 Aug 2003) | 1 line
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/initialization.py
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-
-------------------------------------------------------------------------
-r281 | jgoerzen | 2003-08-23 17:39:47 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Updated WAP error handling
-
-------------------------------------------------------------------------
-r280 | jgoerzen | 2003-08-23 17:34:40 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/protocols/http.py
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Fixed File Not Found code.
-
-------------------------------------------------------------------------
-r279 | jgoerzen | 2003-08-23 17:25:56 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Store slurp data elsewhere
-
-------------------------------------------------------------------------
-r278 | jgoerzen | 2003-08-23 17:23:38 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Fixed another bug in headerslurp
-
-------------------------------------------------------------------------
-r277 | jgoerzen | 2003-08-23 17:22:15 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Replaced a missing return
-
-------------------------------------------------------------------------
-r276 | jgoerzen | 2003-08-23 17:20:16 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/http.py
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Experimental new header slurping mechanism
-
-------------------------------------------------------------------------
-r275 | jgoerzen | 2003-08-23 17:13:19 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/protocols/http.py
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Added wap auto-detection.
-
-------------------------------------------------------------------------
-r274 | jgoerzen | 2003-08-23 14:56:50 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Fixed a tyop
-
-------------------------------------------------------------------------
-r273 | jgoerzen | 2003-08-23 14:53:18 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/http.py
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Added text file conversion to WAP
-
-------------------------------------------------------------------------
-r272 | jgoerzen | 2003-08-23 14:43:12 -0500 (Sat, 23 Aug 2003) | 4 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/handlers/virtual.py
-
- * Virtual: now use | for selector sep (keep ? for legacy)
-    for WAP compatibility.
-
-
-------------------------------------------------------------------------
-r271 | jgoerzen | 2003-08-23 14:41:13 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/http.py
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Some updates
-
-------------------------------------------------------------------------
-r270 | jgoerzen | 2003-08-23 13:54:31 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Add the waptop in front of generated URLs
-
-------------------------------------------------------------------------
-r269 | jgoerzen | 2003-08-23 13:51:18 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Minor WAP bugfixes
-
-------------------------------------------------------------------------
-r268 | jgoerzen | 2003-08-23 13:49:29 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/debian/control
-   M /pygopherd/head/debian/rules
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Updated for Python 2.3 -- and added some more WAP code (for searches)
-
-------------------------------------------------------------------------
-r267 | jgoerzen | 2003-08-23 13:26:50 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Braino
-
-------------------------------------------------------------------------
-r266 | jgoerzen | 2003-08-23 13:26:10 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-More updates
-
-------------------------------------------------------------------------
-r265 | jgoerzen | 2003-08-23 13:19:02 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Another braino
-
-------------------------------------------------------------------------
-r264 | jgoerzen | 2003-08-23 13:18:23 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Oops, little braino here
-
-------------------------------------------------------------------------
-r263 | jgoerzen | 2003-08-23 13:17:37 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Removed debugging code and added accesskey support
-
-------------------------------------------------------------------------
-r262 | jgoerzen | 2003-08-23 13:13:22 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/protocols/http.py
-   M /pygopherd/head/pygopherd/protocols/wap.py
-
-Wap now works!
-
-------------------------------------------------------------------------
-r261 | jgoerzen | 2003-08-23 12:01:49 -0500 (Sat, 23 Aug 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/protocols/__init__.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-   A /pygopherd/head/pygopherd/protocols/wap.py
-
-First attempt at new feature: WAP support!
-
-------------------------------------------------------------------------
-r259 | jgoerzen | 2003-03-13 09:53:11 -0600 (Thu, 13 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-
-Updated for 1.99.5
-
-------------------------------------------------------------------------
-r258 | jgoerzen | 2003-03-13 09:52:47 -0600 (Thu, 13 Mar 2003) | 13 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-
-  * Introduced new "inode-like" caching system for ZIP files.
-    Now, the first time a ZIP file is accessed, it will be scanned.
-    Links will be resolved immediately.  A dictionary tree is built up;
-    values being either file offsets in the ZIP file or dictionaries
-    (for subdirectories).  This dictionary is then cached on-disk using
-    a binary database and marshal algorithm derived from Python's shelve
-    module.  We do not need to use pickle for this task since we are saving
-    only simple structures.  The performance gain for large ZIP files using
-    this method is tremendous.  The only time a ZIP file's central
-    directory structure must be scanned now is the very first time it is
-    ever accessed.
-
-
-------------------------------------------------------------------------
-r257 | jgoerzen | 2003-03-13 09:48:56 -0600 (Thu, 13 Mar 2003) | 3 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-
-Removed the needschain tests
-Optimized the gophermap isrequestforme handler
-
-------------------------------------------------------------------------
-r256 | jgoerzen | 2003-03-13 08:58:54 -0600 (Thu, 13 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-Converted to using marshal for a performance gain
-
-------------------------------------------------------------------------
-r255 | jgoerzen | 2003-03-12 19:20:33 -0600 (Wed, 12 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-Removed debug code
-
-------------------------------------------------------------------------
-r254 | jgoerzen | 2003-03-12 19:20:01 -0600 (Wed, 12 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/zipfile.py
-
-Passes all ZIP tests.
-
-------------------------------------------------------------------------
-r253 | jgoerzen | 2003-03-12 19:02:49 -0600 (Wed, 12 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-Removed debug code
-
-------------------------------------------------------------------------
-r252 | jgoerzen | 2003-03-12 18:56:26 -0600 (Wed, 12 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-Think I've nailed the caching problem
-
-------------------------------------------------------------------------
-r251 | jgoerzen | 2003-03-12 18:32:48 -0600 (Wed, 12 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/zipfile.py
-
-All tests are passing, but caching doesn't seem to be working.
-
-------------------------------------------------------------------------
-r250 | jgoerzen | 2003-03-12 18:28:35 -0600 (Wed, 12 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/zipfile.py
-
-Strating to fix errors as part of testing
-
-------------------------------------------------------------------------
-r249 | jgoerzen | 2003-03-12 16:55:49 -0600 (Wed, 12 Mar 2003) | 3 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-Making more progress -- we now have this to the point of being ready for
-testing, I believe.
-
-------------------------------------------------------------------------
-r248 | jgoerzen | 2003-03-12 16:20:19 -0600 (Wed, 12 Mar 2003) | 3 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/zipfile.py
-
-Checkpointing my progress -- initial efforts to rewrite the caching to use
-an inode system complete.
-
-------------------------------------------------------------------------
-r247 | jgoerzen | 2003-03-12 15:37:27 -0600 (Wed, 12 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-Merged back in bugfix to islinkattr from ZIP.py prior to this rev.
-
-------------------------------------------------------------------------
-r246 | jgoerzen | 2003-03-12 15:33:07 -0600 (Wed, 12 Mar 2003) | 3 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-Reverted to ZIP.py from revision 229 when pickling was present.  Will try to
-re-do this more efficiently with the new zipfile and anydbm.
-
-------------------------------------------------------------------------
-r245 | jgoerzen | 2003-03-07 16:01:39 -0600 (Fri, 07 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-
-Added additional optimizations, tested working.
-
-------------------------------------------------------------------------
-r244 | jgoerzen | 2003-03-06 23:53:39 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/zipfile.py
-
-Fixed an excessive stating problem.
-
-------------------------------------------------------------------------
-r243 | jgoerzen | 2003-03-06 23:12:40 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-Significant optimizations noted in output from zip stuff.
-
-------------------------------------------------------------------------
-r242 | jgoerzen | 2003-03-06 23:05:11 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/zipfile.py
-
-Tests now pass.  Time to see how this optimization fares.
-
-------------------------------------------------------------------------
-r241 | jgoerzen | 2003-03-06 22:57:59 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/zipfile.py
-
-In the middle of some optimizing.
-
-------------------------------------------------------------------------
-r240 | jgoerzen | 2003-03-06 22:44:36 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/zipfile.py
-
-Some feeble optimization attempts.
-
-------------------------------------------------------------------------
-r239 | jgoerzen | 2003-03-06 22:13:36 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/zipfile.py
-
-Tests are all passing!
-
-------------------------------------------------------------------------
-r238 | jgoerzen | 2003-03-06 21:54:42 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-Removed _resolvelink debug code
-
-------------------------------------------------------------------------
-r237 | jgoerzen | 2003-03-06 21:54:13 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/zipfile.py
-
-Fixed _resolvelink
-
-------------------------------------------------------------------------
-r236 | jgoerzen | 2003-03-07 11:23:16 -0600 (Fri, 07 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/zipfile.py
-
-Ready to test.
-
-------------------------------------------------------------------------
-r235 | jgoerzen | 2003-03-07 10:29:02 -0600 (Fri, 07 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/zipfile.py
-   M /pygopherd/head/runtests.py
-
-Completed initial work on the new zipfile.py.
-
-------------------------------------------------------------------------
-r233 | jgoerzen | 2003-03-06 21:25:11 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   A /pygopherd/head/pygopherd/zipfile.py
-
-Added from upstream CVS
-
-------------------------------------------------------------------------
-r232 | jgoerzen | 2003-03-06 19:49:15 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-Made great strides here.
-
-------------------------------------------------------------------------
-r231 | jgoerzen | 2003-03-06 19:32:21 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-Reworking the symlink stuff.
-
-------------------------------------------------------------------------
-r230 | jgoerzen | 2003-03-06 17:03:04 -0600 (Thu, 06 Mar 2003) | 1 line
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-
-------------------------------------------------------------------------
-r229 | jgoerzen | 2003-03-06 15:09:59 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-All tests now pass!
-
-------------------------------------------------------------------------
-r228 | jgoerzen | 2003-03-06 15:08:16 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/testdata/symlinktest.zip
-
-Making progress on ironing out bugs.
-
-------------------------------------------------------------------------
-r227 | jgoerzen | 2003-03-06 14:03:40 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/handlers/html.py
-   M /pygopherd/head/runtests.py
-
-Checkpointing
-
-------------------------------------------------------------------------
-r226 | jgoerzen | 2003-03-06 11:10:13 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-
-Updated the changelog
-
-------------------------------------------------------------------------
-r225 | jgoerzen | 2003-03-06 11:08:01 -0600 (Thu, 06 Mar 2003) | 6 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-
-Refined directory handling.
-Greatly expanded tests. 
-Added a full symlink test battery.
-listdir() now raises OSError when called on an invalid directory.
-open() now raises IOError when called on a directory.
-
-------------------------------------------------------------------------
-r224 | jgoerzen | 2003-03-06 10:43:16 -0600 (Thu, 06 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/testdata/symlinktest.zip
-
-Directory symlinking now seems to work.
-
-------------------------------------------------------------------------
-r223 | jgoerzen | 2003-03-06 10:04:14 -0600 (Thu, 06 Mar 2003) | 1 line
-Changed paths:
-   M /pygopherd/head/testdata/symlinktest.zip
-
-
-------------------------------------------------------------------------
-r222 | jgoerzen | 2003-03-05 23:58:43 -0600 (Wed, 05 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/rfc1436Test.py
-   A /pygopherd/head/testdata/symlinktest.zip
-
-Fixed up tests to take note of new file symlinktest.zip
-
-------------------------------------------------------------------------
-r221 | jgoerzen | 2003-03-05 23:56:21 -0600 (Wed, 05 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-
-Removed debug code
-
-------------------------------------------------------------------------
-r220 | jgoerzen | 2003-03-05 23:55:48 -0600 (Wed, 05 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-
-Added symlink capabilities to ZIP.py
-
-------------------------------------------------------------------------
-r219 | jgoerzen | 2003-03-05 22:34:14 -0600 (Wed, 05 Mar 2003) | 2 lines
-Changed paths:
-   A /pygopherd/head/testdata/ziptorture.zip
-
-Added this.
-
-------------------------------------------------------------------------
-r218 | jgoerzen | 2003-03-05 22:26:31 -0600 (Wed, 05 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-
-Noted recent changes
-
-------------------------------------------------------------------------
-r217 | jgoerzen | 2003-03-05 22:25:19 -0600 (Wed, 05 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/gopherentryTest.py
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd/protocols/rfc1436Test.py
-
-All tests pass!
-
-------------------------------------------------------------------------
-r216 | jgoerzen | 2003-03-05 22:05:37 -0600 (Wed, 05 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/gopherentry.py
-
-Removed some debug code
-
-------------------------------------------------------------------------
-r215 | jgoerzen | 2003-03-05 22:02:14 -0600 (Wed, 05 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd/protocols/rfc1436Test.py
-   M /pygopherd/head/testdata/testdata.zip
-
-More progress -- basic ZIP file now working!
-
-------------------------------------------------------------------------
-r214 | jgoerzen | 2003-03-05 16:51:06 -0600 (Wed, 05 Mar 2003) | 16 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   A /pygopherd/head/pygopherd/handlers/ZIP.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd/handlers/html.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-   M /pygopherd/head/pygopherd/handlers/pyg.py
-   M /pygopherd/head/pygopherd/handlers/scriptexec.py
-   M /pygopherd/head/pygopherd/handlers/virtual.py
-   M /pygopherd/head/pygopherd/protocols/rfc1436Test.py
-   M /pygopherd/head/runtests.py
-   A /pygopherd/head/runtestsgui.py
-   A /pygopherd/head/testdata/testdata.zip
-   A /pygopherd/head/testdata/testdata2.zip
-
-This is the beginning of work to add a VFS system to PyGopherd.
-
-Changes:
- * Added runtestsgui, updated runtests
- * Modified all handlers to be VFS-aware
- * Implemented VFS_Real in base.py
- * Implemented VFS_ZIP in ZIP.py
- * Added ZIPHandler in ZIP.py
- * Updated HandlerMultiplexer to use VFS
-
-TODO:
- * Make ZIPHandler re-run handlermultiplexer and call it with all subsequent
-   calls
- * Genericize ZIPHandler
-
-
-------------------------------------------------------------------------
-r213 | jgoerzen | 2003-03-04 14:46:27 -0600 (Tue, 04 Mar 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/Makefile
-   M /pygopherd/head/bin/pygopherd
-   M /pygopherd/head/debian/copyright
-   M /pygopherd/head/pygopherd/GopherExceptions.py
-   M /pygopherd/head/pygopherd/GopherExceptionsTest.py
-   M /pygopherd/head/pygopherd/__init__.py
-   M /pygopherd/head/pygopherd/fileext.py
-   M /pygopherd/head/pygopherd/fileextTest.py
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/gopherentryTest.py
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd/handlers/html.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-   M /pygopherd/head/pygopherd/handlers/scriptexec.py
-   M /pygopherd/head/pygopherd/handlers/url.py
-   M /pygopherd/head/pygopherd/initialization.py
-   M /pygopherd/head/pygopherd/initializationTest.py
-   M /pygopherd/head/pygopherd/pipe.py
-   M /pygopherd/head/pygopherd/protocols/ProtocolMultiplexer.py
-   M /pygopherd/head/pygopherd/protocols/__init__.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/enhanced.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-   M /pygopherd/head/pygopherd/protocols/rfc1436.py
-   M /pygopherd/head/pygopherd/sighandlers.py
-   M /pygopherd/head/pygopherd/testutil.py
-   M /pygopherd/head/pygopherd/version.py
-   M /pygopherd/head/pygopherd.8
-   M /pygopherd/head/runtests.py
-   M /pygopherd/head/setup.py
-
-Clarified license terms
-
-------------------------------------------------------------------------
-r212 | jgoerzen | 2003-02-21 17:05:52 -0600 (Fri, 21 Feb 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-
-Fixed gopherentry object for .gophermap files
-
-------------------------------------------------------------------------
-r211 | jgoerzen | 2003-02-21 15:15:09 -0600 (Fri, 21 Feb 2003) | 2 lines
-Changed paths:
-   A /pygopherd/head/TODO
-
-Added
-
-------------------------------------------------------------------------
-r210 | jgoerzen | 2003-02-21 15:14:46 -0600 (Fri, 21 Feb 2003) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-
-Added ability to serve up files ending in .gophermap as Gophermap files.
-
-------------------------------------------------------------------------
-r209 | jgoerzen | 2002-08-08 16:45:08 -0500 (Thu, 08 Aug 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/version.py
-
-Preparing for 1.1.0
-
-------------------------------------------------------------------------
-r208 | jgoerzen | 2002-08-08 16:39:10 -0500 (Thu, 08 Aug 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/manual.html
-   A /pygopherd/head/manual.pdf
-   A /pygopherd/head/manual.ps
-   A /pygopherd/head/manual.txt
-   M /pygopherd/head/pygopherd.8
-
-Committed initial draft of the manual.
-
-------------------------------------------------------------------------
-r207 | jgoerzen | 2002-08-08 14:32:57 -0500 (Thu, 08 Aug 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd.8
-
-Initial draft of manual.
-
-------------------------------------------------------------------------
-r206 | jgoerzen | 2002-08-08 13:32:05 -0500 (Thu, 08 Aug 2002) | 3 lines
-Changed paths:
-   D /pygopherd/head/doc/manual.lyx
-   M /pygopherd/head/pygopherd.8
-
-Began new manual that already incorporates the entire content of the old LyX
-one, so removed it.
-
-------------------------------------------------------------------------
-r205 | jgoerzen | 2002-08-08 13:13:50 -0500 (Thu, 08 Aug 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/Makefile
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/debian/docs
-   A /pygopherd/head/pygopherd.8
-
-First stab at a manpage/manual -- initially imported from OfflineIMAP.
-
-------------------------------------------------------------------------
-r204 | jgoerzen | 2002-08-08 13:09:53 -0500 (Thu, 08 Aug 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/bin
-   A /pygopherd/head/bin/pygopherd (from /pygopherd/head/pygopherd.py:200)
-   M /pygopherd/head/debian/rules
-   D /pygopherd/head/pygopherd.py
-   M /pygopherd/head/setup.py
-
-Moved pygopherd.py to bin and adjusted other files to reflect this
-
-------------------------------------------------------------------------
-r203 | jgoerzen | 2002-08-08 12:57:54 -0500 (Thu, 08 Aug 2002) | 2 lines
-Changed paths:
-   D /pygopherd/head/TODO
-   M /pygopherd/head/debian/changelog
-
-Removed TODO file (now kept in bug-tracking system)
-
-------------------------------------------------------------------------
-r202 | jgoerzen | 2002-08-08 11:46:15 -0500 (Thu, 08 Aug 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-
-Clarified relationship between ignorepatt and UMNDirHandler
-
-------------------------------------------------------------------------
-r201 | jgoerzen | 2002-08-07 23:24:25 -0500 (Wed, 07 Aug 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-
-Commiting old changes
-
-------------------------------------------------------------------------
-r200 | jgoerzen | 2002-07-23 08:04:37 -0500 (Tue, 23 Jul 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/initialization.py
-
-Paranoia: chdir to our root.
-
-------------------------------------------------------------------------
-r199 | jgoerzen | 2002-07-22 08:17:22 -0500 (Mon, 22 Jul 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/initialization.py
-
-Added "advertisedport" feature.
-
-------------------------------------------------------------------------
-r197 | jgoerzen | 2002-07-18 11:26:09 -0500 (Thu, 18 Jul 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-
-Updated for 1.0.0 release.
-
-------------------------------------------------------------------------
-r196 | jgoerzen | 2002-07-18 11:16:35 -0500 (Thu, 18 Jul 2002) | 3 lines
-Changed paths:
-   D /pygopherd/head/debian/cron.d.ex
-   D /pygopherd/head/debian/emacsen-install.ex
-   D /pygopherd/head/debian/emacsen-remove.ex
-   D /pygopherd/head/debian/emacsen-startup.ex
-   D /pygopherd/head/debian/manpage.1.ex
-   D /pygopherd/head/debian/manpage.sgml.ex
-   D /pygopherd/head/debian/menu.ex
-   D /pygopherd/head/debian/preinst.ex
-   D /pygopherd/head/debian/prerm.ex
-   M /pygopherd/head/debian/rules
-   D /pygopherd/head/debian/watch.ex
-
-Removed old .ex files.
-Set rules to install examples/* into Debian package.
-
-------------------------------------------------------------------------
-r195 | jgoerzen | 2002-07-18 11:15:13 -0500 (Thu, 18 Jul 2002) | 3 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/GopherExceptionsTest.py
-   M /pygopherd/head/pygopherd/protocols/baseTest.py
-   M /pygopherd/head/pygopherd/protocols/rfc1436Test.py
-   M /pygopherd/head/runtests.py
-   M /pygopherd/head/testdata/pygopherd/pipetest.sh
-
-Fixed tests to work with Subversion, and made sure things that need to be
-set executable, are.
-
-------------------------------------------------------------------------
-r194 | jgoerzen | 2002-07-18 11:14:20 -0500 (Thu, 18 Jul 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-
-Fixed to keep dot directories out of the list.
-
-------------------------------------------------------------------------
-r193 | jgoerzen | 2002-07-18 11:05:50 -0500 (Thu, 18 Jul 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/Makefile
-   M /pygopherd/head/debian/changelog
-
-A few last-minute tweaks
-
-------------------------------------------------------------------------
-r192 | jgoerzen | 2002-07-17 20:05:05 -0500 (Wed, 17 Jul 2002) | 4 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd/handlers/html.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-   M /pygopherd/head/pygopherd/handlers/pyg.py
-   M /pygopherd/head/pygopherd/handlers/scriptexec.py
-   M /pygopherd/head/pygopherd/handlers/url.py
-   M /pygopherd/head/pygopherd/version.py
-
-Added URL type rewriter.
-Modified handler importing scheme to work nicer.
-Preparing for 1.0.0 release.
-
-------------------------------------------------------------------------
-r191 | jgoerzen | 2002-07-17 19:33:07 -0500 (Wed, 17 Jul 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-
-Fixed gophermap info-only lines that have no tabs
-
-------------------------------------------------------------------------
-r190 | jgoerzen | 2002-07-17 19:28:16 -0500 (Wed, 17 Jul 2002) | 3 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/Makefile
-   M /pygopherd/head/debian/rules
-   M /pygopherd/head/pygopherd.py
-
-Initial move over to Subversion: mark appropriate files executable, new way
-of generating the ChangeLog.
-
-------------------------------------------------------------------------
-r188 | jgoerzen | 2002-07-02 18:43:05 -0500 (Tue, 02 Jul 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/initialization.py
-   M /pygopherd/head/pygopherd/version.py
-
-Version 0.9.14
-
-------------------------------------------------------------------------
-r187 | jgoerzen | 2002-07-02 16:34:02 -0500 (Tue, 02 Jul 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/debian/rules
-   M /pygopherd/head/pygopherd/GopherExceptions.py
-   M /pygopherd/head/pygopherd/handlers/html.py
-   M /pygopherd/head/pygopherd/version.py
-
-Fixed a bug with HTML processing
-
-------------------------------------------------------------------------
-r186 | jgoerzen | 2002-07-02 16:04:06 -0500 (Tue, 02 Jul 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/pygopherd/initialization.py
-   A /pygopherd/head/pygopherd/sighandlers.py
-
-Added signal handler mechanisms to foster orderly shutdowns.
-
-------------------------------------------------------------------------
-r185 | jgoerzen | 2002-05-02 15:24:41 -0500 (Thu, 02 May 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/pygopherd/initialization.py
-
-Amplified the exitfunc.
-
-------------------------------------------------------------------------
-r184 | jgoerzen | 2002-05-02 15:13:45 -0500 (Thu, 02 May 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/README
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/debian/init.d
-   M /pygopherd/head/pygopherd/initialization.py
-   M /pygopherd/head/pygopherd/version.py
-
-Added support for detached operation and pidfile writing.
-
-------------------------------------------------------------------------
-r183 | jgoerzen | 2002-05-01 16:45:47 -0500 (Wed, 01 May 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/debian/control
-
-Added a dep on a non-buggy python2.2
-
-------------------------------------------------------------------------
-r182 | jgoerzen | 2002-04-26 15:18:10 -0500 (Fri, 26 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-HTTP protocol wasn't normalizing incoming selectors.  Fixed.
-
-------------------------------------------------------------------------
-r181 | jgoerzen | 2002-04-18 23:39:29 -0500 (Thu, 18 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygfarm/dict.pyg
-
-Nicer display, sorted
-
-------------------------------------------------------------------------
-r180 | jgoerzen | 2002-04-18 18:01:31 -0500 (Thu, 18 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/debian/control
-   M /pygopherd/head/pygfarm/dict.pyg
-   M /pygopherd/head/pygopherd/version.py
-
-*** empty log message ***
-
-------------------------------------------------------------------------
-r179 | jgoerzen | 2002-04-18 17:22:38 -0500 (Thu, 18 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/Makefile
-   D /pygopherd/head/debian/README.Debian
-   M /pygopherd/head/debian/control
-   A /pygopherd/head/debian/pygfarm.README.Debian
-   A /pygopherd/head/debian/pygfarm.dirs
-   M /pygopherd/head/debian/rules
-   D /pygopherd/head/pygfarm/foo.py
-
-Added pygfarm package for Debian.
-
-------------------------------------------------------------------------
-r178 | jgoerzen | 2002-04-18 17:13:29 -0500 (Thu, 18 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Added support to HTTP for search requests.
-
-------------------------------------------------------------------------
-r177 | jgoerzen | 2002-04-18 16:57:33 -0500 (Thu, 18 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygfarm/dict.pyg
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Fixed gopher-dir to gopher-menu
-
-------------------------------------------------------------------------
-r176 | jgoerzen | 2002-04-18 16:49:52 -0500 (Thu, 18 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygfarm/dict.pyg
-
-Updated.
-
-------------------------------------------------------------------------
-r175 | jgoerzen | 2002-04-18 16:12:30 -0500 (Thu, 18 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygfarm/dict.pyg
-
-All except DBINFO working now.
-
-------------------------------------------------------------------------
-r174 | jgoerzen | 2002-04-18 16:00:20 -0500 (Thu, 18 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygfarm/dict.pyg
-
-Updated -- more features and bugfixes
-
-------------------------------------------------------------------------
-r173 | jgoerzen | 2002-04-18 15:51:02 -0500 (Thu, 18 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygfarm/dict.pyg
-
-All except Match is now working.
-
-------------------------------------------------------------------------
-r172 | jgoerzen | 2002-04-18 15:42:49 -0500 (Thu, 18 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygfarm/dict.pyg
-
-Some various bugfixes
-
-------------------------------------------------------------------------
-r171 | jgoerzen | 2002-04-18 02:31:21 -0500 (Thu, 18 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygfarm/dict.pyg
-
-*** empty log message ***
-
-------------------------------------------------------------------------
-r170 | jgoerzen | 2002-04-18 02:22:29 -0500 (Thu, 18 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygfarm/dict.pyg
-
-Updated, working better.
-
-------------------------------------------------------------------------
-r169 | jgoerzen | 2002-04-17 22:08:11 -0500 (Wed, 17 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygfarm/dict.pyg
-   A /pygopherd/head/pygfarm/foo.py
-
-Updated.
-
-------------------------------------------------------------------------
-r168 | jgoerzen | 2002-04-17 19:31:25 -0500 (Wed, 17 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygfarm/dict.pyg
-
-*** empty log message ***
-
-------------------------------------------------------------------------
-r167 | jgoerzen | 2002-04-17 19:20:35 -0500 (Wed, 17 Apr 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/pygfarm
-   A /pygopherd/head/pygfarm/dict.pyg
-
-*** empty log message ***
-
-------------------------------------------------------------------------
-r166 | jgoerzen | 2002-04-17 14:26:57 -0500 (Wed, 17 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-
-Updated -- use normpath for relative links.
-
-------------------------------------------------------------------------
-r165 | jgoerzen | 2002-04-16 18:37:43 -0500 (Tue, 16 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/rfc1436Test.py
-
-Made sure noabstract stuff works.
-
-------------------------------------------------------------------------
-r164 | jgoerzen | 2002-04-16 18:32:41 -0500 (Tue, 16 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/rfc1436Test.py
-
-Enhanced.
-
-------------------------------------------------------------------------
-r163 | jgoerzen | 2002-04-16 15:11:59 -0500 (Tue, 16 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-
-Fixed entries handling after new prepare.
-
-------------------------------------------------------------------------
-r162 | jgoerzen | 2002-04-16 15:06:42 -0500 (Tue, 16 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/rfc1436Test.py
-
-A test fix.
-
-------------------------------------------------------------------------
-r161 | jgoerzen | 2002-04-16 14:45:20 -0500 (Tue, 16 Apr 2002) | 7 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Fixed a bug in HTTP handler that was adding an extra <TR><TD>
-(reported by Robert Hahn)
-
-Fixed a bug in mbox.py affecting both mailbox handlers -- after the new
-directory architecture, the prepare in the child classes was not properly
-updated.
-
-------------------------------------------------------------------------
-r160 | jgoerzen | 2002-04-16 00:21:01 -0500 (Tue, 16 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/debian/changelog
-   A /pygopherd/head/pygopherd/protocols/rfc1436Test.py
-   M /pygopherd/head/pygopherd/version.py
-   M /pygopherd/head/runtests.py
-
-Updated.
-
-------------------------------------------------------------------------
-r159 | jgoerzen | 2002-04-15 21:08:35 -0500 (Mon, 15 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/GopherExceptionsTest.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/baseTest.py
-   M /pygopherd/head/pygopherd/testutil.py
-
-Finished baseTest and passes all tests.
-
-------------------------------------------------------------------------
-r158 | jgoerzen | 2002-04-15 20:37:08 -0500 (Mon, 15 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/__init__.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   A /pygopherd/head/pygopherd/protocols/baseTest.py
-   M /pygopherd/head/runtests.py
-
-Beginnings of baseTest.
-
-------------------------------------------------------------------------
-r157 | jgoerzen | 2002-04-15 20:20:57 -0500 (Mon, 15 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/Makefile
-   M /pygopherd/head/pygopherd/protocols/ProtocolMultiplexerTest.py
-   M /pygopherd/head/pygopherd/testutil.py
-
-Added ProtocolMultiplexerTest
-
-------------------------------------------------------------------------
-r156 | jgoerzen | 2002-04-15 19:58:16 -0500 (Mon, 15 Apr 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/pygopherd/protocols/ProtocolMultiplexerTest.py
-   M /pygopherd/head/pygopherd/protocols/__init__.py
-   M /pygopherd/head/runtests.py
-
-Added ProtocolMultiplexerTest
-
-------------------------------------------------------------------------
-r155 | jgoerzen | 2002-04-15 19:44:53 -0500 (Mon, 15 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/__init__.py
-   M /pygopherd/head/pygopherd/gopherentryTest.py
-   M /pygopherd/head/pygopherd/pipe.py
-   A /pygopherd/head/pygopherd/pipeTest.py
-   M /pygopherd/head/runtests.py
-   A /pygopherd/head/testdata/pygopherd
-   A /pygopherd/head/testdata/pygopherd/pipetest.sh
-   A /pygopherd/head/testdata/pygopherd/pipetestdata
-
-Added pipeTest.
-
-------------------------------------------------------------------------
-r154 | jgoerzen | 2002-04-15 19:09:48 -0500 (Mon, 15 Apr 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/testdata/.abstract
-   A /pygopherd/head/testdata/testfile.txt.gz.abstract
-
-Updated for new abstract tests
-
-------------------------------------------------------------------------
-r153 | jgoerzen | 2002-04-15 19:03:01 -0500 (Mon, 15 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/GopherExceptionsTest.py
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Many updates to abstract support
-
-------------------------------------------------------------------------
-r152 | jgoerzen | 2002-04-15 17:55:19 -0500 (Mon, 15 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/gopherentry.py
-
-Added the ability to read block contents from the filesystem.
-
-------------------------------------------------------------------------
-r151 | jgoerzen | 2002-04-15 15:21:09 -0500 (Mon, 15 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-
-Added beginnings of support for Abstract and other info.
-
-------------------------------------------------------------------------
-r150 | jgoerzen | 2002-04-15 14:37:22 -0500 (Mon, 15 Apr 2002) | 4 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-   M /pygopherd/head/pygopherd/handlers/pyg.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Redid the directory handling mechanism.  Now, handlers define isdir() and
-getdirlist().  Protocols ask for a list of all entries in the directory,
-rather than having the handler do a callback for each entry.
-
-------------------------------------------------------------------------
-r149 | jgoerzen | 2002-04-15 03:59:13 -0500 (Mon, 15 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-
-Updated.
-
-------------------------------------------------------------------------
-r148 | jgoerzen | 2002-04-15 03:34:53 -0500 (Mon, 15 Apr 2002) | 3 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-
-Fixed a bug with handling empty Path= lines.  Thanks to David Allen
-<mda@idatar.com> for identifying this one.
-
-------------------------------------------------------------------------
-r147 | jgoerzen | 2002-04-12 20:26:46 -0500 (Fri, 12 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/base.py
-
-Miscellany comments and stuff
-
-------------------------------------------------------------------------
-r146 | jgoerzen | 2002-04-12 16:46:54 -0500 (Fri, 12 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/version.py
-
-Updated for 0.9.4
-
-------------------------------------------------------------------------
-r145 | jgoerzen | 2002-04-12 16:39:56 -0500 (Fri, 12 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/handlers/pyg.py
-   M /pygopherd/head/pygopherd/handlers/url.py
-   M /pygopherd/head/pygopherd/protocols/ProtocolMultiplexer.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Updated.
-
-------------------------------------------------------------------------
-r144 | jgoerzen | 2002-04-12 03:13:33 -0500 (Fri, 12 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Fixed bug with rendering URLs.
-
-------------------------------------------------------------------------
-r143 | jgoerzen | 2002-04-12 03:07:52 -0500 (Fri, 12 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-
-Forgot to call renderdirstart and renderdirend.
-
-------------------------------------------------------------------------
-r142 | jgoerzen | 2002-04-11 21:41:40 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/pygopherd/protocols/http.py
-   M /pygopherd/head/pygopherd/version.py
-
-More bugfixes.
-
-------------------------------------------------------------------------
-r141 | jgoerzen | 2002-04-11 21:24:21 -0500 (Thu, 11 Apr 2002) | 3 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/testutil.py
-
-Fixed an initialization problem in testutil that could prevent the system
-from starting up properly.  Fixed URL to gopher downloads in pygopherd.conf.
-
-------------------------------------------------------------------------
-r140 | jgoerzen | 2002-04-11 21:16:59 -0500 (Thu, 11 Apr 2002) | 5 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/Makefile
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/debian/changelog
-   M /pygopherd/head/debian/control
-   M /pygopherd/head/pygopherd/__init__.py
-   A /pygopherd/head/pygopherd/loggerTest.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-   A /pygopherd/head/pygopherd/version.py
-   M /pygopherd/head/runtests.py
-   M /pygopherd/head/setup.py
-
-Added the ability to http to put a configurable spiel at the top of each
-page.
-
-Added version.py for stuff to find info about the software.
-
-------------------------------------------------------------------------
-r139 | jgoerzen | 2002-04-11 19:32:37 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/gopherentryTest.py
-   M /pygopherd/head/pygopherd/handlers/url.py
-
-Geturl now handles URL: patterns
-
-------------------------------------------------------------------------
-r138 | jgoerzen | 2002-04-11 19:22:59 -0500 (Thu, 11 Apr 2002) | 6 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/gopherentryTest.py
-
-Gopherentrytest almost finished.
-
-Fixed some bugs that test illuminated.
-
-Updated testutil.
-
-------------------------------------------------------------------------
-r137 | jgoerzen | 2002-04-11 18:25:24 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/testdata/README
-   A /pygopherd/head/testdata/testarchive.tar
-   A /pygopherd/head/testdata/testarchive.tar.gz
-   A /pygopherd/head/testdata/testarchive.tgz
-   A /pygopherd/head/testdata/testfile.txt.gz
-
-Added an encoded file.
-
-------------------------------------------------------------------------
-r136 | jgoerzen | 2002-04-11 18:01:04 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/__init__.py
-   A /pygopherd/head/pygopherd/gopherentryTest.py
-   M /pygopherd/head/pygopherd/testutil.py
-   M /pygopherd/head/runtests.py
-
-Initial add of the gopherentryTest
-
-------------------------------------------------------------------------
-r135 | jgoerzen | 2002-04-11 17:42:36 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/Makefile
-   M /pygopherd/head/pygopherd/testutil.py
-   A /pygopherd/head/testdata
-   A /pygopherd/head/testdata/testfile.txt
-
-Always set the root to testroot
-
-------------------------------------------------------------------------
-r134 | jgoerzen | 2002-04-11 16:41:05 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/GopherExceptionsTest.py
-   M /pygopherd/head/pygopherd/__init__.py
-   A /pygopherd/head/pygopherd/fileextTest.py
-   M /pygopherd/head/pygopherd/initializationTest.py
-   M /pygopherd/head/pygopherd/testutil.py
-   M /pygopherd/head/runtests.py
-
-Added the fileext test.
-
-------------------------------------------------------------------------
-r133 | jgoerzen | 2002-04-11 16:33:45 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/GopherExceptionsTest.py
-   M /pygopherd/head/pygopherd/__init__.py
-   M /pygopherd/head/pygopherd/initialization.py
-   M /pygopherd/head/pygopherd/initializationTest.py
-   A /pygopherd/head/pygopherd/testutil.py
-
-Added more tests, test utilities, etc.
-
-------------------------------------------------------------------------
-r132 | jgoerzen | 2002-04-11 15:47:14 -0500 (Thu, 11 Apr 2002) | 4 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/GopherExceptions.py
-   A /pygopherd/head/pygopherd/GopherExceptionsTest.py
-   M /pygopherd/head/pygopherd/__init__.py
-   M /pygopherd/head/pygopherd/logger.py
-   M /pygopherd/head/runtests.py
-
-Added more tests.
-
-Made logger capable of logging to non-stdout sources.
-
-------------------------------------------------------------------------
-r131 | jgoerzen | 2002-04-11 14:58:06 -0500 (Thu, 11 Apr 2002) | 4 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/initialization.py
-
-Added a sanity check to HandlerMultiplexer.
-Handle a special interface bind request in initialization.py and
-conf/pygopherd.conf.
-
-------------------------------------------------------------------------
-r130 | jgoerzen | 2002-04-11 14:49:56 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/ProtocolMultiplexer.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-
-Security: block ./ and ../
-
-------------------------------------------------------------------------
-r129 | jgoerzen | 2002-04-11 14:07:28 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/pygopherd/initializationTest.py
-
-Added.
-
-------------------------------------------------------------------------
-r128 | jgoerzen | 2002-04-11 04:05:05 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/initialization.py
-
-Added real tests.
-
-------------------------------------------------------------------------
-r127 | jgoerzen | 2002-04-11 03:31:44 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/__init__.py
-   M /pygopherd/head/pygopherd.py
-   A /pygopherd/head/runtests.py
-
-Added initial testing infrastructure.
-
-------------------------------------------------------------------------
-r126 | jgoerzen | 2002-04-11 03:12:29 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/__init__.py
-   A /pygopherd/head/pygopherd/initialization.py
-   M /pygopherd/head/pygopherd.py
-
-Redid initialization system -- makes it easier for tests.
-
-------------------------------------------------------------------------
-r125 | jgoerzen | 2002-04-11 02:23:24 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/debian/changelog
-
-Updated
-
-------------------------------------------------------------------------
-r124 | jgoerzen | 2002-04-11 00:29:58 -0500 (Thu, 11 Apr 2002) | 4 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/GopherExceptions.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-   M /pygopherd/head/pygopherd.py
-
-Added the ability to log backtraces in more situations.
-
-Fixed a bug in mbox preventing folders from working.
-
-------------------------------------------------------------------------
-r123 | jgoerzen | 2002-04-11 00:23:39 -0500 (Thu, 11 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-
-Fixed a software bug.
-
-------------------------------------------------------------------------
-r122 | jgoerzen | 2002-04-10 21:30:11 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-
-VERSION 0.9.0 RELEASED
-
-------------------------------------------------------------------------
-r121 | jgoerzen | 2002-04-10 21:02:31 -0500 (Wed, 10 Apr 2002) | 3 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-
-Fixed some more bugs: don't crash if we have no perms to create a cache
-file, handle relative Path= lines correctly.
-
-------------------------------------------------------------------------
-r120 | jgoerzen | 2002-04-10 20:56:45 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-
-Fixed a bug with type=X
-
-------------------------------------------------------------------------
-r119 | jgoerzen | 2002-04-10 20:39:53 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd.py
-
-Additional bugfixes and enhancements
-
-------------------------------------------------------------------------
-r118 | jgoerzen | 2002-04-10 20:22:28 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/file.py
-
-Added decompresspatt support.
-
-------------------------------------------------------------------------
-r117 | jgoerzen | 2002-04-10 20:13:16 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-
-Additional fixes for extension and encoding support.
-
-------------------------------------------------------------------------
-r116 | jgoerzen | 2002-04-10 20:05:13 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/fileext.py
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/protocols/rfc1436.py
-
-More updates and features with extensions and stuff.
-
-------------------------------------------------------------------------
-r115 | jgoerzen | 2002-04-10 19:43:09 -0500 (Wed, 10 Apr 2002) | 3 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-
-Modified encoding handling: default is to now set application/octet-stream
-of there is any encoding UNLESS the CompressedFileHandler is used.
-
-------------------------------------------------------------------------
-r114 | jgoerzen | 2002-04-10 19:26:50 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/Makefile
-
-Renamed changelog target
-
-------------------------------------------------------------------------
-r113 | jgoerzen | 2002-04-10 19:19:16 -0500 (Wed, 10 Apr 2002) | 5 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/__init__.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/handlers/scriptexec.py
-   A /pygopherd/head/pygopherd/pipe.py
-
-Added many features:
-The CompressedFileHandler
-Pipe support
-etc
-
-------------------------------------------------------------------------
-r112 | jgoerzen | 2002-04-10 18:38:24 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/__init__.py
-   A /pygopherd/head/pygopherd/fileext.py
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd.py
-
-Added smart file extension stripping for UMN dir.
-
-------------------------------------------------------------------------
-r111 | jgoerzen | 2002-04-10 17:15:22 -0500 (Wed, 10 Apr 2002) | 3 lines
-Changed paths:
-   M /pygopherd/head/debian/changelog
-   A /pygopherd/head/debian/examples
-   M /pygopherd/head/debian/postinst
-   A /pygopherd/head/debian/postrm
-   D /pygopherd/head/debian/postrm.ex
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-
-Added code to strip off an extension in UMN Dirhandler.
-Other Debian enhancements.
-
-------------------------------------------------------------------------
-r110 | jgoerzen | 2002-04-10 17:03:36 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/examples
-   A /pygopherd/head/examples/gophermap
-
-Updated pygopher'd path.
-
-------------------------------------------------------------------------
-r109 | jgoerzen | 2002-04-10 16:27:39 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/debian/control
-   M /pygopherd/head/debian/init.d
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd.py
-
-Miscellaneous other fixes.
-
-------------------------------------------------------------------------
-r108 | jgoerzen | 2002-04-10 16:07:15 -0500 (Wed, 10 Apr 2002) | 3 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/debian/init.d
-   M /pygopherd/head/debian/postinst
-   M /pygopherd/head/debian/rules
-   M /pygopherd/head/pygopherd.py
-
-Modified to do some more checking, to permit colon-separated MIME types,
-etc.
-
-------------------------------------------------------------------------
-r107 | jgoerzen | 2002-04-10 15:41:53 -0500 (Wed, 10 Apr 2002) | 3 lines
-Changed paths:
-   M /pygopherd/head/ChangeLog
-   M /pygopherd/head/Makefile
-   M /pygopherd/head/debian/copyright
-   M /pygopherd/head/debian/docs
-   M /pygopherd/head/debian/rules
-   M /pygopherd/head/setup.py
-
-Made setup.py include handlers and protocols too.
-Updated debian code.
-
-------------------------------------------------------------------------
-r106 | jgoerzen | 2002-04-10 15:27:03 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/README
-   M /pygopherd/head/debian/control
-   M /pygopherd/head/debian/rules
-   M /pygopherd/head/setup.py
-
-Updated.
-
-------------------------------------------------------------------------
-r105 | jgoerzen | 2002-04-10 15:20:43 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd.py
-
-Added ability to specify aliased server name.
-
-------------------------------------------------------------------------
-r104 | jgoerzen | 2002-04-10 15:13:16 -0500 (Wed, 10 Apr 2002) | 3 lines
-Changed paths:
-   A /pygopherd/head/ChangeLog
-   M /pygopherd/head/Makefile
-   A /pygopherd/head/README
-   M /pygopherd/head/TODO
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/debian/changelog
-   A /pygopherd/head/debian/conffiles
-   D /pygopherd/head/debian/conffiles.ex
-   M /pygopherd/head/debian/control
-   M /pygopherd/head/debian/copyright
-   A /pygopherd/head/debian/init.d
-   D /pygopherd/head/debian/init.d.ex
-   A /pygopherd/head/debian/postinst
-   D /pygopherd/head/debian/postinst.ex
-   M /pygopherd/head/debian/rules
-   M /pygopherd/head/setup.py
-
-Many modifications to permit system-wide installations, Debian package
-support, etc.
-
-------------------------------------------------------------------------
-r103 | jgoerzen | 2002-04-10 14:10:58 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/debian
-   A /pygopherd/head/debian/README.Debian
-   A /pygopherd/head/debian/changelog
-   A /pygopherd/head/debian/conffiles.ex
-   A /pygopherd/head/debian/control
-   A /pygopherd/head/debian/copyright
-   A /pygopherd/head/debian/cron.d.ex
-   A /pygopherd/head/debian/dirs
-   A /pygopherd/head/debian/docs
-   A /pygopherd/head/debian/emacsen-install.ex
-   A /pygopherd/head/debian/emacsen-remove.ex
-   A /pygopherd/head/debian/emacsen-startup.ex
-   A /pygopherd/head/debian/ex.package.doc-base
-   A /pygopherd/head/debian/init.d.ex
-   A /pygopherd/head/debian/manpage.1.ex
-   A /pygopherd/head/debian/manpage.sgml.ex
-   A /pygopherd/head/debian/menu.ex
-   A /pygopherd/head/debian/postinst.ex
-   A /pygopherd/head/debian/postrm.ex
-   A /pygopherd/head/debian/preinst.ex
-   A /pygopherd/head/debian/prerm.ex
-   A /pygopherd/head/debian/rules
-   A /pygopherd/head/debian/watch.ex
-   A /pygopherd/head/setup.py
-
-Imported debian/ directory.
-
-------------------------------------------------------------------------
-r102 | jgoerzen | 2002-04-10 13:57:14 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/Makefile
-
-Now cleans up jython .class files
-
-------------------------------------------------------------------------
-r101 | jgoerzen | 2002-04-10 03:31:15 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/Makefile
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/scriptexec.py
-   M /pygopherd/head/pygopherd.py
-
-More security enhancements and stuff.
-
-------------------------------------------------------------------------
-r100 | jgoerzen | 2002-04-10 02:44:34 -0500 (Wed, 10 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/GopherExceptions.py
-   M /pygopherd/head/pygopherd/__init__.py
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-   A /pygopherd/head/pygopherd/logger.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-   M /pygopherd/head/pygopherd.py
-
-Added logging support
-
-------------------------------------------------------------------------
-r99 | jgoerzen | 2002-04-09 21:26:41 -0500 (Tue, 09 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/pyg.py
-
-Fixed an error with searchrequest support.
-
-------------------------------------------------------------------------
-r98 | jgoerzen | 2002-04-09 21:09:48 -0500 (Tue, 09 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd.py
-
-Removed outdated import of "signal"
-
-------------------------------------------------------------------------
-r97 | jgoerzen | 2002-04-09 20:42:31 -0500 (Tue, 09 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/scriptexec.py
-   M /pygopherd/head/pygopherd/handlers/virtual.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-   M /pygopherd/head/pygopherd/protocols/rfc1436.py
-
-Added searchrequest capabilities.
-
-------------------------------------------------------------------------
-r96 | jgoerzen | 2002-04-09 20:18:55 -0500 (Tue, 09 Apr 2002) | 3 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-   M /pygopherd/head/pygopherd/handlers/pyg.py
-   A /pygopherd/head/pygopherd/handlers/scriptexec.py
-   M /pygopherd/head/pygopherd/protocols/ProtocolMultiplexer.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd.py
-
-More updates for vfolder rename.
-Added scriptexec capability.
-
-------------------------------------------------------------------------
-r95 | jgoerzen | 2002-04-09 19:45:52 -0500 (Tue, 09 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-   M /pygopherd/head/pygopherd/handlers/pyg.py
-   D /pygopherd/head/pygopherd/handlers/vfolder.py
-   A /pygopherd/head/pygopherd/handlers/virtual.py
-
-Renamed vfolder to virtual
-
-------------------------------------------------------------------------
-r94 | jgoerzen | 2002-04-08 20:36:27 -0500 (Mon, 08 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-   A /pygopherd/head/pygopherd/handlers/pyg.py
-   M /pygopherd/head/pygopherd/handlers/vfolder.py
-
-Updates.
-
-------------------------------------------------------------------------
-r93 | jgoerzen | 2002-04-08 19:22:12 -0500 (Mon, 08 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-   A /pygopherd/head/pygopherd/handlers/vfolder.py
-
-Updates with the vfolder.
-
-------------------------------------------------------------------------
-r92 | jgoerzen | 2002-04-06 20:08:21 -0600 (Sat, 06 Apr 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/pygopherd/__init__.py
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd/handlers/html.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-   M /pygopherd/head/pygopherd/handlers/url.py
-   M /pygopherd/head/pygopherd/protocols/ProtocolMultiplexer.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/enhanced.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-   M /pygopherd/head/pygopherd/protocols/rfc1436.py
-   M /pygopherd/head/pygopherd.py
-
-Updated for module moving.
-
-------------------------------------------------------------------------
-r91 | jgoerzen | 2002-04-06 19:31:06 -0600 (Sat, 06 Apr 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/Makefile
-
-Added.
-
-------------------------------------------------------------------------
-r90 | jgoerzen | 2002-04-06 02:25:26 -0600 (Sat, 06 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/doc/manual.lyx
-
-*** empty log message ***
-
-------------------------------------------------------------------------
-r89 | jgoerzen | 2002-04-05 22:55:50 -0600 (Fri, 05 Apr 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/doc/manual.lyx
-
-Added.
-
-------------------------------------------------------------------------
-r88 | jgoerzen | 2002-04-05 20:23:55 -0600 (Fri, 05 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-
-Added directory caching ability.
-
-------------------------------------------------------------------------
-r87 | jgoerzen | 2002-04-05 19:59:56 -0600 (Fri, 05 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd/handlers/html.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-
-Performance enhancements after profiling
-
-------------------------------------------------------------------------
-r86 | jgoerzen | 2002-04-05 19:09:58 -0600 (Fri, 05 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/gopherentry.py
-
-Performance: made mapping a module instead of a class variable.
-
-------------------------------------------------------------------------
-r85 | jgoerzen | 2002-04-05 18:51:30 -0600 (Fri, 05 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/base.py
-
-Typo fix
-
-------------------------------------------------------------------------
-r84 | jgoerzen | 2002-04-05 18:39:06 -0600 (Fri, 05 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/mbox.py
-
-*** empty log message ***
-
-------------------------------------------------------------------------
-r83 | jgoerzen | 2002-04-05 18:24:11 -0600 (Fri, 05 Apr 2002) | 5 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/handlers/html.py
-   A /pygopherd/head/pygopherd/handlers/mbox.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-
-More work on the mbox handler.  Say that we don't support gopher+ because
-UMN hates size-less stuff.  Bah.
-
-Reverted gopherp : behavior.  It was right before, UMN is fussy.
-
-------------------------------------------------------------------------
-r82 | jgoerzen | 2002-04-05 18:13:52 -0600 (Fri, 05 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-
-Only put colon on a VIEWS line if there is size information coming.
-
-------------------------------------------------------------------------
-r81 | jgoerzen | 2002-04-05 16:43:00 -0600 (Fri, 05 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   A /pygopherd/head/pygopherd/handlers/html.py
-
-Split HTML title handler out of UMN.py into html.py
-
-------------------------------------------------------------------------
-r80 | jgoerzen | 2002-04-05 15:58:30 -0600 (Fri, 05 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/GopherExceptions.py
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd/handlers/url.py
-   M /pygopherd/head/pygopherd/protocols/ProtocolMultiplexer.py
-   M /pygopherd/head/pygopherd/protocols/__init__.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/enhanced.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-   M /pygopherd/head/pygopherd/protocols/rfc1436.py
-
-Added copyright notices to all files.
-
-------------------------------------------------------------------------
-r79 | jgoerzen | 2002-04-05 15:51:59 -0600 (Fri, 05 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-
-Added HTML handler support.
-
-------------------------------------------------------------------------
-r78 | jgoerzen | 2002-04-05 15:12:49 -0600 (Fri, 05 Apr 2002) | 3 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-
-Added some comments and moved miscellaneous functions into the
-UMNDirHandler.
-
-------------------------------------------------------------------------
-r77 | jgoerzen | 2002-04-05 14:32:39 -0600 (Fri, 05 Apr 2002) | 3 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-
-Removed \t+ adding to gopher0 dirstrings.  This is done in the rfc
-module already.
-
-------------------------------------------------------------------------
-r76 | jgoerzen | 2002-04-05 14:27:33 -0600 (Fri, 05 Apr 2002) | 5 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/protocols/rfc1436.py
-
-Modified to use the getentry() from each handler in the dirhandler.
-Modified to indicate in each entry whether gopher+ is supported by that
-entry.  Modified rfc1436 to only indicate + for those entries where this is
-true.
-
-------------------------------------------------------------------------
-r75 | jgoerzen | 2002-04-04 20:05:22 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-
-Added code to strip off trailing slashes in links.
-
-------------------------------------------------------------------------
-r74 | jgoerzen | 2002-04-04 19:55:57 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-
-Added handling of UMN type X
-
-------------------------------------------------------------------------
-r73 | jgoerzen | 2002-04-04 19:49:51 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-More HTTP updates.
-
-------------------------------------------------------------------------
-r72 | jgoerzen | 2002-04-04 19:36:58 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Added icon support to HTTP protocol.
-
-------------------------------------------------------------------------
-r71 | jgoerzen | 2002-04-04 19:20:27 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Updated.
-
-------------------------------------------------------------------------
-r70 | jgoerzen | 2002-04-04 18:51:48 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-
-Added .cap file handling.
-
-------------------------------------------------------------------------
-r69 | jgoerzen | 2002-04-04 18:37:37 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-
-UMN seems to be working now!
-
-------------------------------------------------------------------------
-r68 | jgoerzen | 2002-04-04 18:27:57 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-
-Various runtime fixes!
-
-------------------------------------------------------------------------
-r67 | jgoerzen | 2002-04-04 17:39:02 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-
-Updated.
-
-------------------------------------------------------------------------
-r66 | jgoerzen | 2002-04-04 17:29:56 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-
-More updates.
-
-------------------------------------------------------------------------
-r65 | jgoerzen | 2002-04-04 17:12:39 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/gopherentry.py
-
-Updates -- safer populatefromfs(), etc.
-
-------------------------------------------------------------------------
-r64 | jgoerzen | 2002-04-04 16:51:12 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/UMN.py
-
-Initial writing.
-
-------------------------------------------------------------------------
-r63 | jgoerzen | 2002-04-04 14:41:03 -0600 (Thu, 04 Apr 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/pygopherd/handlers/UMN.py
-
-Added from dir.py
-
-------------------------------------------------------------------------
-r62 | jgoerzen | 2002-03-27 15:40:53 -0600 (Wed, 27 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-
-Added experimental URLGopherPlus protocol.
-
-------------------------------------------------------------------------
-r61 | jgoerzen | 2002-03-27 15:24:58 -0600 (Wed, 27 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-
-Modified to make more extensible.
-
-------------------------------------------------------------------------
-r60 | jgoerzen | 2002-03-27 13:16:17 -0600 (Wed, 27 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-
-Moved to and fixes in prepare()
-
-------------------------------------------------------------------------
-r59 | jgoerzen | 2002-03-27 12:19:00 -0600 (Wed, 27 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-Added error handling
-
-------------------------------------------------------------------------
-r58 | jgoerzen | 2002-03-26 23:41:47 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-HTTP support now nominally working.
-
-------------------------------------------------------------------------
-r57 | jgoerzen | 2002-03-26 20:44:16 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/http.py
-
-More work on http
-
-------------------------------------------------------------------------
-r56 | jgoerzen | 2002-03-26 20:17:14 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-
-Added some bugfixes for time handling.
-
-------------------------------------------------------------------------
-r55 | jgoerzen | 2002-03-26 20:10:01 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   A /pygopherd/head/pygopherd/GopherExceptions.py
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd/handlers/url.py
-   M /pygopherd/head/pygopherd/protocols/__init__.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-   A /pygopherd/head/pygopherd/protocols/http.py
-
-Added error handling.
-
-------------------------------------------------------------------------
-r54 | jgoerzen | 2002-03-26 19:27:27 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   A /pygopherd/head/doc/standards/Gopher+.txt
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   A /pygopherd/head/pygopherd/handlers/gophermap.py
-   M /pygopherd/head/pygopherd/handlers/url.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-
-Added gophermap capabilities.
-
-------------------------------------------------------------------------
-r53 | jgoerzen | 2002-03-26 18:52:58 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/doc/standards/gophermap.txt
-
-Added from gopher://gopher.floodgap.com:70/0/buck/dbrowse%3Ffaquse%201
-
-------------------------------------------------------------------------
-r52 | jgoerzen | 2002-03-26 18:30:14 -0600 (Tue, 26 Mar 2002) | 3 lines
-Changed paths:
-   A /pygopherd/head/doc/standards/url.txt
-
-Added from
-http://www.complete.org/mailinglists/archives/gopher-200202/msg00033.html
-
-------------------------------------------------------------------------
-r51 | jgoerzen | 2002-03-26 18:17:27 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/__init__.py
-   A /pygopherd/head/pygopherd/handlers/url.py
-
-Added url.py -- a URL: handler.
-
-------------------------------------------------------------------------
-r50 | jgoerzen | 2002-03-26 17:59:11 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   A /pygopherd/head/pygopherd/protocols/ProtocolMultiplexer.py
-   M /pygopherd/head/pygopherd/protocols/enhanced.py
-   M /pygopherd/head/pygopherd.py
-
-Updated to use new multiplexers, more configurability, some renaming
-
-------------------------------------------------------------------------
-r49 | jgoerzen | 2002-03-26 16:45:42 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/TODO
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd.py
-
-Updated.
-
-------------------------------------------------------------------------
-r48 | jgoerzen | 2002-03-26 16:24:58 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-   M /pygopherd/head/pygopherd/protocols/rfc1436.py
-
-More bugfixes
-
-------------------------------------------------------------------------
-r47 | jgoerzen | 2002-03-26 16:19:32 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   D /pygopherd/head/entry.py
-   A /pygopherd/head/pygopherd/gopherentry.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-
-renamed entry to gopherentry
-
-------------------------------------------------------------------------
-r46 | jgoerzen | 2002-03-26 16:12:31 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/entry.py
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-
-Basic execution fixes.
-
-------------------------------------------------------------------------
-r45 | jgoerzen | 2002-03-26 15:46:36 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-   M /pygopherd/head/pygopherd/protocols/rfc1436.py
-   M /pygopherd/head/pygopherd.py
-
-Bugfixes
-
-------------------------------------------------------------------------
-r44 | jgoerzen | 2002-03-26 15:34:22 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/pygopherd/handlers/HandlerMultiplexer.py
-   A /pygopherd/head/pygopherd/handlers/__init__.py
-   M /pygopherd/head/pygopherd/protocols/__init__.py
-   M /pygopherd/head/pygopherd.py
-
-*** empty log message ***
-
-------------------------------------------------------------------------
-r43 | jgoerzen | 2002-03-26 15:25:56 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/conf/mime.types
-   A /pygopherd/head/entry.py
-   M /pygopherd/head/pygopherd/protocols/gopherp.py
-
-*** empty log message ***
-
-------------------------------------------------------------------------
-r42 | jgoerzen | 2002-03-26 15:17:56 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   D /pygopherd/head/handlers.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   A /pygopherd/head/pygopherd/handlers/dir.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-   M /pygopherd/head/pygopherd.py
-
-*** empty log message ***
-
-------------------------------------------------------------------------
-r41 | jgoerzen | 2002-03-26 15:09:05 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/handlers.py
-   M /pygopherd/head/pygopherd/handlers/base.py
-   M /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-
-Updated
-
-------------------------------------------------------------------------
-r40 | jgoerzen | 2002-03-26 14:34:50 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/TODO
-   A /pygopherd/head/pygopherd/handlers
-   A /pygopherd/head/pygopherd/handlers/base.py
-   A /pygopherd/head/pygopherd/handlers/file.py
-   M /pygopherd/head/pygopherd/protocols/base.py
-
-Updated.
-
-------------------------------------------------------------------------
-r39 | jgoerzen | 2002-03-26 14:29:20 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/handlers.py
-
-Removed some code moved to the base protocol.
-
-------------------------------------------------------------------------
-r38 | jgoerzen | 2002-03-26 14:09:39 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   D /pygopherd/head/protocols.py
-   A /pygopherd/head/pygopherd
-   A /pygopherd/head/pygopherd/protocols
-   A /pygopherd/head/pygopherd/protocols/__init__.py
-   A /pygopherd/head/pygopherd/protocols/base.py
-   A /pygopherd/head/pygopherd/protocols/enhanced.py
-   A /pygopherd/head/pygopherd/protocols/gopherp.py
-   A /pygopherd/head/pygopherd/protocols/rfc1436.py
-
-First stab at protocols.py -> protocols/* conversion.
-
-------------------------------------------------------------------------
-r37 | jgoerzen | 2002-03-26 13:24:15 -0600 (Tue, 26 Mar 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/doc
-   A /pygopherd/head/doc/standards
-   A /pygopherd/head/doc/standards/rfc1436.txt
-
-Added.
-
-------------------------------------------------------------------------
-r36 | jgoerzen | 2002-03-25 23:32:02 -0600 (Mon, 25 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/handlers.py
-   M /pygopherd/head/protocols.py
-
-Updates for pre-http redir support.
-
-------------------------------------------------------------------------
-r35 | jgoerzen | 2002-03-25 23:01:58 -0600 (Mon, 25 Mar 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/handlers.py
-   A /pygopherd/head/protocols.py
-   M /pygopherd/head/pygopherd.py
-   D /pygopherd/head/rhandler.py
-
-Rearranged code -- split rhandler.py into handlers.py and protocols.py
-
-------------------------------------------------------------------------
-r34 | jgoerzen | 2002-03-25 20:47:07 -0600 (Mon, 25 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/rhandler.py
-
-bug fixes
-
-------------------------------------------------------------------------
-r33 | jgoerzen | 2002-03-25 20:27:26 -0600 (Mon, 25 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/rhandler.py
-
-Rewrite in progress.
-
-------------------------------------------------------------------------
-r32 | jgoerzen | 2002-03-25 17:27:41 -0600 (Mon, 25 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/rhandler.py
-
-More updates.
-
-------------------------------------------------------------------------
-r31 | jgoerzen | 2002-03-25 17:21:09 -0600 (Mon, 25 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd.py
-   M /pygopherd/head/rhandler.py
-
-Basic functionality is working.
-
-------------------------------------------------------------------------
-r30 | jgoerzen | 2002-03-25 16:17:58 -0600 (Mon, 25 Mar 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/conf
-   A /pygopherd/head/conf/pygopherd.conf
-   M /pygopherd/head/pygopherd.py
-   A /pygopherd/head/rhandler.py
-
-Updated.
-
-------------------------------------------------------------------------
-r29 | jgoerzen | 2002-03-25 15:29:53 -0600 (Mon, 25 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd.py
-
-Updated.
-
-------------------------------------------------------------------------
-r28 | jgoerzen | 2002-03-25 15:08:11 -0600 (Mon, 25 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd.py
-
-This version.
-
-------------------------------------------------------------------------
-r27 | jgoerzen | 2002-03-25 14:55:11 -0600 (Mon, 25 Mar 2002) | 2 lines
-Changed paths:
-   M /pygopherd/head/pygopherd.py
-
-Working prototype.
-
-------------------------------------------------------------------------
-r26 | jgoerzen | 2002-03-25 14:29:14 -0600 (Mon, 25 Mar 2002) | 2 lines
-Changed paths:
-   A /pygopherd/head/pygopherd.py
-
-Skeletal work
-
-------------------------------------------------------------------------
-r25 | jgoerzen | 2002-03-25 14:09:29 -0600 (Mon, 25 Mar 2002) | 2 lines
-Changed paths:
-   A /pygopherd
-   A /pygopherd/head
-   A /pygopherd/head/COPYING
-
-Added license.
-
-------------------------------------------------------------------------
+Thu Sep 22 07:37:24 CDT 2005  John Goerzen <jgoerzen@complete.org>
+  * Fixed a bug where no subject line would crash the handler
+
+    M ./pygopherd/handlers/mbox.py -2 +2
+
+Sat Apr 16 11:48:36 CDT 2005  John Goerzen <jgoerzen@complete.org>
+  tagged Last Arch revision
+
+
+Sat Apr 16 11:48:09 CDT 2005  John Goerzen <jgoerzen@complete.org>
+  tagged Last Subversion revision
+
+
+Sat Feb 19 12:09:20 CST 2005  John Goerzen <jgoerzen@complete.org>
+  * Minor touchups for 2.0.13
+  Keywords: 
+  
+  
+  (jgoerzen@complete.org--projects/pygopherd--head--1.0--patch-6)
+
+    M ./README -2 +2
+    M ./TODO -1
+    M ./pygopherd/version.py -3 +3
+
+Sat Feb 19 12:06:49 CST 2005  John Goerzen <jgoerzen@complete.org>
+  * Minor updates
+  Keywords: 
+  
+  
+  (jgoerzen@complete.org--projects/pygopherd--head--1.0--patch-5)
+
+    M ./debian/changelog +7
+    M ./debian/rules -1 +1
+    M ./doc/pygopherd.sgml -16 +16
+
+Sat Jan 15 15:31:52 CST 2005  John Goerzen <jgoerzen@complete.org>
+  * Another silly fix
+  Keywords: 
+  
+  
+  (jgoerzen@complete.org--projects/pygopherd--head--1.0--patch-4)
+
+    M ./pygopherd/initialization.py -1 +1
+
+Sat Jan 15 15:29:35 CST 2005  John Goerzen <jgoerzen@complete.org>
+  * Syntax error fix
+  Keywords: 
+  
+  
+  (jgoerzen@complete.org--projects/pygopherd--head--1.0--patch-3)
+
+    M ./pygopherd/initialization.py -1 +1
+
+Sat Jan 15 15:24:15 CST 2005  John Goerzen <jgoerzen@complete.org>
+  * Cleaner handling of connection reset by peer
+  Keywords: 
+  
+  
+  (jgoerzen@complete.org--projects/pygopherd--head--1.0--patch-2)
+
+    M ./debian/changelog +6
+    M ./pygopherd/initialization.py -2 +6
+
+Fri Jan 14 09:35:53 CST 2005  John Goerzen <jgoerzen@complete.org>
+  * Add small bugfix
+  Keywords: 
+  
+  
+  (jgoerzen@complete.org--projects/pygopherd--head--1.0--patch-1)
+
+    M ./debian/changelog +6
+    M ./pygopherd/protocols/rfc1436.py -1 +1
+
+Sat Apr 16 11:42:56 CDT 2005  John Goerzen <jgoerzen@complete.org>
+  * Noted removal of pygopherd.py from r204
+
+    R ./pygopherd.py
+
+Sat Apr 16 10:42:11 CDT 2005  John Goerzen <jgoerzen@complete.org>
+  tagged REL1.99.5
+
+
+Sat Apr 16 10:41:32 CDT 2005  John Goerzen <jgoerzen@complete.org>
+  tagged SVN tag BEFORE-ZIPFILE-REWRITE
+
+
+Sat Apr 16 10:40:59 CDT 2005  John Goerzen <jgoerzen@complete.org>
+  tagged REL1.0.0
+
+
+Mon Aug 30 14:51:47 CDT 2004  jgoerzen
+  * /pygopherd/head: changeset 309
+  
+
+    A ./README.windows
+
+Mon Aug 30 14:50:17 CDT 2004  jgoerzen
+  * /pygopherd/head: changeset 308
+  Make more Windows-friendly
+
+    M ./debian/changelog +7
+    M ./pygopherd/handlers/tal.py -4 +9
+    M ./pygopherd/initialization.py -6 +10
+    M ./pygopherd/sighandlers.py -3 +4
+
+Fri Aug 27 10:43:12 CDT 2004  jgoerzen
+  * /pygopherd/head: changeset 307
+  Removed extra reference to ZIP.py
+
+    M ./pygopherd/handlers/ZIP.py -1 +1
+
+Wed Dec 17 11:29:06 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 306
+  Fixed indentation
+
+    M ./pygopherd/handlers/tal.py -1 +1
+
+Wed Dec 17 11:26:43 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 305
+  Don't crash if tal is unavailable.
+
+    M ./debian/changelog +6
+    M ./pygopherd/handlers/tal.py -4 +4
+
+Wed Dec 17 09:20:42 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 304
+  Updated the ChangeLog
+
+    M ./ChangeLog -231 +588
+
+Wed Dec 17 09:20:32 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 303
+  Fixed the earlier fix...
+
+    M ./pygopherd/handlers/UMN.py -18 +6
+
+Wed Dec 17 08:44:11 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 302
+  Fixed a logic error in the Numb handling fix.
+
+    M ./debian/changelog +6
+    M ./pygopherd/handlers/UMN.py -2 +2
+
+Wed Dec 17 08:27:33 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 301
+  Fixed UMN.py to properly handle Numb=.
+
+    M ./debian/changelog +6
+    M ./pygopherd/handlers/UMN.py +14
+
+Wed Dec 17 08:20:30 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 300
+  Generic TAL support
+
+    M ./pygopherd/handlers/tal.py -7 +3
+
+Thu Oct  9 16:48:13 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 299
+  Updated debian/docs
+
+    M ./debian/changelog +6
+    M ./debian/docs -4 +5
+
+Thu Oct  9 11:11:33 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 298
+  Added build-dep on python2.3-dev
+
+    M ./debian/changelog +6
+
+Mon Aug 25 22:29:52 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 297
+  Added missing docs Misc. tal stuff
+
+    A ./doc/book.sgml
+    A ./doc/manpage.sgml
+    A ./doc/quickstart.sgml
+    M ./pygopherd/handlers/tal.py +15
+
+Mon Aug 25 20:42:14 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 296
+  Added dir, macro capability to tal.py Some work on the manual --
+  splitting up into sections
+
+    M ./Makefile -2 +3
+    M ./doc/pygopherd.ps -1590 +7465
+    M ./doc/pygopherd.sgml -1281 +990
+    M ./local.dsl -6 +4
+    M ./pygopherd/handlers/tal.py -2 +55
+
+Mon Aug 25 18:56:15 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 295
+  Make is a little more aggressive about cleaning... ... added
+  stylesheets.
+
+    M ./Makefile -1 +2
+    A ./local.dsl
+    A ./printlocal.dsl
+
+Mon Aug 25 17:01:38 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 294
+  Doc updates
+
+    M ./Makefile -4 +16
+    M ./doc/pygopherd.8 +9
+    M ./doc/pygopherd.html -169 +566
+    M ./doc/pygopherd.pdf
+    M ./doc/pygopherd.ps -160 +171
+
+Mon Aug 25 16:17:38 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 293
+  Finalizing the document renaming
+
+     ./doc/manual.ps -> ./doc/pygopherd.ps
+
+Mon Aug 25 16:17:23 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 292
+  More document renaming
+
+     ./doc/manual.html -> ./doc/pygopherd.html
+     ./doc/manual.pdf -> ./doc/pygopherd.pdf
+     ./doc/manual.txt -> ./doc/pygopherd.txt
+
+Mon Aug 25 16:14:52 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 291
+  
+
+     ./manual.html -> ./doc/manual.html
+     ./manual.pdf -> ./doc/manual.pdf
+     ./manual.ps -> ./doc/manual.ps
+     ./manual.txt -> ./doc/manual.txt
+     ./pygopherd.8 -> ./doc/pygopherd.8
+     ./pygopherd.sgml -> ./doc/pygopherd.sgml
+    M ./Makefile -8 +18
+    M ./doc/pygopherd.sgml -1 +1
+
+Mon Aug 25 16:10:38 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 290
+  Fixed up Python2.3 support -- and added dep on simpletal
+
+    M ./debian/control -2 +2
+
+Mon Aug 25 15:17:36 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 289
+  Added a TAL example
+
+    A ./examples/talsample.html.tal
+
+Mon Aug 25 15:15:58 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 288
+  Added beginnings of TAL support. More to come.
+
+    M ./bin/pygopherd -1 +1
+    M ./conf/pygopherd.conf -2 +5
+    M ./pygopherd/handlers/__init__.py -2 +3
+    A ./pygopherd/handlers/tal.py
+    M ./setup.py -1 +1
+
+Mon Aug 25 13:47:40 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 287
+  Documented the ZIP handler
+
+    M ./manual.html -879 +1041
+    M ./manual.pdf
+    M ./manual.ps -819 +885
+    M ./manual.txt -363 +453
+    M ./pygopherd.8 -412 +578
+    M ./pygopherd.sgml -836 +837
+    M ./pygopherd/handlers/ZIP.py -2 +5
+
+Mon Aug 25 10:31:58 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 286
+  Work on documenting the handlers
+
+    M ./pygopherd.sgml -3 +311
+
+Sun Aug 24 20:38:33 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 285
+  Some work on the docs
+
+    M ./manual.html -844 +576
+    M ./manual.pdf
+    M ./manual.ps -1181 +909
+    M ./manual.txt -313 +206
+    M ./pygopherd.8 -406 +313
+    M ./pygopherd.sgml -455 +202
+
+Sun Aug 24 18:17:20 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 284
+  Updated
+
+    M ./manual.html -1936 +2198
+    M ./manual.pdf
+    M ./manual.ps -809 +1557
+    M ./manual.txt -660 +647
+    M ./pygopherd.8 -816 +868
+    M ./pygopherd.sgml -65 +207
+
+Sun Aug 24 17:34:16 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 283
+  Added SGML docs.
+
+    M ./Makefile -2 +6
+    A ./pygopherd.sgml
+
+Sun Aug 24 17:30:10 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 282
+  
+
+    M ./debian/changelog +13
+    M ./pygopherd/initialization.py -1 +1
+    M ./pygopherd/protocols/wap.py -1 +1
+
+Sat Aug 23 17:39:47 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 281
+  Updated WAP error handling
+
+    M ./pygopherd/protocols/wap.py -2 +2
+
+Sat Aug 23 17:34:40 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 280
+  Fixed File Not Found code.
+
+    M ./debian/changelog +6
+    M ./pygopherd/protocols/http.py -2 +2
+    M ./pygopherd/protocols/wap.py +10
+
+Sat Aug 23 17:25:56 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 279
+  Store slurp data elsewhere
+
+    M ./pygopherd/protocols/http.py -3 +3
+
+Sat Aug 23 17:23:38 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 278
+  Fixed another bug in headerslurp
+
+    M ./pygopherd/protocols/http.py -1 +1
+
+Sat Aug 23 17:22:15 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 277
+  Replaced a missing return
+
+    M ./pygopherd/protocols/http.py -1 +1
+
+Sat Aug 23 17:20:16 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 276
+  Experimental new header slurping mechanism
+
+    M ./pygopherd/protocols/http.py -6 +13
+    M ./pygopherd/protocols/wap.py +2
+
+Sat Aug 23 17:13:19 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 275
+  Added wap auto-detection.
+
+    M ./conf/pygopherd.conf +7
+    M ./debian/changelog +6
+    M ./pygopherd/protocols/http.py -3 +11
+    M ./pygopherd/protocols/wap.py -1 +16
+
+Sat Aug 23 14:56:50 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 274
+  Fixed a tyop
+
+    M ./pygopherd/protocols/wap.py -1 +1
+
+Sat Aug 23 14:53:18 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 273
+  Added text file conversion to WAP
+
+    M ./pygopherd/protocols/http.py -1 +4
+    M ./pygopherd/protocols/wap.py -7 +34
+
+Sat Aug 23 14:43:12 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 272
+  Virtual: now use | for selector sep (keep ? for legacy) for WAP
+  compatibility.
+
+    M ./debian/changelog +2
+    M ./pygopherd/handlers/virtual.py -3 +7
+
+Sat Aug 23 14:41:13 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 271
+  Some updates
+
+    M ./pygopherd/protocols/http.py +1
+    M ./pygopherd/protocols/wap.py -7 +12
+
+Sat Aug 23 13:54:31 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 270
+  Add the waptop in front of generated URLs
+
+    M ./pygopherd/protocols/wap.py +3
+
+Sat Aug 23 13:51:18 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 269
+  Minor WAP bugfixes
+
+    M ./pygopherd/protocols/wap.py -2 +2
+
+Sat Aug 23 13:49:29 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 268
+  Updated for Python 2.3 -- and added some more WAP code (for searches)
+
+    M ./debian/changelog -1 +2
+    M ./debian/control -5 +7
+    M ./debian/rules -1 +1
+    M ./pygopherd/protocols/wap.py -2 +12
+
+Sat Aug 23 13:26:50 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 267
+  Braino
+
+    M ./pygopherd/protocols/wap.py -2 +2
+
+Sat Aug 23 13:26:10 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 266
+  More updates
+
+    M ./pygopherd/protocols/wap.py -3 +6
+
+Sat Aug 23 13:19:02 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 265
+  Another braino
+
+    M ./pygopherd/protocols/wap.py -1 +1
+
+Sat Aug 23 13:18:23 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 264
+  Oops, little braino here
+
+    M ./pygopherd/protocols/wap.py -1 +1
+
+Sat Aug 23 13:17:37 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 263
+  Removed debugging code and added accesskey support
+
+    M ./pygopherd/protocols/wap.py -4 +11
+
+Sat Aug 23 13:13:22 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 262
+  Wap now works!
+
+    M ./debian/changelog +1
+    M ./pygopherd/protocols/http.py -6 +6
+    M ./pygopherd/protocols/wap.py -6 +10
+
+Sat Aug 23 12:01:49 CDT 2003  jgoerzen
+  * /pygopherd/head: changeset 261
+  First attempt at new feature: WAP support!
+
+    M ./conf/pygopherd.conf -1 +9
+    M ./debian/changelog +6
+    M ./pygopherd/protocols/__init__.py -1 +1
+    M ./pygopherd/protocols/http.py -4 +11
+    A ./pygopherd/protocols/wap.py
+
+Thu Mar 13 09:53:11 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 259
+  Updated for 1.99.5
+
+    M ./ChangeLog +113
+
+Thu Mar 13 09:52:47 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 258
+  Introduced new "inode-like" caching system for ZIP files. Now, the
+  first time a ZIP file is accessed, it will be scanned. Links will be
+  resolved immediately. A dictionary tree is built up; values being
+  either file offsets in the ZIP file or dictionaries (for
+  subdirectories). This dictionary is then cached on-disk using a binary
+  database and marshal algorithm derived from Python's shelve module. We
+  do not need to use pickle for this task since we are saving only
+  simple structures. The performance gain for large ZIP files using this
+  method is tremendous. The only time a ZIP file's central directory
+  structure must be scanned now is the very first time it is ever
+  accessed.
+
+    M ./debian/changelog +16
+
+Thu Mar 13 09:48:56 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 257
+  Removed the needschain tests Optimized the gophermap isrequestforme
+  handler
+
+    M ./pygopherd/handlers/ZIP.py -36 +25
+    M ./pygopherd/handlers/gophermap.py -3 +4
+
+Thu Mar 13 08:58:54 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 256
+  Converted to using marshal for a performance gain
+
+    M ./pygopherd/handlers/ZIP.py -5 +21
+
+Wed Mar 12 19:20:33 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 255
+  Removed debug code
+
+    M ./pygopherd/handlers/ZIP.py -11
+
+Wed Mar 12 19:20:01 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 254
+  Passes all ZIP tests.
+
+    M ./pygopherd/handlers/ZIP.py -15 +26
+    M ./pygopherd/zipfile.py -15 +19
+
+Wed Mar 12 19:02:49 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 253
+  Removed debug code
+
+    M ./pygopherd/handlers/ZIP.py -17 +2
+
+Wed Mar 12 18:56:26 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 252
+  Think I've nailed the caching problem
+
+    M ./pygopherd/handlers/ZIP.py -22 +37
+
+Wed Mar 12 18:32:48 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 251
+  All tests are passing, but caching doesn't seem to be working.
+
+    M ./pygopherd/handlers/ZIP.py -2 +2
+    M ./pygopherd/zipfile.py -6 +9
+
+Wed Mar 12 18:28:35 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 250
+  Strating to fix errors as part of testing
+
+    M ./pygopherd/handlers/ZIP.py -59 +25
+    M ./pygopherd/zipfile.py -3 +3
+
+Wed Mar 12 16:55:49 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 249
+  Making more progress -- we now have this to the point of being ready
+  for testing, I believe.
+
+    M ./ChangeLog -562 +1013
+    M ./debian/changelog +8
+    M ./pygopherd/handlers/ZIP.py -38 +21
+
+Wed Mar 12 16:20:19 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 248
+  Checkpointing my progress -- initial efforts to rewrite the caching to
+  use an inode system complete.
+
+    M ./pygopherd/handlers/ZIP.py -28 +42
+    M ./pygopherd/zipfile.py -7 +6
+
+Wed Mar 12 15:37:27 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 247
+  Merged back in bugfix to islinkattr from ZIP.py prior to this rev.
+
+    M ./pygopherd/handlers/ZIP.py -4 +4
+
+Wed Mar 12 15:33:07 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 246
+  Reverted to ZIP.py from revision 229 when pickling was present. Will
+  try to re-do this more efficiently with the new zipfile and anydbm.
+
+    M ./pygopherd/handlers/ZIP.py -166 +247
+
+Fri Mar  7 16:01:39 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 245
+  Added additional optimizations, tested working.
+
+    M ./pygopherd/handlers/ZIP.py -13 +28
+    M ./pygopherd/handlers/dir.py -2
+
+Thu Mar  6 23:53:39 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 244
+  Fixed an excessive stating problem.
+
+    M ./pygopherd/handlers/HandlerMultiplexer.py -5 +5
+    M ./pygopherd/handlers/ZIP.py +9
+    M ./pygopherd/handlers/dir.py +2
+    M ./pygopherd/zipfile.py -2 +4
+
+Thu Mar  6 23:12:40 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 243
+  Significant optimizations noted in output from zip stuff.
+
+    M ./pygopherd/handlers/ZIP.py -9 +9
+
+Thu Mar  6 23:05:11 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 242
+  Tests now pass. Time to see how this optimization fares.
+
+    M ./pygopherd/handlers/ZIP.py -3 +9
+    M ./pygopherd/zipfile.py -3 +4
+
+Thu Mar  6 22:57:59 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 241
+  In the middle of some optimizing.
+
+    M ./pygopherd/handlers/ZIP.py -5 +10
+    M ./pygopherd/zipfile.py -19 +2
+
+Thu Mar  6 22:44:36 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 240
+  Some feeble optimization attempts.
+
+    M ./pygopherd/handlers/ZIP.py -2 +2
+    M ./pygopherd/zipfile.py -4 +12
+
+Thu Mar  6 22:13:36 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 239
+  Tests are all passing!
+
+    M ./pygopherd/handlers/ZIP.py -1 +1
+    M ./pygopherd/zipfile.py -14 +24
+
+Thu Mar  6 21:54:42 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 238
+  Removed _resolvelink debug code
+
+    M ./pygopherd/handlers/ZIP.py -5
+
+Thu Mar  6 21:54:13 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 237
+  Fixed _resolvelink
+
+    M ./pygopherd/handlers/ZIP.py -55 +96
+    M ./pygopherd/zipfile.py -19 +18
+
+Fri Mar  7 11:23:16 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 236
+  Ready to test.
+
+    M ./pygopherd/handlers/ZIP.py -143 +60
+    M ./pygopherd/handlers/base.py +9
+    M ./pygopherd/handlers/file.py -10 +1
+    M ./pygopherd/zipfile.py -38 +98
+
+Fri Mar  7 10:29:02 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 235
+  Completed initial work on the new zipfile.py.
+
+    M ./pygopherd/handlers/ZIP.py -9 +9
+    M ./pygopherd/zipfile.py +241
+    M ./runtests.py +1
+
+Thu Mar  6 21:25:11 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 233
+  Added from upstream CVS
+
+    A ./pygopherd/zipfile.py
+
+Thu Mar  6 19:49:15 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 232
+  Made great strides here.
+
+    M ./pygopherd/handlers/ZIP.py -20 +24
+
+Thu Mar  6 19:32:21 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 231
+  Reworking the symlink stuff.
+
+    M ./pygopherd/handlers/ZIP.py -47 +39
+
+Thu Mar  6 17:03:04 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 230
+  
+
+    M ./debian/changelog +12
+    M ./pygopherd/handlers/ZIP.py -82 +17
+
+Thu Mar  6 15:09:59 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 229
+  All tests now pass!
+
+    M ./pygopherd/handlers/ZIP.py -6 +4
+
+Thu Mar  6 15:08:16 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 228
+  Making progress on ironing out bugs.
+
+    M ./pygopherd/handlers/ZIP.py -39 +129
+    M ./pygopherd/handlers/base.py +3
+    M ./testdata/symlinktest.zip
+
+Thu Mar  6 14:03:40 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 227
+  Checkpointing
+
+    M ./debian/changelog +6
+    M ./pygopherd/handlers/ZIP.py -42 +156
+    M ./pygopherd/handlers/html.py -1 +1
+    M ./runtests.py -2 +2
+
+Thu Mar  6 11:10:13 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 226
+  Updated the changelog
+
+    M ./debian/changelog +4
+
+Thu Mar  6 11:08:01 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 225
+  Refined directory handling. Greatly expanded tests. Added a full
+  symlink test battery. listdir() now raises OSError when called on an
+  invalid directory. open() now raises IOError when called on a
+  directory.
+
+    M ./pygopherd/handlers/ZIP.py +117
+
+Thu Mar  6 10:43:16 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 224
+  Directory symlinking now seems to work.
+
+    M ./pygopherd/handlers/ZIP.py -8 +17
+    M ./testdata/symlinktest.zip
+
+Thu Mar  6 10:04:14 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 223
+  
+
+    M ./testdata/symlinktest.zip
+
+Wed Mar  5 23:58:43 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 222
+  Fixed up tests to take note of new file symlinktest.zip
+
+    M ./pygopherd/protocols/rfc1436Test.py +2
+    A ./testdata/symlinktest.zip
+
+Wed Mar  5 23:56:21 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 221
+  Removed debug code
+
+    M ./pygopherd/handlers/ZIP.py -5
+    M ./pygopherd/handlers/dir.py -1
+
+Wed Mar  5 23:55:48 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 220
+  Added symlink capabilities to ZIP.py
+
+    M ./pygopherd/handlers/ZIP.py -7 +62
+    M ./pygopherd/handlers/dir.py +1
+
+Wed Mar  5 22:34:14 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 219
+  Added this.
+
+    A ./testdata/ziptorture.zip
+
+Wed Mar  5 22:26:31 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 218
+  Noted recent changes
+
+    M ./debian/changelog +10
+
+Wed Mar  5 22:25:19 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 217
+  All tests pass!
+
+    M ./pygopherd/gopherentry.py -2 +5
+    M ./pygopherd/gopherentryTest.py -7 +7
+    M ./pygopherd/handlers/gophermap.py -2 +1
+    M ./pygopherd/protocols/rfc1436Test.py -2 +5
+
+Wed Mar  5 22:05:37 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 216
+  Removed some debug code
+
+    M ./pygopherd/gopherentry.py -3
+
+Wed Mar  5 22:02:14 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 215
+  More progress -- basic ZIP file now working!
+
+    M ./conf/pygopherd.conf +11
+    M ./pygopherd/gopherentry.py -5 +15
+    M ./pygopherd/handlers/ZIP.py -10 +36
+    M ./pygopherd/handlers/__init__.py -1 +1
+    M ./pygopherd/handlers/base.py -16 +19
+    M ./pygopherd/handlers/dir.py -2 +2
+    M ./pygopherd/handlers/file.py -1 +1
+    M ./pygopherd/handlers/gophermap.py -1 +1
+    M ./pygopherd/protocols/rfc1436Test.py -1 +16
+    M ./testdata/testdata.zip
+
+Wed Mar  5 16:51:06 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 214
+  - This is the beginning of work to add a VFS system to PyGopherd.
+    Changes:
+  
+  - Added runtestsgui, updated runtests
+  
+  - Modified all handlers to be VFS-aware
+  
+  - Implemented VFS_Real in base.py
+  
+  - Implemented VFS_ZIP in ZIP.py
+  
+  - Added ZIPHandler in ZIP.py
+  
+  - Updated HandlerMultiplexer to use VFS TODO:
+  
+  - Make ZIPHandler re-run handlermultiplexer and call it with all
+    subsequent calls
+  
+  - Genericize ZIPHandler
+
+    M ./pygopherd/handlers/HandlerMultiplexer.py -3 +9
+    M ./pygopherd/handlers/UMN.py -4 +4
+    A ./pygopherd/handlers/ZIP.py
+    M ./pygopherd/handlers/base.py -17 +51
+    M ./pygopherd/handlers/dir.py -8 +10
+    M ./pygopherd/handlers/file.py -1 +1
+    M ./pygopherd/handlers/gophermap.py -12 +9
+    M ./pygopherd/handlers/html.py -1 +1
+    M ./pygopherd/handlers/mbox.py -5 +8
+    M ./pygopherd/handlers/pyg.py -2 +4
+    M ./pygopherd/handlers/scriptexec.py -2 +4
+    M ./pygopherd/handlers/virtual.py -4 +4
+    M ./pygopherd/protocols/rfc1436Test.py +4
+    M ./runtests.py -1 +3
+    A ./runtestsgui.py
+    A ./testdata/testdata.zip
+    A ./testdata/testdata2.zip
+
+Tue Mar  4 14:46:27 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 213
+  Clarified license terms
+
+    M ./Makefile -2 +1
+    M ./bin/pygopherd -2 +1
+    M ./debian/copyright -2 +1
+    M ./pygopherd.8 -2 +1
+    M ./pygopherd/GopherExceptions.py -2 +1
+    M ./pygopherd/GopherExceptionsTest.py -2 +1
+    M ./pygopherd/__init__.py -2 +1
+    M ./pygopherd/fileext.py -2 +1
+    M ./pygopherd/fileextTest.py -2 +1
+    M ./pygopherd/gopherentry.py -2 +1
+    M ./pygopherd/gopherentryTest.py -2 +1
+    M ./pygopherd/handlers/HandlerMultiplexer.py -2 +1
+    M ./pygopherd/handlers/UMN.py -2 +1
+    M ./pygopherd/handlers/__init__.py -2 +1
+    M ./pygopherd/handlers/base.py -2 +1
+    M ./pygopherd/handlers/dir.py -2 +1
+    M ./pygopherd/handlers/file.py -2 +1
+    M ./pygopherd/handlers/gophermap.py -2 +1
+    M ./pygopherd/handlers/html.py -2 +1
+    M ./pygopherd/handlers/mbox.py -2 +1
+    M ./pygopherd/handlers/scriptexec.py -2 +1
+    M ./pygopherd/handlers/url.py -2 +1
+    M ./pygopherd/initialization.py -2 +1
+    M ./pygopherd/initializationTest.py -2 +1
+    M ./pygopherd/pipe.py -2 +1
+    M ./pygopherd/protocols/ProtocolMultiplexer.py -2 +1
+    M ./pygopherd/protocols/__init__.py -2 +1
+    M ./pygopherd/protocols/base.py -2 +1
+    M ./pygopherd/protocols/enhanced.py -2 +1
+    M ./pygopherd/protocols/gopherp.py -2 +1
+    M ./pygopherd/protocols/http.py -2 +1
+    M ./pygopherd/protocols/rfc1436.py -2 +1
+    M ./pygopherd/sighandlers.py -2 +1
+    M ./pygopherd/testutil.py -2 +1
+    M ./pygopherd/version.py -2 +1
+    M ./runtests.py -2 +1
+    M ./setup.py -2 +1
+
+Fri Feb 21 17:05:52 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 212
+  Fixed gopherentry object for .gophermap files
+
+    M ./pygopherd/handlers/gophermap.py -1 +6
+
+Fri Feb 21 15:15:09 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 211
+  Added
+
+    A ./TODO
+
+Fri Feb 21 15:14:46 CST 2003  jgoerzen
+  * /pygopherd/head: changeset 210
+  Added ability to serve up files ending in .gophermap as Gophermap
+  files.
+
+    M ./debian/changelog +7
+    M ./pygopherd/handlers/gophermap.py -2 +8
+
+Thu Aug  8 16:45:08 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 209
+  Preparing for 1.1.0
+
+    M ./debian/changelog -2 +4
+    M ./pygopherd/handlers/UMN.py -1 +1
+    M ./pygopherd/version.py -1 +1
+
+Thu Aug  8 16:39:10 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 208
+  Committed initial draft of the manual.
+
+    A ./manual.html
+    A ./manual.pdf
+    A ./manual.ps
+    A ./manual.txt
+    M ./pygopherd.8 -2 +507
+
+Thu Aug  8 14:32:57 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 207
+  Initial draft of manual.
+
+    M ./pygopherd.8 -593 +135
+
+Thu Aug  8 13:32:05 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 206
+  Began new manual that already incorporates the entire content of the
+  old LyX one, so removed it.
+
+    R ./doc/manual.lyx
+    M ./pygopherd.8 -90 +145
+
+Thu Aug  8 13:13:50 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 205
+  First stab at a manpage/manual -- initially imported from OfflineIMAP.
+
+    M ./Makefile +6
+    M ./debian/changelog +2
+    M ./debian/docs -1 +4
+    A ./pygopherd.8
+
+Thu Aug  8 13:09:53 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 204
+  Moved pygopherd.py to bin and adjusted other files to reflect this
+
+    A ./bin/
+    A ./bin/pygopherd
+    M ./debian/rules -1 +1
+    M ./setup.py -1 +1
+
+Thu Aug  8 12:57:54 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 203
+  Removed TODO file (now kept in bug-tracking system)
+
+    R ./TODO
+    M ./debian/changelog +1
+
+Thu Aug  8 11:46:15 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 202
+  Clarified relationship between ignorepatt and UMNDirHandler
+
+    M ./conf/pygopherd.conf -1 +5
+
+Wed Aug  7 23:24:25 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 201
+  Commiting old changes
+
+    M ./debian/changelog +6
+
+Tue Jul 23 08:04:37 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 200
+  Paranoia: chdir to our root.
+
+    M ./pygopherd/initialization.py +1
+
+Mon Jul 22 08:17:22 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 199
+  Added "advertisedport" feature.
+
+    M ./conf/pygopherd.conf +7
+    M ./pygopherd/initialization.py -1 +4
+
+Thu Jul 18 11:26:09 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 197
+  Updated for 1.0.0 release.
+
+    M ./ChangeLog +47
+
+Thu Jul 18 11:16:35 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 196
+  Removed old .ex files. Set rules to install examples/* into Debian
+  package.
+
+    R ./debian/cron.d.ex
+    R ./debian/emacsen-install.ex
+    R ./debian/emacsen-remove.ex
+    R ./debian/emacsen-startup.ex
+    R ./debian/manpage.1.ex
+    R ./debian/manpage.sgml.ex
+    R ./debian/menu.ex
+    R ./debian/preinst.ex
+    R ./debian/prerm.ex
+    M ./debian/rules -1 +1
+    R ./debian/watch.ex
+
+Thu Jul 18 11:15:13 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 195
+  Fixed tests to work with Subversion, and made sure things that need to
+  be set executable, are.
+
+    M ./debian/changelog +3
+    M ./pygopherd/GopherExceptionsTest.py -2 +2
+    M ./pygopherd/protocols/baseTest.py -1 +1
+    M ./pygopherd/protocols/rfc1436Test.py -4 +2
+
+Thu Jul 18 11:14:20 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 194
+  Fixed to keep dot directories out of the list.
+
+    M ./pygopherd/handlers/UMN.py -3 +6
+
+Thu Jul 18 11:05:50 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 193
+  A few last-minute tweaks
+
+    M ./ChangeLog +43
+    M ./Makefile +1
+    M ./debian/changelog -1 +1
+
+Wed Jul 17 20:05:05 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 192
+  Added URL type rewriter. Modified handler importing scheme to work
+  nicer. Preparing for 1.0.0 release.
+
+    M ./conf/pygopherd.conf -1 +2
+    M ./debian/changelog -1 +3
+    M ./pygopherd/gopherentry.py -1
+    M ./pygopherd/handlers/HandlerMultiplexer.py -5 +10
+    M ./pygopherd/handlers/UMN.py -2 +3
+    M ./pygopherd/handlers/__init__.py +2
+    M ./pygopherd/handlers/base.py -1 +6
+    M ./pygopherd/handlers/dir.py -1 +2
+    M ./pygopherd/handlers/file.py -2 +3
+    M ./pygopherd/handlers/gophermap.py -2 +3
+    M ./pygopherd/handlers/html.py -1 +1
+    M ./pygopherd/handlers/mbox.py -1 +1
+    M ./pygopherd/handlers/pyg.py -1 +1
+    M ./pygopherd/handlers/scriptexec.py -1 +1
+    M ./pygopherd/handlers/url.py -2 +22
+    M ./pygopherd/version.py -1 +1
+
+Wed Jul 17 19:33:07 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 191
+  Fixed gophermap info-only lines that have no tabs
+
+    M ./debian/changelog +6
+    M ./pygopherd/handlers/gophermap.py -1 +1
+
+Wed Jul 17 19:28:16 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 190
+  Initial move over to Subversion: mark appropriate files executable,
+  new way of generating the ChangeLog.
+
+    M ./ChangeLog -857 +1277
+    M ./Makefile -3 +18
+
+Tue Jul  2 18:43:05 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 188
+  Version 0.9.14
+
+    M ./ChangeLog +14
+    M ./debian/changelog +8
+    M ./pygopherd/initialization.py -2 +8
+    M ./pygopherd/version.py -1 +1
+
+Tue Jul  2 16:34:02 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 187
+  Fixed a bug with HTML processing
+
+    M ./debian/changelog +6
+    M ./debian/rules -1
+    M ./pygopherd/GopherExceptions.py -1 +1
+    M ./pygopherd/handlers/html.py -3 +3
+    M ./pygopherd/version.py -1 +1
+
+Tue Jul  2 16:04:06 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 186
+  Added signal handler mechanisms to foster orderly shutdowns.
+
+    M ./ChangeLog +9
+    M ./pygopherd/initialization.py -1 +13
+    A ./pygopherd/sighandlers.py
+
+Thu May  2 15:24:41 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 185
+  Amplified the exitfunc.
+
+    M ./ChangeLog +22
+    M ./pygopherd/initialization.py -11 +2
+
+Thu May  2 15:13:45 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 184
+  Added support for detached operation and pidfile writing.
+
+    M ./README -1 +1
+    M ./conf/pygopherd.conf +14
+    M ./debian/changelog +7
+    M ./debian/init.d -2 +2
+    M ./pygopherd/initialization.py -1 +26
+    M ./pygopherd/version.py -1 +1
+
+Wed May  1 16:45:47 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 183
+  Added a dep on a non-buggy python2.2
+
+    M ./ChangeLog +120
+    M ./debian/control -1 +1
+
+Fri Apr 26 15:18:10 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 182
+  HTTP protocol wasn't normalizing incoming selectors. Fixed.
+
+    M ./pygopherd/protocols/base.py -2 +9
+    M ./pygopherd/protocols/http.py -1 +3
+
+Thu Apr 18 23:39:29 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 181
+  Nicer display, sorted
+
+    M ./pygfarm/dict.pyg -3 +5
+
+Thu Apr 18 18:01:31 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 180
+  *** empty log message ***
+
+    M ./debian/changelog +8
+    M ./debian/control -1 +1
+    M ./pygfarm/dict.pyg +5
+    M ./pygopherd/version.py -1 +1
+
+Thu Apr 18 17:22:38 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 179
+  Added pygfarm package for Debian.
+
+    M ./Makefile +1
+    R ./debian/README.Debian
+    M ./debian/control +14
+    A ./debian/pygfarm.README.Debian
+    A ./debian/pygfarm.dirs
+    M ./debian/rules +3
+    R ./pygfarm/foo.py
+
+Thu Apr 18 17:13:29 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 178
+  Added support to HTTP for search requests.
+
+    M ./conf/pygopherd.conf +1
+    M ./pygopherd/protocols/http.py -7 +18
+
+Thu Apr 18 16:57:33 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 177
+  Fixed gopher-dir to gopher-menu
+
+    M ./pygfarm/dict.pyg -15 +15
+    M ./pygopherd/protocols/http.py -1 +3
+
+Thu Apr 18 16:49:52 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 176
+  Updated.
+
+    M ./pygfarm/dict.pyg -2 +49
+
+Thu Apr 18 16:12:30 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 175
+  All except DBINFO working now.
+
+    M ./pygfarm/dict.pyg -6 +22
+
+Thu Apr 18 16:00:20 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 174
+  Updated -- more features and bugfixes
+
+    M ./pygfarm/dict.pyg +44
+
+Thu Apr 18 15:51:02 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 173
+  All except Match is now working.
+
+    M ./pygfarm/dict.pyg -6 +42
+
+Thu Apr 18 15:42:49 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 172
+  Some various bugfixes
+
+    M ./pygfarm/dict.pyg -3 +85
+
+Thu Apr 18 02:31:21 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 171
+  *** empty log message ***
+
+    M ./pygfarm/dict.pyg -2 +12
+
+Thu Apr 18 02:22:29 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 170
+  Updated, working better.
+
+    M ./pygfarm/dict.pyg -6 +93
+
+Wed Apr 17 22:08:11 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 169
+  Updated.
+
+    M ./pygfarm/dict.pyg +2
+    A ./pygfarm/foo.py
+
+Wed Apr 17 19:31:25 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 168
+  *** empty log message ***
+
+    M ./pygfarm/dict.pyg -2 +27
+
+Wed Apr 17 19:20:35 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 167
+  *** empty log message ***
+
+    A ./pygfarm/
+    A ./pygfarm/dict.pyg
+
+Wed Apr 17 14:26:57 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 166
+  Updated -- use normpath for relative links.
+
+    M ./pygopherd/handlers/UMN.py -1 +1
+
+Tue Apr 16 18:37:43 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 165
+  Made sure noabstract stuff works.
+
+    M ./pygopherd/protocols/rfc1436Test.py -3 +23
+
+Tue Apr 16 18:32:41 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 164
+  Enhanced.
+
+    M ./pygopherd/protocols/rfc1436Test.py -2 +4
+
+Tue Apr 16 15:11:59 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 163
+  Fixed entries handling after new prepare.
+
+    M ./pygopherd/handlers/gophermap.py -2 +2
+
+Tue Apr 16 15:06:42 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 162
+  A test fix.
+
+    M ./pygopherd/protocols/rfc1436Test.py -3 +22
+
+Tue Apr 16 14:45:20 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 161
+  Fixed a bug in HTTP handler that was adding an extra <TR><TD>
+  (reported by Robert Hahn) Fixed a bug in mbox.py affecting both
+  mailbox handlers -- after the new directory architecture, the prepare
+  in the child classes was not properly updated.
+
+    M ./pygopherd/handlers/UMN.py -1
+    M ./pygopherd/handlers/mbox.py +2
+    M ./pygopherd/protocols/http.py -3 +2
+
+Tue Apr 16 00:21:01 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 160
+  Updated.
+
+    M ./ChangeLog +73
+    M ./debian/changelog +7
+    A ./pygopherd/protocols/rfc1436Test.py
+    M ./pygopherd/version.py -1 +1
+    M ./runtests.py -1 +3
+
+Mon Apr 15 21:08:35 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 159
+  Finished baseTest and passes all tests.
+
+    M ./pygopherd/GopherExceptionsTest.py +1
+    M ./pygopherd/protocols/base.py +1
+    M ./pygopherd/protocols/baseTest.py -3 +88
+    M ./pygopherd/testutil.py -3 +10
+
+Mon Apr 15 20:37:08 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 158
+  Beginnings of baseTest.
+
+    M ./pygopherd/protocols/__init__.py +1
+    M ./pygopherd/protocols/base.py -1 +1
+    A ./pygopherd/protocols/baseTest.py
+    M ./runtests.py -1 +4
+
+Mon Apr 15 20:20:57 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 157
+  Added ProtocolMultiplexerTest
+
+    M ./Makefile +1
+    M ./pygopherd/protocols/ProtocolMultiplexerTest.py -4 +14
+    M ./pygopherd/testutil.py -2 +19
+
+Mon Apr 15 19:58:16 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 156
+  Added ProtocolMultiplexerTest
+
+    A ./pygopherd/protocols/ProtocolMultiplexerTest.py
+    M ./pygopherd/protocols/__init__.py -1
+    M ./runtests.py -1 +4
+
+Mon Apr 15 19:44:53 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 155
+  Added pipeTest.
+
+    M ./pygopherd/__init__.py -1 +1
+    M ./pygopherd/gopherentryTest.py +5
+    M ./pygopherd/pipe.py -2 +2
+    A ./pygopherd/pipeTest.py
+    M ./runtests.py -1 +2
+    A ./testdata/pygopherd/
+    A ./testdata/pygopherd/pipetest.sh
+    A ./testdata/pygopherd/pipetestdata
+
+Mon Apr 15 19:09:48 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 154
+  Updated for new abstract tests
+
+    A ./testdata/.abstract
+    A ./testdata/testfile.txt.gz.abstract
+
+Mon Apr 15 19:03:01 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 153
+  Many updates to abstract support
+
+    M ./conf/pygopherd.conf -5 +31
+    M ./pygopherd/GopherExceptionsTest.py -9
+    M ./pygopherd/gopherentry.py -4 +12
+    M ./pygopherd/handlers/gophermap.py -6 +1
+    M ./pygopherd/protocols/base.py -5 +31
+    M ./pygopherd/protocols/gopherp.py -1 +4
+    M ./pygopherd/protocols/http.py -7 +2
+
+Mon Apr 15 17:55:19 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 152
+  Added the ability to read block contents from the filesystem.
+
+    M ./conf/pygopherd.conf -1 +20
+    M ./pygopherd/gopherentry.py +21
+
+Mon Apr 15 15:21:09 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 151
+  Added beginnings of support for Abstract and other info.
+
+    M ./pygopherd/handlers/UMN.py -3 +16
+    M ./pygopherd/protocols/gopherp.py -3 +18
+
+Mon Apr 15 14:37:22 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 150
+  Redid the directory handling mechanism. Now, handlers define isdir()
+  and getdirlist(). Protocols ask for a list of all entries in the
+  directory, rather than having the handler do a callback for each
+  entry.
+
+    M ./pygopherd/gopherentry.py +13
+    M ./pygopherd/handlers/base.py -2 +20
+    M ./pygopherd/handlers/dir.py -11 +4
+    M ./pygopherd/handlers/gophermap.py -11 +11
+    M ./pygopherd/handlers/mbox.py -9 +8
+    M ./pygopherd/handlers/pyg.py -6 +6
+    M ./pygopherd/protocols/base.py -8 +31
+    M ./pygopherd/protocols/gopherp.py -1 +4
+    M ./pygopherd/protocols/http.py -2 +5
+
+Mon Apr 15 03:59:13 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 149
+  Updated.
+
+    M ./ChangeLog +18
+
+Mon Apr 15 03:34:53 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 148
+  Fixed a bug with handling empty Path= lines. Thanks to David Allen
+  <mda@idatar.com> for identifying this one.
+
+    M ./pygopherd/handlers/UMN.py -1 +1
+
+Fri Apr 12 20:26:46 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 147
+  Miscellany comments and stuff
+
+    M ./pygopherd/handlers/base.py -3 +3
+
+Fri Apr 12 16:46:54 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 146
+  Updated for 0.9.4
+
+    M ./debian/changelog +7
+    M ./pygopherd/version.py -1 +1
+
+Fri Apr 12 16:39:56 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 145
+  Updated.
+
+    M ./ChangeLog +24
+    M ./pygopherd/handlers/HandlerMultiplexer.py -6 +6
+    M ./pygopherd/handlers/base.py -1 +28
+    M ./pygopherd/handlers/file.py +3
+    M ./pygopherd/handlers/pyg.py -1 +1
+    M ./pygopherd/handlers/url.py +9
+    M ./pygopherd/protocols/ProtocolMultiplexer.py -20 +1
+    M ./pygopherd/protocols/http.py +1
+
+Fri Apr 12 03:13:33 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 144
+  Fixed bug with rendering URLs.
+
+    M ./pygopherd/protocols/http.py -9 +10
+
+Fri Apr 12 03:07:52 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 143
+  Forgot to call renderdirstart and renderdirend.
+
+    M ./pygopherd/handlers/gophermap.py +6
+
+Thu Apr 11 21:41:40 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 142
+  More bugfixes.
+
+    M ./ChangeLog +27
+    M ./debian/changelog +7
+    M ./pygopherd/protocols/http.py -1 +3
+    M ./pygopherd/version.py -3 +3
+
+Thu Apr 11 21:24:21 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 141
+  Fixed an initialization problem in testutil that could prevent the
+  system from starting up properly. Fixed URL to gopher downloads in
+  pygopherd.conf.
+
+    M ./conf/pygopherd.conf -1 +1
+    M ./pygopherd/testutil.py -2 +5
+
+Thu Apr 11 21:16:59 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 140
+  Added the ability to http to put a configurable spiel at the top of
+  each page. Added version.py for stuff to find info about the software.
+
+    M ./ChangeLog +114
+    M ./Makefile -1 +1
+    M ./conf/pygopherd.conf +16
+    M ./debian/changelog +6
+    M ./debian/control -1 +1
+    M ./pygopherd/__init__.py -2 +3
+    A ./pygopherd/loggerTest.py
+    M ./pygopherd/protocols/http.py -2 +14
+    A ./pygopherd/version.py
+    M ./runtests.py -1 +2
+    M ./setup.py -22 +9
+
+Thu Apr 11 19:32:37 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 139
+  Geturl now handles URL: patterns
+
+    M ./pygopherd/gopherentry.py -1 +9
+    M ./pygopherd/gopherentryTest.py -2 +25
+    M ./pygopherd/handlers/url.py -1 +1
+
+Thu Apr 11 19:22:59 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 138
+  Gopherentrytest almost finished. Fixed some bugs that test
+  illuminated. Updated testutil.
+
+    M ./pygopherd/gopherentry.py -24 +96
+    M ./pygopherd/gopherentryTest.py -2 +180
+
+Thu Apr 11 18:25:24 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 137
+  Added an encoded file.
+
+    A ./testdata/README
+    A ./testdata/testarchive.tar
+    A ./testdata/testarchive.tar.gz
+    A ./testdata/testarchive.tgz
+    A ./testdata/testfile.txt.gz
+
+Thu Apr 11 18:01:04 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 136
+  Initial add of the gopherentryTest
+
+    M ./pygopherd/__init__.py -1 +1
+    A ./pygopherd/gopherentryTest.py
+    M ./pygopherd/testutil.py +1
+    M ./runtests.py -1 +2
+
+Thu Apr 11 17:42:36 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 135
+  Always set the root to testroot
+
+    M ./Makefile +1
+    M ./pygopherd/testutil.py -1 +3
+    A ./testdata/
+    A ./testdata/testfile.txt
+
+Thu Apr 11 16:41:05 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 134
+  Added the fileext test.
+
+    M ./conf/pygopherd.conf -1 +2
+    M ./pygopherd/GopherExceptionsTest.py +22
+    M ./pygopherd/__init__.py -1 +1
+    A ./pygopherd/fileextTest.py
+    M ./pygopherd/initializationTest.py +22
+    M ./pygopherd/testutil.py +23
+    M ./runtests.py -1 +2
+
+Thu Apr 11 16:33:45 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 133
+  Added more tests, test utilities, etc.
+
+    M ./pygopherd/GopherExceptionsTest.py -6 +29
+    M ./pygopherd/__init__.py -1 +1
+    M ./pygopherd/initialization.py -16 +16
+    M ./pygopherd/initializationTest.py -8 +9
+    A ./pygopherd/testutil.py
+
+Thu Apr 11 15:47:14 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 132
+  Added more tests. Made logger capable of logging to non-stdout
+  sources.
+
+    M ./conf/pygopherd.conf -1 +2
+    M ./pygopherd/GopherExceptions.py -1 +3
+    A ./pygopherd/GopherExceptionsTest.py
+    M ./pygopherd/__init__.py -1 +2
+    M ./pygopherd/logger.py -4 +13
+    M ./runtests.py -1 +2
+
+Thu Apr 11 14:58:06 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 131
+  Added a sanity check to HandlerMultiplexer. Handle a special interface
+  bind request in initialization.py and conf/pygopherd.conf.
+
+    M ./conf/pygopherd.conf +10
+    M ./pygopherd/handlers/HandlerMultiplexer.py +9
+    M ./pygopherd/initialization.py -1 +5
+
+Thu Apr 11 14:49:56 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 130
+  Security: block ./ and ../
+
+    M ./pygopherd/protocols/ProtocolMultiplexer.py -1 +22
+    M ./pygopherd/protocols/base.py -7
+
+Thu Apr 11 14:07:28 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 129
+  Added.
+
+    A ./pygopherd/initializationTest.py
+
+Thu Apr 11 04:05:05 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 128
+  Added real tests.
+
+    M ./pygopherd/initialization.py -4 +2
+
+Thu Apr 11 03:31:44 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 127
+  Added initial testing infrastructure.
+
+    M ./pygopherd.py -1
+    M ./pygopherd/__init__.py -1 +2
+    A ./runtests.py
+
+Thu Apr 11 03:12:29 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 126
+  Redid initialization system -- makes it easier for tests.
+
+    M ./conf/pygopherd.conf -1 +1
+    M ./pygopherd.py -139 +2
+    M ./pygopherd/__init__.py -1 +1
+    A ./pygopherd/initialization.py
+
+Thu Apr 11 02:23:24 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 125
+  Updated
+
+    M ./ChangeLog +16
+    M ./debian/changelog +6
+
+Thu Apr 11 00:29:58 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 124
+  Added the ability to log backtraces in more situations. Fixed a bug in
+  mbox preventing folders from working.
+
+    M ./conf/pygopherd.conf +10
+    M ./pygopherd.py -2 +11
+    M ./pygopherd/GopherExceptions.py -1 +7
+    M ./pygopherd/handlers/mbox.py -2 +2
+
+Thu Apr 11 00:23:39 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 123
+  Fixed a software bug.
+
+    M ./pygopherd/handlers/UMN.py -3 +12
+
+Wed Apr 10 21:30:11 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 122
+  VERSION 0.9.0 RELEASED
+
+    M ./ChangeLog +60
+
+Wed Apr 10 21:02:31 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 121
+  Fixed some more bugs: don't crash if we have no perms to create a
+  cache file, handle relative Path= lines correctly.
+
+    M ./pygopherd/handlers/UMN.py -2 +2
+    M ./pygopherd/handlers/dir.py -3 +7
+
+Wed Apr 10 20:56:45 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 120
+  Fixed a bug with type=X
+
+    M ./pygopherd/handlers/UMN.py -2 +4
+
+Wed Apr 10 20:39:53 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 119
+  Additional bugfixes and enhancements
+
+    M ./pygopherd.py -1 +1
+    M ./pygopherd/gopherentry.py -1 +1
+    M ./pygopherd/handlers/file.py -3 +4
+
+Wed Apr 10 20:22:28 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 118
+  Added decompresspatt support.
+
+    M ./conf/pygopherd.conf -2 +12
+    M ./pygopherd/handlers/file.py -2 +7
+
+Wed Apr 10 20:13:16 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 117
+  Additional fixes for extension and encoding support.
+
+    M ./conf/pygopherd.conf -4 +7
+    M ./pygopherd/gopherentry.py -8 +10
+    M ./pygopherd/handlers/file.py -3 +4
+
+Wed Apr 10 20:05:13 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 116
+  More updates and features with extensions and stuff.
+
+    M ./conf/pygopherd.conf +25
+    M ./pygopherd/fileext.py -2 +1
+    M ./pygopherd/handlers/UMN.py -4 +15
+    M ./pygopherd/handlers/file.py -12 +15
+    M ./pygopherd/protocols/rfc1436.py +2
+
+Wed Apr 10 19:43:09 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 115
+  Modified encoding handling: default is to now set application/octet-
+  stream of there is any encoding UNLESS the CompressedFileHandler is
+  used.
+
+    M ./pygopherd/gopherentry.py -16 +25
+    M ./pygopherd/handlers/file.py -2 +16
+
+Wed Apr 10 19:26:50 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 114
+  Renamed changelog target
+
+    M ./Makefile -1 +1
+
+Wed Apr 10 19:19:16 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 113
+  Added many features: The CompressedFileHandler Pipe support etc
+
+    M ./ChangeLog +50
+    M ./conf/pygopherd.conf -6 +32
+    M ./pygopherd/__init__.py -1 +1
+    M ./pygopherd/handlers/file.py +27
+    M ./pygopherd/handlers/scriptexec.py -5 +25
+    A ./pygopherd/pipe.py
+
+Wed Apr 10 18:38:24 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 112
+  Added smart file extension stripping for UMN dir.
+
+    M ./conf/pygopherd.conf -5 +62
+    M ./pygopherd.py -1 +11
+    M ./pygopherd/__init__.py -1 +1
+    A ./pygopherd/fileext.py
+    M ./pygopherd/handlers/UMN.py -7 +7
+    M ./pygopherd/handlers/dir.py -5 +5
+
+Wed Apr 10 17:15:22 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 111
+  Added code to strip off an extension in UMN Dirhandler. Other Debian
+  enhancements.
+
+    M ./debian/changelog -1 +1
+    A ./debian/examples
+    M ./debian/postinst -17 +1
+    A ./debian/postrm
+    R ./debian/postrm.ex
+    M ./pygopherd/handlers/UMN.py -1 +9
+
+Wed Apr 10 17:03:36 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 110
+  Updated pygopher'd path.
+
+    A ./examples/
+    A ./examples/gophermap
+
+Wed Apr 10 16:27:39 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 109
+  Miscellaneous other fixes.
+
+    M ./debian/control -1 +9
+    M ./debian/init.d -4 +3
+    M ./pygopherd.py -2 +5
+    M ./pygopherd/handlers/gophermap.py -1 +4
+
+Wed Apr 10 16:07:15 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 108
+  Modified to do some more checking, to permit colon-separated MIME
+  types, etc.
+
+    M ./ChangeLog +62
+    M ./conf/pygopherd.conf -2 +4
+    M ./debian/init.d -1 +1
+    M ./debian/postinst -18 +20
+    M ./debian/rules -2 +1
+    M ./pygopherd.py -3 +49
+
+Wed Apr 10 15:41:53 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 107
+  Made setup.py include handlers and protocols too. Updated debian code.
+
+    M ./ChangeLog -27 +96
+    M ./Makefile +2
+    M ./debian/copyright +3
+    M ./debian/docs +1
+    M ./debian/rules -4 +8
+    M ./setup.py -3 +3
+
+Wed Apr 10 15:27:03 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 106
+  Updated.
+
+    M ./README +1
+    M ./debian/control -3 +4
+    M ./debian/rules -1 +1
+    M ./setup.py -1 +2
+
+Wed Apr 10 15:20:43 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 105
+  Added ability to specify aliased server name.
+
+    M ./conf/pygopherd.conf -2 +15
+    M ./pygopherd.py -3 +8
+
+Wed Apr 10 15:13:16 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 104
+  Many modifications to permit system-wide installations, Debian package
+  support, etc.
+
+    A ./ChangeLog
+    M ./Makefile +3
+    A ./README
+    M ./TODO -8 +1
+    M ./conf/pygopherd.conf -22 +35
+    M ./debian/changelog -1 +1
+    A ./debian/conffiles
+    R ./debian/conffiles.ex
+    M ./debian/control -4 +4
+    M ./debian/copyright -3 +17
+    A ./debian/init.d
+    R ./debian/init.d.ex
+    A ./debian/postinst
+    R ./debian/postinst.ex
+    M ./debian/rules -2 +8
+    M ./setup.py -1 +21
+
+Wed Apr 10 14:10:58 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 103
+  Imported debian/ directory.
+
+    A ./debian/
+    A ./debian/README.Debian
+    A ./debian/changelog
+    A ./debian/conffiles.ex
+    A ./debian/control
+    A ./debian/copyright
+    A ./debian/cron.d.ex
+    A ./debian/dirs
+    A ./debian/docs
+    A ./debian/emacsen-install.ex
+    A ./debian/emacsen-remove.ex
+    A ./debian/emacsen-startup.ex
+    A ./debian/ex.package.doc-base
+    A ./debian/init.d.ex
+    A ./debian/manpage.1.ex
+    A ./debian/manpage.sgml.ex
+    A ./debian/menu.ex
+    A ./debian/postinst.ex
+    A ./debian/postrm.ex
+    A ./debian/preinst.ex
+    A ./debian/prerm.ex
+    A ./debian/rules
+    A ./debian/watch.ex
+    A ./setup.py
+
+Wed Apr 10 13:57:14 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 102
+  Now cleans up jython .class files
+
+    M ./Makefile +2
+
+Wed Apr 10 03:31:15 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 101
+  More security enhancements and stuff.
+
+    M ./conf/pygopherd.conf -2 +18
+    M ./pygopherd.py -3 +40
+    M ./pygopherd/handlers/scriptexec.py -1 +3
+
+Wed Apr 10 02:44:34 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 100
+  Added logging support
+
+    M ./conf/pygopherd.conf +25
+    M ./pygopherd.py +3
+    M ./pygopherd/GopherExceptions.py -3 +25
+    M ./pygopherd/__init__.py -1 +2
+    M ./pygopherd/handlers/HandlerMultiplexer.py -3 +4
+    M ./pygopherd/handlers/mbox.py -2 +2
+    A ./pygopherd/logger.py
+    M ./pygopherd/protocols/base.py -1 +10
+    M ./pygopherd/protocols/gopherp.py +2
+    M ./pygopherd/protocols/http.py +2
+
+Tue Apr  9 21:26:41 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 99
+  Fixed an error with searchrequest support.
+
+    M ./conf/pygopherd.conf -2 +2
+    M ./pygopherd/handlers/pyg.py -1 +2
+
+Tue Apr  9 21:09:48 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 98
+  Removed outdated import of "signal"
+
+    M ./pygopherd.py -1 +1
+
+Tue Apr  9 20:42:31 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 97
+  Added searchrequest capabilities.
+
+    M ./conf/pygopherd.conf +2
+    M ./pygopherd/handlers/HandlerMultiplexer.py -2 +3
+    M ./pygopherd/handlers/base.py -1 +3
+    M ./pygopherd/handlers/dir.py -1 +1
+    M ./pygopherd/handlers/scriptexec.py -1 +2
+    M ./pygopherd/handlers/virtual.py -2 +3
+    M ./pygopherd/protocols/base.py -2 +2
+    M ./pygopherd/protocols/gopherp.py -7 +16
+    M ./pygopherd/protocols/rfc1436.py +2
+
+Tue Apr  9 20:18:55 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 96
+  More updates for vfolder rename. Added scriptexec capability.
+
+    M ./conf/pygopherd.conf -1 +2
+    M ./pygopherd.py -1 +1
+    M ./pygopherd/handlers/__init__.py -1 +1
+    M ./pygopherd/handlers/mbox.py -2 +2
+    M ./pygopherd/handlers/pyg.py -2 +2
+    A ./pygopherd/handlers/scriptexec.py
+    M ./pygopherd/protocols/ProtocolMultiplexer.py -2 +2
+    M ./pygopherd/protocols/base.py -1 +2
+
+Tue Apr  9 19:45:52 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 95
+  Renamed vfolder to virtual
+
+    M ./pygopherd/handlers/__init__.py -1 +1
+    M ./pygopherd/handlers/mbox.py -1 +1
+    M ./pygopherd/handlers/pyg.py -1 +1
+    R ./pygopherd/handlers/vfolder.py
+    A ./pygopherd/handlers/virtual.py
+
+Mon Apr  8 20:36:27 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 94
+  Updates.
+
+    M ./conf/pygopherd.conf -3 +5
+    M ./pygopherd/handlers/__init__.py -1 +1
+    M ./pygopherd/handlers/mbox.py -24 +74
+    A ./pygopherd/handlers/pyg.py
+    M ./pygopherd/handlers/vfolder.py -7 +8
+
+Mon Apr  8 19:22:12 CDT 2002  jgoerzen
+  * /pygopherd/head: changeset 93
+  Updates with the vfolder.
+
+    M ./pygopherd/handlers/__init__.py -1 +1
+    M ./pygopherd/handlers/base.py -1 +3
+    M ./pygopherd/handlers/mbox.py -10 +17
+    A ./pygopherd/handlers/vfolder.py
+
+Sat Apr  6 21:08:21 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 92
+  Updated for module moving.
+
+    M ./pygopherd.py -2 +3
+    A ./pygopherd/__init__.py
+    M ./pygopherd/gopherentry.py -1 +2
+    M ./pygopherd/handlers/HandlerMultiplexer.py -2 +2
+    M ./pygopherd/handlers/UMN.py -4 +4
+    M ./pygopherd/handlers/__init__.py -1 +1
+    M ./pygopherd/handlers/base.py -1 +2
+    M ./pygopherd/handlers/dir.py -2 +3
+    M ./pygopherd/handlers/file.py -2 +2
+    M ./pygopherd/handlers/gophermap.py -2 +2
+    M ./pygopherd/handlers/html.py -4 +5
+    M ./pygopherd/handlers/mbox.py -2 +2
+    M ./pygopherd/handlers/url.py -2 +2
+    M ./pygopherd/protocols/ProtocolMultiplexer.py -2 +2
+    M ./pygopherd/protocols/base.py -3 +4
+    M ./pygopherd/protocols/enhanced.py -2 +4
+    M ./pygopherd/protocols/gopherp.py -5 +6
+    M ./pygopherd/protocols/http.py -4 +5
+    M ./pygopherd/protocols/rfc1436.py -3 +4
+
+Sat Apr  6 19:31:06 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 91
+  Added.
+
+    A ./Makefile
+
+Sat Apr  6 02:25:26 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 90
+  *** empty log message ***
+
+    M ./doc/manual.lyx -7 +92
+
+Fri Apr  5 22:55:50 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 89
+  Added.
+
+    A ./doc/manual.lyx
+
+Fri Apr  5 20:23:55 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 88
+  Added directory caching ability.
+
+    M ./conf/pygopherd.conf +11
+    M ./pygopherd/gopherentry.py -2 +2
+    M ./pygopherd/handlers/HandlerMultiplexer.py -1 +1
+    M ./pygopherd/handlers/UMN.py -6 +5
+    M ./pygopherd/handlers/base.py -1
+    M ./pygopherd/handlers/dir.py -1 +43
+
+Fri Apr  5 19:59:56 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 87
+  Performance enhancements after profiling
+
+    M ./conf/pygopherd.conf -1 +1
+    M ./pygopherd/gopherentry.py -5 +15
+    M ./pygopherd/handlers/HandlerMultiplexer.py -3 +15
+    M ./pygopherd/handlers/UMN.py -20 +22
+    M ./pygopherd/handlers/base.py -2 +9
+    M ./pygopherd/handlers/dir.py -2 +3
+    M ./pygopherd/handlers/file.py -2 +3
+    M ./pygopherd/handlers/gophermap.py -1 +2
+    M ./pygopherd/handlers/html.py -1 +1
+    M ./pygopherd/handlers/mbox.py -1 +2
+
+Fri Apr  5 19:09:58 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 86
+  Performance: made mapping a module instead of a class variable.
+
+    M ./pygopherd/gopherentry.py -2 +3
+
+Fri Apr  5 18:51:30 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 85
+  Typo fix
+
+    M ./pygopherd/handlers/base.py -1 +1
+
+Fri Apr  5 18:39:06 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 84
+  *** empty log message ***
+
+    M ./pygopherd/handlers/base.py -3 +2
+    M ./pygopherd/handlers/mbox.py -1 +5
+
+Fri Apr  5 18:24:11 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 83
+  More work on the mbox handler. Say that we don't support gopher+
+  because UMN hates size-less stuff. Bah. Reverted gopherp : behavior.
+  It was right before, UMN is fussy.
+
+    M ./conf/pygopherd.conf -2 +4
+    M ./pygopherd/gopherentry.py +2
+    M ./pygopherd/handlers/HandlerMultiplexer.py -1 +1
+    M ./pygopherd/handlers/__init__.py -1 +1
+    M ./pygopherd/handlers/html.py -4 +16
+    A ./pygopherd/handlers/mbox.py
+    M ./pygopherd/protocols/gopherp.py -1 +1
+
+Fri Apr  5 18:13:52 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 82
+  Only put colon on a VIEWS line if there is size information coming.
+
+    M ./pygopherd/protocols/gopherp.py -1 +1
+
+Fri Apr  5 16:43:00 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 81
+  Split HTML title handler out of UMN.py into html.py
+
+    M ./conf/pygopherd.conf -2 +2
+    M ./pygopherd/handlers/HandlerMultiplexer.py -1 +1
+    M ./pygopherd/handlers/UMN.py -60
+    M ./pygopherd/handlers/__init__.py -1 +1
+    A ./pygopherd/handlers/html.py
+
+Fri Apr  5 15:58:30 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 80
+  Added copyright notices to all files.
+
+    M ./pygopherd/GopherExceptions.py +19
+    M ./pygopherd/gopherentry.py +19
+    M ./pygopherd/handlers/HandlerMultiplexer.py +19
+    M ./pygopherd/handlers/UMN.py -1 +20
+    M ./pygopherd/handlers/__init__.py +19
+    M ./pygopherd/handlers/base.py +19
+    M ./pygopherd/handlers/dir.py +19
+    M ./pygopherd/handlers/file.py +19
+    M ./pygopherd/handlers/gophermap.py +19
+    M ./pygopherd/handlers/url.py +19
+    M ./pygopherd/protocols/ProtocolMultiplexer.py +19
+    M ./pygopherd/protocols/__init__.py +20
+    M ./pygopherd/protocols/base.py +19
+    M ./pygopherd/protocols/enhanced.py +19
+    M ./pygopherd/protocols/gopherp.py +19
+    M ./pygopherd/protocols/http.py +19
+    M ./pygopherd/protocols/rfc1436.py +19
+
+Fri Apr  5 15:51:59 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 79
+  Added HTML handler support.
+
+    M ./conf/pygopherd.conf -2 +2
+    M ./pygopherd/handlers/UMN.py -1 +66
+
+Fri Apr  5 15:12:49 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 78
+  Added some comments and moved miscellaneous functions into the
+  UMNDirHandler.
+
+    M ./pygopherd/handlers/UMN.py -48 +67
+
+Fri Apr  5 14:32:39 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 77
+  Removed \t+ adding to gopher0 dirstrings. This is done in the rfc
+  module already.
+
+    M ./pygopherd/protocols/gopherp.py -5 +2
+
+Fri Apr  5 14:27:33 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 76
+  Modified to use the getentry() from each handler in the dirhandler.
+  Modified to indicate in each entry whether gopher+ is supported by
+  that entry. Modified rfc1436 to only indicate + for those entries
+  where this is true.
+
+    M ./conf/pygopherd.conf -4 +23
+    M ./pygopherd/gopherentry.py +7
+    M ./pygopherd/handlers/dir.py -3 +7
+    M ./pygopherd/protocols/rfc1436.py -6 +10
+
+Thu Apr  4 20:05:22 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 75
+  Added code to strip off trailing slashes in links.
+
+    M ./pygopherd/handlers/UMN.py -2 +5
+
+Thu Apr  4 19:55:57 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 74
+  Added handling of UMN type X
+
+    M ./pygopherd/handlers/UMN.py -3 +11
+    M ./pygopherd/handlers/dir.py -4 +3
+
+Thu Apr  4 19:49:51 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 73
+  More HTTP updates.
+
+    M ./conf/pygopherd.conf -1 +2
+    M ./pygopherd/protocols/http.py -11 +19
+
+Thu Apr  4 19:36:58 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 72
+  Added icon support to HTTP protocol.
+
+    M ./conf/pygopherd.conf +11
+    M ./pygopherd/handlers/__init__.py -1 +1
+    M ./pygopherd/protocols/http.py -3 +24
+
+Thu Apr  4 19:20:27 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 71
+  Updated.
+
+    M ./conf/pygopherd.conf -1 +7
+    M ./pygopherd/handlers/__init__.py -1 +2
+    M ./pygopherd/protocols/http.py +19
+
+Thu Apr  4 18:51:48 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 70
+  Added .cap file handling.
+
+    M ./pygopherd/handlers/UMN.py -12 +27
+    M ./pygopherd/handlers/dir.py +7
+
+Thu Apr  4 18:37:37 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 69
+  UMN seems to be working now!
+
+    M ./pygopherd/handlers/UMN.py -14 +17
+    M ./pygopherd/handlers/dir.py -1 +6
+
+Thu Apr  4 18:27:57 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 68
+  Various runtime fixes!
+
+    M ./conf/pygopherd.conf -3 +4
+    M ./pygopherd/handlers/HandlerMultiplexer.py -1 +1
+    M ./pygopherd/handlers/UMN.py -13 +38
+    M ./pygopherd/handlers/base.py +3
+    M ./pygopherd/handlers/dir.py -13 +30
+
+Thu Apr  4 17:39:02 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 67
+  Updated.
+
+    M ./pygopherd/handlers/UMN.py +19
+    M ./pygopherd/handlers/dir.py -10 +9
+
+Thu Apr  4 17:29:56 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 66
+  More updates.
+
+    M ./pygopherd/handlers/UMN.py -71 +40
+
+Thu Apr  4 17:12:39 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 65
+  Updates -- safer populatefromfs(), etc.
+
+    M ./pygopherd/gopherentry.py -5 +28
+
+Thu Apr  4 16:51:12 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 64
+  Initial writing.
+
+    M ./pygopherd/handlers/UMN.py -1 +104
+
+Thu Apr  4 14:41:03 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 63
+  Added from dir.py
+
+    A ./pygopherd/handlers/UMN.py
+
+Wed Mar 27 15:40:53 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 62
+  Added experimental URLGopherPlus protocol.
+
+    M ./pygopherd/gopherentry.py -1 +6
+    M ./pygopherd/protocols/gopherp.py -5 +14
+
+Wed Mar 27 15:24:58 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 61
+  Modified to make more extensible.
+
+    M ./pygopherd/protocols/base.py -1 +1
+    M ./pygopherd/protocols/gopherp.py -22 +49
+
+Wed Mar 27 13:16:17 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 60
+  Moved to and fixes in prepare()
+
+    M ./pygopherd/handlers/gophermap.py -8 +10
+
+Wed Mar 27 12:19:00 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 59
+  Added error handling
+
+    M ./pygopherd/protocols/http.py -5 +12
+
+Tue Mar 26 23:41:47 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 58
+  HTTP support now nominally working.
+
+    M ./conf/pygopherd.conf -2 +2
+    M ./pygopherd/handlers/dir.py +9
+    M ./pygopherd/protocols/base.py +9
+    M ./pygopherd/protocols/http.py -27 +54
+
+Tue Mar 26 20:44:16 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 57
+  More work on http
+
+    M ./pygopherd/protocols/http.py -9 +64
+
+Tue Mar 26 20:17:14 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 56
+  Added some bugfixes for time handling.
+
+    M ./pygopherd/protocols/gopherp.py -2 +3
+
+Tue Mar 26 20:10:01 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 55
+  Added error handling.
+
+    M ./conf/pygopherd.conf +5
+    A ./pygopherd/GopherExceptions.py
+    M ./pygopherd/handlers/HandlerMultiplexer.py +3
+    M ./pygopherd/handlers/base.py +12
+    M ./pygopherd/handlers/dir.py -4 +5
+    M ./pygopherd/handlers/file.py -2 +6
+    M ./pygopherd/handlers/gophermap.py -2 +7
+    M ./pygopherd/handlers/url.py +2
+    M ./pygopherd/protocols/__init__.py -1 +1
+    M ./pygopherd/protocols/base.py -5 +13
+    M ./pygopherd/protocols/gopherp.py -11 +33
+    A ./pygopherd/protocols/http.py
+
+Tue Mar 26 19:27:27 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 54
+  Added gophermap capabilities.
+
+    M ./conf/pygopherd.conf -1 +2
+    A ./doc/standards/Gopher+.txt
+    M ./pygopherd/handlers/HandlerMultiplexer.py -1 +1
+    M ./pygopherd/handlers/__init__.py -1 +1
+    M ./pygopherd/handlers/base.py -2 +5
+    M ./pygopherd/handlers/dir.py -1 +1
+    A ./pygopherd/handlers/gophermap.py
+    M ./pygopherd/handlers/url.py -1 +3
+    M ./pygopherd/protocols/base.py -4 +1
+    M ./pygopherd/protocols/gopherp.py -7 +9
+
+Tue Mar 26 18:52:58 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 53
+  Added from gopher://gopher.floodgap.com:70/0/buck/dbrowse%3Ffaquse%201
+
+    A ./doc/standards/gophermap.txt
+
+Tue Mar 26 18:30:14 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 52
+  Added from http://www.complete.org/mailinglists/archives/gopher-
+  200202/msg00033.html
+
+    A ./doc/standards/url.txt
+
+Tue Mar 26 18:17:27 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 51
+  Added url.py -- a URL: handler.
+
+    M ./conf/pygopherd.conf -1 +1
+    M ./pygopherd/handlers/HandlerMultiplexer.py -1 +1
+    M ./pygopherd/handlers/__init__.py -1 +1
+    A ./pygopherd/handlers/url.py
+
+Tue Mar 26 17:59:11 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 50
+  Updated to use new multiplexers, more configurability, some renaming
+
+    M ./conf/pygopherd.conf -2 +64
+    M ./pygopherd.py -12 +7
+    M ./pygopherd/gopherentry.py -2 +2
+    M ./pygopherd/handlers/HandlerMultiplexer.py -2 +2
+    M ./pygopherd/handlers/base.py -1 +1
+    M ./pygopherd/handlers/dir.py +6
+    A ./pygopherd/protocols/ProtocolMultiplexer.py
+    M ./pygopherd/protocols/enhanced.py -1 +1
+
+Tue Mar 26 16:45:42 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 49
+  Updated.
+
+    M ./TODO +2
+    M ./conf/pygopherd.conf -1 +1
+    M ./pygopherd.py -1 +1
+    M ./pygopherd/gopherentry.py -1 +1
+
+Tue Mar 26 16:24:58 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 48
+  More bugfixes
+
+    M ./pygopherd/protocols/gopherp.py -5 +5
+    M ./pygopherd/protocols/rfc1436.py -1 +2
+
+Tue Mar 26 16:19:32 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 47
+  renamed entry to gopherentry
+
+    R ./entry.py
+    A ./pygopherd/gopherentry.py
+    M ./pygopherd/handlers/base.py -2 +2
+    M ./pygopherd/handlers/dir.py -3 +3
+    M ./pygopherd/handlers/file.py -2 +2
+    M ./pygopherd/protocols/gopherp.py -3 +3
+
+Tue Mar 26 16:12:31 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 46
+  Basic execution fixes.
+
+    M ./entry.py +3
+    M ./pygopherd/handlers/dir.py -6 +6
+    M ./pygopherd/handlers/file.py -1 +1
+    M ./pygopherd/protocols/base.py -2 +2
+
+Tue Mar 26 15:46:36 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 45
+  Bugfixes
+
+    M ./pygopherd.py -1 +2
+    M ./pygopherd/handlers/HandlerMultiplexer.py -1 +1
+    M ./pygopherd/handlers/base.py -1 +1
+    M ./pygopherd/handlers/dir.py -2 +3
+    M ./pygopherd/handlers/file.py -1 +2
+    M ./pygopherd/protocols/base.py -1 +2
+    M ./pygopherd/protocols/gopherp.py -4 +5
+    M ./pygopherd/protocols/rfc1436.py -1 +2
+
+Tue Mar 26 15:34:22 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 44
+  *** empty log message ***
+
+    M ./pygopherd.py -7 +6
+    A ./pygopherd/handlers/HandlerMultiplexer.py
+    A ./pygopherd/handlers/__init__.py
+    M ./pygopherd/protocols/__init__.py -1 +1
+
+Tue Mar 26 15:25:56 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 43
+  *** empty log message ***
+
+    A ./conf/mime.types
+    A ./entry.py
+    M ./pygopherd/protocols/gopherp.py -2 +4
+
+Tue Mar 26 15:17:56 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 42
+  *** empty log message ***
+
+    R ./handlers.py
+    M ./pygopherd.py -1 +13
+    M ./pygopherd/handlers/base.py -1 +2
+    A ./pygopherd/handlers/dir.py
+    M ./pygopherd/protocols/base.py -1 +2
+
+Tue Mar 26 15:09:05 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 41
+  Updated
+
+    M ./conf/pygopherd.conf -1 +3
+    M ./handlers.py -68
+    M ./pygopherd/handlers/base.py -2 +5
+    M ./pygopherd/handlers/file.py +19
+    M ./pygopherd/protocols/base.py -1 +1
+
+Tue Mar 26 14:34:50 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 40
+  Updated.
+
+    A ./TODO
+    A ./pygopherd/handlers/
+    A ./pygopherd/handlers/base.py
+    A ./pygopherd/handlers/file.py
+    M ./pygopherd/protocols/base.py -7 +27
+
+Tue Mar 26 14:29:20 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 39
+  Removed some code moved to the base protocol.
+
+    M ./handlers.py -17 +1
+
+Tue Mar 26 14:09:39 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 38
+  First stab at protocols.py -> protocols/* conversion.
+
+    R ./protocols.py
+    A ./pygopherd/
+    A ./pygopherd/protocols/
+    A ./pygopherd/protocols/__init__.py
+    A ./pygopherd/protocols/base.py
+    A ./pygopherd/protocols/enhanced.py
+    A ./pygopherd/protocols/gopherp.py
+    A ./pygopherd/protocols/rfc1436.py
+
+Tue Mar 26 13:24:15 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 37
+  Added.
+
+    A ./doc/
+    A ./doc/standards/
+    A ./doc/standards/rfc1436.txt
+
+Mon Mar 25 23:32:02 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 36
+  Updates for pre-http redir support.
+
+    M ./handlers.py -1 +1
+    M ./protocols.py -11 +11
+
+Mon Mar 25 23:01:58 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 35
+  Rearranged code -- split rhandler.py into handlers.py and protocols.py
+
+    A ./handlers.py
+    A ./protocols.py
+    M ./pygopherd.py -1 +1
+    R ./rhandler.py
+
+Mon Mar 25 20:47:07 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 34
+  bug fixes
+
+    M ./rhandler.py -43 +36
+
+Mon Mar 25 20:27:26 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 33
+  Rewrite in progress.
+
+    M ./conf/pygopherd.conf +1
+    M ./rhandler.py -43 +129
+
+Mon Mar 25 17:27:41 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 32
+  More updates.
+
+    M ./rhandler.py -12 +11
+
+Mon Mar 25 17:21:09 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 31
+  Basic functionality is working.
+
+    M ./conf/pygopherd.conf +11
+    M ./pygopherd.py +5
+    M ./rhandler.py -9 +105
+
+Mon Mar 25 16:17:58 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 30
+  Updated.
+
+    A ./conf/
+    A ./conf/pygopherd.conf
+    M ./pygopherd.py -6 +12
+    A ./rhandler.py
+
+Mon Mar 25 15:29:53 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 29
+  Updated.
+
+    M ./pygopherd.py -40 +9
+
+Mon Mar 25 15:08:11 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 28
+  This version.
+
+    M ./pygopherd.py -1 +11
+
+Mon Mar 25 14:55:11 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 27
+  Working prototype.
+
+    M ./pygopherd.py -1 +34
+
+Mon Mar 25 14:29:14 CST 2002  jgoerzen
+  * /pygopherd/head: changeset 26
+  Skeletal work
+
+    A ./pygopherd.py
+
+Sat Apr 16 05:33:54 CDT 2005  tailor@katherina.lan.complete.org
+  * Tailorization of /pygopherd/head
+  Import of the upstream sources from the repository
+  
+   file:///tmp/darcsconv/t/gopher-py
+  
+  as of revision 25
+  
+
+    A ./COPYING
