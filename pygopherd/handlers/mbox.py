@@ -1,6 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: Present a mbox file as if it were a folder.
-# Copyright (C) 2002 John Goerzen
+# Copyright (C) 2002, 2005 John Goerzen
 # <jgoerzen@complete.org>
 #
 #    This program is free software; you can redistribute it and/or modify
@@ -89,7 +89,7 @@ class MessageHandler(Virtual):
             self.entry.setmimetype('text/plain')
             self.entry.setgopherpsupport(0)
 
-            subject = message.getheader('Subject')
+            subject = message.getheader('Subject', '<no subject>')
             # Sanitize, esp. for continuations.
             subject = re.sub('\s+', ' ', subject)
             if subject:
