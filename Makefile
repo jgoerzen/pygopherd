@@ -26,7 +26,7 @@ clean:
 	-svn cleanup
 
 changelog:
-	svn log -v > ChangeLog
+	darcs changes -s > ChangeLog
 
 docs: doc/pygopherd.8 doc/pygopherd.html doc/pygopherd.ps \
 	doc/pygopherd.pdf doc/pygopherd.txt
