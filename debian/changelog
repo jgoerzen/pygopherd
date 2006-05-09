@@ -1,3 +1,9 @@
+pygopherd (2.0.15) unstable; urgency=low
+
+  * Fixed handling of interface config option.  Closes: #357315, #361435.
+
+ -- John Goerzen <jgoerzen@complete.org>  Tue,  9 May 2006 10:43:42 -0500
+
 pygopherd (2.0.14) unstable; urgency=low
 
   * Fixed a bug where no subject line would crash the mailbox handler.
