@@ -102,6 +102,15 @@ def getserverobject(config):
         def server_bind(self):
             """Override server_bind to store server name."""
             servertype.server_bind(self)
+
+            # Set a timeout.
+            if config.has_option('pygopherd', 'timeout'):
+                mytimeout = int(config.get('pygopherd', 'timeout'))
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO,
+                                       (mytimeout, 0))
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO,
+                                       (mytimeout, 0))
+                #self.socket.settimeout(int(config.get('pygopherd', 'timeout')))
             host, port = self.socket.getsockname()
             if config.has_option("pygopherd", "servername"):
                 self.server_name = config.get("pygopherd", "servername")
