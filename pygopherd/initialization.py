@@ -21,7 +21,7 @@ from ConfigParser import ConfigParser
 
 # Import lots of stuff so it's here before chrooting.
 import socket, os, sys, SocketServer, re, stat, os.path, UserDict, tempfile
-import time, atexit, errno
+import time, atexit, errno, struct
 
 from pygopherd import handlers, protocols, GopherExceptions, logger, sighandlers
 from pygopherd.protocols import *
@@ -105,11 +105,11 @@ def getserverobject(config):
 
             # Set a timeout.
             if config.has_option('pygopherd', 'timeout'):
-                mytimeout = int(config.get('pygopherd', 'timeout'))
+                mytimeout = struct.pack("ll", long(config.get('pygopherd', 'timeout')), 0)
                 self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO,
-                                       (mytimeout, 0))
+                                       mytimeout)
                 self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO,
-                                       (mytimeout, 0))
+                                       mytimeout)
                 #self.socket.settimeout(int(config.get('pygopherd', 'timeout')))
             host, port = self.socket.getsockname()
             if config.has_option("pygopherd", "servername"):
