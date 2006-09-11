@@ -1,4 +1,4 @@
-#!/usr/bin/python2.2
+#!/usr/bin/python
 # COPYRIGHT #
 # Copyright (C) 2002 John Goerzen
 #
