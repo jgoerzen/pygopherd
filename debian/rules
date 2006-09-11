@@ -9,7 +9,7 @@
 # This is the debhelper compatibility version to use.
 export DH_COMPAT=3
 
-PYTHON=python2.3
+PYTHON=python
 PACKAGE=pygopherd
 
 
@@ -89,6 +89,8 @@ binary-indep: build install
 	dh_installinfo
 #	dh_undocumented
 	dh_installchangelogs 
+	dh_pycentral
+	dh_python
 	dh_link
 	dh_strip
 	dh_compress
