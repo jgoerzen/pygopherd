@@ -1,7 +1,7 @@
-pygopherd (2.0.16) unstable; urgency=low
+pygopherd (2.0.16) unstable; urgency=medium
 
   * New config file option: timeout
-  * Updated to latest Debian python policy
+  * Updated to latest Debian python policy (Closes: #380906)
 
  -- John Goerzen <jgoerzen@complete.org>  Mon, 11 Sep 2006 08:54:50 -0500
 
