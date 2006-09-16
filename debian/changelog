@@ -1,4 +1,4 @@
-pygopherd (2.0.17) unstable; urgency=low
+pygopherd (2.0.17) unstable; urgency=high
 
   * Make sure python-central does its thing before the init script
     tries to start Python.  Closes: #387663.
