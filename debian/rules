@@ -83,13 +83,13 @@ binary-indep: build install
 #	dh_installemacsen
 #	dh_installpam
 #	dh_installmime
+	dh_pycentral
 	dh_installinit
 	dh_installcron
 	dh_installman doc/pygopherd.8
 	dh_installinfo
 #	dh_undocumented
 	dh_installchangelogs 
-	dh_pycentral
 	dh_python
 	dh_link
 	dh_strip
