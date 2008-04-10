@@ -1,17 +1,17 @@
 productname = 'PyGopherd'
-versionstr = "2.0.15"
+versionstr = "2.0.18"
 
 versionlist = versionstr.split(".")
 major = versionlist[0]
 minor = versionlist[1]
 patch = versionlist[2]
-copyright = "Copyright (C) 2002-2006 John Goerzen.  All rights reserved."
+copyright = "Copyright (C) 2002-2008 John Goerzen.  All rights reserved."
 author = "John Goerzen"
 author_email = "jgoerzen@complete.org"
 description = "Multiprotocol Internet Gopher Information Server"
 homepage = "http://www.quux.org/devel/gopher/pygopherd"
 homegopher = "gopher://quux.org/1/devel/gopher/pygopherd"
-license = """Copyright (C) 2002-2006 John Goerzen <jgoerzen@complete.org>
+license = """Copyright (C) 2002-2008 John Goerzen <jgoerzen@complete.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -1,3 +1,12 @@
+pygopherd (2.0.18) unstable; urgency=low
+
+  * Move #DEBHELPER# section to end of postinst so that adduser gets run
+    first. Fixes a bug introduced in 2.0.17.  Closes: #475247.
+  * Removed weird stuff from source tree
+  * Acknowledge NMU.  Closes: #469619.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 10 Apr 2008 00:23:56 -0500
+
 pygopherd (2.0.17-0.1) unstable; urgency=low
 
   * Non-maintainer upload to solve release goal.
