@@ -1,0 +1,365 @@
+# -*-Python-*-
+import sys, string
+from pygopherd.handlers.pyg import PYGBase
+from pygopherd.gopherentry import GopherEntry, getinfoentry
+import dictclient
+
+def matchsort(x, y):
+    return cmp(x.lower(), y.lower())
+
+class PYGMain(PYGBase):
+    def canhandlerequest(self):
+        arglist = []
+        if self.selectorargs:
+            arglist = self.selectorargs.split("/")
+        self.dbname = None
+        self.dbcommand = None
+        self.commandargs = []
+        if len(arglist) >= 2:
+            self.dbname = arglist[1]
+        if len(arglist) >= 3:
+            self.dbcommand = arglist[2]
+        if len(arglist) >= 4:
+            self.commandargs = arglist[3:]
+        if self.searchrequest:
+            self.commandargs.append(self.searchrequest)
+
+        if self.dbcommand == 'DEFINE':
+            self.__class__ = DefineMenu
+        elif self.dbcommand == 'DEFINITION':
+            self.__class__ = Definition
+        elif self.dbcommand == 'MATCH':
+            self.__class__ = Match
+        elif self.dbcommand == 'MATCHMENU':
+            self.__class__ = MatchMenu
+        elif self.dbcommand == 'DBINFO':
+            self.__class__ = DBInfo
+        elif self.dbname:
+            self.__class__ = Browse
+        else:
+            self.__class__ = TopMenu
+        return 1
+            
+class TopMenu(PYGMain):
+    def prepare(self):
+        self.db = dictclient.Connection()
+        self.entries = []
+
+        intro = ["Welcome to the dictionary server!",
+                 " ",
+                 "To do a quick lookup, use the following search:",
+                 " "]
+
+        for item in intro:
+            self.entries.append(getinfoentry(item, self.config))
+
+        selector = self.genargsselector("/*/DEFINE")
+        entry = GopherEntry(selector, self.config)
+        entry.type = '7'
+        entry.mimetype = 'application/gopher-menu'
+        entry.name = 'Definition Lookup -- All Databases'
+        self.entries.append(entry)
+
+        selector = self.genargsselector("/*/MATCHMENU")
+        entry = GopherEntry(selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-menu'
+        entry.name = 'Advanced Search -- All Databases'
+        self.entries.append(entry)
+
+        intro = [" ", "Use the following links to search a particular",
+                 "database or to browse ALL the definitions",
+                 "in a database!", " "]
+
+        for item in intro:
+            self.entries.append(getinfoentry(item, self.config))
+
+        items = self.db.getdbdescs().items()
+        items.sort(lambda x, y: cmp(x[1], y[1]))
+
+        for name, desc in items:
+            selector = self.genargsselector("/%s" % name)
+            entry = GopherEntry(selector, self.config)
+            entry.type = '1'
+            entry.mimetype = 'application/gopher-menu'
+            entry.name = desc
+            self.entries.append(entry)
+
+    def getentry(self):
+        entry = GopherEntry(self.selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-menu'
+        entry.name = 'Dictionary Search'
+        return entry
+
+    def isdir(self):
+        return 1
+
+    def getdirlist(self):
+        return self.entries
+
+    
+class Browse(PYGMain):
+    def prepare(self):
+        self.entries = []
+
+        intro = ["You can browse the entries in the database by",
+                 "selecting the first letter of the item you want.",
+                 " "]
+
+        for item in intro:
+            self.entries.append(getinfoentry(item, self.config))
+
+        selector = self.genargsselector("/%s/DEFINE" % self.dbname)
+        entry = GopherEntry(selector, self.config)
+        entry.type = '7'
+        entry.mimetype = 'application/gopher-menu'
+        entry.name = 'Search This Database'
+        self.entries.append(entry)
+
+        selector = self.genargsselector("/%s/MATCHMENU" % self.dbname)
+        entry = GopherEntry(selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-menu'
+        entry.name = 'Advanced Search for This Database'
+        self.entries.append(entry)
+
+        if self.dbname != '*':
+            selector = self.genargsselector("/%s/DBINFO" % self.dbname)
+            entry = GopherEntry(selector, self.config)
+            entry.type = '0'
+            entry.mimetype = 'text/plain'
+            dictconn = dictclient.Connection()
+            entry.name = 'About ' + \
+                         dictclient.Database(dictconn, self.dbname).getdescription()
+            self.entries.append(entry)
+
+        selector = self.genargsselector("/%s/MATCH/re/^[^a-zA-Z]" % \
+                                        self.dbname)
+        entry = GopherEntry(selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-menu'
+        entry.name = "Items that do not begin with a letter"
+        self.entries.append(entry)
+        
+        for letter in string.ascii_uppercase:
+            selector = self.genargsselector("/%s/MATCH/re/^[%s%s]" % \
+                                            (self.dbname, letter,
+                                            letter.lower()))
+            entry = GopherEntry(selector, self.config)
+            entry.type = '1'
+            entry.mimetype = 'application/gopher-menu'
+            entry.name = letter
+            self.entries.append(entry)
+
+    def getentry(self):
+        entry = GopherEntry(self.selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-menu'
+        entry.name = 'Dictionary Database Browse'
+        return entry
+
+    def isdir(self):
+        return 1
+
+    def getdirlist(self):
+        return self.entries
+
+class DefineMenu(PYGMain):
+    def getentry(self):
+        entry = GopherEntry(self.selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-menu'
+        entry.name = 'Definition Menu for %s' % self.commandargs[0]
+        return entry
+    
+    def prepare(self):
+        self.db = dictclient.Connection()
+        self.entries = []
+
+        entry = getinfoentry("Definitions for '%s' in database '%s'" % \
+                             (self.commandargs[0], self.dbname), self.config)
+        self.entries.append(entry)
+
+        defs = self.db.define(self.dbname, self.commandargs[0])
+
+        if len(defs):
+            selector = self.genargsselector("/%s/DEFINITION/%s" %
+                                            (self.dbname, self.commandargs[0]))
+            entry = GopherEntry(selector, self.config)
+            entry.type = '0'
+            entry.mimetype = 'text/plain'
+            entry.name = 'All %d definitions on a single page' % len(defs)
+            self.entries.append(entry)
+        else:
+            entry = getinfoentry("No definitions found.", self.config)
+            self.entries.append(entry)
+
+        for i in range(len(defs)):
+            selector = self.genargsselector("/%s/DEFINITION/%s" % \
+                                            (defs[i].getdb().getname(),
+                                             defs[i].getword()))
+            entry = GopherEntry(selector, self.config)
+            entry.type = '0'
+            entry.mimetype = 'text/plain'
+            entry.name = "'%s' in %s" % (defs[i].getword(),
+                                         defs[i].getdb().getdescription())
+            self.entries.append(entry)
+
+        self.entries.append(getinfoentry(" ", self.config))
+        self.entries.append(getinfoentry("Definitions for similar words:",
+                                         self.config))
+
+        matches = self.db.match(self.dbname, 'lev', self.commandargs[0])
+        matchlist = unique([x.getword() for x in matches])
+        matchlist.sort(matchsort)
+
+        if not len(matchlist):
+            self.entries.append(getinfoentry("No similar definitions found.",
+                                             self.config))
+
+        for matchword in matchlist:
+            selector = self.genargsselector("/%s/DEFINE/%s" % \
+                                            (self.dbname, matchword))
+            entry = GopherEntry(selector, self.config)
+            entry.type = '1'
+            entry.mimetype = 'application/gopher-menu'
+            entry.name = matchword
+            self.entries.append(entry)
+
+    def isdir(self):
+        return 1
+
+    def getdirlist(self):
+        return self.entries
+
+class Definition(PYGMain):
+    def prepare(self):
+        self.db = dictclient.Connection()
+        self.definition = ""
+        defs = self.db.define(self.dbname, self.commandargs[0])
+
+        if not len(defs):
+            self.definition = "No definition found."
+            return
+
+        for d in defs:
+            self.definition += "DEFINITION of '%s'\nFrom %s\n\n" % \
+                               (d.getword(), d.getdb().getdescription())
+            self.definition += d.getdefstr()
+            self.definition += "\n" + ('-' * 60) + "\n"
+
+        self.definition += "Generated by dict.pyg for Pygopherd by John Goerzen <jgoerzen@complete.org>\n"
+        self.definition += "dict.pyg and Pygopherd licensed under the GPL.\n"
+
+    def write(self, wfile):
+        wfile.write(self.definition)
+
+    def getentry(self):
+        entry = GopherEntry(self.selector, self.config)
+        entry.type = '0'
+        entry.mimetype = 'text/plain'
+        entry.name = 'Definition for %s' % self.commandargs[0]
+        return entry
+
+class Match(PYGMain):
+    def getentry(self):
+        entry = GopherEntry(self.selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-menu'
+        entry.name = 'Match menu for %s' % self.commandargs[1]
+        return entry
+
+    def prepare(self):
+        self.conn = dictclient.Connection()
+        self.entries = []
+
+        matches = self.conn.match(self.dbname, self.commandargs[0],
+                                  self.commandargs[1])
+        if not len(matches):
+            self.entries.append(getinfoentry("No matches.",
+                                             self.config))
+            return
+
+        matchlist = unique([x.getword() for x in matches])
+        matchlist.sort(matchsort)
+
+        self.entries.append(getinfoentry("%d matches for '%s' (%s)" % \
+                                         (len(matchlist),
+                                          self.commandargs[1],
+                                          self.commandargs[0]), self.config))
+        
+        for matchword in matchlist:
+            selector = self.genargsselector("/%s/DEFINE/%s" % \
+                                            (self.dbname, matchword))
+            entry = GopherEntry(selector, self.config)
+            entry.type = '1'
+            entry.mimetype = 'application/gopher-menu'
+            entry.name = matchword
+            self.entries.append(entry)
+
+    def isdir(self):
+        return 1
+
+    def getdirlist(self):
+        return self.entries
+
+class MatchMenu(PYGMain):
+    def getentry(self):
+        entry = GopherEntry(self.selector, self.config)
+        entry.type = '1'
+        entry.mimetype = 'application/gopher-menu'
+        entry.name = 'Advanced Search Options for %s' % self.dbname
+        return entry
+
+    def prepare(self):
+        self.conn = dictclient.Connection()
+        self.entries = []
+
+        self.entries.append(getinfoentry("Advanced Search: " + self.dbname,
+                                         self.config))
+
+        for name, desc in self.conn.getstratdescs().items():
+            selector = self.genargsselector("/%s/MATCH/%s" % \
+                                            (self.dbname, name))
+            entry = GopherEntry(selector, self.config)
+            entry.type = '7'
+            entry.mimetype = 'application/gopher-menu'
+            entry.name = 'Search with %s (%s)' % (name, desc)
+            self.entries.append(entry)
+
+    def isdir(self):
+        return 1
+
+    def getdirlist(self):
+        return self.entries
+
+class DBInfo(PYGMain):
+    def prepare(self):
+        self.conn = dictclient.Connection()
+        self.conn.getdbdescs()
+        self.db = self.conn.getdbobj(self.dbname)
+        self.infotext = self.db.getinfo()
+
+    def write(self, wfile):
+        wfile.write("About %s (%s):\n\n" % (self.dbname, self.db.getdescription()))
+        wfile.write(self.infotext)
+
+    def getentry(self):
+        entry = GopherEntry(self.selector, self.config)
+        entry.type = '0'
+        entry.mimetype = 'text/plain'
+        entry.name = 'Information for %s' % self.dbname
+        return entry
+
+def unique(input):
+    """Return a list of the elements in input, but without duplicates.
+    Performs a case-insensitive check."""
+    retval = []
+    check  = {}
+    for item in input:
+        if not check.has_key(item.lower()):
+            retval.append(item)
+            check[item.lower()] = 1
+    return retval
+

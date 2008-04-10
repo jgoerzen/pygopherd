@@ -1,0 +1,179 @@
+
+   John Goerzen on Tue, 12 Feb 2002 14:19:47 -0500 (EST) 
+
+   [[1]Date Prev] [[2]Date Next] [[3]Thread Prev] [[4]Thread Next]
+   [[5]Date Index] [[6]Thread Index]
+
+   [gopher] Links to URL
+
+     * To: [7]gopher AT complete SEP org
+     * Subject: [gopher] Links to URL
+     * From: John Goerzen <[8]jgoerzen AT complete SEP org>
+     * Date: 12 Feb 2002 14:19:46 -0500
+     * In-reply-to: <[9]200202120132.RAA11190@stockholm.ptloma.edu>
+     * List-archive: <[10]http://www.complete.org/mailinglists/archives/>
+     * List-help: <[11]mailto:listar@complete.org?Subject=help>
+     * List-owner: <[12]mailto:jgoerzen@complete.org>
+     * List-post: <[13]mailto:gopher@complete.org>
+     * List-software: Listar version 1.0.0
+     * List-subscribe:
+       <[14]mailto:gopher-request@complete.org?Subject=subscribe>
+     * List-unsubscribe:
+       <[15]mailto:gopher-request@complete.org?Subject=unsubscribe>
+     * References: <[16]200202120132.RAA11190@stockholm.ptloma.edu>
+     * Reply-to: [17]gopher AT complete SEP org
+     * Sender: [18]gopher-bounce AT complete SEP org
+     * User-agent: Gnus/5.0808 (Gnus v5.8.8) XEmacs/21.4 (Common Lisp)
+     _________________________________________________________________
+
+
+I think it is best to start small with modifications to the protocol.
+Therefore, I propose the following:
+
+Method to link to URLs from Gopherspace
+---------------------------------------
+
+1. Protocol issues
+
+Links to URLs from a gopher directory shall be defined as follows:
+
+ Type -- the appropriate character corresponding to the type of the
+ document on the remote end; h if HTML.
+
+ Path -- the full URL, preceeded by "URL:".  For instance:
+         URL:[19]http://www.complete.org/
+
+ Host, Port -- pointing back to the gopher server that provided
+ the directory for compatibility reasons.
+
+ Name -- as usual for a Gopher directory entry.
+
+2. Conforming client requirements
+
+A client adhering to this specification will, when it sees a Gopher
+selector with a path starting with URL:, interpret the path as a URL.
+It will ignore the host and port components of the Gopher selector,
+using those components from the URL instead (if applicable).
+
+3. Conforming server requirements
+
+A server with Gopher URL support will not, in most cases, need to take
+extra steps to provide this support beyond those outlined in
+Compatibility below.  Servers not implementing those steps outlined in
+Compatibility will be deemed to be not in compliance.
+
+4. Authoring compliance
+
+The use of URL: selectors should be avoided wherever possible.  In
+particular, it should be avoided when pre-existing gopher facilities
+exist for the type of content linked.  The following URL types are
+explicitly prohibited by this specification:
+
+  gopher
+  telnet
+  tn3270
+
+Authors should avoid links to any document not of HTML type whenever
+possible.  Linking to non-HTML documents will break compatibility with
+Gopher browsers that do not implement this specification.  The ranks
+of these browsers include most Web browsers, so that is a significant
+audience.
+
+5. Compatibility
+
+Links to HTML pages may be accomodated even for non-comforming
+browsers by providing additional capabilities in the server.
+
+When a non-conforming browser is instructed to follow a link to a URL,
+it will contact the Gopher server that provided the menu (since these
+are specified per section 1).
+
+When a conforming Gopher server receives a request whose path begins
+with URL:, it will write out a HTML document that will send the
+non-compliant browser to the appropriate place.  One such conforming
+document is:
+
+  <HTML>
+  <HEAD>
+  <META HTTP-EQUIV="refresh" content="2;URL=[20]http://www.acm.org/classics/";>
+  </HEAD>
+  <BODY>
+  You are following a link from gopher to a web site.  You will be
+  automatically taken to the web site shortly.  If you do not get sent
+  there, please click
+  <A HREF="[21]http://www.acm.org/classics/";>here</A> to go to the web site.
+  <P>
+  The URL linked is:
+  <P>
+  <A HREF="[22]http://www.acm.org/classics/";>[23]http://www.acm.org/classics/<
+/A>
+  <P>
+  Thanks for using gopher!
+  </BODY>
+  </HTML>
+
+This document may be any desired by the server authors, but must
+adhere to these requirements:
+ * It must provide a refresh of a duration of 10 seconds or less
+ * It must not use IMG tags, frames, or have any reference whatsoever
+   to content outside that particular file -- other than the link
+   to the real destination.
+ * It must not use JavaScript.
+ * It must adhere to the W3C HTML 3.2 standard.
+
+When a non-conforming Gopher client finds a reference to a HTML file
+(type h), it will open up the file via Gopher (getting the redirect
+document) but using a web browser.  The web browser will then be
+redirected to the actual link destination.  Conforming clients will
+follow the link directly.
+
+END
+
+
+Comments?
+     _________________________________________________________________
+
+     * References:
+          + [24][gopher] Re: Gopher wishlist
+               o From: Cameron Kaiser
+
+     * Prev by Date: [25][gopher] Re: UMN Gopher on Mac OSX
+     * Next by Date: [26][gopher] Re: Gopher wishlist
+     * Previous by thread: [27][gopher] Re: Gopher wishlist
+     * Next by thread: [28][gopher] Bug
+     * Index(es):
+          + [29]Date
+          + [30]Thread
+
+References
+
+   1. http://www.complete.org/mailinglists/archives/gopher-200202/msg00032.html
+   2. http://www.complete.org/mailinglists/archives/gopher-200202/msg00034.html
+   3. http://www.complete.org/mailinglists/archives/gopher-200202/msg00076.html
+   4. http://www.complete.org/mailinglists/archives/gopher-200202/msg00021.html
+   5. http://www.complete.org/mailinglists/archives/gopher-200202/maillist.html#00033
+   6. http://www.complete.org/mailinglists/archives/gopher-200202/threads.html#00033
+   7. mailto:gopher@DOMAIN.HIDDEN
+   8. mailto:jgoerzen@DOMAIN.HIDDEN
+   9. http://www.complete.org/mailinglists/archives/gopher-200202/msg00026.html
+  10. http://www.complete.org/mailinglists/archives/
+  11. mailto:listar@complete.org?Subject=help
+  12. mailto:jgoerzen@complete.org
+  13. mailto:gopher@complete.org
+  14. mailto:gopher-request@complete.org?Subject=subscribe
+  15. mailto:gopher-request@complete.org?Subject=unsubscribe
+  16. http://www.complete.org/mailinglists/archives/gopher-200202/msg00026.html
+  17. mailto:gopher@DOMAIN.HIDDEN
+  18. mailto:gopher-bounce@DOMAIN.HIDDEN
+  19. http://www.complete.org/
+  20. http://www.acm.org/classics/"
+  21. http://www.acm.org/classics/"
+  22. http://www.acm.org/classics/"
+  23. http://www.acm.org/classics/
+  24. http://www.complete.org/mailinglists/archives/gopher-200202/msg00026.html
+  25. http://www.complete.org/mailinglists/archives/gopher-200202/msg00032.html
+  26. http://www.complete.org/mailinglists/archives/gopher-200202/msg00034.html
+  27. http://www.complete.org/mailinglists/archives/gopher-200202/msg00076.html
+  28. http://www.complete.org/mailinglists/archives/gopher-200202/msg00021.html
+  29. http://www.complete.org/mailinglists/archives/gopher-200202/maillist.html#00033
+  30. http://www.complete.org/mailinglists/archives/gopher-200202/threads.html#00033

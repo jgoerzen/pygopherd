@@ -1,0 +1,16 @@
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
+  <!ENTITY PyGopherd "<application>PyGopherd</application>">
+  <!ENTITY quickstart SYSTEM "quickstart.sgml">
+  <!ENTITY maindoc SYSTEM "pygopherd.sgml">
+  <!ENTITY manpage SYSTEM "manpage.sgml">
+]>
+<book id="pygopherd">
+  <bookinfo>
+    <title>PyGopherd Manual</>
+    <pubdate>$Date$</>
+    <edition>$Rev$</>
+  </bookinfo>
+
+  &maindoc;
+  &manpage;
+</book>

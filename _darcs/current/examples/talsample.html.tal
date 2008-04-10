@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>TAL Test</title>
+</head>
+<body>
+My selector is: <b tal:content="selector">selector</b><br>
+My MIME type is: <b tal:content="entry/mimetype">foo/bar</b><br>
+Another way of getting that is: <b tal:content="handler/getentry/mimetype">foo/bar</b><br>
+Gopher type is: <b tal:content="entry/gettype">X</b><br>
+My handler is: <b tal:content="handler">handlername</b><br>
+My protocol is: <b tal:content="protocol">protocol</b><br>
+Python path enabling status: <b tal:content="allowpythonpath">123</b><br>
+My vfs is: <b tal:content="handler/vfs">vfs</b><br>
+Math: <b tal:content="python:2 + 2">5</b>
+</body>
+</html>

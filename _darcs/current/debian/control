@@ -1,0 +1,40 @@
+Source: pygopherd
+Section: net
+Priority: optional
+Maintainer: John Goerzen <jgoerzen@complete.org>
+Build-Depends-Indep: python-central (>= 0.5), debhelper (>> 5.0.37.2), python, python (>= 2.3)
+Build-Depends: debhelper (>= 5.0.37.2), python-central (>= 0.5)
+Standards-Version: 3.5.2
+XS-Python-Version: current, >= 2.3
+
+Package: pygopherd
+Architecture: all
+XB-Python-Version: ${python:Versions}
+Depends: python, mime-support, logrotate, python-simpletal, ${python:Depends}
+Provides: gopher-server
+Description: Modular Multiprotocol Gopher/HTTP/WAP Server in Python
+ This is an all-new, modern Gopher server.  It can serve documents
+ with Gopher+, standard Gopher (RFC1436), HTTP, and WAP -- all on the same
+ port.  Pygopherd features a modular extension system as well as
+ loadable scripts and much more.  It contains full support for
+ UMN gopherd systems -- including .Links, .names, .cap, searches, etc.
+ Pygopherd also supports Bucktooth features such as gophermap files
+ and executables.  In addition to all this, there are Pygopherd's own
+ extra features.  All features are fully customizable and can be enabled
+ or disabled by editing /etc/pygopherd/pygopherd.conf.
+ .
+ This version of PyGopherd introduces WAP support.
+
+Package: pygfarm
+Architecture: all
+Depends: pygopherd (>= ${Source-Version}), python-dictclient (>= 1.0.1)
+Description: Collection of add-on modules for Pygopherd
+ These add-on modules provide additional functionality for
+ your Pygopherd server.
+ .
+ Included modules are:
+ .
+ dict.pyg: Interface to a dictd database
+ .
+ These are installed into /usr/share/pygfarm for you to link to
+ as you like.

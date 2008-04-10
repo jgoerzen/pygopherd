@@ -1,0 +1,271 @@
+pygopherd (2.0.17) unstable; urgency=high
+
+  * Make sure python-central does its thing before the init script
+    tries to start Python.  Closes: #387663.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri, 15 Sep 2006 14:01:50 -0500
+
+pygopherd (2.0.16) unstable; urgency=medium
+
+  * New config file option: timeout
+  * Updated to latest Debian python policy (Closes: #380906)
+
+ -- John Goerzen <jgoerzen@complete.org>  Mon, 11 Sep 2006 08:54:50 -0500
+
+pygopherd (2.0.15) unstable; urgency=low
+
+  * Fixed handling of interface config option.  Closes: #357315, #361435.
+
+ -- John Goerzen <jgoerzen@complete.org>  Tue,  9 May 2006 10:43:42 -0500
+
+pygopherd (2.0.14) unstable; urgency=low
+
+  * Fixed a bug where no subject line would crash the mailbox handler.
+  * Updated ChangeLog.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 22 Sep 2005 05:46:29 -0500
+
+pygopherd (2.0.13) unstable; urgency=low
+
+  * Applied patch from Tim to clean up some typos in the docs.
+  * Manpage was missing from .deb.  Fixed.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat, 19 Feb 2005 12:05:48 -0600
+
+pygopherd (2.0.12) unstable; urgency=low
+
+  * Cleaner handling of connection reset by peer
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat, 15 Jan 2005 15:23:38 -0600
+
+pygopherd (2.0.11) unstable; urgency=medium
+
+  * Work around a bug that occurs when a type is missing.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri, 14 Jan 2005 09:35:25 -0600
+
+pygopherd (2.0.10) unstable; urgency=low
+
+  * Some modifications to make more Windows friendly, based on patch from
+    Grant D. Watson.
+
+ -- John Goerzen <jgoerzen@complete.org>  Mon, 30 Aug 2004 14:49:15 -0500
+
+pygopherd (2.0.9) unstable; urgency=low
+
+  * Don't crash if simpletal is unavailable. 
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 17 Dec 2003 11:26:14 -0600
+
+pygopherd (2.0.8) unstable; urgency=low
+
+  * Fixed a logic error in the Numb handling fix.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 17 Dec 2003 08:43:38 -0600
+
+pygopherd (2.0.7) unstable; urgency=low
+
+  * Fixed UMN.py to properly handle Numb=.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 17 Dec 2003 08:25:49 -0600
+
+pygopherd (2.0.6) unstable; urgency=low
+
+  * Updated debian/docs.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu,  9 Oct 2003 16:46:37 -0500
+
+pygopherd (2.0.5) unstable; urgency=low
+
+  * Added build-dep on python2.3-dev.  Closes: #213938.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu,  9 Oct 2003 11:09:41 -0500
+
+pygopherd (2.0.4) unstable; urgency=low
+
+  * Eliminated outdated import of xreadlines, clearing up a warning
+    with Python 2.3.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sun, 24 Aug 2003 17:23:41 -0500
+
+pygopherd (2.0.3) unstable; urgency=low
+
+  * Fixed a silly typo in wap.py.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat, 23 Aug 2003 20:59:12 -0500
+
+pygopherd (2.0.2) unstable; urgency=low
+
+  * Can now autodetect many WAP browsers.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat, 23 Aug 2003 17:29:20 -0500
+
+pygopherd (2.0.1) unstable; urgency=low
+
+  * Oops, a stray print was left over.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat, 23 Aug 2003 15:04:19 -0500
+
+pygopherd (2.0.0) unstable; urgency=low
+
+  * New feature: WAP/WMP support!
+  * HTTP bugfix: use \r\n line endings.
+  * Debian: Updated for Python 2.3.
+  * Virtual: now use | for selector sep (keep ? for legacy)
+    for WAP compatibility.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat, 23 Aug 2003 12:00:48 -0500
+
+pygopherd (1.99.5) unstable; urgency=low
+
+  * Introduced new "inode-like" caching system for ZIP files.
+    Now, the first time a ZIP file is accessed, it will be scanned.
+    Links will be resolved immediately.  A dictionary tree is built up;
+    values being either file offsets in the ZIP file or dictionaries
+    (for subdirectories).  This dictionary is then cached on-disk using
+    a binary database and marshal algorithm derived from Python's shelve
+    module.  We do not need to use pickle for this task since we are saving
+    only simple structures.  The performance gain for large ZIP files using
+    this method is tremendous.  The only time a ZIP file's central
+    directory structure must be scanned now is the very first time it is
+    ever accessed.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 13 Mar 2003 09:49:39 -0600
+
+pygopherd (1.99.4) unstable; urgency=low
+
+  * Wrote my own ZIP file reader and heavily optimized it.  This reduced run
+    times for certain torture cases from over 100 seconds to somewhere
+    around 20, and others from over 200 seconds to around 80.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri,  7 Mar 2003 16:03:35 -0600
+
+pygopherd (1.99.3) unstable; urgency=low
+
+  * Backed out ZIP content cache.  Was slower than the ZIP file itself.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu,  6 Mar 2003 15:43:03 -0600
+
+pygopherd (1.99.2) unstable; urgency=low
+
+  * Made some aggressive optimizations in the ZIP handler.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu,  6 Mar 2003 15:34:08 -0600
+
+pygopherd (1.99.1) unstable; urgency=low
+
+  * Fixed a bug in html handler.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu,  6 Mar 2003 11:26:14 -0600
+
+pygopherd (1.99.0) unstable; urgency=low
+
+  * Implemented virtual file system support.
+  * Implemented VFS_Real, the VFS module for the on-disk filesystem
+    (as was the only option in the past)
+  * Implemented VFS_ZIP, the VFS module for ZIP archives.
+  * New handler ZIP to work with VFS_ZIP.
+  * Implemented symlink capabilities for VFS_ZIP.
+  * Implemented directory symlink capabilities for VFS_ZIP.
+  * Wrote extensive test battery for VFS_ZIP and VFS_ZIP's symlink handling.
+    All tests pass.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed,  5 Mar 2003 22:24:43 -0600
+
+pygopherd (1.1.1) unstable; urgency=low
+
+  * Added ability to serve up files ending in ".gophermap" as
+    Gophermap files.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri, 21 Feb 2003 15:14:03 -0600
+
+pygopherd (1.1.0) unstable; urgency=low
+
+  * Added new configuration option: advertisedport.
+  * Removed TODO file (now contained in bug-tracking system)
+  * Moved pygopherd.py to bin/pygopherd to make installation clearer
+    and testing smoother.
+  * Extensive new manual that thoroughly documents the system.
+  * UMN Compatibility: type - will also hide things in the fashion of X.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 08 Aug 2002 20:17:17 -0500
+
+pygopherd (1.0.0) unstable; urgency=low
+
+  * First release.  Welcome, pygopherd.
+  * Added URL type rewriting handler.
+  * Fixed gophermap info-only lines that have no tabs.
+  * UMN dir handler now keeps directories beginning with a . out of the
+    directory list.
+  * Shored up tests to work with Subversion.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 17 Jul 2002 19:32:32 -0500
+
+pygopherd (0.9.14) unstable; urgency=low
+
+  * Fixed some more bugs -- HTMLParser.
+  * Detect failure to allocate a socket and log it.  And still scream about
+    it.
+
+ -- John Goerzen <jgoerzen@complete.org>  Tue,  2 Jul 2002 11:45:20 -0500
+
+pygopherd (0.9.13) unstable; urgency=low
+
+  * Added signal handlers so shutdowns work properly.
+
+ -- John Goerzen <jgoerzen@complete.org>  Tue,  2 Jul 2002 11:03:18 -0500
+
+pygopherd (0.9.12) unstable; urgency=low
+
+  * Minor bugfixes.
+  * Added support for detached operation and pidfile writing.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed,  1 May 2002 11:46:19 -0500
+
+pygopherd (0.9.11) unstable; urgency=low
+
+  * Added support for searches in HTTP handler.
+  * Added pygfarm package and a PYG.
+  * Many bugfixes.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 18 Apr 2002 12:23:09 -0500
+
+pygopherd (0.9.10) unstable; urgency=low
+
+  * Added handling of abstracts and other extended attributes.
+  * More test cases.
+
+ -- John Goerzen <jgoerzen@complete.org>  Mon, 15 Apr 2002 19:20:04 -0500
+
+pygopherd (0.9.4) unstable; urgency=low
+
+  * Moved security handling to the handler base.
+  * Fixed bug in URL handling -- it works now.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri, 12 Apr 2002 11:46:14 -0500
+
+pygopherd (0.9.3) unstable; urgency=low
+
+  * Fixed a bug that prevented proper startup.  Fixed a lot of bugs
+    with new HTTP code.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 11 Apr 2002 16:41:02 -0500
+
+pygopherd (0.9.2) unstable; urgency=low
+
+  * More bugfixes and new testing code.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 11 Apr 2002 14:34:43 -0500
+
+pygopherd (0.9.1) unstable; urgency=low
+
+  * Many routine bugfixes.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 10 Apr 2002 19:31:13 -0500
+
+pygopherd (0.9.0) unstable; urgency=low
+
+  * Initial Release.  Closes: #142221.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 10 Apr 2002 08:58:31 -0500
+
