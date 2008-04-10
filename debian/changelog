@@ -1,3 +1,10 @@
+pygopherd (2.0.17-0.1) unstable; urgency=low
+
+  * Non-maintainer upload to solve release goal.
+  * Add LSB dependency header to init.d scripts (Closes: #469619).
+
+ -- Petter Reinholdtsen <pere@debian.org>  Fri,  4 Apr 2008 20:18:22 +0200
+
 pygopherd (2.0.17) unstable; urgency=high
 
   * Make sure python-central does its thing before the init script
