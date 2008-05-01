@@ -1,3 +1,9 @@
+pygopherd (2.0.18.1) unstable; urgency=low
+
+  * Remove RFC from Debian source package.  Closes: #475376.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 01 May 2008 01:31:59 -0500
+
 pygopherd (2.0.18) unstable; urgency=low
 
   * Move #DEBHELPER# section to end of postinst so that adduser gets run
