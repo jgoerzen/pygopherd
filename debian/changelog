@@ -1,3 +1,10 @@
+pygopherd (2.0.18.2) unstable; urgency=medium
+
+  * Correct typo in debian/rules.  Really get RFC out of Debian source package
+    this time.  Closes: #475376.
+
+ -- John Goerzen <jgoerzen@complete.org>  Tue, 05 Aug 2008 08:40:10 -0500
+
 pygopherd (2.0.18.1) unstable; urgency=low
 
   * Remove RFC from Debian source package.  Closes: #475376.
