@@ -23,7 +23,6 @@ clean:
 	-rm -f `find . -name ".cache*"`
 	-rm -f *.log *.aux *.dvi *.out *.jtex jadetex.cfg
 	-find . -name auth -exec rm -vf {}/password {}/username \;
-	-svn cleanup
 
 changelog:
 	git log -M -C --find-copies-harder --name-status > ChangeLog
