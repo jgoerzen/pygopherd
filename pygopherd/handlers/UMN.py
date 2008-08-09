@@ -224,7 +224,10 @@ class UMNDirHandler(DirHandler):
                     entry.setport(int(line[5:]))
                 done['port'] = 1
             elif line[0:5] == 'Numb=':
-                entry.setnum(int(line[5:]))
+                try:            # Don't crash if we can't parse the number
+                    entry.setnum(int(line[5:]))
+                except:
+                    pass
             elif line[0:9] == 'Abstract=':
                 abstractstr = ""
                 abstractline = line[9:]
