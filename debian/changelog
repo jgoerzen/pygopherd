@@ -1,3 +1,9 @@
+pygopherd (2.0.18.3) unstable; urgency=low
+
+  * Now remove build directory in clean target.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri, 08 Aug 2008 22:02:16 -0500
+
 pygopherd (2.0.18.2) unstable; urgency=medium
 
   * Correct typo in debian/rules.  Really get RFC out of Debian source package
