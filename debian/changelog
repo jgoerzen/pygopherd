@@ -1,3 +1,9 @@
+pygopherd (2.0.18.4) UNRELEASED; urgency=low
+
+  * Fix typo in pygopherd/handlers/url.py
+
+ -- Benjamin Kerensa <bkerensa@ubuntu.com>  Thu, 08 Nov 2012 03:23:41 -0800
+
 pygopherd (2.0.18.3) unstable; urgency=low
 
   * Now remove build directory in clean target.
