@@ -64,7 +64,7 @@ class HTMLURLHandler(BaseHandler):
         outdoc += """
         You are following a link from gopher to a website.  You will be
         automatically taken to the web site shortly.  If you do not get
-        sent there, plesae click """
+        sent there, please click """
         outdoc += '<A HREF="%s">here</A> ' % url
         outdoc += """to go to the web site.
         <P>
