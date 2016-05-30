@@ -1,3 +1,32 @@
+pygopherd (2.0.18.3+nmu4) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Copy gophermap from /usr/share, not /usr/share/doc (Closes: #771501)
+
+ -- Cameron Norman <camerontnorman@gmail.com>  Mon, 08 Dec 2014 17:25:38 -0800
+
+pygopherd (2.0.18.3+nmu3) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Convert to dh_python2. (Closes: #616966) 
+
+ -- Andrea Colangelo <warp10@ubuntu.com>  Fri, 28 Jun 2013 18:08:31 +0200
+
+pygopherd (2.0.18.3+nmu2) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Build-Depend on python >= 2.5.4 for install-layout=deb.
+
+ -- Kumar Appaiah <akumar@debian.org>  Mon, 19 Oct 2009 18:00:54 -0500
+
+pygopherd (2.0.18.3+nmu1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix "manipulates site-packages/ directly, failing with Python 2.6"
+    Applied and uploaded Kumar's patch, thanks dude! (Closes: #547835)
+
+ -- Bastian Venthur <venthur@debian.org>  Sat, 17 Oct 2009 15:41:30 +0200
+
 pygopherd (2.0.18.3) unstable; urgency=low
 
   * Now remove build directory in clean target.

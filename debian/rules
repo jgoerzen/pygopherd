@@ -59,7 +59,7 @@ install: build
 
 	# Add here commands to install the package into debian/pygopherd.
 	#$(MAKE) install DESTDIR=$(CURDIR)/debian/pygopherd
-	$(PYTHON) setup.py install --root=`pwd`/debian/$(PACKAGE) --no-compile
+	$(PYTHON) setup.py install --root=`pwd`/debian/$(PACKAGE) --no-compile --install-layout=deb
 
 
 # Build architecture-dependent files here.
@@ -75,6 +75,7 @@ binary-indep: build install
 	mv debian/pygopherd/usr/bin/pygopherd \
 		debian/pygopherd/usr/sbin/pygopherd
 	rm debian/pygopherd/etc/pygopherd/mime.types
+	cp examples/gophermap debian/pygopherd/usr/share/pygopherd/gophermap
 	cp pygfarm/*.pyg debian/pygfarm/usr/share/pygfarm
 	chown root.root debian/pygfarm/usr/share/pygfarm/*
 	chmod 0755 debian/pygfarm/usr/share/pygfarm/*
@@ -84,14 +85,13 @@ binary-indep: build install
 #	dh_installemacsen
 #	dh_installpam
 #	dh_installmime
-	dh_pycentral
 	dh_installinit
 	dh_installcron
 	dh_installman doc/pygopherd.8
 	dh_installinfo
 #	dh_undocumented
 	dh_installchangelogs 
-	dh_python
+	dh_python2
 	dh_link
 	dh_strip
 	dh_compress
