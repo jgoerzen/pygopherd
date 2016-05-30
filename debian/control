@@ -3,7 +3,7 @@ Section: net
 Priority: optional
 Maintainer: John Goerzen <jgoerzen@complete.org>
 Build-Depends-Indep: debhelper (>> 9), python (>= 2.6.6-3~), dh-python
-Build-Depends: debhelper (>= 9), dh-python
+Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.6
 Homepage: gopher://gopher.quux.org/1/devel/gopher/pygopherd
 Vcs-Git: git://git.complete.org/pygopherd
