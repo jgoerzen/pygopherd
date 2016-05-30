@@ -3,6 +3,7 @@ pygopherd (2.0.18.4) unstable; urgency=low
   * Ack NMU.  Closes: #771501, #616966, #547835.
   * Don't crash if Numb= is empty.
   * Migrate to compat 9.  Closes: #800204.
+  * Correct a typo in URL handler.  Closes: #663420.
 
  -- John Goerzen <jgoerzen@complete.org>  Sun, 29 May 2016 21:01:06 -0500
 
