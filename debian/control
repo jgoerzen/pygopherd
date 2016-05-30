@@ -2,16 +2,16 @@ Source: pygopherd
 Section: net
 Priority: optional
 Maintainer: John Goerzen <jgoerzen@complete.org>
-Build-Depends-Indep: debhelper (>> 5.0.37.2), python (>= 2.6.6-3~), dh-python
-Build-Depends: debhelper (>= 5.0.37.2), dh-python
-Standards-Version: 3.5.2
+Build-Depends-Indep: debhelper (>> 9), python (>= 2.6.6-3~), dh-python
+Build-Depends: debhelper (>= 9), dh-python
+Standards-Version: 3.9.6
 Homepage: gopher://gopher.quux.org/1/devel/gopher/pygopherd
 Vcs-Git: git://git.complete.org/pygopherd
 Vcs-Browser: http://git.complete.org/pygopherd
 
 Package: pygopherd
 Architecture: all
-Depends: python, mime-support, logrotate, python-simpletal, ${python:Depends}
+Depends: python, mime-support, logrotate, python-simpletal, ${python:Depends}, ${misc:Depends}, adduser
 Provides: gopher-server
 Description: Modular Multiprotocol Gopher/HTTP/WAP Server in Python
  This is an all-new, modern Gopher server.  It can serve documents
@@ -28,7 +28,7 @@ Description: Modular Multiprotocol Gopher/HTTP/WAP Server in Python
 
 Package: pygfarm
 Architecture: all
-Depends: pygopherd (>= ${Source-Version}), python-dictclient (>= 1.0.1)
+Depends: pygopherd (>= ${Source-Version}), python-dictclient (>= 1.0.1), ${misc:Depends}
 Description: Collection of add-on modules for Pygopherd
  These add-on modules provide additional functionality for
  your Pygopherd server.

@@ -68,7 +68,7 @@ if [ "$HOMEDIREXISTS" = "no" ]; then
     mkdir $HOMEDIR
   fi
   cp /usr/share/pygopherd/gophermap $HOMEDIR/gophermap
-  chown -R gopher.gopher $HOMEDIR
+  chown -R gopher:gopher $HOMEDIR
 fi
 
     ;;
