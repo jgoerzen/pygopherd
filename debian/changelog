@@ -1,3 +1,9 @@
+pygopherd (2.0.18.4) unstable; urgency=medium
+
+  * Ack NMU.  Closes: #771501, #616966, #547835.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sun, 29 May 2016 21:01:06 -0500
+
 pygopherd (2.0.18.3+nmu4) unstable; urgency=medium
 
   * Non-maintainer upload.
