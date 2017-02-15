@@ -2,6 +2,7 @@ pygopherd (2.0.18.5) unstable; urgency=medium
 
   * Correct Cvs-Git and related in debian/control.
   * Bump standards-version.
+  * Build fix: use newer source:Version in control.
 
  -- John Goerzen <jgoerzen@complete.org>  Tue, 14 Feb 2017 19:08:39 -0600
 

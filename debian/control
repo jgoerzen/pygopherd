@@ -28,7 +28,7 @@ Description: Modular Multiprotocol Gopher/HTTP/WAP Server in Python
 
 Package: pygfarm
 Architecture: all
-Depends: pygopherd (>= ${Source-Version}), python-dictclient (>= 1.0.1), ${misc:Depends}
+Depends: pygopherd (>= ${source:Version}), python-dictclient (>= 1.0.1), ${misc:Depends}
 Description: Collection of add-on modules for Pygopherd
  These add-on modules provide additional functionality for
  your Pygopherd server.
