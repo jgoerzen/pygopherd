@@ -37,7 +37,7 @@ as a system-wide daemon.  For running in-place, do this:
 
 For installing:
 
-1. Run pytohn2.2 setup.py install
+1. Run python2.2 setup.py install
 
 2. Make sure that the /etc/pygopherd/pygopherd.conf names valid users
    (setuid, setgid) and valid document root (root).
