@@ -71,7 +71,7 @@ class BuckGophermapHandler(base.BaseHandler):
                     args[1] = args[0][1:] # Copy display string to selector
 
                 selector = args[1]
-                if selector[0] != '/': # Relative link
+                if selector[0] != '/' and selector[0:4] != "URL:": # Relative link
                     selector = selectorbase + '/' + selector
                 
                 entry = gopherentry.GopherEntry(selector, self.config)
