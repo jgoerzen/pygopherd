@@ -209,7 +209,7 @@ class UMNDirHandler(DirHandler):
                     # Handle ./: make full path.
                     entry.setselector(self.selectorbase + "/" + pathname[2:])
                     entry.setneedsmerge(1)
-                elif len(pathname) and pathname[0] != '/':
+                elif len(pathname) and pathname[0] != '/' and pathname[0:4] != "URL:":
                     entry.setselector(pathname)
                     entry.setneedsabspath(1)
                 else:
