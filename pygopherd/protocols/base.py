@@ -16,7 +16,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import SocketServer
+import socketserver
 import re
 import os, stat, os.path, mimetypes
 from pygopherd import handlers, GopherExceptions, logger, gopherentry
@@ -37,7 +37,7 @@ class BaseGopherProtocol:
         config -- a ConfigParser object."""
 
         self.request = request
-        requestparts = map(lambda arg: arg.strip(), request.split("\t"))
+        requestparts = [arg.strip() for arg in request.split("\t")]
         self.rfile = rfile
         self.wfile = wfile
         self.config = config
@@ -87,9 +87,9 @@ class BaseGopherProtocol:
                 self.writedir(self.entry, handler.getdirlist())
             else:
                 handler.write(self.wfile)
-        except GopherExceptions.FileNotFound, e:
+        except GopherExceptions.FileNotFound as e:
             self.filenotfound(str(e))
-        except IOError, e:
+        except IOError as e:
             GopherExceptions.log(e, self, None)
             self.filenotfound(e[1])
 

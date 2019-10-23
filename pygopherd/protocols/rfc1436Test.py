@@ -1,7 +1,7 @@
 import unittest, re
 from pygopherd.protocols.rfc1436 import GopherProtocol
 from pygopherd import testutil
-from StringIO import StringIO
+from io import StringIO
 
 class RFC1436TestCase(unittest.TestCase):
     def setUp(self):
@@ -22,20 +22,20 @@ class RFC1436TestCase(unittest.TestCase):
                                self.server, self.handler, self.rfile,
                                self.wfile, self.config)
         assert proto.canhandlerequest()
-        self.assertEquals(proto.selector, '/testfile.txt')
-        self.assertEquals(proto.searchrequest, "search")
+        self.assertEqual(proto.selector, '/testfile.txt')
+        self.assertEqual(proto.searchrequest, "search")
 
     def testrenderobjinfo(self):
         expected = "0testfile.txt\t/testfile.txt\t%s\t%d\t+\r\n" % \
                    (self.server.server_name, self.server.server_port)
-        self.assertEquals(self.proto.renderobjinfo(self.proto.gethandler().getentry()),
+        self.assertEqual(self.proto.renderobjinfo(self.proto.gethandler().getentry()),
                           expected)
 
     def testhandle_file(self):
         self.proto.handle()
-        self.assertEquals(self.logfile.getvalue(),
+        self.assertEqual(self.logfile.getvalue(),
                           "10.77.77.77 [GopherProtocol/FileHandler]: /testfile.txt\n")
-        self.assertEquals(self.wfile.getvalue(), "Test\n")
+        self.assertEqual(self.wfile.getvalue(), "Test\n")
 
     def testhandle_file_zipped(self):
         self.config.set("handlers.ZIP.ZIPHandler", "enabled", 'true')
@@ -50,15 +50,15 @@ class RFC1436TestCase(unittest.TestCase):
                                     self.handler, self.rfile, self.wfile,
                                     self.config)
         self.proto.handle()
-        self.assertEquals(self.wfile.getvalue(), "ZIPonly\n")
+        self.assertEqual(self.wfile.getvalue(), "ZIPonly\n")
         self.config.set("handlers.ZIP.ZIPHandler", "enabled", "false")
 
     def testhandle_dir_abstracts(self):
         proto = GopherProtocol("", self.server, self.handler, self.rfile,
                                self.wfile, self.config)
         proto.handle()
-        self.assertEquals(proto.selector, '/')
-        self.assertEquals(self.logfile.getvalue(),
+        self.assertEqual(proto.selector, '/')
+        self.assertEqual(self.logfile.getvalue(),
                           "10.77.77.77 [GopherProtocol/UMNDirHandler]: /\n")
         # Try to make this easy on us to fix.
         actualarr = self.wfile.getvalue().splitlines()
@@ -79,11 +79,11 @@ class RFC1436TestCase(unittest.TestCase):
 '9ziptorture\t/ziptorture.zip\tHOSTNAME\t64777\t+']
         expectedarr = [re.sub('HOSTNAME', self.server.server_name, x) for \
                       x in expectedarr]
-        self.assertEquals(len(actualarr), len(expectedarr), str(actualarr))
+        self.assertEqual(len(actualarr), len(expectedarr), str(actualarr))
         for i in range(len(actualarr)):
-            self.assertEquals(actualarr[i], expectedarr[i])
+            self.assertEqual(actualarr[i], expectedarr[i])
         # Make sure proper line endings are present.
-        self.assertEquals("\r\n".join(actualarr) + "\r\n", self.wfile.getvalue())
+        self.assertEqual("\r\n".join(actualarr) + "\r\n", self.wfile.getvalue())
 
     def testhandle_dir_noabstract(self):
         self.config.set("pygopherd", "abstract_headers", "off")
@@ -106,7 +106,7 @@ class RFC1436TestCase(unittest.TestCase):
               '9ziptorture\t/ziptorture.zip\tHOSTNAME\t64777\t+']
         expectedarr = [re.sub('HOSTNAME', self.server.server_name, x) for \
                        x in expectedarr]
-        self.assertEquals(len(actualarr), len(expectedarr))
+        self.assertEqual(len(actualarr), len(expectedarr))
         for i in range(len(actualarr)):
-            self.assertEquals(actualarr[i], expectedarr[i])
+            self.assertEqual(actualarr[i], expectedarr[i])
 

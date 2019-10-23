@@ -78,7 +78,7 @@ class TALLoader:
         elif self.vfs.isdir(fq):
             return self.__class__(self.vfs, fq)
         else:
-            raise AttributeError, "Key %s not found in %s" % (key, self.path)
+            raise AttributeError("Key %s not found in %s" % (key, self.path))
 
 class RecursiveTALLoader(TALLoader):
     def __getattr__(self, key):

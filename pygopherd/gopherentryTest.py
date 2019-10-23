@@ -33,8 +33,8 @@ class GopherEntryTestCase(unittest.TestCase):
         self.root = self.config.get("pygopherd", "root")
 
     def assertEntryMatches(self, conditions, entry, testname):
-        for field, value in conditions.items():
-            self.assertEquals(value, getattr(entry, field),
+        for field, value in list(conditions.items()):
+            self.assertEqual(value, getattr(entry, field),
                               "%s: Field '%s' expected '%s' but was '%s'" % \
                               (testname, field, value, getattr(entry, field)))
 
@@ -96,11 +96,11 @@ class GopherEntryTestCase(unittest.TestCase):
         entry = GopherEntry('/testfile.txt.gz', self.config)
         entry.populatefromfs(fspath)
 
-        self.assertEquals(entry.gettype(), '9')
-        self.assertEquals(entry.getmimetype(), 'application/octet-stream')
-        self.assertEquals(entry.getencoding(), 'gzip')
-        self.assertEquals(entry.getencodedmimetype(), 'text/plain')
-        self.assertEquals(entry.geteadict(),
+        self.assertEqual(entry.gettype(), '9')
+        self.assertEqual(entry.getmimetype(), 'application/octet-stream')
+        self.assertEqual(entry.getencoding(), 'gzip')
+        self.assertEqual(entry.getencodedmimetype(), 'text/plain')
+        self.assertEqual(entry.geteadict(),
                           {'ABSTRACT': "This is the abstract\nfor testfile.txt.gz"})
 
     def testpopulate_dir(self):
@@ -171,27 +171,27 @@ class GopherEntryTestCase(unittest.TestCase):
         entry.type = '2'
         entry.mimetype = 'FAKEMIMETYPE'
         entry.populatefromfs(self.root)
-        self.assertEquals(entry.gettype(), '2')
-        self.assertEquals(entry.getmimetype(), 'FAKEMIMETYPE')
+        self.assertEqual(entry.gettype(), '2')
+        self.assertEqual(entry.getmimetype(), 'FAKEMIMETYPE')
         
         # Test mime type handling.  First, regular file.
 
         entry = GopherEntry(selector, self.config)
         entry.mimetype = 'fakemimetype'
         entry.populatefromfs(fspath)
-        self.assertEquals(entry.getmimetype(), 'fakemimetype')
+        self.assertEqual(entry.getmimetype(), 'fakemimetype')
         # The guesstype will not find fakemimetype and so it'll set it to 0
-        self.assertEquals(entry.gettype(), '0')
+        self.assertEqual(entry.gettype(), '0')
 
         # Now, an encoded file.
 
         entry = GopherEntry(selector + '.gz', self.config)
         entry.mimetype = 'fakemime'
         entry.populatefromfs(fspath + '.gz')
-        self.assertEquals(entry.getmimetype(), 'fakemime')
-        self.assertEquals(entry.getencoding(), 'gzip')
-        self.assertEquals(entry.getencodedmimetype(), 'text/plain')
-        self.assertEquals(entry.gettype(), '0') # again from fakemime
+        self.assertEqual(entry.getmimetype(), 'fakemime')
+        self.assertEqual(entry.getencoding(), 'gzip')
+        self.assertEqual(entry.getencodedmimetype(), 'text/plain')
+        self.assertEqual(entry.gettype(), '0') # again from fakemime
 
         # More details.
 
@@ -201,27 +201,27 @@ class GopherEntryTestCase(unittest.TestCase):
         entry.mimetype = 'foo1234'
         entry.encoding = 'bar'
         entry.populatefromfs(fspath)
-        self.assertEquals(entry.getmimetype(), 'foo1234')
-        self.assertEquals(entry.getencoding(), 'bar')
-        self.assertEquals(entry.getencodedmimetype(), 'application/x-tar')
-        self.assertEquals(entry.gettype(), '0')
+        self.assertEqual(entry.getmimetype(), 'foo1234')
+        self.assertEqual(entry.getencoding(), 'bar')
+        self.assertEqual(entry.getencodedmimetype(), 'application/x-tar')
+        self.assertEqual(entry.gettype(), '0')
 
         # And overriding only the encoding.
 
         entry = GopherEntry(selector, self.config)
         entry.encoding = 'fakeencoding'
         entry.populatefromfs(fspath)
-        self.assertEquals(entry.getencoding(), 'fakeencoding')
-        self.assertEquals(entry.gettype(), '9')
-        self.assertEquals(entry.getmimetype(), 'application/octet-stream')
+        self.assertEqual(entry.getencoding(), 'fakeencoding')
+        self.assertEqual(entry.gettype(), '9')
+        self.assertEqual(entry.getmimetype(), 'application/octet-stream')
 
         # And finally -- overriding the encoded mime type.
 
         entry = GopherEntry(selector, self.config)
         entry.encodedmimetype = 'fakeencoded'
         entry.populatefromfs(fspath)
-        self.assertEquals(entry.getencodedmimetype(), 'fakeencoded')
-        self.assertEquals(entry.getmimetype(), 'application/octet-stream')
+        self.assertEqual(entry.getencodedmimetype(), 'fakeencoded')
+        self.assertEqual(entry.getmimetype(), 'application/octet-stream')
 
     def test_guesstype(self):
         entry = GopherEntry('/NONEXISTANT', self.config)
@@ -235,9 +235,9 @@ class GopherEntryTestCase(unittest.TestCase):
                     'application/msword' : '9',
                     'audio/aiff' : 's'}
 
-        for mimetype, type in expected.items():
+        for mimetype, type in list(expected.items()):
             entry.mimetype = mimetype
-            self.assertEquals(entry.guesstype(), type,
+            self.assertEqual(entry.guesstype(), type,
                               "Failure for %s: got %s, expected %s" % \
                               (mimetype, entry.guesstype(), type))
 
@@ -256,11 +256,11 @@ class GopherEntryTestCase(unittest.TestCase):
         for field in fields:
             getfunc = getattr(entry, 'get' + field)
             setfunc = getattr(entry, 'set' + field)
-            self.assertEquals(getfunc(), None)
-            self.assertEquals(getfunc('DEFAULT' + field), 'DEFAULT' + field)
+            self.assertEqual(getfunc(), None)
+            self.assertEqual(getfunc('DEFAULT' + field), 'DEFAULT' + field)
             setfunc('NewValue' + field)
-            self.assertEquals(getfunc(), 'NewValue' + field)
-            self.assertEquals(getfunc('DEFAULT'), 'NewValue' + field)
+            self.assertEqual(getfunc(), 'NewValue' + field)
+            self.assertEqual(getfunc('DEFAULT'), 'NewValue' + field)
 
     def testgeturl(self):
         expected = {
@@ -269,19 +269,19 @@ class GopherEntryTestCase(unittest.TestCase):
             '/foo' : 'gopher://MISSINGHOST:70/0/foo',
             '/About Me.txt' : 'gopher://MISSINGHOST:70/0/About%20Me.txt',
             '/' : 'gopher://MISSINGHOST:70/0/'}
-        for selector, url in expected.items():
+        for selector, url in list(expected.items()):
             entry = GopherEntry(selector, self.config)
             entry.settype('0')
-            self.assertEquals(url, entry.geturl())
-            self.assertEquals(re.sub('MISSINGHOST', 'NEWHOST', url),
+            self.assertEqual(url, entry.geturl())
+            self.assertEqual(re.sub('MISSINGHOST', 'NEWHOST', url),
                               entry.geturl('NEWHOST'))
-            self.assertEquals(re.sub('70', '10101', url),
+            self.assertEqual(re.sub('70', '10101', url),
                               entry.geturl(defaultport = 10101))
             entry.sethost('newhost')
-            self.assertEquals(re.sub('MISSINGHOST', 'newhost', url),
+            self.assertEqual(re.sub('MISSINGHOST', 'newhost', url),
                               entry.geturl())
             entry.setport(80)
-            self.assertEquals(re.sub('MISSINGHOST:70', 'newhost:80', url),
+            self.assertEqual(re.sub('MISSINGHOST:70', 'newhost:80', url),
                               entry.geturl())
 
         

@@ -17,8 +17,8 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from http import HTTPProtocol
-from StringIO import StringIO
+from .http import HTTPProtocol
+from io import StringIO
 import cgi, re
 
 accesskeys = '1234567890#*'
@@ -46,7 +46,7 @@ class WAPProtocol(HTTPProtocol):
         self.headerslurp()
 
         # See if we can auto-detect a WAP browser.
-        if not self.httpheaders.has_key('accept'):
+        if 'accept' not in self.httpheaders:
             return 0
 
         if not re.search('[, ]text/vnd.wap.wml', self.httpheaders['accept']):
@@ -56,7 +56,7 @@ class WAPProtocol(HTTPProtocol):
         # more things.
 
         for tryitem in ['x-wap-profile', 'x-up-devcap-max-pdu']:
-            if self.httpheaders.has_key(tryitem):
+            if tryitem in self.httpheaders:
                 return 1
 
         return 0

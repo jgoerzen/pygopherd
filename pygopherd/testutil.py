@@ -22,7 +22,7 @@
 
 from pygopherd import initialization, logger
 from pygopherd.protocols import ProtocolMultiplexer
-from StringIO import StringIO
+from io import StringIO
 import os
 
 def getconfig():

@@ -44,7 +44,7 @@ class ExecHandler(Virtual):
         # environment.  Just saying newenv = os.environ would still
         # do that.
         newenv = {}
-        for key in os.environ.keys():
+        for key in list(os.environ.keys()):
             newenv[key] = os.environ[key]
         newenv['SERVER_NAME'] = self.protocol.server.server_name
         newenv['SERVER_PORT'] = str(self.protocol.server.server_port)

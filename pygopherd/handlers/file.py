@@ -16,7 +16,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import SocketServer
+import socketserver
 import re
 import os, stat, os.path, mimetypes
 from pygopherd import protocols, gopherentry
@@ -50,7 +50,7 @@ class CompressedFileHandler(FileHandler):
         
         return FileHandler.canhandlerequest(self) and \
                self.getentry().realencoding and \
-               decompressors.has_key(self.getentry().realencoding) and \
+               self.getentry().realencoding in decompressors and \
                re.search(decompresspatt, self.selector)
 
     def getentry(self):
@@ -58,7 +58,7 @@ class CompressedFileHandler(FileHandler):
             self.entry = FileHandler.getentry(self)
             self.entry.realencoding = None
             if self.entry.getencoding() and \
-               decompressors.has_key(self.entry.getencoding()) and \
+               self.entry.getencoding() in decompressors and \
                self.entry.getencodedmimetype():
                 # When the client gets it, there will not be
                 # encoding.  Therefore, we remove the encoding and switch

@@ -16,7 +16,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import SocketServer
+import socketserver
 import re
 import os, stat, os.path, mimetypes
 from pygopherd import protocols, gopherentry
@@ -131,7 +131,7 @@ class UMNDirHandler(DirHandler):
             if not linkentry.getneedsmerge():
                 self.fileentries.append(linkentry)
                 continue
-            if fileentriesdict.has_key(linkentry.selector):
+            if linkentry.selector in fileentriesdict:
                 if linkentry.gettype() == 'X':
                     # It's special code to hide something.
                     self.fileentries.remove(fileentriesdict[linkentry.selector])
@@ -148,7 +148,7 @@ class UMNDirHandler(DirHandler):
             if getattr(new, field):
                 setattr(old, field, getattr(new, field))
 
-        for field in new.geteadict().keys():
+        for field in list(new.geteadict().keys()):
             old.setea(field, new.getea(field))
 
     def processLinkFile(self, filename, capfilepath = None):

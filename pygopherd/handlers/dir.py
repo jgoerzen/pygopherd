@@ -17,13 +17,13 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import SocketServer
+import socketserver
 import re
 import os, stat, os.path, mimetypes, time
 from pygopherd import protocols, gopherentry, handlers
 from pygopherd.handlers import base
 from stat import *
-import cPickle
+import pickle
 
 cachetime = None
 cachefile = None
@@ -119,7 +119,7 @@ class DirHandler(base.BaseHandler):
 
         if (time.time() - statval[stat.ST_MTIME] < cachetime):
             fp = self.vfs.open(cachename, "rb")
-            self.fileentries = cPickle.load(fp)
+            self.fileentries = pickle.load(fp)
             fp.close()
             self.fromcache = 1
             return 1
@@ -134,7 +134,7 @@ class DirHandler(base.BaseHandler):
             return
         try:
             fp = self.vfs.open(self.selector + "/" + cachefile, "wb")
-            cPickle.dump(self.fileentries, fp, 1)
+            pickle.dump(self.fileentries, fp, 1)
             fp.close()
         except IOError:
             pass

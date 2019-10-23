@@ -16,7 +16,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import SocketServer
+import socketserver
 import re
 import os, stat, os.path, mimetypes
 from pygopherd import protocols, gopherentry
@@ -65,7 +65,7 @@ class BuckGophermapHandler(base.BaseHandler):
             if not line:
                 break
             if re.search("\t", line):   # gophermap link
-                args = map(lambda arg: arg.strip(), line.split("\t"))
+                args = [arg.strip() for arg in line.split("\t")]
 
                 if len(args) < 2 or not len(args[1]):
                     args[1] = args[0][1:] # Copy display string to selector

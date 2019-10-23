@@ -16,7 +16,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import SocketServer
+import socketserver
 import re
 import os, stat, os.path, mimetypes
 from pygopherd import protocols, gopherentry
@@ -47,7 +47,7 @@ class VFS_Real:
         return os.path.exists(self.getfspath(selector))
 
     def open(self, selector, *args, **kwargs):
-        return apply(open, (self.getfspath(selector),) + args, kwargs)
+        return open(*(self.getfspath(selector),) + args, **kwargs)
 
     def listdir(self, selector):
         return os.listdir(self.getfspath(selector))
@@ -172,7 +172,7 @@ class BaseHandler:
         NOT call write if isdir() returns true!  Should be overridden
         by files."""
         if self.isdir():
-            raise Exception, "Attempt to use write for a directory"
+            raise Exception("Attempt to use write for a directory")
 
     def getdirlist(self):
         """Returns a list-like object (list, iterator, tuple, generator, etc)
@@ -180,6 +180,6 @@ class BaseHandler:
         to each item in the directory.  Valid only if self.isdir() returns
         true."""
         if not self.isdir():
-            raise Exception, "Attempt to use getdir for a file."
+            raise Exception("Attempt to use getdir for a file.")
         return []
     

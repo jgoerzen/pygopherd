@@ -17,22 +17,22 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from pygopherd.handlers.file import FileHandler
-import HTMLParser
-import SocketServer
+import html.parser
+import socketserver
 import re
 import os, stat, os.path, mimetypes
 from pygopherd import protocols, gopherentry
 from pygopherd.gopherentry import GopherEntry
-import htmlentitydefs
+import html.entities
 from stat import *
 
 ###########################################################################
 # HTML File Handler
 # Sets the name of a file if it's HTML.
 ###########################################################################
-class HTMLTitleParser(HTMLParser.HTMLParser):
+class HTMLTitleParser(html.parser.HTMLParser):
     def __init__(self):
-        HTMLParser.HTMLParser.__init__(self)
+        html.parser.HTMLParser.__init__(self)
         self.titlestr = ""
         self.readingtitle = 0
         self.gotcompletetitle = 0
@@ -53,8 +53,8 @@ class HTMLTitleParser(HTMLParser.HTMLParser):
     def handle_entityref(self, name):
         """Handle things like &amp; or &gt; or &lt;.  If it's not in
         the dictionary, ignore it."""
-        if self.readingtitle and htmlentitydefs.entitydefs.has_key(name):
-            self.titlestr += htmlentitydefs.entitydefs[name]
+        if self.readingtitle and name in html.entities.entitydefs:
+            self.titlestr += html.entities.entitydefs[name]
 
 class HTMLFileTitleHandler(FileHandler):
     """This class will set the title of a HTML document based on the
@@ -78,7 +78,7 @@ class HTMLFileTitleHandler(FileHandler):
                     break
                 parser.feed(line)
             parser.close()
-        except HTMLParser.HTMLParseError:
+        except html.parser.HTMLParseError:
             # Parse error?  Stop parsing, go to here.  We can still
             # return a title if the parse error happened after we got
             # the title.

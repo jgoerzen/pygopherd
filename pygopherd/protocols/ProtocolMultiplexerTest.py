@@ -1,5 +1,5 @@
 import unittest
-from StringIO import StringIO
+from io import StringIO
 from pygopherd.protocols import ProtocolMultiplexer
 from pygopherd import testutil
 import pygopherd.protocols

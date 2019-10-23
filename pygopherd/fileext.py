@@ -34,7 +34,7 @@ def extcmp(x, y):
 def extstrip(file, filetype):
     """Strips off the extension from file given type and returns the result.
     Returns file unmodified if no action is possible."""
-    if not (filetype and typemap.has_key(filetype)):
+    if not (filetype and filetype in typemap):
         return file
     for possible in typemap[filetype]:
         if file.endswith(possible):
@@ -43,9 +43,9 @@ def extstrip(file, filetype):
     return file
 
 def init():
-    for fileext, filetype in mimetypes.types_map.items():
+    for fileext, filetype in list(mimetypes.types_map.items()):
         extlist = []
-        if typemap.has_key(filetype):
+        if filetype in typemap:
             extlist = typemap[filetype]
 
         baselist = []
@@ -53,9 +53,9 @@ def init():
         baselist.append(fileext)
         # Add it in all encoding flavors.
         baselist.extend(
-            [fileext + enc for enc in mimetypes.encodings_map.keys()])
+            [fileext + enc for enc in list(mimetypes.encodings_map.keys())])
 
-        for shortsuff, longsuff in mimetypes.suffix_map.items():
+        for shortsuff, longsuff in list(mimetypes.suffix_map.items()):
             if longsuff in baselist:
                 baselist.append(shortsuff)
 

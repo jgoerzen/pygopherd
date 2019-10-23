@@ -19,7 +19,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # END OF COPYRIGHT #
 
-import unittest, SocketServer, mimetypes
+import unittest, socketserver, mimetypes
 from pygopherd import initialization
 
 from pygopherd import logger, fileext
@@ -66,7 +66,7 @@ class initializationGeneralTestCase(unittest.TestCase):
     def testgetserverobject(self):
         self.config.set("pygopherd", "port", "22270")
         s = initialization.getserverobject(self.config)
-        assert isinstance(s, SocketServer.ForkingTCPServer)
+        assert isinstance(s, socketserver.ForkingTCPServer)
 
     def testinitsecurity(self):
         #FIXME

@@ -30,7 +30,7 @@ class FileExtTestCase(unittest.TestCase):
     def testinit(self):
         # Was already inited in the initmimetypes, so just do a sanity
         # check.
-        self.assert_('.txt' in fileext.typemap['text/plain'])
-        self.assert_('.txt.gz' in fileext.typemap['text/plain'])
-        self.assert_(not ('.html' in fileext.typemap['text/plain']))
+        self.assertTrue('.txt' in fileext.typemap['text/plain'])
+        self.assertTrue('.txt.gz' in fileext.typemap['text/plain'])
+        self.assertTrue(not ('.html' in fileext.typemap['text/plain']))
         

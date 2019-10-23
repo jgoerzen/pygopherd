@@ -17,7 +17,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-import SocketServer
+import socketserver
 import re
 import os, stat, os.path, mimetypes
 from pygopherd import protocols, gopherentry
@@ -47,7 +47,7 @@ class FolderHandler(Virtual):
         self.entries = []
         count = 1
         while 1:
-            message = self.mbox.next()
+            message = next(self.mbox)
             if not message:
                 break
             handler = MessageHandler(self.genargsselector(self.getargflag() + \
@@ -104,7 +104,7 @@ class MessageHandler(Virtual):
         mbox = self.openmailbox()
         message = None
         for x in range(self.msgnum):
-            message = mbox.next()
+            message = next(mbox)
         self.message = message
         return self.message
 

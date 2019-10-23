@@ -17,7 +17,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import re, time, stat, unittest, os.path, struct, types, shelve, marshal
-from StringIO import StringIO
+from io import StringIO
 from pygopherd import zipfile
 
 class MarshalingShelf(shelve.Shelf):
@@ -29,14 +29,14 @@ class MarshalingShelf(shelve.Shelf):
 
 class DbfilenameShelf(MarshalingShelf):
     def __init__(self, filename, flag='c'):
-        import anydbm
-        MarshalingShelf.__init__(self, anydbm.open(filename, flag))
+        import dbm
+        MarshalingShelf.__init__(self, dbm.open(filename, flag))
 
 def shelveopen(filename, flag='c'):
     return DbfilenameShelf(filename, flag)
 
-UNX_IFMT = 0170000L
-UNX_IFLNK = 0120000L
+UNX_IFMT = 0170000
+UNX_IFLNK = 0120000
 
 from pygopherd.handlers import base
 
@@ -90,7 +90,7 @@ class VFS_Zip(base.VFS_Real):
         if not hasattr(self, 'dbdircache'):
             # createcache was somehow unsuccessful
             return
-        for (key, value) in self.dircache.iteritems():
+        for (key, value) in self.dircache.items():
             self.dbdircache[key] = value
 
     def _initzip(self):
@@ -121,15 +121,15 @@ class VFS_Zip(base.VFS_Real):
         if dir in self.entrycache:
             return self.entrycache[dir][file]
         elif dir in self.badcache:
-            raise KeyError, "Call for %s: directory %s non-existant" % (fspath, dir)
+            raise KeyError("Call for %s: directory %s non-existant" % (fspath, dir))
 
         workingdir = ''
         
         for item in fspath.split('/'):
             # right now, directory holds the directory from the *last* iteration.
             directory = self.dircache[inode]
-            if type(directory) != types.DictType:
-                raise KeyError, "Call for %s: couldn't find %s" % (fspath, item)
+            if type(directory) != dict:
+                raise KeyError("Call for %s: couldn't find %s" % (fspath, item))
             self.entrycache[workingdir] = directory
             
             workingdir = os.path.join(workingdir, item)
@@ -138,7 +138,7 @@ class VFS_Zip(base.VFS_Real):
                 inode = directory[item]
             except KeyError:
                 self.badcache[workingdir] = 1
-                raise KeyError, "Call for %s: Couldn't find %s" % (fspath, item)
+                raise KeyError("Call for %s: Couldn't find %s" % (fspath, item))
         return inode
         
     def _cachedir(self):
@@ -147,7 +147,7 @@ class VFS_Zip(base.VFS_Real):
         self.zip.GetContents()
         self.dircache = {'0': {}}
 
-        for (file, location) in self.zip.locationmap.iteritems():
+        for (file, location) in self.zip.locationmap.items():
             info = self.zip.getinfo(file)
             (dir, filename) = os.path.split(file)
             if dir == '/':
@@ -157,7 +157,7 @@ class VFS_Zip(base.VFS_Real):
             for level in dir.split('/'):
                 if level == '':
                     continue
-                if not dirlevel.has_key(level):
+                if level not in dirlevel:
                     self.dircache[str(nextinode)] = {}
                     dirlevel[level] = str(nextinode)
                     nextinode += 1
@@ -199,7 +199,7 @@ class VFS_Zip(base.VFS_Real):
         return (result & UNX_IFMT) == UNX_IFLNK
 
     def _islinkinfo(self, info):
-        if type(info) == types.DictType:
+        if type(info) == dict:
             return 0
         return self._islinkattr(info.external_attr)
 
@@ -217,7 +217,7 @@ class VFS_Zip(base.VFS_Real):
         return 0
 
     def unlink(self, selector):
-        raise NotImplementedError, "VFS_ZIP cannot unlink files."
+        raise NotImplementedError("VFS_ZIP cannot unlink files.")
 
     def _getfspathfinal(self, selector):
         # Strip off the filename part.
@@ -254,10 +254,10 @@ class VFS_Zip(base.VFS_Real):
         try:
             zi = self._getcacheentry(fspath)
         except KeyError:
-            raise OSError, "Entry %s does not exist in %s" %\
-                  (selector, self.zipfilename)
+            raise OSError("Entry %s does not exist in %s" %\
+                  (selector, self.zipfilename))
         
-        if type(zi) == types.DictType:
+        if type(zi) == dict:
             # It's a directory.
             return (16877,              # mode
                     0,                  # inode
@@ -293,7 +293,7 @@ class VFS_Zip(base.VFS_Real):
         except KeyError:
             return 0
 
-        return type(item) == types.DictType
+        return type(item) == dict
 
     def isfile(self, selector):
         fspath = self.getfspath(selector)
@@ -302,7 +302,7 @@ class VFS_Zip(base.VFS_Real):
         except KeyError:
             return 0
 
-        return type(item) != types.DictType
+        return type(item) != dict
 
     def exists(self, selector):
         fspath = self.getfspath(selector)
@@ -316,9 +316,9 @@ class VFS_Zip(base.VFS_Real):
         try:
             item = self._getcacheentry(fspath)
         except KeyError:
-            raise IOError, "Request to open %s, which does not exist" % selector
-        if type(item) == types.DictType:
-            raise IOError, "Request to open %s, which is a directory (%s)" % (selector, str(item))
+            raise IOError("Request to open %s, which does not exist" % selector)
+        if type(item) == dict:
+            raise IOError("Request to open %s, which is a directory (%s)" % (selector, str(item)))
 
         return self.zip.open_pos(item)
 
@@ -327,12 +327,12 @@ class VFS_Zip(base.VFS_Real):
         try:
             retobj = self._getcacheentry(fspath)
         except KeyError:
-            raise OSError, "listdir on %s (%s) failed: no such file or directory" % (selector, fspath)
+            raise OSError("listdir on %s (%s) failed: no such file or directory" % (selector, fspath))
 
-        if type(retobj) != types.DictType:
-            raise OSError, "listdir on %s failed: that is a file, not a directory.  Got %s" % (selector, str(retobj))
+        if type(retobj) != dict:
+            raise OSError("listdir on %s failed: that is a file, not a directory.  Got %s" % (selector, str(retobj)))
 
-        return retobj.keys()
+        return list(retobj.keys())
 
 
 #class TestVFS_Zip_huge(unittest.TestCase):
@@ -409,7 +409,7 @@ class DISABLED_TestVFS_Zip_huge:
 
 class TestVFS_Zip(unittest.TestCase):
     def setUp(s):
-        from ConfigParser import ConfigParser
+        from configparser import ConfigParser
         s.config = ConfigParser()
         s.config.add_section('pygopherd')
         s.config.set("pygopherd", "root", os.path.abspath('testdata'))
@@ -426,8 +426,8 @@ class TestVFS_Zip(unittest.TestCase):
         m2.sort()
 
         assert 'pygopherd' in m1
-        s.assertEquals(m1, m2)
-        s.assertEquals(m1, ['.abstract', 'README', 'pygopherd',
+        s.assertEqual(m1, m2)
+        s.assertEqual(m1, ['.abstract', 'README', 'pygopherd',
                             'testarchive.tar', 'testarchive.tar.gz',
                             'testarchive.tgz', 'testfile.txt',
                             'testfile.txt.gz', 'testfile.txt.gz.abstract'])
@@ -438,8 +438,8 @@ class TestVFS_Zip(unittest.TestCase):
         m1.sort()
         m2.sort()
 
-        s.assertEquals(m1, m2 + ['ziponly'])
-        s.assertEquals(m1, ['pipetest.sh', 'pipetestdata', 'ziponly'])
+        s.assertEqual(m1, m2 + ['ziponly'])
+        s.assertEqual(m1, ['pipetest.sh', 'pipetestdata', 'ziponly'])
 
     def test_needschain(s):
         return
@@ -457,9 +457,9 @@ class TestVFS_Zip(unittest.TestCase):
         #assert s.z.iswritable('/.foo')
 
     def test_getfspath(s):
-        s.assertEquals(s.z.getfspath('/testdata.zip/foo'), 'foo')
-        s.assertEquals(s.z.getfspath('/testdata.zip'), '')
-        s.assertEquals(s.z.getfspath('/testdata.zip/foo/bar'), 'foo/bar')
+        s.assertEqual(s.z.getfspath('/testdata.zip/foo'), 'foo')
+        s.assertEqual(s.z.getfspath('/testdata.zip'), '')
+        s.assertEqual(s.z.getfspath('/testdata.zip/foo/bar'), 'foo/bar')
 
     def test_stat(s):
         s.assertRaises(OSError, s.z.stat, '/testdata.zip/nonexistant')
@@ -502,10 +502,10 @@ class TestVFS_Zip(unittest.TestCase):
         assert s.zs.exists('/symlinktest.zip/subdir/linktosubdir2')
 
     def test_symlinkgetfspath(s):
-        s.assertEquals(s.zs.getfspath('/symlinktest.zip'), '')
-        s.assertEquals(s.zs.getfspath('/symlinktest.zip/real.txt'), 'real.txt')
-        s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir'), 'subdir')
-        s.assertEquals(s.zs.getfspath('/symlinktest.zip/subdir2/real2.txt'),
+        s.assertEqual(s.zs.getfspath('/symlinktest.zip'), '')
+        s.assertEqual(s.zs.getfspath('/symlinktest.zip/real.txt'), 'real.txt')
+        s.assertEqual(s.zs.getfspath('/symlinktest.zip/subdir'), 'subdir')
+        s.assertEqual(s.zs.getfspath('/symlinktest.zip/subdir2/real2.txt'),
                                       'subdir2/real2.txt')
 
 
@@ -513,18 +513,18 @@ class TestVFS_Zip(unittest.TestCase):
         m1 = s.zs.listdir('/symlinktest.zip')
         m1.sort()
 
-        s.assertEquals(m1, ['linked.txt', 'linktosubdir', 'real.txt',
+        s.assertEqual(m1, ['linked.txt', 'linktosubdir', 'real.txt',
                             'subdir', 'subdir2'])
 
         tm2 = ['linked2.txt', 'linkedabs.txt', 'linkedrel.txt', 'linktoself',
                'linktosubdir2']
         m2 = s.zs.listdir('/symlinktest.zip/subdir')
         m2.sort()
-        s.assertEquals(m2, tm2)
+        s.assertEqual(m2, tm2)
 
         m2 = s.zs.listdir('/symlinktest.zip/linktosubdir')
         m2.sort()
-        s.assertEquals(m2, tm2)
+        s.assertEqual(m2, tm2)
 
         s.assertRaises(OSError, s.zs.listdir, '/symlinktest.zip/nonexistant')
         s.assertRaises(OSError, s.zs.listdir, '/symlinktest.zip/real.txt')
@@ -533,10 +533,10 @@ class TestVFS_Zip(unittest.TestCase):
         m2 = s.zs.listdir('/symlinktest.zip/linktosubdir/linktoself/linktoself')
         
         m2.sort()
-        s.assertEquals(m2, tm2)
+        s.assertEqual(m2, tm2)
 
         m3 = s.zs.listdir('/symlinktest.zip/linktosubdir/linktoself/linktosubdir2')
-        s.assertEquals(m3, ['real2.txt'])
+        s.assertEqual(m3, ['real2.txt'])
         
     def test_symlink_open(s):
         realtxt = "Test.\n"
@@ -544,21 +544,21 @@ class TestVFS_Zip(unittest.TestCase):
 
         # Establish basis for tests is correct.
         
-        s.assertEquals(s.zs.open('/symlinktest.zip/real.txt').read(),
+        s.assertEqual(s.zs.open('/symlinktest.zip/real.txt').read(),
                        realtxt)
-        s.assertEquals(s.zs.open('/symlinktest.zip/subdir2/real2.txt').read(),
+        s.assertEqual(s.zs.open('/symlinktest.zip/subdir2/real2.txt').read(),
                        real2txt)
 
         # Now, run the tests.
-        s.assertEquals(s.zs.open('/symlinktest.zip/subdir/linked2.txt').read(),
+        s.assertEqual(s.zs.open('/symlinktest.zip/subdir/linked2.txt').read(),
                        real2txt)
-        s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linked2.txt').read(),
+        s.assertEqual(s.zs.open('/symlinktest.zip/linktosubdir/linked2.txt').read(),
                        real2txt)
-        s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linkedabs.txt').read(),
+        s.assertEqual(s.zs.open('/symlinktest.zip/linktosubdir/linkedabs.txt').read(),
                        realtxt)
-        s.assertEquals(s.zs.open('/symlinktest.zip/linktosubdir/linktoself/linktoself/linktoself/linkedrel.txt').read(),
+        s.assertEqual(s.zs.open('/symlinktest.zip/linktosubdir/linktoself/linktoself/linktoself/linkedrel.txt').read(),
                        realtxt)
-        s.assertEquals(s.zs.open('/symlinktest.zip/subdir/linktosubdir2/real2.txt').read(),
+        s.assertEqual(s.zs.open('/symlinktest.zip/subdir/linktosubdir2/real2.txt').read(),
                        real2txt)
 
         s.assertRaises(IOError, s.zs.open, '/symlinktest.zip')
@@ -597,12 +597,12 @@ class TestVFS_Zip(unittest.TestCase):
 
         assert s.z.open("/testdata.zip/.abstract")
 
-        s.assertEquals(s.z.open('/testdata.zip/testfile.txt').read(),
+        s.assertEqual(s.z.open('/testdata.zip/testfile.txt').read(),
                        'Test\n')
         shouldbe = "Word1\nWord2\nWord3\n"
-        s.assertEquals(s.z.open('/testdata.zip/pygopherd/pipetestdata').read(),
+        s.assertEqual(s.z.open('/testdata.zip/pygopherd/pipetestdata').read(),
                        shouldbe)
-        s.assertEquals(s.z2.open('/testdata2.zip/pygopherd/pipetestdata').read(),
+        s.assertEqual(s.z2.open('/testdata2.zip/pygopherd/pipetestdata').read(),
                        shouldbe)
         
         

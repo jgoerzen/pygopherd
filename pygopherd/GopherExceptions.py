@@ -48,7 +48,7 @@ class FileNotFound:
         self.comments = ''
         self.protocol = ''
 
-        if type(arg) != types.StringType:
+        if type(arg) != bytes:
             self.selector = arg[0]
             self.comments = arg[1]
             if len(arg) > 2 and arg[2]:
