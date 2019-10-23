@@ -1,6 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: ZIP transparent handling
-# Copyright (C) 2003 John Goerzen
+# Copyright (C) 2003-2019 John Goerzen
 # <jgoerzen@complete.org>
 #
 #    This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 
 import re, time, stat, unittest, os.path, struct, types, shelve, marshal
 from io import StringIO
-from pygopherd import zipfile
+import zipfile
 
 class MarshalingShelf(shelve.Shelf):
     def __getitem__(self, key):
