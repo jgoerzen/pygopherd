@@ -20,7 +20,7 @@
 from configparser import ConfigParser
 
 # Import lots of stuff so it's here before chrooting.
-import socket, os, sys, socketserver, re, stat, os.path, UserDict, tempfile
+import socket, os, sys, socketserver, re, stat, os.path, tempfile
 import time, atexit, errno, struct
 
 from pygopherd import handlers, protocols, GopherExceptions, logger, sighandlers
@@ -93,7 +93,7 @@ class GopherRequestHandler(socketserver.StreamRequestHandler):
 def getserverobject(config):
     # Pick up the server type from the config.
 
-    servertype = eval("SocketServer." + config.get("pygopherd", "servertype"))
+    servertype = eval("socketserver." + config.get("pygopherd", "servertype"))
 
     class MyServer(servertype):
         allow_reuse_address = 1

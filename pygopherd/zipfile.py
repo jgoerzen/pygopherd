@@ -5,7 +5,7 @@
 import struct, os, time, types
 import binascii
 from io import StringIO
-from socket import _fileobject as BaseFileSimulator
+from socket import SocketIO as BaseFileSimulator
 
 _STRING_TYPES = (bytes,)
 if hasattr(types, "UnicodeType"):

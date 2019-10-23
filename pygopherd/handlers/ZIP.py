@@ -35,8 +35,8 @@ class DbfilenameShelf(MarshalingShelf):
 def shelveopen(filename, flag='c'):
     return DbfilenameShelf(filename, flag)
 
-UNX_IFMT = 0170000
-UNX_IFLNK = 0120000
+UNX_IFMT = 0o170000
+UNX_IFLNK = 0o120000
 
 from pygopherd.handlers import base
 

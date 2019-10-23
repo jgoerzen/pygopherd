@@ -23,7 +23,7 @@ import os, stat, os.path, mimetypes
 from pygopherd import protocols, gopherentry
 from pygopherd.handlers.virtual import Virtual
 from pygopherd.handlers.base import VFS_Real
-from mailbox import UnixMailbox, Maildir
+from mailbox import mbox, Maildir
 from stat import *
 
 
@@ -134,23 +134,29 @@ class MBoxFolderHandler(FolderHandler):
     def canhandlerequest(self):
         """Figure out if this is a handleable request."""
 
+        if not isinstance(self.vfs, VFS_Real):
+            return 0
         if self.selectorargs:
             return 0
-        
         if not (self.statresult and S_ISREG(self.statresult[ST_MODE])):
             return 0
         try:
-            fd = self.vfs.open(self.getselector(), "rt")
+            fd = self.vfs.open(self.getselector(), "rb")
             startline = fd.readline()
             fd.close()
-            
-            return re.match(UnixMailbox._fromlinepattern, startline)
+
+            # From old Python2.7 UnixMailbox
+            fromlinepattern = (r"From \s*[^\s]+\s+\w\w\w\s+\w\w\w\s+\d?\d\s+"
+                        r"\d?\d:\d\d(:\d\d)?(\s+[^\s]+)?\s+\d\d\d\d\s*"
+                        r"[^\s]*\s*"
+                        "$")
+
+            return re.match(fromlinepattern, startline)
         except IOError:
             return 0
 
     def prepare(self):
-        self.rfile = self.vfs.open(self.getselector(), "rt")
-        self.mbox = UnixMailbox(self.rfile)
+        self.mbox = mbox(self.getfspath())
         FolderHandler.prepare(self)
 
     def getargflag(self):
@@ -192,4 +198,3 @@ class MaildirMessageHandler(MessageHandler):
 
     def openmailbox(self):
         return Maildir(self.getfspath())
-
