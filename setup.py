@@ -1,11 +1,9 @@
-#!/usr/bin/env python2.3
-
-# $Id: setup.py,v 1.6 2002/04/11 21:12:12 jgoerzen Exp $
+#!/usr/bin/env python3
 
 # Python-based gopher server
 # Module: installer
 # COPYRIGHT #
-# Copyright (C) 2002 John Goerzen
+# Copyright (C) 2002-2019 John Goerzen
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
