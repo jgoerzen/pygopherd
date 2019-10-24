@@ -35,9 +35,6 @@ class DbfilenameShelf(MarshalingShelf):
 def shelveopen(filename, flag='c'):
     return DbfilenameShelf(filename, flag)
 
-UNX_IFMT = 0o170000
-UNX_IFLNK = 0o120000
-
 from pygopherd.handlers import base
 
 class VFS_Zip(base.VFS_Real):
@@ -94,8 +91,8 @@ class VFS_Zip(base.VFS_Real):
             self.dbdircache[key] = value
 
     def _initzip(self):
-        zipfd = self.chain.open(self.zipfilename)
-        self.zip = zipfile.ZipReader(zipfd)
+        zipfd = self.chain.open(self.zipfilename, mode='rb')
+        self.zip = zipfile.ZipFile(zipfd, mode='r')
         if not self._initcache():
             # For reloading an existing one.  Must be called before _cachedir.
             self._cachedir()
@@ -123,9 +120,9 @@ class VFS_Zip(base.VFS_Real):
         elif dir in self.badcache:
             raise KeyError("Call for %s: directory %s non-existant" % (fspath, dir))
 
-        workingdir = ''
+        workingdir = b''
         
-        for item in fspath.split('/'):
+        for item in fspath.split(b'/'):
             # right now, directory holds the directory from the *last* iteration.
             directory = self.dircache[inode]
             if type(directory) != dict:
@@ -144,12 +141,10 @@ class VFS_Zip(base.VFS_Real):
     def _cachedir(self):
         symlinkinodes = []
         nextinode = 1
-        self.zip.GetContents()
         self.dircache = {'0': {}}
-
-        for (file, location) in self.zip.locationmap.items():
-            info = self.zip.getinfo(file)
-            (dir, filename) = os.path.split(file)
+        
+        for info in self.zip.infolist():
+            (dir, filename) = os.path.split(info.filename)
             if dir == '/':
                 dir == ''
 
@@ -167,11 +162,11 @@ class VFS_Zip(base.VFS_Real):
                 if self._islinkinfo(info):
                     symlinkinodes.append({'dirlevel': dirlevel,
                                           'filename': filename,
-                                          'pathname': file,
-                                          'dest': self._readlinkfspath(file)})
+                                          'pathname': info.filename,
+                                          'dest': self._readlinkfspath(info.filename)})
                 else:
                     dirlevel[filename] = str(nextinode)
-                    self.dircache[str(nextinode)] = location
+                    self.dircache[str(nextinode)] = 42    # no longer used; used to be location
                     nextinode += 1
 
         lastsymlinklen = 0
@@ -179,10 +174,10 @@ class VFS_Zip(base.VFS_Real):
             lastsymlinklen = len(symlinkinodes)
             newsymlinkinodes = []
             for item in symlinkinodes:
-                if item['dest'][0] == '/':
+                if item['dest'][0] == b'/':
                     dest = item['dest'][1:]
                 else:
-                    dest = os.path.join(os.path.dirname(item['pathname']),
+                    dest = os.path.join(os.path.dirname(item['pathname']).encode(),
                                         item['dest'])
                     dest = os.path.normpath(dest)
                 if self._isentryincache(dest):
@@ -193,10 +188,7 @@ class VFS_Zip(base.VFS_Real):
             symlinkinodes = newsymlinkinodes
                                                          
     def _islinkattr(self, attr):
-        str = struct.pack('L', attr)
-        str2 = str[2:5] + str[0:2]
-        result = struct.unpack('L', str2)[0]
-        return (result & UNX_IFMT) == UNX_IFLNK
+        return stat.S_ISLNK(attr >> 16)
 
     def _islinkinfo(self, info):
         if type(info) == dict:
@@ -270,7 +262,7 @@ class VFS_Zip(base.VFS_Real):
                     0,                  # modification time
                     0)                  # change time
 
-        zi = self.zip.getinfofrompos(zi)
+        zi = self.zip.getinfo(fspath)
 
         zt = zi.date_time
         modtime = time.mktime(zt + (0, 0, -1))
