@@ -313,7 +313,7 @@ class VFS_Zip(base.VFS_Real):
         if type(item) == dict:
             raise IOError("Request to open %s, which is a directory (%s)" % (selector, str(item)))
 
-        return self.zip.open_pos(item)
+        return self.zip.open(fspath)
 
     def listdir(self, selector):
         fspath = self.getfspath(selector)
@@ -532,8 +532,8 @@ class TestVFS_Zip(unittest.TestCase):
         s.assertEqual(m3, ['real2.txt'])
         
     def test_symlink_open(s):
-        realtxt = "Test.\n"
-        real2txt = "asdf\n"
+        realtxt = b"Test.\n"
+        real2txt = b"asdf\n"
 
         # Establish basis for tests is correct.
         
@@ -591,8 +591,8 @@ class TestVFS_Zip(unittest.TestCase):
         assert s.z.open("/testdata.zip/.abstract")
 
         s.assertEqual(s.z.open('/testdata.zip/testfile.txt').read(),
-                       'Test\n')
-        shouldbe = "Word1\nWord2\nWord3\n"
+                       b'Test\n')
+        shouldbe = b"Word1\nWord2\nWord3\n"
         s.assertEqual(s.z.open('/testdata.zip/pygopherd/pipetestdata').read(),
                        shouldbe)
         s.assertEqual(s.z2.open('/testdata2.zip/pygopherd/pipetestdata').read(),
