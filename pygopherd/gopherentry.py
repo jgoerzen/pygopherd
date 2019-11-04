@@ -179,7 +179,7 @@ class GopherEntry:
                 continue
             try:
                 rfile = vfs.open(selector + extension, "rb")
-                self.setea(blockname, "\n".join(
+                self.setea(blockname, b"\n".join(
                            [x.rstrip() for x in rfile.readlines(20480)]))
             except IOError:
                 pass

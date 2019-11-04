@@ -72,8 +72,8 @@ class BaseGopherProtocol:
         """Log a handled request."""
         logger.log("%s [%s/%s]: %s" % \
                    (self.requesthandler.client_address[0],
-                    re.search("[^.]+$", str(self.__class__)).group(0),
-                    re.search("[^.]+$", str(handler.__class__)).group(0),
+                    type(self).__name__,
+                    type(handler).__name__,
                     self.selector))
 
     def handle(self):
@@ -94,7 +94,7 @@ class BaseGopherProtocol:
             self.filenotfound(e[1])
 
     def filenotfound(self, msg):
-        self.wfile.write("3%s\t\terror.host\t1\r\n" % msg)
+        self.wfile.write(b"3%s\t\terror.host\t1\r\n" % msg)
 
     def gethandler(self):
         """Gets the handler for this object's selector."""

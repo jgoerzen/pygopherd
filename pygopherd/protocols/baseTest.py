@@ -1,14 +1,14 @@
 import unittest
 import pygopherd.handlers.file
 from pygopherd import testutil
-from io import StringIO
+from io import BytesIO
 from pygopherd.protocols.base import BaseGopherProtocol
 
 class BaseProtocolTestCase(unittest.TestCase):
     def setUp(self):
         self.config = testutil.getconfig()
-        self.rfile = StringIO("/testfile.txt\n")
-        self.wfile = StringIO()
+        self.rfile = BytesIO(b"/testfile.txt\n")
+        self.wfile = BytesIO()
         self.logfile = testutil.getstringlogger()
         self.logstr =  "10.77.77.77 [BaseGopherProtocol/FileHandler]: /testfile.txt\n"
         self.handler = testutil.gettestinghandler(self.rfile, self.wfile,
@@ -72,7 +72,7 @@ class BaseProtocolTestCase(unittest.TestCase):
     def testhandle_file(self):
         self.proto.handle()
         self.assertEqual(self.logfile.getvalue(), self.logstr)
-        self.assertEqual(self.wfile.getvalue(), "Test\n")
+        self.assertEqual(self.wfile.getvalue(), b"Test\n")
 
     def testhandle_notfound(self):
         proto = BaseGopherProtocol("/NONEXISTANT.txt\n", self.server,
@@ -86,9 +86,9 @@ class BaseProtocolTestCase(unittest.TestCase):
     # We cannot test handle_dir here because we don't have enough info.
 
     def testfilenotfound(self):
-        self.proto.filenotfound("FOO")
+        self.proto.filenotfound(b"FOO")
         self.assertEqual(self.wfile.getvalue(),
-                          "3FOO\t\terror.host\t1\r\n")
+                          b"3FOO\t\terror.host\t1\r\n")
 
     def testgethandler(self):
         handler = self.proto.gethandler()

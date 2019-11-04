@@ -1,13 +1,13 @@
 import unittest, re
 from pygopherd.protocols.rfc1436 import GopherProtocol
 from pygopherd import testutil
-from io import StringIO
+from io import BytesIO
 
 class RFC1436TestCase(unittest.TestCase):
     def setUp(self):
         self.config = testutil.getconfig()
-        self.rfile = StringIO("/testfile.txt\n")
-        self.wfile = StringIO()
+        self.rfile = BytesIO(b"/testfile.txt\n")
+        self.wfile = BytesIO()
         self.logfile = testutil.getstringlogger()
         self.handler = testutil.gettestinghandler(self.rfile, self.wfile,
                                                   self.config)
@@ -35,7 +35,7 @@ class RFC1436TestCase(unittest.TestCase):
         self.proto.handle()
         self.assertEqual(self.logfile.getvalue(),
                           "10.77.77.77 [GopherProtocol/FileHandler]: /testfile.txt\n")
-        self.assertEqual(self.wfile.getvalue(), "Test\n")
+        self.assertEqual(self.wfile.getvalue(), b"Test\n")
 
     def testhandle_file_zipped(self):
         self.config.set("handlers.ZIP.ZIPHandler", "enabled", 'true')
@@ -50,7 +50,7 @@ class RFC1436TestCase(unittest.TestCase):
                                     self.handler, self.rfile, self.wfile,
                                     self.config)
         self.proto.handle()
-        self.assertEqual(self.wfile.getvalue(), "ZIPonly\n")
+        self.assertEqual(self.wfile.getvalue(), b"ZIPonly\n")
         self.config.set("handlers.ZIP.ZIPHandler", "enabled", "false")
 
     def testhandle_dir_abstracts(self):

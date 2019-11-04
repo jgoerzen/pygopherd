@@ -146,10 +146,10 @@ class MBoxFolderHandler(FolderHandler):
             fd.close()
 
             # From old Python2.7 UnixMailbox
-            fromlinepattern = (r"From \s*[^\s]+\s+\w\w\w\s+\w\w\w\s+\d?\d\s+"
-                        r"\d?\d:\d\d(:\d\d)?(\s+[^\s]+)?\s+\d\d\d\d\s*"
-                        r"[^\s]*\s*"
-                        "$")
+            fromlinepattern = (rb"From \s*[^\s]+\s+\w\w\w\s+\w\w\w\s+\d?\d\s+"
+                        rb"\d?\d:\d\d(:\d\d)?(\s+[^\s]+)?\s+\d\d\d\d\s*"
+                        rb"[^\s]*\s*"
+                        b"$")
 
             return re.match(fromlinepattern, startline)
         except IOError:
