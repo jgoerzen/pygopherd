@@ -120,9 +120,9 @@ class VFS_Zip(base.VFS_Real):
         elif dir in self.badcache:
             raise KeyError("Call for %s: directory %s non-existant" % (fspath, dir))
 
-        workingdir = b''
+        workingdir = ''
         
-        for item in fspath.split(b'/'):
+        for item in fspath.split('/'):
             # right now, directory holds the directory from the *last* iteration.
             directory = self.dircache[inode]
             if type(directory) != dict:
@@ -160,6 +160,7 @@ class VFS_Zip(base.VFS_Real):
 
             if len(filename):
                 if self._islinkinfo(info):
+                    print("%s - %s -> %s, types %s %s %s" % (filename, info.filename, self._readlinkfspath(info.filename), type(filename), type(info.filename), type(self._readlinkfspath(info.filename))))
                     symlinkinodes.append({'dirlevel': dirlevel,
                                           'filename': filename,
                                           'pathname': info.filename,
@@ -174,10 +175,10 @@ class VFS_Zip(base.VFS_Real):
             lastsymlinklen = len(symlinkinodes)
             newsymlinkinodes = []
             for item in symlinkinodes:
-                if item['dest'][0] == b'/':
+                if item['dest'][0] == '/':
                     dest = item['dest'][1:]
                 else:
-                    dest = os.path.join(os.path.dirname(item['pathname']).encode(),
+                    dest = os.path.join(os.path.dirname(item['pathname']),
                                         item['dest'])
                     dest = os.path.normpath(dest)
                 if self._isentryincache(dest):
@@ -200,7 +201,7 @@ class VFS_Zip(base.VFS_Real):
         #if not self._islinkfspath(fspath):
         #    raise ValueError, "Readlinkfspath called on %s which is not a link" % fspath
 
-        return self.zip.read(fspath)
+        return self.zip.read(fspath).decode()
 
     def _readlink(self, selector):
         return self._readlinkfspath(self, self._getfspathfinal(selector))
