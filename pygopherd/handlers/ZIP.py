@@ -48,7 +48,7 @@ class VFS_Zip(base.VFS_Real):
 
     def _getcachefilename(self):
         (dir, file) = os.path.split(self.zipfilename)
-        return os.path.join(dir, '.cache.pygopherd.zip.' + file)
+        return os.path.join(dir, '.cache.pygopherd.zip3.' + file)
 
     def _initcache(self):
         """Returns 1 if a cache was found existing; 0 if not."""
@@ -160,14 +160,13 @@ class VFS_Zip(base.VFS_Real):
 
             if len(filename):
                 if self._islinkinfo(info):
-                    print("%s - %s -> %s, types %s %s %s" % (filename, info.filename, self._readlinkfspath(info.filename), type(filename), type(info.filename), type(self._readlinkfspath(info.filename))))
                     symlinkinodes.append({'dirlevel': dirlevel,
                                           'filename': filename,
                                           'pathname': info.filename,
                                           'dest': self._readlinkfspath(info.filename)})
                 else:
                     dirlevel[filename] = str(nextinode)
-                    self.dircache[str(nextinode)] = 42    # no longer used; used to be location
+                    self.dircache[str(nextinode)] = info.filename    # used to be location
                     nextinode += 1
 
         lastsymlinklen = 0
@@ -313,7 +312,7 @@ class VFS_Zip(base.VFS_Real):
         if type(item) == dict:
             raise IOError("Request to open %s, which is a directory (%s)" % (selector, str(item)))
 
-        return self.zip.open(fspath)
+        return self.zip.open(item)
 
     def listdir(self, selector):
         fspath = self.getfspath(selector)
