@@ -200,7 +200,7 @@ class VFS_Zip(base.VFS_Real):
         #if not self._islinkfspath(fspath):
         #    raise ValueError, "Readlinkfspath called on %s which is not a link" % fspath
 
-        return self.zip.read(fspath).decode()
+        return self.zip.read(fspath).decode(encoding='cp437')
 
     def _readlink(self, selector):
         return self._readlinkfspath(self, self._getfspathfinal(selector))

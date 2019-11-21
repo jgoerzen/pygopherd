@@ -94,7 +94,7 @@ class BaseGopherProtocol:
             self.filenotfound(e[1])
 
     def filenotfound(self, msg):
-        self.wfile.write(b"3%s\t\terror.host\t1\r\n" % msg)
+        self.wfile.write(b"3%s\t\terror.host\t1\r\n" % msg.encode(encoding='cp437'))
 
     def gethandler(self):
         """Gets the handler for this object's selector."""
@@ -119,7 +119,7 @@ class BaseGopherProtocol:
             self.wfile.write(self.renderabstract(entry.getea('ABSTRACT', '')))
 
         for direntry in dirlist:
-            self.wfile.write(self.renderobjinfo(direntry))
+            self.wfile.write(self.renderobjinfo(direntry).encode(encoding='cp437'))
             if doabstracts:
                 abstract = self.renderabstract(direntry.getea('ABSTRACT'))
                 if abstract:

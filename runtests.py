@@ -1,8 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # Python-based gopher server
 # Module: main test runner
 # COPYRIGHT #
-# Copyright (C) 2002 John Goerzen
+# Copyright (C) 2002-2019 John Goerzen
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
