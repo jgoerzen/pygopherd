@@ -25,6 +25,7 @@ from pygopherd import logger, initialization, GopherExceptions, testutil
 from pygopherd.GopherExceptions import FileNotFound
 from pygopherd.protocols import rfc1436
 
+
 class GopherExceptionsTestCase(unittest.TestCase):
     def setUp(self):
         self.stringfile = BytesIO()
@@ -37,8 +38,10 @@ class GopherExceptionsTestCase(unittest.TestCase):
             raise IOError("foo")
         except IOError as e:
             GopherExceptions.log(e)
-        self.assertEqual(self.stringfile.getvalue(),
-                         "unknown-address [None/None] EXCEPTION OSError: foo\n")
+        self.assertEqual(
+            self.stringfile.getvalue(),
+            "unknown-address [None/None] EXCEPTION OSError: foo\n",
+        )
 
     def testlog_proto_ip(self):
         rfile = BytesIO(b"/NONEXISTANT\n")
@@ -46,13 +49,13 @@ class GopherExceptionsTestCase(unittest.TestCase):
         handler = testutil.gettestinghandler(rfile, wfile, self.config)
         handler.handle()
         # handler.handle()
-        self.assertEqual(self.stringfile.getvalue(),
-             b"10.77.77.77 [GopherProtocol/None] EXCEPTION FileNotFound: '/NONEXISTANT' does not exist (no handler found)\n")
+        self.assertEqual(
+            self.stringfile.getvalue(),
+            b"10.77.77.77 [GopherProtocol/None] EXCEPTION FileNotFound: '/NONEXISTANT' does not exist (no handler found)\n",
+        )
 
     def testFileNotFound(self):
         try:
             raise FileNotFound("TEST STRING")
         except FileNotFound as e:
-            self.assertEqual(str(e),
-                              "'TEST STRING' does not exist")
-
+            self.assertEqual(str(e), "'TEST STRING' does not exist")

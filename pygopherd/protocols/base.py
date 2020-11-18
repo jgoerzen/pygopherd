@@ -22,8 +22,10 @@ import os, stat, os.path, mimetypes
 from pygopherd import handlers, GopherExceptions, logger, gopherentry
 from pygopherd.handlers import HandlerMultiplexer
 
+
 class BaseGopherProtocol:
     """Skeleton protocol -- includes commonly-used routines."""
+
     def __init__(self, request, server, requesthandler, rfile, wfile, config):
         """Parameters are:
         request -- the raw request string.
@@ -56,12 +58,11 @@ class BaseGopherProtocol:
         """Normalize slashes in the selector.  Make sure it starts
         with a slash and does not end with one.  If it is a root directory
         request, make sure it is exactly '/'.  Returns result."""
-        if len(selector) and selector[-1] == '/':
+        if len(selector) and selector[-1] == "/":
             selector = selector[0:-1]
-        if len(selector) == 0 or selector[0] != '/':
-            selector = '/' + selector
+        if len(selector) == 0 or selector[0] != "/":
+            selector = "/" + selector
         return selector
-
 
     def canhandlerequest(self):
         """Decides whether or not a given request is valid for this
@@ -70,11 +71,15 @@ class BaseGopherProtocol:
 
     def log(self, handler):
         """Log a handled request."""
-        logger.log("%s [%s/%s]: %s" % \
-                   (self.requesthandler.client_address[0],
-                    type(self).__name__,
-                    type(handler).__name__,
-                    self.selector))
+        logger.log(
+            "%s [%s/%s]: %s"
+            % (
+                self.requesthandler.client_address[0],
+                type(self).__name__,
+                type(handler).__name__,
+                self.selector,
+            )
+        )
 
     def handle(self):
         """Handles the request."""
@@ -94,13 +99,14 @@ class BaseGopherProtocol:
             self.filenotfound(e[1])
 
     def filenotfound(self, msg):
-        self.wfile.write(b"3%s\t\terror.host\t1\r\n" % msg.encode(encoding='cp437'))
+        self.wfile.write(b"3%s\t\terror.host\t1\r\n" % msg.encode(encoding="cp437"))
 
     def gethandler(self):
         """Gets the handler for this object's selector."""
         if not self.handler:
-            self.handler = HandlerMultiplexer.getHandler(self.selector, self.searchrequest,
-                                               self, self.config)
+            self.handler = HandlerMultiplexer.getHandler(
+                self.selector, self.searchrequest, self, self.config
+            )
         return self.handler
 
     def writedir(self, entry, dirlist):
@@ -111,17 +117,17 @@ class BaseGopherProtocol:
             self.wfile.write(startstr)
 
         abstractopt = self.config.get("pygopherd", "abstract_entries")
-        doabstracts = abstractopt == 'always' or \
-                      (abstractopt == 'unsupported' and
-                       not self.groksabstract())
+        doabstracts = abstractopt == "always" or (
+            abstractopt == "unsupported" and not self.groksabstract()
+        )
 
         if self.config.getboolean("pygopherd", "abstract_headers"):
-            self.wfile.write(self.renderabstract(entry.getea('ABSTRACT', '')))
+            self.wfile.write(self.renderabstract(entry.getea("ABSTRACT", "")))
 
         for direntry in dirlist:
-            self.wfile.write(self.renderobjinfo(direntry).encode(encoding='cp437'))
+            self.wfile.write(self.renderobjinfo(direntry).encode(encoding="cp437"))
             if doabstracts:
-                abstract = self.renderabstract(direntry.getea('ABSTRACT'))
+                abstract = self.renderabstract(direntry.getea("ABSTRACT"))
                 if abstract:
                     self.wfile.write(abstract)
 
@@ -131,8 +137,8 @@ class BaseGopherProtocol:
 
     def renderabstract(self, abstractstring):
         if not abstractstring:
-            return ''
-        retval = ''
+            return ""
+        retval = ""
         for line in abstractstring.splitlines():
             absentry = gopherentry.getinfoentry(line, self.config)
             retval += self.renderobjinfo(absentry)
@@ -158,4 +164,3 @@ class BaseGopherProtocol:
         """Returns true if this protocol understands abstracts natively;
         false otherwise."""
         return 0
-    

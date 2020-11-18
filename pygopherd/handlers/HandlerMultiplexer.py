@@ -23,19 +23,19 @@ import os, re
 handlers = None
 rootpath = None
 
-def getHandler(selector, searchrequest, protocol, config, handlerlist = None,
-               vfs = None):
+
+def getHandler(selector, searchrequest, protocol, config, handlerlist=None, vfs=None):
     """Called without handlerlist specified, uses the default as listed
     in config."""
     global handlers, rootpath
 
     if vfs == None:
         from pygopherd.handlers.base import VFS_Real
+
         vfs = VFS_Real(config)
 
     if not handlers:
-        handlers = eval(config.get("handlers.HandlerMultiplexer",
-                                   "handlers"))
+        handlers = eval(config.get("handlers.HandlerMultiplexer", "handlers"))
         rootpath = config.get("pygopherd", "root")
     if handlerlist == None:
         handlerlist = handlers
@@ -43,7 +43,7 @@ def getHandler(selector, searchrequest, protocol, config, handlerlist = None,
     # SECURITY: assert that our absolute path is within the absolute
     # path of the site root.
 
-    #if not os.path.abspath(rootpath + '/' + selector). \
+    # if not os.path.abspath(rootpath + '/' + selector). \
     #   startswith(os.path.abspath(rootpath)):
     #    raise GopherExceptions.FileNotFound, \
     #          [selector, "Requested document is outside the server root",
@@ -55,9 +55,8 @@ def getHandler(selector, searchrequest, protocol, config, handlerlist = None,
     except OSError:
         pass
     for handler in handlerlist:
-        htry = handler(selector, searchrequest, protocol, config, statresult,
-                       vfs)
+        htry = handler(selector, searchrequest, protocol, config, statresult, vfs)
         if htry.isrequestforme():
             return htry.gethandler()
-    
+
     raise GopherExceptions.FileNotFound([selector, "no handler found", protocol])

@@ -31,15 +31,15 @@ from stat import *
 # Basic mailbox support
 ###########################################################################
 
+
 class FolderHandler(Virtual):
     def getentry(self):
         ## Return my own entry.
         if not self.entry:
-            self.entry = gopherentry.GopherEntry(self.getselector(),
-                                                 self.config)
-            self.entry.settype('1')
+            self.entry = gopherentry.GopherEntry(self.getselector(), self.config)
+            self.entry.settype("1")
             self.entry.setname(os.path.basename(self.getselector()))
-            self.entry.setmimetype('application/gopher-menu')
+            self.entry.setmimetype("application/gopher-menu")
             self.entry.setgopherpsupport(0)
         return self.entry
 
@@ -50,9 +50,13 @@ class FolderHandler(Virtual):
             message = next(self.mbox)
             if not message:
                 break
-            handler = MessageHandler(self.genargsselector(self.getargflag() + \
-                                     str(count)), self.searchrequest,
-                                     self.protocol, self.config, None)
+            handler = MessageHandler(
+                self.genargsselector(self.getargflag() + str(count)),
+                self.searchrequest,
+                self.protocol,
+                self.config,
+                None,
+            )
             self.entries.append(handler.getentry(message))
             count += 1
 
@@ -62,6 +66,7 @@ class FolderHandler(Virtual):
     def getdirlist(self):
         return self.entries
 
+
 class MessageHandler(Virtual):
     def canhandlerequest(self):
         """We put MBOX-MESSAGE in here so we don't have to re-check
@@ -69,33 +74,32 @@ class MessageHandler(Virtual):
         result."""
         if not self.selectorargs:
             return 0
-        msgnum = re.search('^' + self.getargflag() + '(\d+)$',
-                           self.selectorargs)
+        msgnum = re.search("^" + self.getargflag() + "(\d+)$", self.selectorargs)
         if not msgnum:
             return 0
         self.msgnum = int(msgnum.group(1))
         self.message = None
         return 1
 
-    def getentry(self, message = None):
+    def getentry(self, message=None):
         """Set the message if called from, eg, the dir handler.  Saves
         having to rescan the file.  If not set, will figure it out."""
         if not message:
             message = self.getmessage()
-            
+
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
-            self.entry.settype('0')
-            self.entry.setmimetype('text/plain')
+            self.entry.settype("0")
+            self.entry.setmimetype("text/plain")
             self.entry.setgopherpsupport(0)
 
-            subject = message.getheader('Subject', '<no subject>')
+            subject = message.getheader("Subject", "<no subject>")
             # Sanitize, esp. for continuations.
-            subject = re.sub('\s+', ' ', subject)
+            subject = re.sub("\s+", " ", subject)
             if subject:
                 self.entry.setname(subject)
             else:
-                self.entry.setname('<no subject>')
+                self.entry.setname("<no subject>")
         return self.entry
 
     def getmessage(self):
@@ -109,7 +113,7 @@ class MessageHandler(Virtual):
         return self.message
 
     def prepare(self):
-        self.canhandlerequest()         # Init the vars
+        self.canhandlerequest()  # Init the vars
 
     def write(self, wfile):
         # Print out the headers first.
@@ -126,9 +130,11 @@ class MessageHandler(Virtual):
         self.rfile.close()
         self.rfile = None
 
+
 ###########################################################################
 # Unix MBOX support
 ###########################################################################
+
 
 class MBoxFolderHandler(FolderHandler):
     def canhandlerequest(self):
@@ -146,10 +152,12 @@ class MBoxFolderHandler(FolderHandler):
             fd.close()
 
             # From old Python2.7 UnixMailbox
-            fromlinepattern = (rb"From \s*[^\s]+\s+\w\w\w\s+\w\w\w\s+\d?\d\s+"
-                        rb"\d?\d:\d\d(:\d\d)?(\s+[^\s]+)?\s+\d\d\d\d\s*"
-                        rb"[^\s]*\s*"
-                        b"$")
+            fromlinepattern = (
+                rb"From \s*[^\s]+\s+\w\w\w\s+\w\w\w\s+\d?\d\s+"
+                rb"\d?\d:\d\d(:\d\d)?(\s+[^\s]+)?\s+\d\d\d\d\s*"
+                rb"[^\s]*\s*"
+                b"$"
+            )
 
             return re.match(fromlinepattern, startline)
         except IOError:
@@ -162,6 +170,7 @@ class MBoxFolderHandler(FolderHandler):
     def getargflag(self):
         return "/MBOX-MESSAGE/"
 
+
 class MBoxMessageHandler(MessageHandler):
     def getargflag(self):
         return "/MBOX-MESSAGE/"
@@ -170,9 +179,11 @@ class MBoxMessageHandler(MessageHandler):
         fd = self.vfs.open(self.getselector(), "rt")
         return UnixMailbox(fd)
 
+
 ###########################################################################
 # Maildir support
 ###########################################################################
+
 
 class MaildirFolderHandler(FolderHandler):
     def canhandlerequest(self):
@@ -182,8 +193,9 @@ class MaildirFolderHandler(FolderHandler):
             return 0
         if not (self.statresult and S_ISDIR(self.statresult[ST_MODE])):
             return 0
-        return self.vfs.isdir(self.getselector() + "/new") and \
-               self.vfs.isdir(self.getselector() + "/cur")
+        return self.vfs.isdir(self.getselector() + "/new") and self.vfs.isdir(
+            self.getselector() + "/cur"
+        )
 
     def prepare(self):
         self.mbox = Maildir(self.getfspath())
@@ -191,6 +203,7 @@ class MaildirFolderHandler(FolderHandler):
 
     def getargflag(self):
         return "/MAILDIR-MESSAGE/"
+
 
 class MaildirMessageHandler(MessageHandler):
     def getargflag(self):

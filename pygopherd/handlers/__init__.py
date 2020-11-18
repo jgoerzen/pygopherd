@@ -16,8 +16,20 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-__all__ = ['base', 'dir', 'file', 'url', 'gophermap',
-           'UMN', 'ZIP', 'html', 'mbox', 'virtual', 'pyg', 'scriptexec',
-           'tal']
-#import base, dir, file, gophermap, UMN, html, mbox, virtual, pyg
-#import scriptexec, url
+__all__ = [
+    "base",
+    "dir",
+    "file",
+    "url",
+    "gophermap",
+    "UMN",
+    "ZIP",
+    "html",
+    "mbox",
+    "virtual",
+    "pyg",
+    "scriptexec",
+    "tal",
+]
+# import base, dir, file, gophermap, UMN, html, mbox, virtual, pyg
+# import scriptexec, url

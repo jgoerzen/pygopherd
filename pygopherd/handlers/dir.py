@@ -1,4 +1,3 @@
-
 # pygopherd -- Gopher-based protocol server in Python
 # module: regular directory handling
 # Copyright (C) 2002 John Goerzen
@@ -28,6 +27,7 @@ import pickle
 cachetime = None
 cachefile = None
 
+
 class DirHandler(base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a directory."""
@@ -36,7 +36,7 @@ class DirHandler(base.BaseHandler):
     def getentry(self):
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
-            self.entry.populatefromfs(self.getselector(), self.statresult, vfs = self.vfs)
+            self.entry.populatefromfs(self.getselector(), self.statresult, vfs=self.vfs)
         return self.entry
 
     def prep_initfiles(self):
@@ -45,9 +45,9 @@ class DirHandler(base.BaseHandler):
         dirfiles = self.vfs.listdir(self.getselector())
         ignorepatt = self.config.get("handlers.dir.DirHandler", "ignorepatt")
         for file in dirfiles:
-            if self.prep_initfiles_canaddfile(ignorepatt,
-                                              self.selectorbase + '/' + file,
-                                              file):
+            if self.prep_initfiles_canaddfile(
+                ignorepatt, self.selectorbase + "/" + file, file
+            ):
                 self.files.append(file)
 
     def prep_initfiles_canaddfile(self, ignorepatt, pattern, file):
@@ -60,10 +60,13 @@ class DirHandler(base.BaseHandler):
         for file in self.files:
             # We look up the appropriate handler for this object, and ask
             # it to give us an entry object.
-            handler = handlers.HandlerMultiplexer.\
-                        getHandler(self.selectorbase + '/' \
-                                   + file, self.searchrequest, self.protocol,
-                                   self.config, vfs = self.vfs)
+            handler = handlers.HandlerMultiplexer.getHandler(
+                self.selectorbase + "/" + file,
+                self.searchrequest,
+                self.protocol,
+                self.config,
+                vfs=self.vfs,
+            )
             fileentry = handler.getentry()
             self.prep_entriesappend(file, handler, fileentry)
 
@@ -77,12 +80,12 @@ class DirHandler(base.BaseHandler):
         # Initialize some variables.
 
         self.selectorbase = self.selector
-        if self.selectorbase == '/':
-            self.selectorbase = ''           # Avoid dup slashes        
-            
+        if self.selectorbase == "/":
+            self.selectorbase = ""  # Avoid dup slashes
+
         if self.loadcache():
             # No need to do anything else.
-            return 0                    # Did nothing.
+            return 0  # Did nothing.
 
         self.prep_initfiles()
 
@@ -90,7 +93,7 @@ class DirHandler(base.BaseHandler):
         self.files.sort()
 
         self.prep_entries()
-        return 1                        # Did something.
+        return 1  # Did something.
 
     def isdir(self):
         return 1
@@ -104,10 +107,8 @@ class DirHandler(base.BaseHandler):
 
         self.fromcache = 0
         if cachetime == None:
-            cachetime = self.config.getint("handlers.dir.DirHandler",
-                                           "cachetime")
-            cachefile = self.config.get("handlers.dir.DirHandler",
-                                        "cachefile")
+            cachetime = self.config.getint("handlers.dir.DirHandler", "cachetime")
+            cachefile = self.config.get("handlers.dir.DirHandler", "cachefile")
         cachename = self.selector + "/" + cachefile
         if not self.vfs.iswritable(cachename):
             return 0
@@ -117,7 +118,7 @@ class DirHandler(base.BaseHandler):
         except OSError:
             return 0
 
-        if (time.time() - statval[stat.ST_MTIME] < cachetime):
+        if time.time() - statval[stat.ST_MTIME] < cachetime:
             fp = self.vfs.open(cachename, "rb")
             self.fileentries = pickle.load(fp)
             fp.close()
@@ -138,5 +139,3 @@ class DirHandler(base.BaseHandler):
             fp.close()
         except IOError:
             pass
-
-    

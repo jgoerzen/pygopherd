@@ -22,6 +22,7 @@ import os, stat, os.path, mimetypes
 from pygopherd import protocols, gopherentry, handlers
 from pygopherd.handlers.base import BaseHandler
 
+
 class HTMLURLHandler(BaseHandler):
     """Will take requests for a URL-like selector and generate
     a HTML page redirecting people to the actual URL.
@@ -29,15 +30,17 @@ class HTMLURLHandler(BaseHandler):
     This implementation adheres to the proposal as specified at
     http://www.complete.org/mailinglists/archives/gopher-200202/msg00033.html
     """
-    
+
     def isrequestsecure(self):
         """For URLs, it is valid to have .., //, etc in the URLs."""
-        return self.canhandlerequest() and \
-               self.selector.find("\0") == -1 and \
-               self.selector.find("\n") == -1 and \
-               self.selector.find("\t") == -1 and \
-               self.selector.find('"') == -1 and \
-               self.selector.find("\r") == -1
+        return (
+            self.canhandlerequest()
+            and self.selector.find("\0") == -1
+            and self.selector.find("\n") == -1
+            and self.selector.find("\t") == -1
+            and self.selector.find('"') == -1
+            and self.selector.find("\r") == -1
+        )
 
     def canhandlerequest(self):
         """We can handle the request if it's for something that starts
@@ -48,15 +51,15 @@ class HTMLURLHandler(BaseHandler):
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
             self.entry.name = self.selector
-            self.entry.mimetype = 'text/html'
-            self.entry.type = 'h'
+            self.entry.mimetype = "text/html"
+            self.entry.type = "h"
         return self.entry
 
     # We have nothing to prepare.
 
     def write(self, wfile):
-        url = self.selector[4:]         # Strip off URL:
-        if self.selector[0] == '/':
+        url = self.selector[4:]  # Strip off URL:
+        if self.selector[0] == "/":
             url = self.selector[5:]
         outdoc = "<HTML><HEAD>\n"
         outdoc += '<META HTTP-EQUIV="refresh" content="5;URL=%s">' % url
@@ -78,6 +81,7 @@ class HTMLURLHandler(BaseHandler):
         </BODY></HTML>"""
         wfile.write(outdoc)
 
+
 class URLTypeRewriter(BaseHandler):
     """Will take URLs that start with a file type (ie,
     /1/devel/offlineimap) and remove the type (/devel/offlineimap).  Useful
@@ -85,14 +89,20 @@ class URLTypeRewriter(BaseHandler):
     a single document."""
 
     def canhandlerequest(self):
-        return len(self.selector) >= 3 and \
-               self.selector[0] == '/' and \
-               self.selector[2] == '/'
+        return (
+            len(self.selector) >= 3
+            and self.selector[0] == "/"
+            and self.selector[2] == "/"
+        )
 
     def gethandler(self):
-        handlerlist = [x for x in handlers.HandlerMultiplexer.handlers if
-                       x != URLTypeRewriter]
-        return handlers.HandlerMultiplexer.getHandler(self.selector[2:],
-                                             self.searchrequest, self.protocol,
-                                             self.config, handlerlist)
-    
+        handlerlist = [
+            x for x in handlers.HandlerMultiplexer.handlers if x != URLTypeRewriter
+        ]
+        return handlers.HandlerMultiplexer.getHandler(
+            self.selector[2:],
+            self.searchrequest,
+            self.protocol,
+            self.config,
+            handlerlist,
+        )

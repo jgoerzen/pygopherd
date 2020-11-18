@@ -19,6 +19,7 @@
 # END OF COPYRIGHT #
 
 import sys, profile
+
 # sys.path.insert("-1", "..")
 
 import unittest
@@ -30,24 +31,26 @@ import pygopherd.protocols.rfc1436Test
 import pygopherd.protocols
 import pygopherd.handlers.ZIP
 
+
 def suite():
-    tests = [initializationTest,
-             GopherExceptionsTest,
-             fileextTest,
-             gopherentryTest,
-             loggerTest,
-             pipeTest,
-             pygopherd.protocols.ProtocolMultiplexerTest,
-             pygopherd.protocols.baseTest,
-             pygopherd.protocols.rfc1436Test,
-	     pygopherd.handlers.ZIP
-        ]
+    tests = [
+        initializationTest,
+        GopherExceptionsTest,
+        fileextTest,
+        gopherentryTest,
+        loggerTest,
+        pipeTest,
+        pygopherd.protocols.ProtocolMultiplexerTest,
+        pygopherd.protocols.baseTest,
+        pygopherd.protocols.rfc1436Test,
+        pygopherd.handlers.ZIP,
+    ]
     suite = unittest.TestSuite()
     for module in tests:
         suite.addTest(unittest.findTestCases(module))
     return suite
 
-if __name__ == '__main__':
-    profile.run("unittest.main(defaultTest='suite')", 'profile.out')
-#    unittest.main(defaultTest='suite')
 
+if __name__ == "__main__":
+    profile.run("unittest.main(defaultTest='suite')", "profile.out")
+#    unittest.main(defaultTest='suite')

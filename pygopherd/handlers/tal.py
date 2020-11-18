@@ -18,25 +18,28 @@
 
 try:
     from simpletal import simpleTAL, simpleTALES
+
     talavailable = 1
 except:
     talavailable = 0
 
 try:
     import logging
+
     haslogging = 1
 except:
     haslogging = 0
 
 if haslogging:
     import os
+
     try:
-        hdlrFilename = os.path.join(os.environ['TEMP'], 'mylog.log')
+        hdlrFilename = os.path.join(os.environ["TEMP"], "mylog.log")
     except:
-        hdlrFilename = '/tmp/mylog.log'
-    logger = logging.getLogger('simpleTAL.HTMLTemplateCompiler')
+        hdlrFilename = "/tmp/mylog.log"
+    logger = logging.getLogger("simpleTAL.HTMLTemplateCompiler")
     hdlr = logging.FileHandler(hdlrFilename)
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
     hdlr.setFormatter(formatter)
     logger.addHandler(hdlr)
     logger.setLevel(logging.INFO)
@@ -45,6 +48,7 @@ if haslogging:
 from pygopherd.handlers.file import FileHandler
 from pygopherd import gopherentry
 import re, os.path
+
 
 class TALLoader:
     def __init__(self, vfs, path):
@@ -55,7 +59,7 @@ class TALLoader:
         return self.path
 
     def getparent(self):
-        if self.path == '/':
+        if self.path == "/":
             return self
         else:
             return self.__class__(self.vfs, os.path.dirname(self.path))
@@ -63,10 +67,9 @@ class TALLoader:
     def getchildrennames(self):
         return self.vfs.listdir(self.path)
 
-    #def getchildren(self):
+    # def getchildren(self):
     #    return [self.__class__(self.vfs, os.path.join(self.path, item)) \
     #            for item in self.getchildrennames()]
-
 
     def __getattr__(self, key):
         fq = os.path.join(self.path, key)
@@ -80,9 +83,10 @@ class TALLoader:
         else:
             raise AttributeError("Key %s not found in %s" % (key, self.path))
 
+
 class RecursiveTALLoader(TALLoader):
     def __getattr__(self, key):
-        if self.path == '/':
+        if self.path == "/":
             # Already at the top -- can't recurse.
             return TALLoader.__getattr__(self, key)
         try:
@@ -90,23 +94,28 @@ class RecursiveTALLoader(TALLoader):
         except AttributeError:
             return self.getparent().__getattr__(self, key)
 
+
 class TALFileHandler(FileHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a file ending with .thtml."""
-        canhandle = FileHandler.canhandlerequest(self) and self.getselector().endswith(".tal")
+        canhandle = FileHandler.canhandlerequest(self) and self.getselector().endswith(
+            ".tal"
+        )
         if not canhandle:
             return 0
         self.talbasename = self.getselector()[:-4]
         self.allowpythonpath = 1
-        if self.config.has_option('handlers.tal.TALFileHandler', 'allowpythonpath'):
-            self.allowpythonpath = self.config.getboolean('handlers.tal.TALFileHandler', 'allowpythonpath')
+        if self.config.has_option("handlers.tal.TALFileHandler", "allowpythonpath"):
+            self.allowpythonpath = self.config.getboolean(
+                "handlers.tal.TALFileHandler", "allowpythonpath"
+            )
         return 1
 
     def getentry(self):
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
-            self.entry.populatefromfs(self.getselector(), self.statresult, vfs = self.vfs)
-            assert self.entry.getencoding() == 'tal.TALFileHandler'
+            self.entry.populatefromfs(self.getselector(), self.statresult, vfs=self.vfs)
+            assert self.entry.getencoding() == "tal.TALFileHandler"
             # Remove the TAL encoding and revert to default.
             self.entry.mimetype = self.entry.getencodedmimetype()
             self.entry.encodedmimetype = None
@@ -118,18 +127,18 @@ class TALFileHandler(FileHandler):
 
     def write(self, wfile):
         rfile = self.vfs.open(self.getselector())
-        context = simpleTALES.Context(allowPythonPath = self.allowpythonpath)
+        context = simpleTALES.Context(allowPythonPath=self.allowpythonpath)
         context.addGlobal("selector", self.getselector())
-        context.addGlobal('handler', self)
-        context.addGlobal('entry', self.getentry())
-        context.addGlobal('talbasename', self.talbasename)
-        context.addGlobal('allowpythonpath', self.allowpythonpath)
-        context.addGlobal('protocol', self.protocol)
-        context.addGlobal('root', TALLoader(self.vfs, '/'))
-        context.addGlobal('rroot', RecursiveTALLoader(self.vfs, '/'))
+        context.addGlobal("handler", self)
+        context.addGlobal("entry", self.getentry())
+        context.addGlobal("talbasename", self.talbasename)
+        context.addGlobal("allowpythonpath", self.allowpythonpath)
+        context.addGlobal("protocol", self.protocol)
+        context.addGlobal("root", TALLoader(self.vfs, "/"))
+        context.addGlobal("rroot", RecursiveTALLoader(self.vfs, "/"))
         dirname = os.path.dirname(self.getselector())
-        context.addGlobal('dir', TALLoader(self.vfs, dirname))
-        context.addGlobal('rdir', RecursiveTALLoader(self.vfs, dirname))
+        context.addGlobal("dir", TALLoader(self.vfs, dirname))
+        context.addGlobal("rdir", RecursiveTALLoader(self.vfs, dirname))
 
         template = simpleTAL.compileHTMLTemplate(rfile)
         rfile.close()

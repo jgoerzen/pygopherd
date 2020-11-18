@@ -36,16 +36,16 @@ class HTMLTitleParser(html.parser.HTMLParser):
         self.titlestr = ""
         self.readingtitle = 0
         self.gotcompletetitle = 0
-        
+
     def handle_starttag(self, tag, attrs):
-        if tag == 'title':
+        if tag == "title":
             self.readingtitle = 1
 
     def handle_endtag(self, tag):
-        if tag == 'title':
+        if tag == "title":
             self.gotcompletetitle = 1
             self.readingtitle = 0
-        
+
     def handle_data(self, data):
         if self.readingtitle:
             self.titlestr += data
@@ -56,13 +56,15 @@ class HTMLTitleParser(html.parser.HTMLParser):
         if self.readingtitle and name in html.entities.entitydefs:
             self.titlestr += html.entities.entitydefs[name]
 
+
 class HTMLFileTitleHandler(FileHandler):
     """This class will set the title of a HTML document based on the
     HTML title.  It is a clone of the UMN gsfindhtmltitle function."""
+
     def canhandlerequest(self):
         if FileHandler.canhandlerequest(self):
             mimetype, encoding = mimetypes.guess_type(self.selector)
-            return mimetype == 'text/html'
+            return mimetype == "text/html"
         else:
             return 0
 
@@ -92,7 +94,6 @@ class HTMLFileTitleHandler(FileHandler):
             # Convert all whitespace sequences to a single space.
             # Removes newlines, tabs, etc.  Good for presentation
             # and for security.
-            title = re.sub('[\s]+', ' ', parser.titlestr)
+            title = re.sub("[\s]+", " ", parser.titlestr)
             entry.setname(title)
         return entry
-

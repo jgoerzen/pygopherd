@@ -21,32 +21,36 @@ from pygopherd import logger
 
 tracebacks = 0
 
-def log(exception, protocol = None, handler = None):
+
+def log(exception, protocol=None, handler=None):
     """Logs an exception.  It will try to generate a nice-looking string
     based on the arguments passed in."""
-    protostr = 'None'
-    handlerstr = 'None'
-    ipaddr = 'unknown-address'
+    protostr = "None"
+    handlerstr = "None"
+    ipaddr = "unknown-address"
     exceptionclass = type(exception).__name__
     if protocol:
         protostr = type(protocol).__name__
         ipaddr = protocol.requesthandler.client_address[0]
     if handler:
         handlerstr = type(handler).__name__
-    
-    logger.log("%s [%s/%s] EXCEPTION %s: %s" % \
-               (ipaddr, protostr, handlerstr, exceptionclass,
-                str(exception)))
+
+    logger.log(
+        "%s [%s/%s] EXCEPTION %s: %s"
+        % (ipaddr, protostr, handlerstr, exceptionclass, str(exception))
+    )
+
 
 def init(backtraceenabled):
     global tracebacks
     tracebacks = backtraceenabled
 
+
 class FileNotFound(BaseException):
     def __init__(self, arg):
         self.selector = arg
-        self.comments = ''
-        self.protocol = ''
+        self.comments = ""
+        self.protocol = ""
 
         if type(arg) != bytes:
             self.selector = arg[0]

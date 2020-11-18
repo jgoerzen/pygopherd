@@ -1,4 +1,4 @@
-productname = 'PyGopherd'
+productname = "PyGopherd"
 versionstr = "2.0.18"
 
 versionlist = versionstr.split(".")

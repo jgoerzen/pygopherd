@@ -23,11 +23,12 @@ from pygopherd import protocols, gopherentry
 
 rootpath = None
 
+
 class VFS_Real:
-    def __init__(self, config, chain = None):
+    def __init__(self, config, chain=None):
         """This implementation does not chain."""
         self.config = config
-    
+
     def iswritable(self, selector):
         return 1
 
@@ -63,13 +64,13 @@ class VFS_Real:
 
         fspath = self.getrootpath() + selector
         # Strip off trailing slash.
-        if fspath[-1] == '/':
+        if fspath[-1] == "/":
             fspath = fspath[0:-1]
 
         return fspath
 
     def copyto(self, name, fd):
-        rfile = self.open(name, 'rb')
+        rfile = self.open(name, "rb")
         while 1:
             data = rfile.read(4096)
             if not len(data):
@@ -77,10 +78,11 @@ class VFS_Real:
             fd.write(data)
         rfile.close
 
+
 class BaseHandler:
     """Skeleton handler -- includes commonly-used routines."""
-    def __init__(self, selector, searchrequest, protocol, config, statresult,
-                 vfs = None):
+
+    def __init__(self, selector, searchrequest, protocol, config, statresult, vfs=None):
         """Parameters are:
         selector -- requested selector.  The selector must always start
         with a slash and never end with a slash UNLESS it is a one-char
@@ -118,13 +120,14 @@ class BaseHandler:
         if the request is secure, false if not.  By default, we eliminate
         ./, ../, and //  This is split out from canhandlerequest becase
         it could be too easy to forget about it there."""
-        return (self.selector.find("./") == -1) and \
-               (self.selector.find("..") == -1) and \
-               (self.selector.find("//") == -1) and \
-               (self.selector.find(".\\") == -1) and \
-               (self.selector.find("\\\\") == -1) and \
-               (self.selector.find("\0") == -1)
-        
+        return (
+            (self.selector.find("./") == -1)
+            and (self.selector.find("..") == -1)
+            and (self.selector.find("//") == -1)
+            and (self.selector.find(".\\") == -1)
+            and (self.selector.find("\\\\") == -1)
+            and (self.selector.find("\0") == -1)
+        )
 
     def canhandlerequest(self):
         """Decides whether or not a given request is valid for this
@@ -166,7 +169,7 @@ class BaseHandler:
         otherwise.  Not valid unless prepare has been called."""
 
         return 0
-    
+
     def write(self, wfile):
         """Writes out the request if isdir() returns false.  You should
         NOT call write if isdir() returns true!  Should be overridden
@@ -182,4 +185,3 @@ class BaseHandler:
         if not self.isdir():
             raise Exception("Attempt to use getdir for a file.")
         return []
-    

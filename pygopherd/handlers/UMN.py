@@ -33,19 +33,25 @@ extstrip = None
 # Handles .Links, .names, and .cap/* files
 ###########################################################################
 
+
 class LinkEntry(GopherEntry):
     def __init__(self, selector, config):
         GopherEntry.__init__(self, selector, config)
         self.needsmerge = 0
         self.needsabspath = 0
+
     def getneedsmerge(self):
         return self.needsmerge
+
     def getneedsabspath(self):
         return self.needsabspath
+
     def setneedsmerge(self, arg):
         self.needsmerge = arg
+
     def setneedsabspath(self, arg):
         self.needsabspath = arg
+
 
 class UMNDirHandler(DirHandler):
     """This module strives to be bug-compatible with UMN gopherd."""
@@ -61,24 +67,25 @@ class UMNDirHandler(DirHandler):
             # Returns 1 if it didn't load from the cache.
             # Merge and sort.
             self.MergeLinkFiles()
-            self.fileentries.sort(key = cmp_to_key(self.entrycmp))
-        
+            self.fileentries.sort(key=cmp_to_key(self.entrycmp))
+
     def prep_initfiles_canaddfile(self, ignorepatt, pattern, file):
         """Override the parent to process dotfiles and keep them out
         of the list."""
-        if DirHandler.prep_initfiles_canaddfile(self, ignorepatt, pattern,
-                                                 file):
+        if DirHandler.prep_initfiles_canaddfile(self, ignorepatt, pattern, file):
             # If the parent says it's OK, then let's see if it's
             # a link file.  If yes, process it and return false.
-            if file[0] == '.':
-                if not self.vfs.isdir(self.selectorbase + '/' + file):
-                    self.linkentries.extend(self.processLinkFile(self.selectorbase + '/' + file))
+            if file[0] == ".":
+                if not self.vfs.isdir(self.selectorbase + "/" + file):
+                    self.linkentries.extend(
+                        self.processLinkFile(self.selectorbase + "/" + file)
+                    )
                     return 0
                 else:
-                    return 0            # A "dot dir" -- ignore.
-            return 1                    # Not a dot file -- return true
+                    return 0  # A "dot dir" -- ignore.
+            return 1  # Not a dot file -- return true
         else:
-            return 0                    # Parent returned 0, do the same.
+            return 0  # Parent returned 0, do the same.
 
     def prep_entriesappend(self, file, handler, fileentry):
         """Overridden to process .cap files and modify extensions.
@@ -88,29 +95,28 @@ class UMNDirHandler(DirHandler):
 
         global extstrip
         if extstrip == None:
-            extstrip = self.config.get("handlers.UMN.UMNDirHandler",
-                                       "extstrip")
-        if extstrip != 'none' and \
-               isinstance(handler, FileHandler):
-            if extstrip == 'full' or \
-               (extstrip == 'nonencoded' and not fileentry.getencoding()):
+            extstrip = self.config.get("handlers.UMN.UMNDirHandler", "extstrip")
+        if extstrip != "none" and isinstance(handler, FileHandler):
+            if extstrip == "full" or (
+                extstrip == "nonencoded" and not fileentry.getencoding()
+            ):
                 # If it's a file, has a MIME type, and we know about it..
                 fileentry.setname(
-                    pygopherd.fileext.extstrip(file,
-                                               fileentry.getencodedmimetype() or
-                                               fileentry.getmimetype()))
-        
-        capfilename = self.selectorbase + '/.cap/' + file
-        
+                    pygopherd.fileext.extstrip(
+                        file, fileentry.getencodedmimetype() or fileentry.getmimetype()
+                    )
+                )
+
+        capfilename = self.selectorbase + "/.cap/" + file
+
         try:
-            capinfo = self.processLinkFile(capfilename,
-                                           fileentry.getselector())
-            if len(capinfo) >= 1:       # We handle one and only one entry.
-                if capinfo[0].gettype() == 'X' or capinfo[0].gettype() == '-':
-                    return              # Type X -- don't append.
+            capinfo = self.processLinkFile(capfilename, fileentry.getselector())
+            if len(capinfo) >= 1:  # We handle one and only one entry.
+                if capinfo[0].gettype() == "X" or capinfo[0].gettype() == "-":
+                    return  # Type X -- don't append.
                 else:
                     self.mergeentries(fileentry, capinfo[0])
-        except IOError:                 # Ignore no capfile situation
+        except IOError:  # Ignore no capfile situation
             pass
         DirHandler.prep_entriesappend(self, file, handler, fileentry)
 
@@ -122,7 +128,7 @@ class UMNDirHandler(DirHandler):
         not set, don't even bother with it -- just add."""
 
         # For faster matching, make a dictionary out of the list.
-        
+
         fileentriesdict = {}
         for entry in self.fileentries:
             fileentriesdict[entry.selector] = entry
@@ -132,26 +138,25 @@ class UMNDirHandler(DirHandler):
                 self.fileentries.append(linkentry)
                 continue
             if linkentry.selector in fileentriesdict:
-                if linkentry.gettype() == 'X':
+                if linkentry.gettype() == "X":
                     # It's special code to hide something.
                     self.fileentries.remove(fileentriesdict[linkentry.selector])
                 else:
-                    self.mergeentries(fileentriesdict[linkentry.selector],
-                                      linkentry)
+                    self.mergeentries(fileentriesdict[linkentry.selector], linkentry)
             else:
                 self.fileentries.append(linkentry)
 
     def mergeentries(self, old, new):
         """Takes the set fields from new and modifies old to have their
         value."""
-        for field in ['selector', 'type', 'name', 'host', 'port']:
+        for field in ["selector", "type", "name", "host", "port"]:
             if getattr(new, field):
                 setattr(old, field, getattr(new, field))
 
         for field in list(new.geteadict().keys()):
             old.setea(field, new.getea(field))
 
-    def processLinkFile(self, filename, capfilepath = None):
+    def processLinkFile(self, filename, capfilepath=None):
         """Processes a link file.  If capfilepath is set, it should
         be the equivolent of the Path= in a .names file."""
         linkentries = []
@@ -160,25 +165,25 @@ class UMNDirHandler(DirHandler):
             nextstep, entry = self.getLinkItem(fd, capfilepath)
             if entry:
                 linkentries.append(entry)
-            if nextstep == 'stop':
+            if nextstep == "stop":
                 break
         return linkentries
-        
-    def getLinkItem(self, fd, capfilepath = None):
+
+    def getLinkItem(self, fd, capfilepath=None):
         """This is an almost exact clone of UMN's GSfromLink function."""
         entry = LinkEntry(self.entry.selector, self.config)
-        nextstep = 'continue'
+        nextstep = "continue"
 
-        done = {'path' : 0, 'type' : 0, 'name' : 0, 'host' : 0, 'port' : 0}
+        done = {"path": 0, "type": 0, "name": 0, "host": 0, "port": 0}
 
         if capfilepath != None:
             entry.setselector(capfilepath)
-            done['path'] = 1
+            done["path"] = 1
 
         while 1:
             line = fd.readline()
             if not line:
-                nextstep = 'stop'
+                nextstep = "stop"
                 break
             line = line.strip()
 
@@ -187,8 +192,8 @@ class UMNDirHandler(DirHandler):
                 break
 
             # Comment.
-            if line[0] == '#':
-                if done['path']:
+            if line[0] == "#":
+                if done["path"]:
                     break
                 else:
                     continue
@@ -197,38 +202,38 @@ class UMNDirHandler(DirHandler):
             if line[0:5] == "Type=":
                 entry.settype(line[5])
                 # FIXME: handle if line[6] is + or ?
-                done['type'] = 1
+                done["type"] = 1
             elif line[0:5] == "Name=":
                 entry.setname(line[5:])
-                done['name'] = 1
+                done["name"] = 1
             elif line[0:5] == "Path=":
                 pathname = line[5:]
-                if len(pathname) and pathname[-1] == '/':
+                if len(pathname) and pathname[-1] == "/":
                     pathname = pathname[0:-1]
-                if len(line) >= 7 and (line[5:7] == './' or line[5:7] == '~/'):
+                if len(line) >= 7 and (line[5:7] == "./" or line[5:7] == "~/"):
                     # Handle ./: make full path.
                     entry.setselector(self.selectorbase + "/" + pathname[2:])
                     entry.setneedsmerge(1)
-                elif len(pathname) and pathname[0] != '/' and pathname[0:4] != "URL:":
+                elif len(pathname) and pathname[0] != "/" and pathname[0:4] != "URL:":
                     entry.setselector(pathname)
                     entry.setneedsabspath(1)
                 else:
                     entry.setselector(pathname)
-                done['path'] = 1
-            elif line[0:5] == 'Host=':
-                if line[5:] != '+':
+                done["path"] = 1
+            elif line[0:5] == "Host=":
+                if line[5:] != "+":
                     entry.sethost(line[5:])
-                done['host'] = 1
-            elif line[0:5] == 'Port=':
-                if line[5:] != '+':
+                done["host"] = 1
+            elif line[0:5] == "Port=":
+                if line[5:] != "+":
                     entry.setport(int(line[5:]))
-                done['port'] = 1
-            elif line[0:5] == 'Numb=':
-                try:            # Don't crash if we can't parse the number
+                done["port"] = 1
+            elif line[0:5] == "Numb=":
+                try:  # Don't crash if we can't parse the number
                     entry.setnum(int(line[5:]))
                 except:
                     pass
-            elif line[0:9] == 'Abstract=':
+            elif line[0:9] == "Abstract=":
                 abstractstr = ""
                 abstractline = line[9:]
                 while len(abstractline) and abstractline[-1] == "\\":
@@ -237,19 +242,22 @@ class UMNDirHandler(DirHandler):
                 abstractstr += abstractline
 
                 if abstractstr:
-                    entry.setea('ABSTRACT', abstractstr)
-            elif line[0:6] == 'Admin=' or \
-                 line[0:4] == 'URL=' or \
-                 line[0:4] == 'TTL=':
+                    entry.setea("ABSTRACT", abstractstr)
+            elif line[0:6] == "Admin=" or line[0:4] == "URL=" or line[0:4] == "TTL=":
                 pass
             else:
                 break
             ### FIXME: Handle Admin, URL, TTL
 
-        if done['path']:
-            if entry.getneedsabspath() and \
-                   entry.gethost() == None and entry.getport() == None:
-                entry.setselector(os.path.normpath(self.selectorbase + "/" + entry.getselector()))
+        if done["path"]:
+            if (
+                entry.getneedsabspath()
+                and entry.gethost() == None
+                and entry.getport() == None
+            ):
+                entry.setselector(
+                    os.path.normpath(self.selectorbase + "/" + entry.getselector())
+                )
             return (nextstep, entry)
         return (nextstep, None)
 
@@ -277,7 +285,7 @@ class UMNDirHandler(DirHandler):
             return cmp(entry1.name, entry2.name)
 
         # Same signs: use plain numeric comparison.
-        if (self.sgn(e1num) == self.sgn(e2num)):
+        if self.sgn(e1num) == self.sgn(e2num):
             return cmp(e1num, e2num)
 
         # Different signs: other comparison.
@@ -286,28 +294,37 @@ class UMNDirHandler(DirHandler):
         else:
             return 1
 
+
 # For Python 3 compat
 # https://docs.python.org/3.0/whatsnew/3.0.html#ordering-comparisons
 def cmp(a, b):
     return (a > b) - (a < b)
 
+
 # Python 3 conversion tool: from http://code.activestate.com/recipes/576653-convert-a-cmp-function-to-a-key-function/
 def cmp_to_key(mycmp):
-    'Convert a cmp= function into a key= function'
+    "Convert a cmp= function into a key= function"
+
     class K(object):
         def __init__(self, obj, *args):
             self.obj = obj
+
         def __lt__(self, other):
             return mycmp(self.obj, other.obj) < 0
+
         def __gt__(self, other):
             return mycmp(self.obj, other.obj) > 0
+
         def __eq__(self, other):
             return mycmp(self.obj, other.obj) == 0
+
         def __le__(self, other):
-            return mycmp(self.obj, other.obj) <= 0  
+            return mycmp(self.obj, other.obj) <= 0
+
         def __ge__(self, other):
             return mycmp(self.obj, other.obj) >= 0
+
         def __ne__(self, other):
             return mycmp(self.obj, other.obj) != 0
-    return K
 
+    return K

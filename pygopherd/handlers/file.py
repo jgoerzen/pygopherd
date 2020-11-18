@@ -24,6 +24,7 @@ from pygopherd.handlers import base
 import pygopherd.pipe
 from stat import *
 
+
 class FileHandler(base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a file."""
@@ -32,14 +33,16 @@ class FileHandler(base.BaseHandler):
     def getentry(self):
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
-            self.entry.populatefromfs(self.getselector(), self.statresult, vfs = self.vfs)
+            self.entry.populatefromfs(self.getselector(), self.statresult, vfs=self.vfs)
         return self.entry
 
     def write(self, wfile):
         self.vfs.copyto(self.getselector(), wfile)
 
+
 decompressors = None
 decompresspatt = None
+
 
 class CompressedFileHandler(FileHandler):
     def canhandlerequest(self):
@@ -47,19 +50,23 @@ class CompressedFileHandler(FileHandler):
 
         # It's OK to call just canhandlerequest() since we're not
         # overriding the security or isrequestforme functions.
-        
-        return FileHandler.canhandlerequest(self) and \
-               self.getentry().realencoding and \
-               self.getentry().realencoding in decompressors and \
-               re.search(decompresspatt, self.selector)
+
+        return (
+            FileHandler.canhandlerequest(self)
+            and self.getentry().realencoding
+            and self.getentry().realencoding in decompressors
+            and re.search(decompresspatt, self.selector)
+        )
 
     def getentry(self):
         if not self.entry:
             self.entry = FileHandler.getentry(self)
             self.entry.realencoding = None
-            if self.entry.getencoding() and \
-               self.entry.getencoding() in decompressors and \
-               self.entry.getencodedmimetype():
+            if (
+                self.entry.getencoding()
+                and self.entry.getencoding() in decompressors
+                and self.entry.getencodedmimetype()
+            ):
                 # When the client gets it, there will not be
                 # encoding.  Therefore, we remove the encoding and switch
                 # to the real MIME type.
@@ -69,24 +76,26 @@ class CompressedFileHandler(FileHandler):
                 self.entry.encoding = None
                 self.entry.type = self.entry.guesstype()
         return self.entry
-    
+
     def initdecompressors(self):
         global decompressors, decompresspatt
         if decompressors == None:
-            decompressors = \
-                eval(self.config.get("handlers.file.CompressedFileHandler",
-                                     "decompressors"))
-            decompresspatt = \
-                self.config.get("handlers.file.CompressedFileHandler",
-                                "decompresspatt")
+            decompressors = eval(
+                self.config.get("handlers.file.CompressedFileHandler", "decompressors")
+            )
+            decompresspatt = self.config.get(
+                "handlers.file.CompressedFileHandler", "decompresspatt"
+            )
 
     def write(self, wfile):
         global decompressors
         decompprog = decompressors[self.getentry().realencoding]
-        pygopherd.pipe.pipedata_unix(decompprog, [decompprog],
-                                     childstdin = self.rfile,
-                                     childstdout = wfile,
-                                     pathsearch = 1)
+        pygopherd.pipe.pipedata_unix(
+            decompprog,
+            [decompprog],
+            childstdin=self.rfile,
+            childstdout=wfile,
+            pathsearch=1,
+        )
         self.rfile.close()
         self.rfile = None
-    

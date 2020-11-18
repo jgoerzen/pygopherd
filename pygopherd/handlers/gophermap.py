@@ -23,57 +23,73 @@ from pygopherd import protocols, gopherentry
 from pygopherd.handlers import base
 from stat import *
 
+
 class BuckGophermapHandler(base.BaseHandler):
     """Bucktooth selector handler.  Adheres to the specification
     at gopher://gopher.floodgap.com:70/0/buck/dbrowse%3Ffaquse%201"""
+
     def canhandlerequest(self):
         """We can handle the request if it's for a directory AND
         the directory has a gophermap file."""
-        return self.statresult and ((S_ISDIR(self.statresult[ST_MODE]) and \
-                self.vfs.isfile(self.getselector() + '/gophermap')) or \
-               (S_ISREG(self.statresult[ST_MODE]) and \
-                self.getselector().endswith(".gophermap")))
+        return self.statresult and (
+            (
+                S_ISDIR(self.statresult[ST_MODE])
+                and self.vfs.isfile(self.getselector() + "/gophermap")
+            )
+            or (
+                S_ISREG(self.statresult[ST_MODE])
+                and self.getselector().endswith(".gophermap")
+            )
+        )
 
     def getentry(self):
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
-            if (self.statresult and S_ISREG(self.statresult[ST_MODE]) and \
-                self.getselector().endswith(".gophermap")):
+            if (
+                self.statresult
+                and S_ISREG(self.statresult[ST_MODE])
+                and self.getselector().endswith(".gophermap")
+            ):
                 self.entry.populatefromvfs(self.vfs, self.getselector())
             else:
-                self.entry.populatefromfs(self.getselector(), self.statresult, vfs = self.vfs)
-            
+                self.entry.populatefromfs(
+                    self.getselector(), self.statresult, vfs=self.vfs
+                )
+
         return self.entry
 
     def prepare(self):
         self.selectorbase = self.selector
-        if self.selectorbase == '/':
-            self.selectorbase = ''           # Avoid dup slashes
+        if self.selectorbase == "/":
+            self.selectorbase = ""  # Avoid dup slashes
 
-        if self.getselector().endswith(".gophermap") and \
-           self.statresult and S_ISREG(self.statresult[ST_MODE]):
-            self.rfile = self.vfs.open(self.getselector(), 'rb')
+        if (
+            self.getselector().endswith(".gophermap")
+            and self.statresult
+            and S_ISREG(self.statresult[ST_MODE])
+        ):
+            self.rfile = self.vfs.open(self.getselector(), "rb")
         else:
-            self.rfile = self.vfs.open(self.selectorbase + '/gophermap', 'rb')
+            self.rfile = self.vfs.open(self.selectorbase + "/gophermap", "rb")
 
         self.entries = []
 
         selectorbase = self.selectorbase
-        
+
         while 1:
             line = self.rfile.readline()
             if not line:
                 break
-            if re.search("\t", line):   # gophermap link
+            if re.search("\t", line):  # gophermap link
                 args = [arg.strip() for arg in line.split("\t")]
 
                 if len(args) < 2 or not len(args[1]):
-                    args[1] = args[0][1:] # Copy display string to selector
+                    args[1] = args[0][1:]  # Copy display string to selector
 
                 selector = args[1]
-                if selector[0] != '/' and selector[0:4] != "URL:": # Relative link
-                    selector = selectorbase + '/' + selector
-                
+                if selector[0] != "/" and selector[0:4] != "URL:":  # Relative link
+                    selector = selectorbase + "/" + selector
+
                 entry = gopherentry.GopherEntry(selector, self.config)
                 entry.type = args[0][0]
                 entry.name = args[0][1:]
@@ -90,7 +106,7 @@ class BuckGophermapHandler(base.BaseHandler):
                     if self.vfs.exists(selector):
                         entry.populatefromvfs(self.vfs, selector)
                 self.entries.append(entry)
-            else:                       # Info line
+            else:  # Info line
                 line = line.strip()
                 self.entries.append(gopherentry.getinfoentry(line, self.config))
 
@@ -99,4 +115,3 @@ class BuckGophermapHandler(base.BaseHandler):
 
     def getdirlist(self):
         return self.entries
-

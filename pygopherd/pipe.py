@@ -20,11 +20,16 @@ import os, sys
 
 # Later we will check sys.platform
 
-def pipedata_unix(file, args, environ = os.environ,
-                  childstdin = None,
-                  childstdout = None,
-                  childstderr = None,
-                  pathsearch = 0):
+
+def pipedata_unix(
+    file,
+    args,
+    environ=os.environ,
+    childstdin=None,
+    childstdout=None,
+    childstderr=None,
+    pathsearch=0,
+):
     pid = os.fork()
     if pid:
         # Parent.
@@ -42,5 +47,6 @@ def pipedata_unix(file, args, environ = os.environ,
         else:
             os.execve(file, args, environ)
         sys.exit(255)
+
 
 pipedata = pipedata_unix

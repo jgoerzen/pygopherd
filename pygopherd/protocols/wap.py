@@ -21,12 +21,13 @@ from .http import HTTPProtocol
 from io import StringIO
 import cgi, re
 
-accesskeys = '1234567890#*'
+accesskeys = "1234567890#*"
 wmlheader = """<?xml version="1.0"?>
 <!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN"
 "http://www.wapforum.org/DTD/wml_1.1.xml">
 <wml>
 """
+
 
 class WAPProtocol(HTTPProtocol):
     # canhandlerequest inherited
@@ -35,27 +36,26 @@ class WAPProtocol(HTTPProtocol):
         if not ishttp:
             return 0
 
-        waptop = self.config.get("protocols.wap.WAPProtocol",
-                                 "waptop")
+        waptop = self.config.get("protocols.wap.WAPProtocol", "waptop")
         self.waptop = waptop
         if self.requestparts[1].startswith(waptop):
             # If it starts with waptop, *guaranteed* to be wap.
-            self.requestparts[1] = self.requestparts[1][len(waptop):]
+            self.requestparts[1] = self.requestparts[1][len(waptop) :]
             return 1
 
         self.headerslurp()
 
         # See if we can auto-detect a WAP browser.
-        if 'accept' not in self.httpheaders:
+        if "accept" not in self.httpheaders:
             return 0
 
-        if not re.search('[, ]text/vnd.wap.wml', self.httpheaders['accept']):
+        if not re.search("[, ]text/vnd.wap.wml", self.httpheaders["accept"]):
             return 0
 
         # By now, we know that it lists WML in accept.  Let's try a few
         # more things.
 
-        for tryitem in ['x-wap-profile', 'x-up-devcap-max-pdu']:
+        for tryitem in ["x-wap-profile", "x-up-devcap-max-pdu"]:
             if tryitem in self.httpheaders:
                 return 1
 
@@ -63,24 +63,25 @@ class WAPProtocol(HTTPProtocol):
 
     def adjustmimetype(self, mimetype):
         self.needsconversion = 0
-        if mimetype == None or mimetype == 'text/plain':
+        if mimetype == None or mimetype == "text/plain":
             self.needsconversion = 1
-            return 'text/vnd.wap.wml'
-        if mimetype == 'application/gopher-menu':
-            return 'text/vnd.wap.wml'
+            return "text/vnd.wap.wml"
+        if mimetype == "application/gopher-menu":
+            return "text/vnd.wap.wml"
         return mimetype
 
     def getrenderstr(self, entry, url):
         global accesskeys
-        if url.startswith('/'):
+        if url.startswith("/"):
             url = self.waptop + url
-        retstr = ''
-        if not entry.gettype() in ['i', '7']:
+        retstr = ""
+        if not entry.gettype() in ["i", "7"]:
             if self.accesskeyidx < len(accesskeys):
-                retstr += '%s <a accesskey="%s" href="%s">' % \
-                          (accesskeys[self.accesskeyidx],
-                           accesskeys[self.accesskeyidx],
-                           url)
+                retstr += '%s <a accesskey="%s" href="%s">' % (
+                    accesskeys[self.accesskeyidx],
+                    accesskeys[self.accesskeyidx],
+                    url,
+                )
                 self.accesskeyidx += 1
             else:
                 retstr += '<a href="%s">' % url
@@ -89,21 +90,22 @@ class WAPProtocol(HTTPProtocol):
         else:
             thisname = cgi.escape(entry.getselector())
         retstr += thisname
-        if not entry.gettype() in ['i', '7']:
-            retstr += '</a>'
-        if entry.gettype() == '7':
-            retstr += '<br/>\n'
-            retstr += '  <input name="sr%d"/>\n' % \
-                      self.postfieldidx
-            retstr += '<anchor>Go\n'
-            #retstr += '<do type="accept">\n'
-            retstr += '  <go method="get" href="%s">\n' % url#.replace('%', '%25')
-            retstr += '    <postfield name="searchrequest" value="$(sr%d)"/>\n' % \
-                      self.postfieldidx
-            #retstr += '    <postfield name="text" value="1234"/>\n'
-            retstr += '  </go>\n'
-            #retstr += '</do>\n'
-            retstr += '</anchor>\n'
+        if not entry.gettype() in ["i", "7"]:
+            retstr += "</a>"
+        if entry.gettype() == "7":
+            retstr += "<br/>\n"
+            retstr += '  <input name="sr%d"/>\n' % self.postfieldidx
+            retstr += "<anchor>Go\n"
+            # retstr += '<do type="accept">\n'
+            retstr += '  <go method="get" href="%s">\n' % url  # .replace('%', '%25')
+            retstr += (
+                '    <postfield name="searchrequest" value="$(sr%d)"/>\n'
+                % self.postfieldidx
+            )
+            # retstr += '    <postfield name="text" value="1234"/>\n'
+            retstr += "  </go>\n"
+            # retstr += '</do>\n'
+            retstr += "</anchor>\n"
         retstr += "<br/>\n"
         self.postfieldidx += 1
         return retstr
@@ -113,19 +115,18 @@ class WAPProtocol(HTTPProtocol):
         self.accesskeyidx = 0
         self.postfieldidx = 0
         retval = wmlheader
-        title = 'Gopher'
+        title = "Gopher"
         if self.entry.getname():
             title = cgi.escape(self.entry.getname())
-        retval += '<card id="index" title="%s" newcontext="true">' % \
-                  cgi.escape(title)
-        
+        retval += '<card id="index" title="%s" newcontext="true">' % cgi.escape(title)
+
         retval += "\n<p>\n"
         retval += "<b>%s</b><br/>\n" % cgi.escape(title)
         return retval
 
     def renderdirend(self, entry):
         return "</p>\n</card>\n</wml>\n"
-    
+
     def handlerwrite(self, wfile):
         global wmlheader
         if not self.needsconversion:
@@ -136,7 +137,7 @@ class WAPProtocol(HTTPProtocol):
         fakefile.seek(0)
         wfile.write(wmlheader)
         wfile.write('<card id="index" title="Text File" newcontext="true">\n')
-        wfile.write('<p>\n')
+        wfile.write("<p>\n")
         while 1:
             line = fakefile.readline()
             if not len(line):
@@ -146,15 +147,14 @@ class WAPProtocol(HTTPProtocol):
                 wfile.write(cgi.escape(line) + "\n")
             else:
                 wfile.write("</p>\n<p>")
-        wfile.write('</p>\n</card>\n</wml>\n')
-        
+        wfile.write("</p>\n</card>\n</wml>\n")
+
     def filenotfound(self, msg):
         wfile = self.wfile
         wfile.write("HTTP/1.0 200 Not Found\r\n")
         wfile.write("Content-Type: text/vnd.wap.wml\r\n\r\n")
         wfile.write(wmlheader)
         wfile.write('<card id="index" title="404 Error" newcontext="true">\n')
-        wfile.write('<p><b>Gopher Error</b></p><p>\n')
-        wfile.write(cgi.escape(msg)+ "\n")
-        wfile.write('</p>\n</card>\n</wml>\n')
-    
+        wfile.write("<p><b>Gopher Error</b></p><p>\n")
+        wfile.write(cgi.escape(msg) + "\n")
+        wfile.write("</p>\n</card>\n</wml>\n")

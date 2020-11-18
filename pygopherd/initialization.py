@@ -36,28 +36,35 @@ import traceback
 
 def initconffile(conffile):
     if not (os.path.isfile(conffile) and os.access(conffile, os.R_OK)):
-        raise Exception("Could NOT access config file %s\nPlease specify config file as a command-line argument\n" % conffile)
+        raise Exception(
+            "Could NOT access config file %s\nPlease specify config file as a command-line argument\n"
+            % conffile
+        )
 
     config = ConfigParser()
     config.read(conffile)
     return config
 
+
 def initlogger(config, conffile):
     logger.init(config)
     logger.log("Pygopherd starting, using configuration file %s" % conffile)
 
+
 def initexceptions(config):
     GopherExceptions.init(config.getboolean("pygopherd", "tracebacks"))
 
+
 def initmimetypes(config):
     mimetypesfiles = config.get("pygopherd", "mimetypes").split(":")
-    mimetypesfiles = [x for x in mimetypesfiles if os.path.isfile(x) and os.access(x, os.R_OK)]
+    mimetypesfiles = [
+        x for x in mimetypesfiles if os.path.isfile(x) and os.access(x, os.R_OK)
+    ]
 
     if not mimetypesfiles:
         errmsg = "Could not find any mimetypes files; check mimetypes option in config."
         logger.log(errmsg)
         raise Exception(errmsg)
-
 
     configencoding = eval(config.get("pygopherd", "encoding"))
     mimetypes.encodings_map.clear()
@@ -70,13 +77,14 @@ def initmimetypes(config):
 
     pygopherd.fileext.init()
 
+
 class GopherRequestHandler(socketserver.StreamRequestHandler):
     def handle(self):
         request = self.rfile.readline()
 
-        protohandler = \
-                     ProtocolMultiplexer.getProtocol(request, \
-                     self.server, self, self.rfile, self.wfile, self.server.config)
+        protohandler = ProtocolMultiplexer.getProtocol(
+            request, self.server, self, self.rfile, self.wfile, self.server.config
+        )
         try:
             protohandler.handle()
         except socket.error as e:
@@ -86,9 +94,10 @@ class GopherRequestHandler(socketserver.StreamRequestHandler):
         except:
             if GopherExceptions.tracebacks:
                 # Yes, this may be invalid.  Not much else we can do.
-                #traceback.print_exc(file = self.wfile)
+                # traceback.print_exc(file = self.wfile)
                 traceback.print_exc()
             GopherExceptions.log(sys.exc_info()[1], protohandler, None)
+
 
 def getserverobject(config):
     # Pick up the server type from the config.
@@ -103,13 +112,13 @@ def getserverobject(config):
             servertype.server_bind(self)
 
             # Set a timeout.
-            if config.has_option('pygopherd', 'timeout'):
-                mytimeout = struct.pack("ll", int(config.get('pygopherd', 'timeout')), 0)
-                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO,
-                                       mytimeout)
-                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO,
-                                       mytimeout)
-                #self.socket.settimeout(int(config.get('pygopherd', 'timeout')))
+            if config.has_option("pygopherd", "timeout"):
+                mytimeout = struct.pack(
+                    "ll", int(config.get("pygopherd", "timeout")), 0
+                )
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, mytimeout)
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, mytimeout)
+                # self.socket.settimeout(int(config.get('pygopherd', 'timeout')))
             host, port = self.socket.getsockname()
             if config.has_option("pygopherd", "servername"):
                 self.server_name = config.get("pygopherd", "servername")
@@ -123,14 +132,15 @@ def getserverobject(config):
     # Instantiate a server.  Has to be done before the security so we can
     # get a privileged port if necessary.
 
-    interface = ''
-    if config.has_option('pygopherd', 'interface'):
-        servername = config.get('pygopherd', 'interface')
-        interface = config.get('pygopherd', 'interface')
+    interface = ""
+    if config.has_option("pygopherd", "interface"):
+        servername = config.get("pygopherd", "interface")
+        interface = config.get("pygopherd", "interface")
 
     try:
-        s = MyServer((interface, config.getint('pygopherd', 'port')),
-                     GopherRequestHandler)
+        s = MyServer(
+            (interface, config.getint("pygopherd", "port")), GopherRequestHandler
+        )
     except:
         GopherExceptions.log(sys.exc_info()[1], None, None)
         logger.log("Application startup NOT successful!")
@@ -139,16 +149,19 @@ def getserverobject(config):
     s.config = config
     return s
 
+
 def initsecurity(config):
     idsetuid = None
     idsetgid = None
 
     if config.has_option("pygopherd", "setuid"):
         import pwd
+
         idsetuid = pwd.getpwnam(config.get("pygopherd", "setuid"))[2]
 
     if config.has_option("pygopherd", "setgid"):
         import grp
+
         idsetgid = grp.getgrnam(config.get("pygopherd", "setgid"))[2]
 
     if config.getboolean("pygopherd", "usechroot"):
@@ -157,7 +170,7 @@ def initsecurity(config):
         config.set("pygopherd", "root", "/")
 
     if idsetuid != None or idsetgid != None:
-        os.setgroups( () )
+        os.setgroups(())
         logger.log("Supplemental group list cleared.")
 
     if idsetgid != None:
@@ -168,12 +181,14 @@ def initsecurity(config):
         os.setreuid(idsetuid, idsetuid)
         logger.log("Switched to uid %d" % idsetuid)
 
+
 def initconditionaldetach(config):
     if config.getboolean("pygopherd", "detach"):
         pid = os.fork()
         if pid:
             logger.log("Parent process detaching; child is %d" % pid)
             sys.exit(0)
+
 
 def initpidfile(config):
     if config.has_option("pygopherd", "pidfile"):
@@ -182,8 +197,9 @@ def initpidfile(config):
         fd.write("%d\n" % os.getpid())
         fd.close()
 
+
 def initpgrp(config):
-    if 'setpgrp' in os.__dict__:
+    if "setpgrp" in os.__dict__:
         os.setpgrp()
         pgrp = os.getpgrp()
         logger.log("Process group is %d" % pgrp)
@@ -192,9 +208,11 @@ def initpgrp(config):
         logger.log("setpgrp() unavailable; not initializing process group")
         return None
 
+
 def initsighandlers(config, pgrp):
     sighandlers.setsighuphandler()
     sighandlers.setsigtermhandler(pgrp)
+
 
 def initeverything(conffile):
     config = initconffile(conffile)
@@ -211,4 +229,3 @@ def initeverything(conffile):
 
     logger.log("Running.  Root is '%s'" % config.get("pygopherd", "root"))
     return s
-

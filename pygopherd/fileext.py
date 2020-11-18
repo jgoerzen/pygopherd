@@ -20,16 +20,18 @@ import mimetypes
 
 typemap = {}
 
+
 def extcmp(x, y):
-    if x.count('.') > y.count('.'):
+    if x.count(".") > y.count("."):
         return 1
-    if x.count('.') < y.count('.'):
+    if x.count(".") < y.count("."):
         return -1
     if len(x) > len(y):
         return 1
     if len(x) < len(y):
         return -1
     return cmp(x, y)
+
 
 def extstrip(file, filetype):
     """Strips off the extension from file given type and returns the result.
@@ -42,6 +44,7 @@ def extstrip(file, filetype):
             return file[0:extindex]
     return file
 
+
 def init():
     for fileext, filetype in list(mimetypes.types_map.items()):
         extlist = []
@@ -52,8 +55,7 @@ def init():
         # Add the basic extension.
         baselist.append(fileext)
         # Add it in all encoding flavors.
-        baselist.extend(
-            [fileext + enc for enc in list(mimetypes.encodings_map.keys())])
+        baselist.extend([fileext + enc for enc in list(mimetypes.encodings_map.keys())])
 
         for shortsuff, longsuff in list(mimetypes.suffix_map.items()):
             if longsuff in baselist:
@@ -63,6 +65,3 @@ def init():
         extlist.sort(extcmp)
         extlist.reverse()
         typemap[filetype] = extlist
-
-
-        

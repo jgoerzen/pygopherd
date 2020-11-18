@@ -23,37 +23,37 @@ import os, stat, os.path, mimetypes, urllib.request, urllib.parse, urllib.error
 mapping = None
 eaexts = None
 
+
 class GopherEntry:
     """The entry object for Gopher.  It holds information about each
     Gopher object."""
 
     def __init__(self, selector, config):
         """Initialize object based on a selector and config."""
-        self.selector = selector        # Gopher path to file
-        self.config = config            # Our config object
-        self.fspath = None              # Path to the obj in filesystem
-        self.type = None                # Gopher0 type char
-        self.name = None                # Menu name
-        self.host = None                # Hostname
-        self.port = None                # Port number (an int)
-        self.mimetype = None            # MIME type
-        self.encodedmimetype = None     # Real MIME type if encoded.
-        self.size = None                # Size
-        self.encoding = None            # Encoding type
-        self.populated = 0              # Whether or not it's been populated
-        self.language = None            # Language
-        self.ctime = None               # Creation date
-        self.mtime = None               # Modification date
-        self.num = 0                    # Number in menu
-        self.gopherpsupport = 0         # Supports gopher+
-        self.ea = {}                    # Extended attributes -- Gopher+
-                                        # Abstract, etc.
+        self.selector = selector  # Gopher path to file
+        self.config = config  # Our config object
+        self.fspath = None  # Path to the obj in filesystem
+        self.type = None  # Gopher0 type char
+        self.name = None  # Menu name
+        self.host = None  # Hostname
+        self.port = None  # Port number (an int)
+        self.mimetype = None  # MIME type
+        self.encodedmimetype = None  # Real MIME type if encoded.
+        self.size = None  # Size
+        self.encoding = None  # Encoding type
+        self.populated = 0  # Whether or not it's been populated
+        self.language = None  # Language
+        self.ctime = None  # Creation date
+        self.mtime = None  # Modification date
+        self.num = 0  # Number in menu
+        self.gopherpsupport = 0  # Supports gopher+
+        self.ea = {}  # Extended attributes -- Gopher+
+        # Abstract, etc.
 
     def populatefromvfs(self, vfs, selector):
-        self.populatefromfs(selector, statval = vfs.stat(selector),
-                            vfs = vfs)
+        self.populatefromfs(selector, statval=vfs.stat(selector), vfs=vfs)
 
-    def populatefromfs(self, fspath, statval = None, vfs = None):
+    def populatefromfs(self, fspath, statval=None, vfs=None):
         """Fills in self with data gleaned from the filesystem.
 
         The argument fspath specifies where in the filesystem it will search.
@@ -99,10 +99,11 @@ class GopherEntry:
         If no mimetype can be found, it will be set to the default
         from the config file.  If no gopher0 type character is already present,
         self.guesstype() will be called to set it."""
-        
+
         self.fspath = fspath
         if vfs == None:
             from pygopherd.handlers.base import VFS_Real
+
             vfs = VFS_Real(self.config)
 
         if self.populated:
@@ -119,9 +120,9 @@ class GopherEntry:
                 statval = vfs.stat(self.fspath)
             except OSError:
                 return
-        
+
         self.populated = 1
-        self.gopherpsupport = 1         # Indicate gopher+ support for locals.
+        self.gopherpsupport = 1  # Indicate gopher+ support for locals.
 
         # All this "or" stuff means that we only modify it if it's not already
         # set.
@@ -131,19 +132,19 @@ class GopherEntry:
         self.name = self.name or os.path.basename(self.selector)
 
         if stat.S_ISDIR(statval[0]):
-            self.type = self.type or '1'
-            self.mimetype = self.mimetype or 'application/gopher-menu'
-            self.handleeaext(self.fspath + '/', vfs) # Add the / so we get /.abs
+            self.type = self.type or "1"
+            self.mimetype = self.mimetype or "application/gopher-menu"
+            self.handleeaext(self.fspath + "/", vfs)  # Add the / so we get /.abs
             return
 
         self.handleeaext(self.fspath, vfs)
 
         self.size = self.size or statval[6]
 
-        mimetype, encoding = mimetypes.guess_type(self.selector, strict = 0)
+        mimetype, encoding = mimetypes.guess_type(self.selector, strict=0)
 
         if encoding:
-            self.mimetype = self.mimetype or 'application/octet-stream'
+            self.mimetype = self.mimetype or "application/octet-stream"
             self.encoding = self.encoding or encoding
             self.encodedmimetype = self.encodedmimetype or mimetype
         else:
@@ -163,7 +164,7 @@ class GopherEntry:
         for maprule in mapping:
             if re.match(maprule[0], self.mimetype):
                 return maprule[1]
-        return '0'
+        return "0"
 
     def handleeaext(self, selector, vfs):
         """Handle getting extended attributes from the filesystem."""
@@ -172,6 +173,7 @@ class GopherEntry:
             eaexts = eval(self.config.get("GopherEntry", "eaexts"))
         if vfs == None:
             from pygopherd.handlers.base import VFS_Real
+
             vfs = VFS_Real(self.config)
 
         for extension, blockname in list(eaexts.items()):
@@ -179,130 +181,163 @@ class GopherEntry:
                 continue
             try:
                 rfile = vfs.open(selector + extension, "rb")
-                self.setea(blockname, b"\n".join(
-                           [x.rstrip() for x in rfile.readlines(20480)]))
+                self.setea(
+                    blockname, b"\n".join([x.rstrip() for x in rfile.readlines(20480)])
+                )
             except IOError:
                 pass
-                         
 
-    def getselector(self, default = None):
+    def getselector(self, default=None):
         if self.selector == None:
             return default
         return self.selector
+
     def setselector(self, arg):
         self.selector = arg
-    def getconfig(self, default = None):
+
+    def getconfig(self, default=None):
         return self.config or default
+
     def setconfig(self, arg):
         self.config = arg
-    def getfspath(self, default = None):
+
+    def getfspath(self, default=None):
         if self.fspath == None:
             return default
         return self.fspath
+
     def setfspath(self, arg):
         self.fspath = arg
-    def gettype(self, default = None):
+
+    def gettype(self, default=None):
         if self.type == None:
             return default
         return self.type
+
     def settype(self, arg):
         self.type = arg
-    def getname(self, default = None):
+
+    def getname(self, default=None):
         if self.name == None:
             return default
         return self.name
+
     def setname(self, arg):
         self.name = arg
-    def gethost(self, default = None):
+
+    def gethost(self, default=None):
         if self.host == None:
             return default
         return self.host
+
     def sethost(self, arg):
         self.host = arg
-    def getport(self, default = None):
+
+    def getport(self, default=None):
         if self.port == None:
             return default
         return self.port
+
     def setport(self, arg):
         self.port = arg
-    def getmimetype(self, default = None):
+
+    def getmimetype(self, default=None):
         if self.mimetype == None:
             return default
         return self.mimetype
-    def getencodedmimetype(self, default = None):
+
+    def getencodedmimetype(self, default=None):
         if self.encodedmimetype == None:
             return default
         return self.encodedmimetype
+
     def setencodedmimetype(self, arg):
         self.encodedmimetype = arg
+
     def setmimetype(self, arg):
         self.mimetype = arg
-    def getsize(self, default = None):
+
+    def getsize(self, default=None):
         if self.size == None:
             return default
         return self.size
+
     def setsize(self, arg):
         self.size = arg
-    def getencoding(self, default = None):
+
+    def getencoding(self, default=None):
         if self.encoding == None:
             return default
         return self.encoding
+
     def setencoding(self, arg):
         self.encoding = arg
-    def getlanguage(self, default = None):
+
+    def getlanguage(self, default=None):
         if self.language == None:
             return default
         return self.language
+
     def setlanguage(self, arg):
         self.language = arg
-    def getctime(self, default = None):
+
+    def getctime(self, default=None):
         if self.ctime == None:
             return default
         return self.ctime
+
     def setctime(self, arg):
         self.ctime = arg
-    def getmtime(self, default = None):
+
+    def getmtime(self, default=None):
         if self.mtime == None:
             return default
         return self.mtime
+
     def setmtime(self, arg):
         self.mtime = arg
-    def getpopulated(self, default = None):
+
+    def getpopulated(self, default=None):
         if self.populated != None:
             return self.populated
         return default
+
     def setpopulated(self, arg):
         self.populated = arg
-    
-    def geturl(self, defaulthost = 'MISSINGHOST', defaultport = 70):
+
+    def geturl(self, defaulthost="MISSINGHOST", defaultport=70):
         """If this selector is a URL: one, then we just return the rest of
         it.  Otherwise, generate a gopher:// URL and quote it."""
         if re.search("^(/|)URL:.+://", self.selector):
-            if self.selector[0] == '/':
+            if self.selector[0] == "/":
                 return self.selector[5:]
             else:
                 return self.selector[4:]
-            
-        retval = 'gopher://%s:%d/' % (self.gethost(defaulthost),
-                                      self.getport(defaultport))
-        retval += urllib.parse.quote('%s%s' % (self.gettype(), self.getselector()))
+
+        retval = "gopher://%s:%d/" % (
+            self.gethost(defaulthost),
+            self.getport(defaultport),
+        )
+        retval += urllib.parse.quote("%s%s" % (self.gettype(), self.getselector()))
         return retval
 
-    def getnum(self, default = None):
+    def getnum(self, default=None):
         if self.num != None:
             return self.num
         return default
+
     def setnum(self, arg):
         self.num = arg
 
-    def getgopherpsupport(self, default = None):
+    def getgopherpsupport(self, default=None):
         if self.gopherpsupport != None:
             return self.gopherpsupport
         return default
+
     def setgopherpsupport(self, arg):
         self.gopherpsupport = arg
 
-    def getea(self, name, default = None):
+    def getea(self, name, default=None):
         if name in self.ea:
             return self.ea[name]
         return default
@@ -313,10 +348,11 @@ class GopherEntry:
     def setea(self, name, value):
         self.ea[name] = value
 
+
 def getinfoentry(text, config):
-    entry = GopherEntry('fake', config)
+    entry = GopherEntry("fake", config)
     entry.name = text
-    entry.host = '(NULL)'
+    entry.host = "(NULL)"
     entry.port = 0
-    entry.type = 'i'
+    entry.type = "i"
     return entry

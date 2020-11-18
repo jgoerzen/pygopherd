@@ -24,18 +24,22 @@ import pygopherd.pipe
 from stat import *
 import imp, re, os
 
+
 class ExecHandler(Virtual):
     def canhandlerequest(self):
         # We ONLY handle requests from the real filesystem.
-        return isinstance(self.vfs, VFS_Real) and \
-               self.statresult and S_ISREG(self.statresult[ST_MODE]) and \
-               (S_IMODE(self.statresult[ST_MODE]) & S_IXOTH)
-        
+        return (
+            isinstance(self.vfs, VFS_Real)
+            and self.statresult
+            and S_ISREG(self.statresult[ST_MODE])
+            and (S_IMODE(self.statresult[ST_MODE]) & S_IXOTH)
+        )
+
     def getentry(self):
         entry = gopherentry.GopherEntry(self.getselector(), self.config)
-        entry.settype('0')
+        entry.settype("0")
         entry.setname(os.path.basename(self.getselector()))
-        entry.setmimetype('text/plain')
+        entry.setmimetype("text/plain")
         entry.setgopherpsupport(0)
         return entry
 
@@ -46,20 +50,19 @@ class ExecHandler(Virtual):
         newenv = {}
         for key in list(os.environ.keys()):
             newenv[key] = os.environ[key]
-        newenv['SERVER_NAME'] = self.protocol.server.server_name
-        newenv['SERVER_PORT'] = str(self.protocol.server.server_port)
-        newenv['REMOTE_ADDR'] = self.protocol.requesthandler.client_address[0]
-        newenv['REMOTE_PORT'] = str(self.protocol.requesthandler.client_address[1])
-        newenv['REMOTE_HOST'] = newenv['REMOTE_ADDR']
-        newenv['SELECTOR'] = self.selector
-        newenv['REQUEST'] = self.getselector()
+        newenv["SERVER_NAME"] = self.protocol.server.server_name
+        newenv["SERVER_PORT"] = str(self.protocol.server.server_port)
+        newenv["REMOTE_ADDR"] = self.protocol.requesthandler.client_address[0]
+        newenv["REMOTE_PORT"] = str(self.protocol.requesthandler.client_address[1])
+        newenv["REMOTE_HOST"] = newenv["REMOTE_ADDR"]
+        newenv["SELECTOR"] = self.selector
+        newenv["REQUEST"] = self.getselector()
         if self.searchrequest:
-            newenv['SEARCHREQUEST'] = self.searchrequest
+            newenv["SEARCHREQUEST"] = self.searchrequest
         wfile.flush()
 
         args = [self.getfspath()]
         if self.selectorargs:
-            args.extend(self.selectorags.split(' '))
+            args.extend(self.selectorags.split(" "))
 
-        pygopherd.pipe.pipedata(self.getfspath(), args, newenv,
-                                childstdout = wfile)
+        pygopherd.pipe.pipedata(self.getfspath(), args, newenv, childstdout=wfile)

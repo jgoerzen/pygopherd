@@ -17,4 +17,5 @@
 # END OF COPYRIGHT #
 
 import unittestgui
-unittestgui.main('runtests.suite')
+
+unittestgui.main("runtests.suite")
