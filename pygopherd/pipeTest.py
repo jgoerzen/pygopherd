@@ -1,4 +1,5 @@
 import unittest, os
+import tempfile
 from pygopherd import pipe, testutil
 
 
@@ -10,7 +11,7 @@ class PipeTestCase(unittest.TestCase):
         self.testprog = self.root + "/pygopherd/pipetest.sh"
 
     def testWorkingPipe(self):
-        outputfd = os.tmpfile()
+        outputfd = tempfile.TemporaryFile()
         inputfd = open(self.testdata, "rt")
 
         retval = pipe.pipedata(
@@ -27,4 +28,4 @@ class PipeTestCase(unittest.TestCase):
         outputfd.close()
 
     def testFailingPipe(self):
-        outputfd = os.tmpfile()
+        outputfd = tempfile.TemporaryFile()
