@@ -1,7 +1,9 @@
-import unittest, re
-from pygopherd.protocols.rfc1436 import GopherProtocol
-from pygopherd import testutil
+import re
+import unittest
 from io import BytesIO
+
+from pygopherd import testutil
+from pygopherd.protocols.rfc1436 import GopherProtocol
 
 
 class RFC1436TestCase(unittest.TestCase):

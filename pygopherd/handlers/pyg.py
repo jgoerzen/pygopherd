@@ -1,7 +1,9 @@
+import imp
+import re
+from stat import *
+
 from pygopherd.handlers.base import VFS_Real
 from pygopherd.handlers.virtual import Virtual
-from stat import *
-import imp, re
 
 
 class PYGHandler(Virtual):

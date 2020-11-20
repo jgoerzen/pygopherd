@@ -17,12 +17,17 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import re, binascii
-import urllib.request, urllib.parse, urllib.error, time
+import binascii
+import cgi
+import re
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+
+import pygopherd.version
 from pygopherd import GopherExceptions
 from pygopherd.protocols.base import BaseGopherProtocol
-import pygopherd.version
-import cgi
 
 
 class HTTPProtocol(BaseGopherProtocol):

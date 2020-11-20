@@ -21,6 +21,7 @@
 
 
 from distutils.core import setup
+
 import pygopherd.version
 
 setup(

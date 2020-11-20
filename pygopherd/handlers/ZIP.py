@@ -16,9 +16,15 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import re, time, stat, unittest, os.path, shelve, marshal
-from io import StringIO
+import marshal
+import os.path
+import re
+import shelve
+import stat
+import time
+import unittest
 import zipfile
+from io import StringIO
 
 
 class MarshalingShelf(shelve.Shelf):

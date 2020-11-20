@@ -22,7 +22,6 @@ from pygopherd import GopherExceptions
 # be in the module namespace
 from pygopherd.handlers import *  # noqa
 
-
 handlers = None
 rootpath = None
 

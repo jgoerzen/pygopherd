@@ -17,14 +17,15 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
+import os
+import os.path
 import re
-import os, os.path
-from pygopherd import gopherentry
-from pygopherd.handlers.virtual import Virtual
-from pygopherd.handlers.base import VFS_Real
-from mailbox import mbox, Maildir
+from mailbox import Maildir, mbox
 from stat import *
 
+from pygopherd import gopherentry
+from pygopherd.handlers.base import VFS_Real
+from pygopherd.handlers.virtual import Virtual
 
 ###########################################################################
 # Basic mailbox support

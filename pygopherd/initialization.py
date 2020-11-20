@@ -17,18 +17,22 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # END OF COPYRIGHT #
 
-from configparser import ConfigParser
+import errno
+import mimetypes
+import os
+import os.path
 
 # Import lots of stuff so it's here before chrooting.
-import socket, os, sys, socketserver, os.path
-import errno, struct
+import socket
+import socketserver
+import struct
+import sys
+import traceback
+from configparser import ConfigParser
 
+import pygopherd.fileext
 from pygopherd import GopherExceptions, logger, sighandlers
 from pygopherd.protocols import ProtocolMultiplexer
-import pygopherd.fileext
-import mimetypes
-
-import traceback
 
 
 def initconffile(conffile):

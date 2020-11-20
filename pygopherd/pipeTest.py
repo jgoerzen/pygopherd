@@ -1,5 +1,7 @@
-import unittest, os
+import os
 import tempfile
+import unittest
+
 from pygopherd import pipe, testutil
 
 

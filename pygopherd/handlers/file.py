@@ -17,10 +17,11 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import re
+from stat import *
+
+import pygopherd.pipe
 from pygopherd import gopherentry
 from pygopherd.handlers import base
-import pygopherd.pipe
-from stat import *
 
 
 class FileHandler(base.BaseHandler):

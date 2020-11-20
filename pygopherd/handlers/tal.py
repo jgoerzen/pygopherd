@@ -45,9 +45,11 @@ if haslogging:
     logger.setLevel(logging.INFO)
 
 
-from pygopherd.handlers.file import FileHandler
+import os.path
+import re
+
 from pygopherd import gopherentry
-import re, os.path
+from pygopherd.handlers.file import FileHandler
 
 
 class TALLoader:

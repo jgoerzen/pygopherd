@@ -16,8 +16,14 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+import mimetypes
+import os
+import os.path
 import re
-import os, stat, os.path, mimetypes, urllib.request, urllib.parse, urllib.error
+import stat
+import urllib.error
+import urllib.parse
+import urllib.request
 
 mapping = None
 eaexts = None

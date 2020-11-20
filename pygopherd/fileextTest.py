@@ -20,7 +20,8 @@
 # END OF COPYRIGHT #
 
 import unittest
-from pygopherd import fileext, testutil, initialization
+
+from pygopherd import fileext, initialization, testutil
 
 
 class FileExtTestCase(unittest.TestCase):

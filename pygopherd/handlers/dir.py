@@ -16,12 +16,14 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+import pickle
 import re
-import stat, time
+import stat
+import time
+from stat import *
+
 from pygopherd import gopherentry, handlers
 from pygopherd.handlers import base
-from stat import *
-import pickle
 
 cachetime = None
 cachefile = None

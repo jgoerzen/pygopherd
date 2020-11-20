@@ -1,8 +1,9 @@
 import unittest
 from io import StringIO
-from pygopherd.protocols import ProtocolMultiplexer
-from pygopherd import testutil
+
 import pygopherd.protocols
+from pygopherd import testutil
+from pygopherd.protocols import ProtocolMultiplexer
 
 
 class ProtocolMultiplexerTestCase(unittest.TestCase):

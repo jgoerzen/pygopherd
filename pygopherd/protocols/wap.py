@@ -17,9 +17,11 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from .http import HTTPProtocol
+import cgi
+import re
 from io import StringIO
-import cgi, re
+
+from .http import HTTPProtocol
 
 accesskeys = "1234567890#*"
 wmlheader = """<?xml version="1.0"?>

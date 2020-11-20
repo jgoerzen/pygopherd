@@ -19,7 +19,10 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # END OF COPYRIGHT #
 
-import unittest, os, re
+import os
+import re
+import unittest
+
 from pygopherd import testutil
 from pygopherd.gopherentry import GopherEntry
 

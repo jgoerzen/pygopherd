@@ -20,10 +20,11 @@
 # END OF COPYRIGHT #
 
 
+import os
+from io import StringIO
+
 from pygopherd import initialization, logger
 from pygopherd.protocols import ProtocolMultiplexer
-from io import StringIO
-import os
 
 
 def getconfig():

@@ -21,6 +21,7 @@
 
 import unittest
 from io import BytesIO
+
 from pygopherd import GopherExceptions, testutil
 from pygopherd.GopherExceptions import FileNotFound
 

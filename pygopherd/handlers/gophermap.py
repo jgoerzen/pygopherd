@@ -17,9 +17,10 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import re
+from stat import *
+
 from pygopherd import gopherentry
 from pygopherd.handlers import base
-from stat import *
 
 
 class BuckGophermapHandler(base.BaseHandler):
