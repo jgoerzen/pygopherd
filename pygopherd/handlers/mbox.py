@@ -34,7 +34,7 @@ from pygopherd.handlers.virtual import Virtual
 
 class FolderHandler(Virtual):
     def getentry(self):
-        ## Return my own entry.
+        # Return my own entry.
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.getselector(), self.config)
             self.entry.settype("1")
@@ -74,7 +74,7 @@ class MessageHandler(Virtual):
         result."""
         if not self.selectorargs:
             return 0
-        msgnum = re.search("^" + self.getargflag() + "(\d+)$", self.selectorargs)
+        msgnum = re.search("^" + self.getargflag() + r"(\d+)$", self.selectorargs)
         if not msgnum:
             return 0
         self.msgnum = int(msgnum.group(1))
@@ -95,7 +95,7 @@ class MessageHandler(Virtual):
 
             subject = message.getheader("Subject", "<no subject>")
             # Sanitize, esp. for continuations.
-            subject = re.sub("\s+", " ", subject)
+            subject = re.sub(r"\s+", " ", subject)
             if subject:
                 self.entry.setname(subject)
             else:

@@ -87,6 +87,6 @@ class HTMLFileTitleHandler(FileHandler):
             # Convert all whitespace sequences to a single space.
             # Removes newlines, tabs, etc.  Good for presentation
             # and for security.
-            title = re.sub("[\s]+", " ", parser.titlestr)
+            title = re.sub(r"[\s]+", " ", parser.titlestr)
             entry.setname(title)
         return entry

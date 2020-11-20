@@ -14,7 +14,7 @@ class PYGHandler(Virtual):
             self.statresult
             and S_ISREG(self.statresult[ST_MODE])
             and (S_IMODE(self.statresult[ST_MODE]) & S_IXOTH)
-            and re.search("\.pyg$", self.getselector())
+            and re.search(r"\.pyg$", self.getselector())
         ):
             return 0
         self.modfd = self.vfs.open(self.getselector(), "rt")
