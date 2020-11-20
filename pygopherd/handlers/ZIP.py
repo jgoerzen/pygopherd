@@ -58,8 +58,8 @@ class VFS_Zip(base.VFS_Real):
         self._initzip()
 
     def _getcachefilename(self):
-        (dir, file) = os.path.split(self.zipfilename)
-        return os.path.join(dir, ".cache.pygopherd.zip3." + file)
+        (dir_, file) = os.path.split(self.zipfilename)
+        return os.path.join(dir_, ".cache.pygopherd.zip3." + file)
 
     def _initcache(self):
         """Returns 1 if a cache was found existing; 0 if not."""
@@ -120,11 +120,11 @@ class VFS_Zip(base.VFS_Real):
         if fspath == "":
             return inode
 
-        (dir, file) = os.path.split(fspath)
-        if dir in self.entrycache:
-            return self.entrycache[dir][file]
-        elif dir in self.badcache:
-            raise KeyError("Call for %s: directory %s non-existant" % (fspath, dir))
+        (dir_, file) = os.path.split(fspath)
+        if dir_ in self.entrycache:
+            return self.entrycache[dir_][file]
+        elif dir_ in self.badcache:
+            raise KeyError("Call for %s: directory %s non-existant" % (fspath, dir_))
 
         workingdir = ""
 
