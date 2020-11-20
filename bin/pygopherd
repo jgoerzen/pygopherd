@@ -20,13 +20,13 @@
 
 #
 
-from pygopherd import *
 import sys
 
-conffile = '/etc/pygopherd/pygopherd.conf'
+from pygopherd import *
+
+conffile = "/etc/pygopherd/pygopherd.conf"
 if len(sys.argv) > 1:
     conffile = sys.argv[1]
 
 s = initialization.initeverything(conffile)
 s.serve_forever()
-
