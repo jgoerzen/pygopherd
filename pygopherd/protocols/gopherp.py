@@ -178,8 +178,8 @@ class GopherPlusProtocol(GopherProtocol):
 
 
 class URLGopherPlus(GopherPlusProtocol):
-    def getsupportedblocknames(self):
-        return GopherPlusProtocol.getsupportedblocknames(self) + ["+URL"]
+    def getsupportedblocknames(self, entry):
+        return GopherPlusProtocol.getsupportedblocknames(self, entry) + ["+URL"]
 
     def geturlblock(self, entry):
         return "+URL: %s\r\n" % entry.geturl(
