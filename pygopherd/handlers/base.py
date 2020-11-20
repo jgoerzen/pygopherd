@@ -76,7 +76,7 @@ class VFS_Real:
             if not len(data):
                 break
             fd.write(data)
-        rfile.close
+        rfile.close()
 
 
 class BaseHandler:
