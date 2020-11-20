@@ -1,9 +1,7 @@
 import unittest
-from io import StringIO
 
 import pygopherd.protocols
 from pygopherd import testutil
-from pygopherd.protocols import ProtocolMultiplexer
 
 
 class ProtocolMultiplexerTestCase(unittest.TestCase):
@@ -12,19 +10,6 @@ class ProtocolMultiplexerTestCase(unittest.TestCase):
 
     # Just a bunch of test cases for each different protocol -- make
     # sure we find the right one.
-
-    def getproto(self, request):
-        rfile = StringIO(request)
-        wfile = StringIO()
-        handler = testutil.gettestinghandler(rfile, wfile, self.config)
-        return ProtocolMultiplexer.getProtocol(
-            file.readline(),
-            handler.server,
-            handler,
-            handler.rfile,
-            handler.wfile,
-            self.config,
-        )
 
     def testGoToGopher(self):
         assert isinstance(
