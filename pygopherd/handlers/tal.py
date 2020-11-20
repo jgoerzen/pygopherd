@@ -92,7 +92,7 @@ class RecursiveTALLoader(TALLoader):
         try:
             return TALLoader.__getattr__(self, key)
         except AttributeError:
-            return self.getparent().__getattr__(self, key)
+            return self.getparent().__getattr__(key)
 
 
 class TALFileHandler(FileHandler):

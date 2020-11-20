@@ -210,7 +210,7 @@ class VFS_Zip(base.VFS_Real):
         return self.zip.read(fspath).decode(encoding="cp437")
 
     def _readlink(self, selector):
-        return self._readlinkfspath(self, self._getfspathfinal(selector))
+        return self._readlinkfspath(self._getfspathfinal(selector))
 
     def iswritable(self, selector):
         return 0
