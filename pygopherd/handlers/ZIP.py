@@ -149,12 +149,12 @@ class VFS_Zip(base.VFS_Real):
         self.dircache = {"0": {}}
 
         for info in self.zip.infolist():
-            (dir, filename) = os.path.split(info.filename)
-            if dir == "/":
-                dir == ""
+            (dir_, filename) = os.path.split(info.filename)
+            if dir_ == "/":
+                dir_ == ""
 
             dirlevel = self.dircache["0"]
-            for level in dir.split("/"):
+            for level in dir_.split("/"):
                 if level == "":
                     continue
                 if level not in dirlevel:
