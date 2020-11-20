@@ -18,7 +18,8 @@ def setlogfile(file):
 
 
 def log_syslog(message):
-    syslogfunc(priority, message)
+    if syslogfunc:
+        syslogfunc(priority, message)
 
 
 def log_none(message):
