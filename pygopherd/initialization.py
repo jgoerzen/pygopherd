@@ -194,9 +194,9 @@ def initconditionaldetach(config):
 def initpidfile(config):
     if config.has_option("pygopherd", "pidfile"):
         pidfile = config.get("pygopherd", "pidfile")
-        fd = open(pidfile, "wt")
-        fd.write("%d\n" % os.getpid())
-        fd.close()
+
+        with open(pidfile, "wt") as fd:
+            fd.write("%d\n" % os.getpid())
 
 
 def initpgrp(config):
