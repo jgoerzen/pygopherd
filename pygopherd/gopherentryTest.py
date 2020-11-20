@@ -280,13 +280,13 @@ class GopherEntryTestCase(unittest.TestCase):
             "audio/aiff": "s",
         }
 
-        for mimetype, type in list(expected.items()):
+        for mimetype, type_ in list(expected.items()):
             entry.mimetype = mimetype
             self.assertEqual(
                 entry.guesstype(),
-                type,
+                type_,
                 "Failure for %s: got %s, expected %s"
-                % (mimetype, entry.guesstype(), type),
+                % (mimetype, entry.guesstype(), type_),
             )
 
     def test_gets_sets(self):
