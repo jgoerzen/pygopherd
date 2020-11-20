@@ -32,7 +32,7 @@ def huphandler(signum, frame):
 def termhandler(signum, frame):
     if os.getpid() == pid:  # Master killed; kill children.
         logger.log("SIGTERM (%d) received in master; doing orderly shutdown" % signum)
-        logger.log("Terminating all of process group %d with SIGHUP" % (pgrp))
+        logger.log("Terminating all of process group %s with SIGHUP" % pgrp)
         # Ignore this signal so that our own process won't get it again.
         signal.signal(signal.SIGHUP, signal.SIG_IGN)
         os.kill(0, signal.SIGHUP)
