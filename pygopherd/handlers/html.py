@@ -71,18 +71,13 @@ class HTMLFileTitleHandler(FileHandler):
         entry = FileHandler.getentry(self)
         parser = HTMLTitleParser()
         file = self.vfs.open(self.getselector(), "rt")
-        try:
-            while not parser.gotcompletetitle:
-                line = file.readline()
-                if not line:
-                    break
-                parser.feed(line)
-            parser.close()
-        except html.parser.HTMLParseError:
-            # Parse error?  Stop parsing, go to here.  We can still
-            # return a title if the parse error happened after we got
-            # the title.
-            pass
+
+        while not parser.gotcompletetitle:
+            line = file.readline()
+            if not line:
+                break
+            parser.feed(line)
+        parser.close()
 
         file.close()
         # OK, we've parsed the file and exited because of either an EOF
