@@ -115,7 +115,7 @@ class GopherEntry:
             return
 
         # Just let the stat catch the OSError rather than testing
-        # for existance here.  Help cut down on the number of syscalls.
+        # for existence here.  Help cut down on the number of syscalls.
 
         if not (self.gethost() is None and self.getport() is None):
             return
