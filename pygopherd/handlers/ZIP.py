@@ -26,6 +26,8 @@ import unittest
 import zipfile
 from io import StringIO
 
+from pygopherd.handlers import base
+
 
 class MarshalingShelf(shelve.Shelf):
     def __getitem__(self, key):
@@ -44,9 +46,6 @@ class DbfilenameShelf(MarshalingShelf):
 
 def shelveopen(filename, flag="c"):
     return DbfilenameShelf(filename, flag)
-
-
-from pygopherd.handlers import base
 
 
 class VFS_Zip(base.VFS_Real):
