@@ -493,14 +493,6 @@ class TestVFS_Zip(unittest.TestCase):
         s.assertEqual(m1, m2 + ["ziponly"])
         s.assertEqual(m1, ["pipetest.sh", "pipetestdata", "ziponly"])
 
-    def test_needschain(s):
-        return
-        assert s.z._needschain("/testfile.txt")
-        assert s.z._needschain("/foo/testdata.zip")
-        assert not s.z._needschain("/testdata.zip")
-        assert not s.z._needschain("/testdata.zip/foo")
-        assert not s.z._needschain("/testdata.zip/foo/bar")
-
     def test_iswritable(s):
         assert not s.z.iswritable("/testdata.zip")
         assert not s.z.iswritable("/testdata.zip/README")
