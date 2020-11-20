@@ -101,7 +101,7 @@ class GopherEntry:
         self.guesstype() will be called to set it."""
 
         self.fspath = fspath
-        if vfs == None:
+        if vfs is None:
             from pygopherd.handlers.base import VFS_Real
 
             vfs = VFS_Real(self.config)
@@ -112,7 +112,7 @@ class GopherEntry:
         # Just let the stat catch the OSError rather than testing
         # for existance here.  Help cut down on the number of syscalls.
 
-        if not (self.gethost() == None and self.getport() == None):
+        if not (self.gethost() is None and self.getport() is None):
             return
 
         if not statval:
@@ -169,9 +169,9 @@ class GopherEntry:
     def handleeaext(self, selector, vfs):
         """Handle getting extended attributes from the filesystem."""
         global eaexts
-        if eaexts == None:
+        if eaexts is None:
             eaexts = eval(self.config.get("GopherEntry", "eaexts"))
-        if vfs == None:
+        if vfs is None:
             from pygopherd.handlers.base import VFS_Real
 
             vfs = VFS_Real(self.config)
@@ -188,7 +188,7 @@ class GopherEntry:
                 pass
 
     def getselector(self, default=None):
-        if self.selector == None:
+        if self.selector is None:
             return default
         return self.selector
 
@@ -202,7 +202,7 @@ class GopherEntry:
         self.config = arg
 
     def getfspath(self, default=None):
-        if self.fspath == None:
+        if self.fspath is None:
             return default
         return self.fspath
 
@@ -210,7 +210,7 @@ class GopherEntry:
         self.fspath = arg
 
     def gettype(self, default=None):
-        if self.type == None:
+        if self.type is None:
             return default
         return self.type
 
@@ -218,7 +218,7 @@ class GopherEntry:
         self.type = arg
 
     def getname(self, default=None):
-        if self.name == None:
+        if self.name is None:
             return default
         return self.name
 
@@ -226,7 +226,7 @@ class GopherEntry:
         self.name = arg
 
     def gethost(self, default=None):
-        if self.host == None:
+        if self.host is None:
             return default
         return self.host
 
@@ -234,7 +234,7 @@ class GopherEntry:
         self.host = arg
 
     def getport(self, default=None):
-        if self.port == None:
+        if self.port is None:
             return default
         return self.port
 
@@ -242,12 +242,12 @@ class GopherEntry:
         self.port = arg
 
     def getmimetype(self, default=None):
-        if self.mimetype == None:
+        if self.mimetype is None:
             return default
         return self.mimetype
 
     def getencodedmimetype(self, default=None):
-        if self.encodedmimetype == None:
+        if self.encodedmimetype is None:
             return default
         return self.encodedmimetype
 
@@ -258,7 +258,7 @@ class GopherEntry:
         self.mimetype = arg
 
     def getsize(self, default=None):
-        if self.size == None:
+        if self.size is None:
             return default
         return self.size
 
@@ -266,7 +266,7 @@ class GopherEntry:
         self.size = arg
 
     def getencoding(self, default=None):
-        if self.encoding == None:
+        if self.encoding is None:
             return default
         return self.encoding
 
@@ -274,7 +274,7 @@ class GopherEntry:
         self.encoding = arg
 
     def getlanguage(self, default=None):
-        if self.language == None:
+        if self.language is None:
             return default
         return self.language
 
@@ -282,7 +282,7 @@ class GopherEntry:
         self.language = arg
 
     def getctime(self, default=None):
-        if self.ctime == None:
+        if self.ctime is None:
             return default
         return self.ctime
 
@@ -290,7 +290,7 @@ class GopherEntry:
         self.ctime = arg
 
     def getmtime(self, default=None):
-        if self.mtime == None:
+        if self.mtime is None:
             return default
         return self.mtime
 
@@ -298,7 +298,7 @@ class GopherEntry:
         self.mtime = arg
 
     def getpopulated(self, default=None):
-        if self.populated != None:
+        if self.populated is not None:
             return self.populated
         return default
 
@@ -322,7 +322,7 @@ class GopherEntry:
         return retval
 
     def getnum(self, default=None):
-        if self.num != None:
+        if self.num is not None:
             return self.num
         return default
 
@@ -330,7 +330,7 @@ class GopherEntry:
         self.num = arg
 
     def getgopherpsupport(self, default=None):
-        if self.gopherpsupport != None:
+        if self.gopherpsupport is not None:
             return self.gopherpsupport
         return default
 

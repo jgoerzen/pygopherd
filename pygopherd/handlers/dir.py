@@ -106,7 +106,7 @@ class DirHandler(base.BaseHandler):
         global cachetime, cachefile
 
         self.fromcache = 0
-        if cachetime == None:
+        if cachetime is None:
             cachetime = self.config.getint("handlers.dir.DirHandler", "cachetime")
             cachefile = self.config.get("handlers.dir.DirHandler", "cachefile")
         cachename = self.selector + "/" + cachefile

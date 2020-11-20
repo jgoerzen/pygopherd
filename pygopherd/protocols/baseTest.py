@@ -32,8 +32,8 @@ class BaseProtocolTestCase(unittest.TestCase):
         assert proto.config == self.config
         assert proto.requesthandler == self.handler
         assert proto.requestlist == ["/foo.txt"]
-        assert proto.searchrequest == None
-        assert proto.handler == None
+        assert proto.searchrequest is None
+        assert proto.handler is None
         assert proto.selector == "/foo.txt"
 
     def testInitEmpty(self):
@@ -125,13 +125,13 @@ class BaseProtocolTestCase(unittest.TestCase):
     ## CANNOT TEST: writedir, renderabstract
 
     def testrenderdirstart(self):
-        assert self.proto.renderdirstart("foo") == None
+        assert self.proto.renderdirstart("foo") is None
 
     def testrenderdirend(self):
-        assert self.proto.renderdirend("foo") == None
+        assert self.proto.renderdirend("foo") is None
 
     def testrenderobjinfo(self):
-        assert self.proto.renderobjinfo("foo") == None
+        assert self.proto.renderobjinfo("foo") is None
 
     def testgroksabstract(self):
         assert not self.proto.groksabstract()

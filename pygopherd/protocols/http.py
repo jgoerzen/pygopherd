@@ -91,7 +91,7 @@ class HTTPProtocol(BaseGopherProtocol):
             self.entry = handler.getentry()
             handler.prepare()
             self.wfile.write("HTTP/1.0 200 OK\r\n")
-            if self.entry.getmtime() != None:
+            if self.entry.getmtime() is not None:
                 gmtime = time.gmtime(self.entry.getmtime())
                 mtime = time.strftime("%a, %d %b %Y %H:%M:%S GMT", gmtime)
                 self.wfile.write("Last-Modified: " + mtime + "\r\n")
@@ -113,7 +113,7 @@ class HTTPProtocol(BaseGopherProtocol):
         self.handler.write(wfile)
 
     def adjustmimetype(self, mimetype):
-        if mimetype == None:
+        if mimetype is None:
             return "text/plain"
         if mimetype == "application/gopher-menu":
             return "text/html"
@@ -142,7 +142,7 @@ class HTTPProtocol(BaseGopherProtocol):
         if entry.gettype() != "i" and entry.gettype() != "7":
             retstr += '<A HREF="%s">' % url
         retstr += "<TT>"
-        if entry.getname() != None:
+        if entry.getname() is not None:
             retstr += cgi.escape(entry.getname())
         else:
             retstr += cgi.escape(entry.getselector())

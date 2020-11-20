@@ -29,7 +29,7 @@ def getHandler(selector, searchrequest, protocol, config, handlerlist=None, vfs=
     in config."""
     global handlers, rootpath
 
-    if vfs == None:
+    if vfs is None:
         from pygopherd.handlers.base import VFS_Real
 
         vfs = VFS_Real(config)
@@ -37,7 +37,7 @@ def getHandler(selector, searchrequest, protocol, config, handlerlist=None, vfs=
     if not handlers:
         handlers = eval(config.get("handlers.HandlerMultiplexer", "handlers"))
         rootpath = config.get("pygopherd", "root")
-    if handlerlist == None:
+    if handlerlist is None:
         handlerlist = handlers
 
     # SECURITY: assert that our absolute path is within the absolute

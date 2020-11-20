@@ -706,7 +706,7 @@ class ZIPHandler(base.BaseHandler):
                 return 0
 
             (head, tail) = os.path.split(basename)
-            if appendage != None:
+            if appendage is not None:
                 appendage = os.path.join(tail, appendage)
             else:
                 appendage = tail

@@ -169,15 +169,15 @@ def initsecurity(config):
         logger.log("Chrooted to " + config.get("pygopherd", "root"))
         config.set("pygopherd", "root", "/")
 
-    if idsetuid != None or idsetgid != None:
+    if idsetuid is not None or idsetgid is not None:
         os.setgroups(())
         logger.log("Supplemental group list cleared.")
 
-    if idsetgid != None:
+    if idsetgid is not None:
         os.setregid(idsetgid, idsetgid)
         logger.log("Switched to group %d" % idsetgid)
 
-    if idsetuid != None:
+    if idsetuid is not None:
         os.setreuid(idsetuid, idsetuid)
         logger.log("Switched to uid %d" % idsetuid)
 

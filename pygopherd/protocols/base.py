@@ -113,7 +113,7 @@ class BaseGopherProtocol:
         """Called to render a directory.  Generally called by self.handle()"""
 
         startstr = self.renderdirstart(entry)
-        if startstr != None:
+        if startstr is not None:
             self.wfile.write(startstr)
 
         abstractopt = self.config.get("pygopherd", "abstract_entries")
@@ -132,7 +132,7 @@ class BaseGopherProtocol:
                     self.wfile.write(abstract)
 
         endstr = self.renderdirend(entry)
-        if endstr != None:
+        if endstr is not None:
             self.wfile.write(endstr)
 
     def renderabstract(self, abstractstring):

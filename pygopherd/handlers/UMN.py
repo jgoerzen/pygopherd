@@ -94,7 +94,7 @@ class UMNDirHandler(DirHandler):
         to see if there's a .cap file right before adding it."""
 
         global extstrip
-        if extstrip == None:
+        if extstrip is None:
             extstrip = self.config.get("handlers.UMN.UMNDirHandler", "extstrip")
         if extstrip != "none" and isinstance(handler, FileHandler):
             if extstrip == "full" or (
@@ -176,7 +176,7 @@ class UMNDirHandler(DirHandler):
 
         done = {"path": 0, "type": 0, "name": 0, "host": 0, "port": 0}
 
-        if capfilepath != None:
+        if capfilepath is not None:
             entry.setselector(capfilepath)
             done["path"] = 1
 
@@ -252,8 +252,8 @@ class UMNDirHandler(DirHandler):
         if done["path"]:
             if (
                 entry.getneedsabspath()
-                and entry.gethost() == None
-                and entry.getport() == None
+                and entry.gethost() is None
+                and entry.getport() is None
             ):
                 entry.setselector(
                     os.path.normpath(self.selectorbase + "/" + entry.getselector())
@@ -273,9 +273,9 @@ class UMNDirHandler(DirHandler):
     def entrycmp(self, entry1, entry2):
         """This function implements an exact replica of UMN behavior
         GSqsortcmp() behavior."""
-        if entry1.name == None:
+        if entry1.name is None:
             return 1
-        if entry2.name == None:
+        if entry2.name is None:
             return -1
         e1num = entry1.getnum(0)
         e2num = entry2.getnum(0)

@@ -100,7 +100,7 @@ class BuckGophermapHandler(base.BaseHandler):
                 if len(args) >= 4 and len(args[3]):
                     entry.port = int(args[3])
 
-                if entry.gethost() == None and entry.getport() == None:
+                if entry.gethost() is None and entry.getport() is None:
                     # If we're using links on THIS server, try to fill
                     # it in for gopher+.
                     if self.vfs.exists(selector):

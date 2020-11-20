@@ -63,7 +63,7 @@ class WAPProtocol(HTTPProtocol):
 
     def adjustmimetype(self, mimetype):
         self.needsconversion = 0
-        if mimetype == None or mimetype == "text/plain":
+        if mimetype is None or mimetype == "text/plain":
             self.needsconversion = 1
             return "text/vnd.wap.wml"
         if mimetype == "application/gopher-menu":
@@ -85,7 +85,7 @@ class WAPProtocol(HTTPProtocol):
                 self.accesskeyidx += 1
             else:
                 retstr += '<a href="%s">' % url
-        if entry.getname() != None:
+        if entry.getname() is not None:
             thisname = cgi.escape(entry.getname())
         else:
             thisname = cgi.escape(entry.getselector())

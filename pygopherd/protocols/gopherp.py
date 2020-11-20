@@ -147,7 +147,7 @@ class GopherPlusProtocol(GopherProtocol):
             if entry.getlanguage():
                 retstr += " " + entry.getlanguage()
             retstr += ":"
-            if entry.getsize() != None:
+            if entry.getsize() is not None:
                 retstr += " <%dk>" % (entry.getsize() / 1024)
             retstr += "\r\n"
         return retstr

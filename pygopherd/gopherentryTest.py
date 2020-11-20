@@ -124,7 +124,7 @@ class GopherEntryTestCase(unittest.TestCase):
         entry.populated = 1
         entry.populatefromfs(fspath)
 
-        assert entry.gettype() == None
+        assert entry.gettype() is None
 
     def testpopulate_encoded(self):
         fspath = "/testfile.txt.gz"
@@ -174,18 +174,18 @@ class GopherEntryTestCase(unittest.TestCase):
         entry = GopherEntry(selector, self.config)
         entry.host = "gopher.nowhere"
         entry.populatefromfs(fspath)
-        assert entry.gettype() == None
+        assert entry.gettype() is None
 
         entry.populated = 0
         entry.host = None
         entry.port = 70
         entry.populatefromfs(fspath)
-        assert entry.gettype() == None
+        assert entry.gettype() is None
 
         entry.populated = 0
         entry.host = "gopher.nowhere"
         entry.populatefromfs(fspath)
-        assert entry.gettype() == None
+        assert entry.gettype() is None
 
     def testpopulate_untouched(self):
         """Asserts that populatefromfs does not touch data that has already
