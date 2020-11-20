@@ -60,7 +60,7 @@ class FileNotFound(BaseException):
         log(self, self.protocol, None)
 
     def __str__(self):
-        retval = "'%s' does not exist" % (self.selector)
+        retval = "'%s' does not exist" % self.selector
         if self.comments:
             retval += " (%s)" % self.comments
 

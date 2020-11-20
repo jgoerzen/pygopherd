@@ -256,8 +256,8 @@ class UMNDirHandler(DirHandler):
                 entry.setselector(
                     os.path.normpath(self.selectorbase + "/" + entry.getselector())
                 )
-            return (nextstep, entry)
-        return (nextstep, None)
+            return nextstep, entry
+        return nextstep, None
 
     def sgn(self, a):
         """Returns -1 if less than 0, 1 if greater than 0, and 0 if
