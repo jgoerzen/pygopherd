@@ -1,5 +1,5 @@
 import unittest
-from pygopherd import logger, testutil
+from pygopherd import testutil
 
 
 class LoggerTestCase(unittest.TestCase):

@@ -17,10 +17,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-import socketserver
 import re
-import os, stat, os.path, mimetypes
-from pygopherd import protocols, gopherentry
+import os, os.path
+from pygopherd import gopherentry
 from pygopherd.handlers.virtual import Virtual
 from pygopherd.handlers.base import VFS_Real
 from mailbox import mbox, Maildir

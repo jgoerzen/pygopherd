@@ -16,10 +16,9 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from pygopherd import handlers, protocols
-from pygopherd.protocols import *
-from pygopherd.GopherExceptions import FileNotFound
-import re
+# Running eval() when loading the configuration requires all of the protocols to
+# be in the module namespace
+from pygopherd.protocols import *  # noqa
 
 
 def getProtocol(request, server, requesthandler, rfile, wfile, config):

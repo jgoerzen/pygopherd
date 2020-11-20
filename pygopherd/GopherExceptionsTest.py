@@ -21,9 +21,8 @@
 
 import unittest
 from io import BytesIO
-from pygopherd import logger, initialization, GopherExceptions, testutil
+from pygopherd import GopherExceptions, testutil
 from pygopherd.GopherExceptions import FileNotFound
-from pygopherd.protocols import rfc1436
 
 
 class GopherExceptionsTestCase(unittest.TestCase):

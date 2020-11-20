@@ -16,14 +16,10 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import socketserver
-import re
-import os, stat, os.path, mimetypes
-from pygopherd import protocols, gopherentry
+import os, os.path
 from pygopherd.gopherentry import GopherEntry
 from pygopherd.handlers.dir import DirHandler
 from pygopherd.handlers.file import FileHandler
-from stat import *
 import pygopherd.fileext
 
 extstrip = None

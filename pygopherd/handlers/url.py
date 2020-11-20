@@ -16,10 +16,8 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import socketserver
 import re
-import os, stat, os.path, mimetypes
-from pygopherd import protocols, gopherentry, handlers
+from pygopherd import gopherentry, handlers
 from pygopherd.handlers.base import BaseHandler
 
 

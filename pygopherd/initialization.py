@@ -20,14 +20,11 @@
 from configparser import ConfigParser
 
 # Import lots of stuff so it's here before chrooting.
-import socket, os, sys, socketserver, re, stat, os.path, tempfile
-import time, atexit, errno, struct
+import socket, os, sys, socketserver, os.path
+import errno, struct
 
-from pygopherd import handlers, protocols, GopherExceptions, logger, sighandlers
-from pygopherd.protocols import *
+from pygopherd import GopherExceptions, logger, sighandlers
 from pygopherd.protocols import ProtocolMultiplexer
-from pygopherd.handlers import *
-from pygopherd.handlers import HandlerMultiplexer
 import pygopherd.fileext
 import mimetypes
 

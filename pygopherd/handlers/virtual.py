@@ -1,7 +1,4 @@
-from pygopherd import gopherentry
-from stat import *
 from pygopherd.handlers.base import BaseHandler
-import os
 
 
 class Virtual(BaseHandler):

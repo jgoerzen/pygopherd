@@ -22,7 +22,7 @@
 import unittest, socketserver, mimetypes
 from pygopherd import initialization
 
-from pygopherd import logger, fileext
+from pygopherd import fileext
 
 
 class initializationConfigTestCase(unittest.TestCase):

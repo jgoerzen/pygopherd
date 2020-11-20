@@ -17,10 +17,9 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import socketserver
 import re, binascii
-import os, stat, os.path, mimetypes, urllib.request, urllib.parse, urllib.error, time
-from pygopherd import handlers, protocols, GopherExceptions
+import urllib.request, urllib.parse, urllib.error, time
+from pygopherd import GopherExceptions
 from pygopherd.protocols.base import BaseGopherProtocol
 import pygopherd.version
 import cgi

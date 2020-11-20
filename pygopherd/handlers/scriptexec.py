@@ -17,12 +17,12 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-from pygopherd import protocols, gopherentry
-from pygopherd.handlers.base import BaseHandler, VFS_Real
+from pygopherd import gopherentry
+from pygopherd.handlers.base import VFS_Real
 from pygopherd.handlers.virtual import Virtual
 import pygopherd.pipe
 from stat import *
-import imp, re, os
+import os
 
 
 class ExecHandler(Virtual):

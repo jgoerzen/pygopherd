@@ -1,5 +1,4 @@
-from pygopherd import protocols, gopherentry
-from pygopherd.handlers.base import BaseHandler, VFS_Real
+from pygopherd.handlers.base import VFS_Real
 from pygopherd.handlers.virtual import Virtual
 from stat import *
 import imp, re
