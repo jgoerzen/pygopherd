@@ -141,7 +141,7 @@ class GopherEntry:
 
         self.size = self.size or statval[6]
 
-        mimetype, encoding = mimetypes.guess_type(self.selector, strict=0)
+        mimetype, encoding = mimetypes.guess_type(self.selector, strict=False)
 
         if encoding:
             self.mimetype = self.mimetype or "application/octet-stream"
