@@ -16,6 +16,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+import functools
 import mimetypes
 
 typemap = {}
@@ -30,7 +31,10 @@ def extcmp(x, y):
         return 1
     if len(x) < len(y):
         return -1
-    return cmp(x, y)
+    return (x > y) - (y < x)
+
+
+extkey = functools.cmp_to_key(extcmp)
 
 
 def extstrip(file, filetype):
@@ -62,6 +66,6 @@ def init():
                 baselist.append(shortsuff)
 
         extlist.extend(baselist)
-        extlist.sort(extcmp)
+        extlist.sort(key=extkey)
         extlist.reverse()
         typemap[filetype] = extlist
