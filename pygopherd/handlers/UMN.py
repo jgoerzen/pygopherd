@@ -301,7 +301,7 @@ def cmp(a, b):
 
 # Python 3 conversion tool: from http://code.activestate.com/recipes/576653-convert-a-cmp-function-to-a-key-function/
 def cmp_to_key(mycmp):
-    "Convert a cmp= function into a key= function"
+    """Convert a cmp= function into a key= function"""
 
     class K(object):
         def __init__(self, obj, *_):

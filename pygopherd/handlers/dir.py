@@ -41,7 +41,7 @@ class DirHandler(base.BaseHandler):
         return self.entry
 
     def prep_initfiles(self):
-        "Initialize the list of files.  Ignore the files we're suppoed to."
+        """Initialize the list of files.  Ignore the files we're suppoed to."""
         self.files = []
         dirfiles = self.vfs.listdir(self.getselector())
         ignorepatt = self.config.get("handlers.dir.DirHandler", "ignorepatt")
@@ -55,7 +55,7 @@ class DirHandler(base.BaseHandler):
         return not re.search(ignorepatt, pattern)
 
     def prep_entries(self):
-        "Generate entries from the list."
+        """Generate entries from the list."""
 
         self.fileentries = []
         for file in self.files:
