@@ -124,7 +124,6 @@ class HTTPProtocol(BaseGopherProtocol):
         return mimetype
 
     def renderobjinfo(self, entry):
-        url = None
         # Decision time....
         if re.match("(/|)URL:", entry.getselector()):
             # It's a plain URL.  Make it that.

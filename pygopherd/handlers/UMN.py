@@ -304,7 +304,7 @@ def cmp_to_key(mycmp):
     "Convert a cmp= function into a key= function"
 
     class K(object):
-        def __init__(self, obj, *args):
+        def __init__(self, obj, *_):
             self.obj = obj
 
         def __lt__(self, other):

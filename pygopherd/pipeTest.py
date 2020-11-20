@@ -33,4 +33,4 @@ class PipeTestCase(unittest.TestCase):
             self.assertEqual(retval, 0)
 
     def testFailingPipe(self):
-        outputfd = tempfile.TemporaryFile()
+        pass

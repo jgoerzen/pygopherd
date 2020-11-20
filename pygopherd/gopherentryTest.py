@@ -144,7 +144,6 @@ class GopherEntryTestCase(unittest.TestCase):
         )
 
     def testpopulate_dir(self):
-        fspath = self.root + "/"
         entry = GopherEntry("/", self.config)
         entry.populatefromfs("/")
 

@@ -135,7 +135,6 @@ def getserverobject(config):
 
     interface = ""
     if config.has_option("pygopherd", "interface"):
-        servername = config.get("pygopherd", "interface")
         interface = config.get("pygopherd", "interface")
 
     try:
