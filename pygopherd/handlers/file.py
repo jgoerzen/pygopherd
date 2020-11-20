@@ -40,11 +40,10 @@ class FileHandler(base.BaseHandler):
         self.vfs.copyto(self.getselector(), wfile)
 
 
-decompressors = None
-decompresspatt = None
-
-
 class CompressedFileHandler(FileHandler):
+    decompressors = None
+    decompresspatt = None
+
     def canhandlerequest(self):
         self.initdecompressors()
 
@@ -54,8 +53,8 @@ class CompressedFileHandler(FileHandler):
         return (
             FileHandler.canhandlerequest(self)
             and self.getentry().realencoding
-            and self.getentry().realencoding in decompressors
-            and re.search(decompresspatt, self.selector)
+            and self.getentry().realencoding in self.decompressors
+            and re.search(self.decompresspatt, self.selector)
         )
 
     def getentry(self):
@@ -64,7 +63,7 @@ class CompressedFileHandler(FileHandler):
             self.entry.realencoding = None
             if (
                 self.entry.getencoding()
-                and self.entry.getencoding() in decompressors
+                and self.entry.getencoding() in self.decompressors
                 and self.entry.getencodedmimetype()
             ):
                 # When the client gets it, there will not be
@@ -78,18 +77,16 @@ class CompressedFileHandler(FileHandler):
         return self.entry
 
     def initdecompressors(self):
-        global decompressors, decompresspatt
-        if decompressors == None:
-            decompressors = eval(
+        if self.decompressors is None:
+            self.decompressors = eval(
                 self.config.get("handlers.file.CompressedFileHandler", "decompressors")
             )
-            decompresspatt = self.config.get(
+            self.decompresspatt = self.config.get(
                 "handlers.file.CompressedFileHandler", "decompresspatt"
             )
 
     def write(self, wfile):
-        global decompressors
-        decompprog = decompressors[self.getentry().realencoding]
+        decompprog = self.decompressors[self.getentry().realencoding]
         pygopherd.pipe.pipedata_unix(
             decompprog,
             [decompprog],
