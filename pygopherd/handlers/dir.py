@@ -20,6 +20,7 @@ import pickle
 import re
 import stat
 import time
+import typing
 from stat import *
 
 from pygopherd import gopherentry, handlers
@@ -30,17 +31,17 @@ class DirHandler(base.BaseHandler):
     cachetime: int
     cachefile: str
 
-    def canhandlerequest(self):
+    def canhandlerequest(self) -> bool:
         """We can handle the request if it's for a directory."""
         return self.statresult and S_ISDIR(self.statresult[ST_MODE])
 
-    def getentry(self):
+    def getentry(self) -> gopherentry.GopherEntry:
         if not self.entry:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
             self.entry.populatefromfs(self.getselector(), self.statresult, vfs=self.vfs)
         return self.entry
 
-    def prep_initfiles(self):
+    def prep_initfiles(self) -> None:
         """Initialize the list of files.  Ignore the files we're suppoed to."""
         self.files = []
         dirfiles = self.vfs.listdir(self.getselector())
@@ -51,10 +52,12 @@ class DirHandler(base.BaseHandler):
             ):
                 self.files.append(file)
 
-    def prep_initfiles_canaddfile(self, ignorepatt, pattern, file):
+    def prep_initfiles_canaddfile(
+        self, ignorepatt: str, pattern: str, file: str
+    ) -> bool:
         return not re.search(ignorepatt, pattern)
 
-    def prep_entries(self):
+    def prep_entries(self) -> None:
         """Generate entries from the list."""
 
         self.fileentries = []
@@ -71,13 +74,15 @@ class DirHandler(base.BaseHandler):
             fileentry = handler.getentry()
             self.prep_entriesappend(file, handler, fileentry)
 
-    def prep_entriesappend(self, file, handler, fileentry):
+    def prep_entriesappend(
+        self, file: str, handler: base.BaseHandler, fileentry: gopherentry.GopherEntry
+    ):
         """Subclasses can override to do post-processing on the entry while
         we still have the filename around.
         IE, for .cap files."""
         self.fileentries.append(fileentry)
 
-    def prepare(self):
+    def prepare(self) -> bool:
         # Initialize some variables.
 
         self.selectorbase = self.selector
@@ -86,7 +91,7 @@ class DirHandler(base.BaseHandler):
 
         if self.loadcache():
             # No need to do anything else.
-            return 0  # Did nothing.
+            return False  # Did nothing.
 
         self.prep_initfiles()
 
@@ -94,16 +99,16 @@ class DirHandler(base.BaseHandler):
         self.files.sort()
 
         self.prep_entries()
-        return 1  # Did something.
+        return True  # Did something.
 
-    def isdir(self):
-        return 1
+    def isdir(self) -> bool:
+        return True
 
-    def getdirlist(self):
+    def getdirlist(self) -> typing.List[gopherentry.GopherEntry]:
         self.savecache()
         return self.fileentries
 
-    def loadcache(self):
+    def loadcache(self) -> bool:
 
         self.fromcache = 0
         if not hasattr(self, "cachetime"):
@@ -111,22 +116,22 @@ class DirHandler(base.BaseHandler):
             self.cachefile = self.config.get("handlers.dir.DirHandler", "cachefile")
         cachename = self.selector + "/" + self.cachefile
         if not self.vfs.iswritable(cachename):
-            return 0
+            return False
 
         try:
             statval = self.vfs.stat(cachename)
         except OSError:
-            return 0
+            return False
 
         if time.time() - statval[stat.ST_MTIME] < self.cachetime:
             fp = self.vfs.open(cachename, "rb")
             self.fileentries = pickle.load(fp)
             fp.close()
             self.fromcache = 1
-            return 1
-        return 0
+            return True
+        return False
 
-    def savecache(self):
+    def savecache(self) -> None:
         if self.fromcache:
             # Don't resave the cache.
             return
