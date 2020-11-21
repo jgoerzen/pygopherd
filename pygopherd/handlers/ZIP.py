@@ -569,7 +569,7 @@ class ZIPHandler(base.BaseHandler):
         """
 
         if not self.config.getboolean("handlers.ZIP.ZIPHandler", "enabled"):
-            return 0
+            return False
 
         pattern = re.compile(self.config.get("handlers.ZIP.ZIPHandler", "pattern"))
 
@@ -577,14 +577,13 @@ class ZIPHandler(base.BaseHandler):
         appendage = None
 
         while 1:
-            if (
-                pattern.search(basename)
-                and self.vfs.isfile(basename)
-                and zipfile.is_zipfile(self.vfs.getfspath(basename))
-            ):
-                self.basename = basename
-                self.appendage = appendage
-                return 1
+
+            if pattern.search(basename) and self.vfs.isfile(basename):
+                # is_zipfile() accepts filenames as bytes, but the type stub is incorrect
+                if zipfile.is_zipfile(self.vfs.getfspath(basename)):  # noqa
+                    self.basename = basename
+                    self.appendage = appendage
+                    return True
 
             if (
                 len(basename) == 0
@@ -592,7 +591,7 @@ class ZIPHandler(base.BaseHandler):
                 or basename == "."
                 or basename == "./"
             ):
-                return 0
+                return False
 
             (head, tail) = os.path.split(basename)
             if appendage is not None:
