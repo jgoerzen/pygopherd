@@ -18,16 +18,17 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # END OF COPYRIGHT #
-
-
+import configparser
+from io import StringIO, BytesIO
 import os
-from io import StringIO
+import typing
 
 from pygopherd import initialization, logger
+from pygopherd.initialization import AbstractServer
 from pygopherd.protocols import ProtocolMultiplexer
 
 
-def getconfig():
+def getconfig() -> configparser.ConfigParser:
     config = initialization.initconffile("conf/pygopherd.conf")
     config.set("pygopherd", "root", os.path.abspath("./testdata"))
     return config
@@ -42,7 +43,9 @@ def getstringlogger():
     return stringfile
 
 
-def gettestingserver(config=None):
+def gettestingserver(
+    config: typing.Optional[configparser.ConfigParser] = None,
+) -> AbstractServer:
     config = config or getconfig()
     config.set("pygopherd", "port", "64777")
     s = initialization.getserverobject(config)
@@ -50,7 +53,11 @@ def gettestingserver(config=None):
     return s
 
 
-def gettestinghandler(rfile, wfile, config=None):
+def gettestinghandler(
+    rfile: BytesIO,
+    wfile: BytesIO,
+    config: typing.Optional[configparser.ConfigParser] = None,
+) -> initialization.GopherRequestHandler:
     """Creates a testing handler with input from rfile.  Fills in
     other stuff with fake values."""
 
@@ -59,11 +66,11 @@ def gettestinghandler(rfile, wfile, config=None):
     # Kludge to pass to the handler init.
 
     class requestClass:
-        def __init__(self, rfile, wfile):
+        def __init__(self, rfile: BytesIO, wfile: BytesIO):
             self.rfile = rfile
             self.wfile = wfile
 
-        def makefile(self, mode, bufsize):
+        def makefile(self, mode: str, bufsize):
             if mode[0] == "r":
                 return self.rfile
             return self.wfile
@@ -80,16 +87,21 @@ def gettestinghandler(rfile, wfile, config=None):
     return rhandler
 
 
-def gettestingprotocol(request, config=None):
+def gettestingprotocol(request: str, config=None):
     config = config or getconfig()
 
-    rfile = StringIO(request)
+    rfile = BytesIO(request.encode(errors="surrogateescape"))
     # Pass fake rfile, wfile to gettestinghandler -- they'll be closed before
     # we can get the info, and some protocols need to read more from them.
 
-    handler = gettestinghandler(StringIO(), StringIO(), config)
+    handler = gettestinghandler(BytesIO(), BytesIO(), config)
     # Now override.
     handler.rfile = rfile
     return ProtocolMultiplexer.getProtocol(
-        rfile.readline(), handler.server, handler, handler.rfile, handler.wfile, config
+        rfile.readline().decode(errors="surrogateescape"),
+        handler.server,
+        handler,
+        handler.rfile,
+        handler.wfile,
+        config,
     )
