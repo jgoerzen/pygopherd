@@ -74,7 +74,6 @@ class WAPProtocol(HTTPProtocol):
         return mimetype
 
     def getrenderstr(self, entry, url):
-        global accesskeys
         if url.startswith("/"):
             url = self.waptop + url
         retstr = ""
@@ -114,7 +113,6 @@ class WAPProtocol(HTTPProtocol):
         return retstr
 
     def renderdirstart(self, entry):
-        global wmlheader
         self.accesskeyidx = 0
         self.postfieldidx = 0
         retval = wmlheader
@@ -131,7 +129,6 @@ class WAPProtocol(HTTPProtocol):
         return "</p>\n</card>\n</wml>\n"
 
     def handlerwrite(self, wfile: io.BufferedIOBase):
-        global wmlheader
         if not self.needsconversion:
             self.handler.write(wfile)
             return

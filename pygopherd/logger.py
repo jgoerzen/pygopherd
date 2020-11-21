@@ -8,7 +8,6 @@ syslogfunc = None
 
 
 def log_file(message):
-    global logfile
     logfile.write(message + "\n")
 
 
