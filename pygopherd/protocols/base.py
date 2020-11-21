@@ -17,15 +17,15 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from __future__ import annotations
 
+import io
 import typing
-import socketserver
 import configparser
 
 from pygopherd import GopherExceptions, gopherentry, logger
 from pygopherd.handlers import HandlerMultiplexer
 
 if typing.TYPE_CHECKING:
-    from pygopherd.initialization import GopherRequestHandler
+    from pygopherd.initialization import GopherRequestHandler, AbstractServer
     from pygopherd.handlers.base import BaseHandler
     from pygopherd.gopherentry import GopherEntry
 
@@ -36,10 +36,10 @@ class BaseGopherProtocol:
     def __init__(
         self,
         request: str,
-        server: socketserver.TCPServer,
+        server: AbstractServer,
         requesthandler: GopherRequestHandler,
-        rfile: typing.IO,
-        wfile: typing.IO,
+        rfile: io.BufferedIOBase,
+        wfile: io.BufferedIOBase,
         config: configparser.ConfigParser,
     ):
         """Parameters are:

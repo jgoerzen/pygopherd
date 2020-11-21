@@ -18,6 +18,7 @@
 # END OF COPYRIGHT #
 
 import errno
+import io
 import mimetypes
 import os
 import os.path
@@ -35,7 +36,17 @@ from pygopherd import GopherExceptions, logger, sighandlers
 from pygopherd.protocols import ProtocolMultiplexer
 
 
-def initconffile(conffile):
+class AbstractServer(socketserver.TCPServer):
+    """
+    We dynamically attach a few extra variables to the base TCP server.
+    """
+
+    config: ConfigParser
+    server_name: str
+    server_port: int
+
+
+def initconffile(conffile: ConfigParser) -> ConfigParser:
     if not (os.path.isfile(conffile) and os.access(conffile, os.R_OK)):
         raise Exception(
             "Could NOT access config file %s\nPlease specify config file as a command-line argument\n"
@@ -47,16 +58,16 @@ def initconffile(conffile):
     return config
 
 
-def initlogger(config, conffile):
+def initlogger(config: ConfigParser, conffile: str) -> None:
     logger.init(config)
     logger.log("Pygopherd starting, using configuration file %s" % conffile)
 
 
-def initexceptions(config):
+def initexceptions(config: ConfigParser):
     GopherExceptions.init(config.getboolean("pygopherd", "tracebacks"))
 
 
-def initmimetypes(config):
+def initmimetypes(config: ConfigParser):
     mimetypesfiles = config.get("pygopherd", "mimetypes").split(":")
     mimetypesfiles = [
         x for x in mimetypesfiles if os.path.isfile(x) and os.access(x, os.R_OK)
@@ -80,6 +91,11 @@ def initmimetypes(config):
 
 
 class GopherRequestHandler(socketserver.StreamRequestHandler):
+
+    rfile: io.BufferedIOBase
+    wfile: io.BufferedIOBase
+    server: AbstractServer
+
     def handle(self):
         request = self.rfile.readline()
 
@@ -100,7 +116,7 @@ class GopherRequestHandler(socketserver.StreamRequestHandler):
             GopherExceptions.log(sys.exc_info()[1], protohandler, None)
 
 
-def getserverobject(config):
+def getserverobject(config: ConfigParser) -> AbstractServer:
     # Pick up the server type from the config.
 
     servertype = eval("socketserver." + config.get("pygopherd", "servertype"))
