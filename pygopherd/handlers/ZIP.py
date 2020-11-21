@@ -213,10 +213,6 @@ class VFS_Zip(base.VFS_Real):
         return self._islinkattr(info.external_attr)
 
     def _readlinkfspath(self, fspath: str) -> str:
-        # Since only called from the cache thing, this isn't needed.
-        # if not self._islinkfspath(fspath):
-        #    raise ValueError, "Readlinkfspath called on %s which is not a link" % fspath
-
         return self.zip.read(fspath).decode(encoding="cp437")
 
     def _readlink(self, selector: str) -> str:
@@ -239,17 +235,6 @@ class VFS_Zip(base.VFS_Real):
             selector = selector[:-1]
 
         return selector
-
-    def _transformlink(self, fspath: str) -> str:
-        while self._islinkfspath(fspath):
-            linkdest = self._readlinkfspath(fspath)
-            if linkdest.startswith("/"):
-                fspath = os.path.normpath(linkdest)[1:]
-            else:
-                fspath = os.path.join(os.path.dirname(fspath), linkdest)
-                fspath = os.path.normpath(fspath)
-
-        return fspath
 
     def getfspath(self, selector):
         # We can skip the initial part -- it just contains the start of
@@ -320,9 +305,6 @@ class VFS_Zip(base.VFS_Real):
         fspath = self.getfspath(selector)
         return self._isentryincache(fspath)
 
-    def _open(self, fspath):
-        return self.zip.open_pos(self._getcacheentry(fspath))
-
     def open(self, selector, *args, **kwargs):
         fspath = self.getfspath(selector)
         try:
@@ -353,109 +335,6 @@ class VFS_Zip(base.VFS_Real):
             )
 
         return list(retobj.keys())
-
-
-# class TestVFS_Zip_huge(unittest.TestCase):
-class DISABLED_TestVFS_Zip_huge:
-    def setUp(self):
-        from pygopherd import testutil
-        from pygopherd.protocols.rfc1436 import GopherProtocol
-
-        self.config = testutil.getconfig()
-        self.rfile = StringIO("/testfile.txt\n")
-        self.wfile = StringIO()
-        self.logfile = testutil.getstringlogger()
-        self.handler = testutil.gettestinghandler(self.rfile, self.wfile, self.config)
-        self.server = self.handler.server
-        self.proto = GopherProtocol(
-            "/testfile.txt\n",
-            self.server,
-            self.handler,
-            self.rfile,
-            self.wfile,
-            self.config,
-        )
-        self.config.set("handlers.ZIP.ZIPHandler", "enabled", "true")
-        from pygopherd.handlers import HandlerMultiplexer
-
-        HandlerMultiplexer.handlers = None
-        handlerlist = self.config.get("handlers.HandlerMultiplexer", "handlers")
-        handlerlist = handlerlist.strip()
-        handlerlist = handlerlist[0] + "ZIP.ZIPHandler, " + handlerlist[1:]
-        self.config.set("handlers.HandlerMultiplexer", "handlers", handlerlist)
-
-    def testlistdir1(self):
-        from pygopherd.protocols.rfc1436 import GopherProtocol
-
-        self.proto = GopherProtocol(
-            "/foo.zip\n", self.server, self.handler, self.rfile, self.wfile, self.config
-        )
-        self.proto.handle()
-
-    def testlistdir2(self):
-        from pygopherd.protocols.rfc1436 import GopherProtocol
-
-        self.proto = GopherProtocol(
-            "/foo.zip/lib\n",
-            self.server,
-            self.handler,
-            self.rfile,
-            self.wfile,
-            self.config,
-        )
-        self.proto.handle()
-
-    def testlistdir3(self):
-        from pygopherd.protocols.rfc1436 import GopherProtocol
-
-        self.proto = GopherProtocol(
-            "/foo.zip/lib/dpkg/info\n",
-            self.server,
-            self.handler,
-            self.rfile,
-            self.wfile,
-            self.config,
-        )
-        self.proto.handle()
-
-    def testopen1(self):
-        from pygopherd.protocols.rfc1436 import GopherProtocol
-
-        self.proto = GopherProtocol(
-            "/foo.zip/lib/dpkg/info/dpkg.list\n",
-            self.server,
-            self.handler,
-            self.rfile,
-            self.wfile,
-            self.config,
-        )
-        self.proto.handle()
-
-    def testopen2(self):
-        from pygopherd.protocols.rfc1436 import GopherProtocol
-
-        self.proto = GopherProtocol(
-            "/foo.zip/games/bsdgames/snake.log\n",
-            self.server,
-            self.handler,
-            self.rfile,
-            self.wfile,
-            self.config,
-        )
-        self.proto.handle()
-
-    def testopen3(self):
-        from pygopherd.protocols.rfc1436 import GopherProtocol
-
-        self.proto = GopherProtocol(
-            "/foo.zip/www/apache2-default/manual/platforms/index.html\n",
-            self.server,
-            self.handler,
-            self.rfile,
-            self.wfile,
-            self.config,
-        )
-        self.proto.handle()
 
 
 class TestVFS_Zip(unittest.TestCase):
