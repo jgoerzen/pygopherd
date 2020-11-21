@@ -58,8 +58,8 @@ class VFS_Real:
     def exists(self, selector: str) -> bool:
         return os.path.exists(self.getfspath(selector))
 
-    def open(self, selector: str, *args, **kwargs) -> typing.IO:
-        return open(*(self.getfspath(selector),) + args, **kwargs)
+    def open(self, selector: str, mode: str) -> typing.IO:
+        return open(self.getfspath(selector), mode)
 
     def listdir(self, selector: str) -> typing.List[str]:
         return os.listdir(self.getfspath(selector))
