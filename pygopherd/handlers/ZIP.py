@@ -15,18 +15,25 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+from __future__ import annotations
 
+import configparser
 import marshal
 import os.path
 import re
 import shelve
 import stat
 import time
+import typing
 import unittest
 import zipfile
 from io import StringIO
 
 from pygopherd.handlers import base
+
+
+if typing.TYPE_CHECKING:
+    from pygopherd.handlers.base import VFS_Real
 
 
 class MarshalingShelf(shelve.Shelf):
@@ -38,18 +45,20 @@ class MarshalingShelf(shelve.Shelf):
 
 
 class DbfilenameShelf(MarshalingShelf):
-    def __init__(self, filename, flag="c"):
+    def __init__(self, filename, flag: typing.Literal["r", "w", "c", "n"] = "c"):
         import dbm
 
         MarshalingShelf.__init__(self, dbm.open(filename, flag))
 
 
-def shelveopen(filename, flag="c"):
+def shelveopen(filename, flag: typing.Literal["r", "w", "c", "n"] = "c"):
     return DbfilenameShelf(filename, flag)
 
 
 class VFS_Zip(base.VFS_Real):
-    def __init__(self, config, chain, zipfilename):
+    def __init__(
+        self, config: configparser.ConfigParser, chain: VFS_Real, zipfilename: str
+    ):
         self.config = config
         self.chain = chain
         self.zipfilename = zipfilename
@@ -57,11 +66,11 @@ class VFS_Zip(base.VFS_Real):
         self.badcache = {}
         self._initzip()
 
-    def _getcachefilename(self):
+    def _getcachefilename(self) -> str:
         (dir_, file) = os.path.split(self.zipfilename)
         return os.path.join(dir_, ".cache.pygopherd.zip3." + file)
 
-    def _initcache(self):
+    def _initcache(self) -> int:
         """Returns 1 if a cache was found existing; 0 if not."""
         filename = self._getcachefilename()
         if isinstance(self.chain, base.VFS_Real) and self.chain.iswritable(filename):
@@ -85,18 +94,18 @@ class VFS_Zip(base.VFS_Real):
 
             return 1
 
-    def _createcache(self, fspath):
+    def _createcache(self, fspath: str) -> None:
         self.dircache = {}
         self.dbdircache = shelveopen(fspath, "n")
 
-    def _savecache(self):
+    def _savecache(self) -> None:
         if not hasattr(self, "dbdircache"):
             # createcache was somehow unsuccessful
             return
         for (key, value) in self.dircache.items():
             self.dbdircache[key] = value
 
-    def _initzip(self):
+    def _initzip(self) -> None:
         zipfd = self.chain.open(self.zipfilename, mode="rb")
         self.zip = zipfile.ZipFile(zipfd, mode="r")
         if not self._initcache():
@@ -105,17 +114,17 @@ class VFS_Zip(base.VFS_Real):
             self._savecache()
             self.dbdircache.close()  # Flush it out
 
-    def _isentryincache(self, fspath):
+    def _isentryincache(self, fspath) -> bool:
         try:
             self._getcacheentry(fspath)
-            return 1
+            return True
         except KeyError:
-            return 0
+            return False
 
-    def _getcacheentry(self, fspath):
+    def _getcacheentry(self, fspath: str) -> dict:
         return self.dircache[self._getcacheinode(fspath)]
 
-    def _getcacheinode(self, fspath):
+    def _getcacheinode(self, fspath: str) -> str:
         inode = "0"
         if fspath == "":
             return inode
@@ -144,7 +153,7 @@ class VFS_Zip(base.VFS_Real):
                 raise KeyError("Call for %s: Couldn't find %s" % (fspath, item))
         return inode
 
-    def _cachedir(self):
+    def _cachedir(self) -> None:
         symlinkinodes = []
         nextinode = 1
         self.dircache = {"0": {}}
@@ -203,23 +212,23 @@ class VFS_Zip(base.VFS_Real):
             return 0
         return self._islinkattr(info.external_attr)
 
-    def _readlinkfspath(self, fspath):
+    def _readlinkfspath(self, fspath: str) -> str:
         # Since only called from the cache thing, this isn't needed.
         # if not self._islinkfspath(fspath):
         #    raise ValueError, "Readlinkfspath called on %s which is not a link" % fspath
 
         return self.zip.read(fspath).decode(encoding="cp437")
 
-    def _readlink(self, selector):
+    def _readlink(self, selector: str) -> str:
         return self._readlinkfspath(self._getfspathfinal(selector))
 
-    def iswritable(self, selector):
-        return 0
+    def iswritable(self, selector: str) -> bool:
+        return False
 
     def unlink(self, selector):
         raise NotImplementedError("VFS_ZIP cannot unlink files.")
 
-    def _getfspathfinal(self, selector):
+    def _getfspathfinal(self, selector: str) -> str:
         # Strip off the filename part.
         selector = selector[len(self.zipfilename) :]
 
@@ -231,7 +240,7 @@ class VFS_Zip(base.VFS_Real):
 
         return selector
 
-    def _transformlink(self, fspath):
+    def _transformlink(self, fspath: str) -> str:
         while self._islinkfspath(fspath):
             linkdest = self._readlinkfspath(fspath)
             if linkdest.startswith("/"):

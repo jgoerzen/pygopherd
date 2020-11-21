@@ -15,12 +15,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+from __future__ import annotations
 
+import configparser
 import mimetypes
 import os
 import os.path
 import re
 import stat
+import typing
+from typing import Optional
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -29,11 +33,15 @@ mapping = None
 eaexts = None
 
 
+if typing.TYPE_CHECKING:
+    from pygopherd.handlers.base import VFS_Real
+
+
 class GopherEntry:
     """The entry object for Gopher.  It holds information about each
     Gopher object."""
 
-    def __init__(self, selector, config):
+    def __init__(self, selector: str, config: configparser.ConfigParser):
         """Initialize object based on a selector and config."""
         self.selector = selector  # Gopher path to file
         self.config = config  # Our config object
@@ -55,10 +63,15 @@ class GopherEntry:
         self.ea = {}  # Extended attributes -- Gopher+
         # Abstract, etc.
 
-    def populatefromvfs(self, vfs, selector):
+    def populatefromvfs(self, vfs: VFS_Real, selector: str) -> None:
         self.populatefromfs(selector, statval=vfs.stat(selector), vfs=vfs)
 
-    def populatefromfs(self, fspath, statval=None, vfs=None):
+    def populatefromfs(
+        self,
+        fspath: str,
+        statval: Optional[os.stat_result] = None,
+        vfs: Optional[VFS_Real] = None,
+    ) -> None:
         """Fills in self with data gleaned from the filesystem.
 
         The argument fspath specifies where in the filesystem it will search.
@@ -162,7 +175,7 @@ class GopherEntry:
 
         self.type = self.type or self.guesstype()
 
-    def guesstype(self):
+    def guesstype(self) -> str:
         global mapping
         if not mapping:
             mapping = eval(self.config.get("GopherEntry", "mapping"))
@@ -171,7 +184,7 @@ class GopherEntry:
                 return maprule[1]
         return "0"
 
-    def handleeaext(self, selector, vfs):
+    def handleeaext(self, selector: str, vfs: Optional[VFS_Real]) -> None:
         """Handle getting extended attributes from the filesystem."""
         global eaexts
         if eaexts is None:
@@ -192,98 +205,100 @@ class GopherEntry:
             except IOError:
                 pass
 
-    def getselector(self, default=None):
+    def getselector(self, default=None) -> str:
         if self.selector is None:
             return default
         return self.selector
 
-    def setselector(self, arg):
+    def setselector(self, arg: str) -> None:
         self.selector = arg
 
-    def getconfig(self, default=None):
+    def getconfig(
+        self, default: Optional[configparser.ConfigParser] = None
+    ) -> Optional[configparser.ConfigParser]:
         return self.config or default
 
-    def setconfig(self, arg):
+    def setconfig(self, arg: configparser.ConfigParser) -> None:
         self.config = arg
 
-    def getfspath(self, default=None):
+    def getfspath(self, default: Optional[str] = None) -> Optional[str]:
         if self.fspath is None:
             return default
         return self.fspath
 
-    def setfspath(self, arg):
+    def setfspath(self, arg: str) -> None:
         self.fspath = arg
 
-    def gettype(self, default=None):
+    def gettype(self, default: Optional[str] = None) -> Optional[str]:
         if self.type is None:
             return default
         return self.type
 
-    def settype(self, arg):
+    def settype(self, arg: str) -> None:
         self.type = arg
 
-    def getname(self, default=None):
+    def getname(self, default: Optional[str] = None) -> Optional[str]:
         if self.name is None:
             return default
         return self.name
 
-    def setname(self, arg):
+    def setname(self, arg: str) -> None:
         self.name = arg
 
-    def gethost(self, default=None):
+    def gethost(self, default: Optional[str] = None) -> Optional[str]:
         if self.host is None:
             return default
         return self.host
 
-    def sethost(self, arg):
+    def sethost(self, arg: str) -> None:
         self.host = arg
 
-    def getport(self, default=None):
+    def getport(self, default: Optional[int] = None) -> Optional[int]:
         if self.port is None:
             return default
         return self.port
 
-    def setport(self, arg):
+    def setport(self, arg: int) -> None:
         self.port = arg
 
-    def getmimetype(self, default=None):
+    def getmimetype(self, default: Optional[str] = None) -> Optional[str]:
         if self.mimetype is None:
             return default
         return self.mimetype
 
-    def getencodedmimetype(self, default=None):
+    def getencodedmimetype(self, default: Optional[str] = None) -> Optional[str]:
         if self.encodedmimetype is None:
             return default
         return self.encodedmimetype
 
-    def setencodedmimetype(self, arg):
+    def setencodedmimetype(self, arg: str) -> None:
         self.encodedmimetype = arg
 
-    def setmimetype(self, arg):
+    def setmimetype(self, arg: str) -> None:
         self.mimetype = arg
 
-    def getsize(self, default=None):
+    def getsize(self, default: Optional[int] = None) -> Optional[int]:
         if self.size is None:
             return default
         return self.size
 
-    def setsize(self, arg):
+    def setsize(self, arg: int) -> None:
         self.size = arg
 
-    def getencoding(self, default=None):
+    def getencoding(self, default: Optional[str] = None) -> Optional[str]:
         if self.encoding is None:
             return default
         return self.encoding
 
-    def setencoding(self, arg):
+    def setencoding(self, arg: str) -> None:
         self.encoding = arg
 
-    def getlanguage(self, default=None):
+    def getlanguage(self, default: Optional[str] = None) -> Optional[str]:
         if self.language is None:
             return default
         return self.language
 
-    def setlanguage(self, arg):
+    def setlanguage(self, arg: str) -> None:
         self.language = arg
 
     def getctime(self, default=None):
@@ -310,7 +325,7 @@ class GopherEntry:
     def setpopulated(self, arg):
         self.populated = arg
 
-    def geturl(self, defaulthost="MISSINGHOST", defaultport=70):
+    def geturl(self, defaulthost: str = "MISSINGHOST", defaultport: int = 70) -> str:
         """If this selector is a URL: one, then we just return the rest of
         it.  Otherwise, generate a gopher:// URL and quote it."""
         if re.search("^(/|)URL:.+://", self.selector):
@@ -354,7 +369,7 @@ class GopherEntry:
         self.ea[name] = value
 
 
-def getinfoentry(text, config):
+def getinfoentry(text: str, config: configparser.ConfigParser) -> GopherEntry:
     entry = GopherEntry("fake", config)
     entry.name = text
     entry.host = "(NULL)"

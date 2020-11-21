@@ -64,7 +64,7 @@ class HTMLFileTitleHandler(FileHandler):
             mimetype, encoding = mimetypes.guess_type(self.selector)
             return mimetype == "text/html"
         else:
-            return 0
+            return False
 
     def getentry(self):
         # Start with the entry from the parent.

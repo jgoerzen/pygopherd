@@ -15,15 +15,33 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+from __future__ import annotations
+
+import typing
+import socketserver
+import configparser
 
 from pygopherd import GopherExceptions, gopherentry, logger
 from pygopherd.handlers import HandlerMultiplexer
+
+if typing.TYPE_CHECKING:
+    from pygopherd.initialization import GopherRequestHandler
+    from pygopherd.handlers.base import BaseHandler
+    from pygopherd.gopherentry import GopherEntry
 
 
 class BaseGopherProtocol:
     """Skeleton protocol -- includes commonly-used routines."""
 
-    def __init__(self, request, server, requesthandler, rfile, wfile, config):
+    def __init__(
+        self,
+        request: str,
+        server: socketserver.TCPServer,
+        requesthandler: GopherRequestHandler,
+        rfile: typing.IO,
+        wfile: typing.IO,
+        config: configparser.ConfigParser,
+    ):
         """Parameters are:
         request -- the raw request string.
 
@@ -51,7 +69,7 @@ class BaseGopherProtocol:
 
         self.selector = selector
 
-    def slashnormalize(self, selector):
+    def slashnormalize(self, selector: str) -> str:
         """Normalize slashes in the selector.  Make sure it starts
         with a slash and does not end with one.  If it is a root directory
         request, make sure it is exactly '/'.  Returns result."""
@@ -61,12 +79,12 @@ class BaseGopherProtocol:
             selector = "/" + selector
         return selector
 
-    def canhandlerequest(self):
+    def canhandlerequest(self) -> bool:
         """Decides whether or not a given request is valid for this
         protocol.  Should be overridden by all subclasses."""
-        return 0
+        return False
 
-    def log(self, handler):
+    def log(self, handler: BaseHandler) -> None:
         """Log a handled request."""
         logger.log(
             "%s [%s/%s]: %s"
@@ -78,7 +96,7 @@ class BaseGopherProtocol:
             )
         )
 
-    def handle(self):
+    def handle(self) -> None:
         """Handles the request."""
         try:
             handler = self.gethandler()
@@ -95,10 +113,10 @@ class BaseGopherProtocol:
             GopherExceptions.log(e, self, None)
             self.filenotfound(e[1])
 
-    def filenotfound(self, msg):
+    def filenotfound(self, msg: str):
         self.wfile.write(b"3%s\t\terror.host\t1\r\n" % msg.encode(encoding="cp437"))
 
-    def gethandler(self):
+    def gethandler(self) -> BaseHandler:
         """Gets the handler for this object's selector."""
         if not self.handler:
             self.handler = HandlerMultiplexer.getHandler(
@@ -106,7 +124,9 @@ class BaseGopherProtocol:
             )
         return self.handler
 
-    def writedir(self, entry, dirlist):
+    def writedir(
+        self, entry: GopherEntry, dirlist: typing.Iterable[GopherEntry]
+    ) -> None:
         """Called to render a directory.  Generally called by self.handle()"""
 
         startstr = self.renderdirstart(entry)
@@ -132,7 +152,7 @@ class BaseGopherProtocol:
         if endstr is not None:
             self.wfile.write(endstr)
 
-    def renderabstract(self, abstractstring):
+    def renderabstract(self, abstractstring: str) -> str:
         if not abstractstring:
             return ""
         retval = ""
@@ -141,23 +161,23 @@ class BaseGopherProtocol:
             retval += self.renderobjinfo(absentry)
         return retval
 
-    def renderdirstart(self, entry):
+    def renderdirstart(self, entry: GopherEntry) -> typing.Optional[str]:
         """Renders the start of a directory.  Most protocols will not need
         this.  Exception might be HTML.  Returns None if not needed.
         Argument should be the entry corresponding to the dir itself."""
         return None
 
-    def renderdirend(self, entry):
+    def renderdirend(self, entry: GopherEntry) -> typing.Optional[str]:
         """Likewise for the end of a directory."""
         return None
 
-    def renderobjinfo(self, entry):
+    def renderobjinfo(self, entry: GopherEntry) -> typing.Optional[str]:
         """Renders an object's info according to the protocol.  Returns
         a string.  A gopher0 server, for instance, would return a dir line.
         MUST BE OVERRIDDEN."""
         return None
 
-    def groksabstract(self):
+    def groksabstract(self) -> bool:
         """Returns true if this protocol understands abstracts natively;
         false otherwise."""
-        return 0
+        return False

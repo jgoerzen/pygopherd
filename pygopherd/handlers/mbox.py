@@ -20,6 +20,7 @@
 import os
 import os.path
 import re
+import typing
 from mailbox import Maildir, mbox
 from stat import *
 
@@ -33,6 +34,9 @@ from pygopherd.handlers.virtual import Virtual
 
 
 class FolderHandler(Virtual):
+
+    mbox: typing.Union[mbox, Maildir]
+
     def getentry(self):
         # Return my own entry.
         if not self.entry:
@@ -65,6 +69,12 @@ class FolderHandler(Virtual):
 
     def getdirlist(self):
         return self.entries
+
+    def getargflag(self) -> str:
+        raise NotImplementedError
+
+    def openmailbox(self):
+        raise NotImplementedError
 
 
 class MessageHandler(Virtual):
@@ -130,6 +140,12 @@ class MessageHandler(Virtual):
         self.rfile.close()
         self.rfile = None
 
+    def getargflag(self) -> str:
+        raise NotImplementedError
+
+    def openmailbox(self):
+        raise NotImplementedError
+
 
 ###########################################################################
 # Unix MBOX support
@@ -177,6 +193,7 @@ class MBoxMessageHandler(MessageHandler):
 
     def openmailbox(self):
         fd = self.vfs.open(self.getselector(), "rt")
+        # TODO: This is dead code, UnixMailbox is not defined
         return UnixMailbox(fd)
 
 
