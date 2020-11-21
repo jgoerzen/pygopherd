@@ -97,7 +97,7 @@ class GopherRequestHandler(socketserver.StreamRequestHandler):
     server: AbstractServer
 
     def handle(self):
-        request = self.rfile.readline()
+        request = self.rfile.readline().decode(errors="surrogateescape")
 
         protohandler = ProtocolMultiplexer.getProtocol(
             request, self.server, self, self.rfile, self.wfile, self.server.config

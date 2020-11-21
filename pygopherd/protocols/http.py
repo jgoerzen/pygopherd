@@ -47,7 +47,7 @@ class HTTPProtocol(BaseGopherProtocol):
         # Slurp up remaining lines.
         self.httpheaders = {}
         while 1:
-            line = self.rfile.readline()
+            line = self.rfile.readline().decode(errors="surrogateescape")
             if not len(line):
                 break
             line = line.strip()
@@ -81,9 +81,9 @@ class HTTPProtocol(BaseGopherProtocol):
         if icon:
             iconname = icon.group(1)
             if iconname in icons:
-                self.wfile.write("HTTP/1.0 200 OK\r\n")
-                self.wfile.write("Last-Modified: Fri, 14 Dec 2001 21:19:47 GMT\r\n")
-                self.wfile.write("Content-Type: image/gif\r\n\r\n")
+                self.wfile.write(b"HTTP/1.0 200 OK\r\n")
+                self.wfile.write(b"Last-Modified: Fri, 14 Dec 2001 21:19:47 GMT\r\n")
+                self.wfile.write(b"Content-Type: image/gif\r\n\r\n")
                 if self.requestparts[0] == "HEAD":
                     return
                 self.wfile.write(binascii.unhexlify(icons[iconname]))
@@ -94,14 +94,14 @@ class HTTPProtocol(BaseGopherProtocol):
             self.log(handler)
             self.entry = handler.getentry()
             handler.prepare()
-            self.wfile.write("HTTP/1.0 200 OK\r\n")
+            self.wfile.write(b"HTTP/1.0 200 OK\r\n")
             if self.entry.getmtime() is not None:
                 gmtime = time.gmtime(self.entry.getmtime())
                 mtime = time.strftime("%a, %d %b %Y %H:%M:%S GMT", gmtime)
-                self.wfile.write("Last-Modified: " + mtime + "\r\n")
+                self.wfile.write(f"Last-Modified: {mtime}\r\n".encode())
             mimetype = self.entry.getmimetype()
             mimetype = self.adjustmimetype(mimetype)
-            self.wfile.write("Content-Type: " + mimetype + "\r\n\r\n")
+            self.wfile.write(f"Content-Type: {mimetype}\r\n\r\n".encode())
             if self.requestparts[0] == "GET":
                 if handler.isdir():
                     self.writedir(self.entry, handler.getdirlist())
@@ -194,19 +194,19 @@ class HTTPProtocol(BaseGopherProtocol):
         )
         return retstr + "\n</BODY></HTML>\n"
 
-    def filenotfound(self, msg):
-        self.wfile.write("HTTP/1.0 404 Not Found\r\n")
-        self.wfile.write("Content-Type: text/html\r\n\r\n")
+    def filenotfound(self, msg: str):
+        self.wfile.write(b"HTTP/1.0 404 Not Found\r\n")
+        self.wfile.write(b"Content-Type: text/html\r\n\r\n")
         self.wfile.write(
-            '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">'
+            b'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">'
         )
         self.wfile.write(
-            """\n<HTML><HEAD><TITLE>Selector Not Found</TITLE>
+            b"""\n<HTML><HEAD><TITLE>Selector Not Found</TITLE>
         <H1>Selector Not Found</H1>
         <TT>"""
         )
-        self.wfile.write(cgi.escape(msg))
-        self.wfile.write("</TT><HR>Pygopherd</BODY></HTML>\n")
+        self.wfile.write(cgi.escape(msg).encode(errors="surrogateescape"))
+        self.wfile.write(b"</TT><HR>Pygopherd</BODY></HTML>\n")
 
     def getimgtag(self, entry):
         name = "generic.gif"

@@ -62,11 +62,13 @@ class GopherPlusProtocol(GopherProtocol):
             self.entry = handler.getentry()
 
             if self.handlemethod == "infoonly":
-                self.wfile.write("+-2\r\n")
-                self.wfile.write(self.renderobjinfo(self.entry))
+                self.wfile.write(b"+-2\r\n")
+                self.wfile.write(
+                    self.renderobjinfo(self.entry).encode(errors="surrogateescape")
+                )
             else:
                 handler.prepare()
-                self.wfile.write("+" + str(self.entry.getsize(-2)) + "\r\n")
+                self.wfile.write(f"+{self.entry.getsize(-2)}\r\n".encode())
                 if handler.isdir():
                     self.writedir(self.entry, handler.getdirlist())
                 else:
@@ -165,12 +167,12 @@ class GopherPlusProtocol(GopherProtocol):
             return self.getallblocks(entry)
 
     def filenotfound(self, msg):
-        self.wfile.write("--2\r\n")
-        self.wfile.write("1 ")
+        self.wfile.write(b"--2\r\n")
+        self.wfile.write(b"1 ")
         self.wfile.write(
-            self.config.get("protocols.gopherp.GopherPlusProtocol", "admin")
+            self.config.get("protocols.gopherp.GopherPlusProtocol", "admin").encode()
         )
-        self.wfile.write("\r\n" + msg + "\r\n")
+        self.wfile.write(f"\r\n{msg}\r\n".encode(errors="surrogateescape"))
 
     def groksabstract(self):
         return 1

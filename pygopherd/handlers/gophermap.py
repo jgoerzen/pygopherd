@@ -76,7 +76,7 @@ class BuckGophermapHandler(base.BaseHandler):
         selectorbase = self.selectorbase
 
         while 1:
-            line = self.rfile.readline()
+            line = self.rfile.readline().decode(errors="surrogateescape")
             if not line:
                 break
             if re.search("\t", line):  # gophermap link

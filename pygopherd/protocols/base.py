@@ -114,7 +114,9 @@ class BaseGopherProtocol:
             self.filenotfound(e[1])
 
     def filenotfound(self, msg: str):
-        self.wfile.write(b"3%s\t\terror.host\t1\r\n" % msg.encode(encoding="cp437"))
+        self.wfile.write(
+            f"3{msg}\t\terror.host\t1\r\n".encode(errors="surrogateescape")
+        )
 
     def gethandler(self) -> BaseHandler:
         """Gets the handler for this object's selector."""
@@ -131,7 +133,7 @@ class BaseGopherProtocol:
 
         startstr = self.renderdirstart(entry)
         if startstr is not None:
-            self.wfile.write(startstr)
+            self.wfile.write(startstr.encode(errors="surrogateescape"))
 
         abstractopt = self.config.get("pygopherd", "abstract_entries")
         doabstracts = abstractopt == "always" or (
@@ -139,18 +141,24 @@ class BaseGopherProtocol:
         )
 
         if self.config.getboolean("pygopherd", "abstract_headers"):
-            self.wfile.write(self.renderabstract(entry.getea("ABSTRACT", "")))
+            self.wfile.write(
+                self.renderabstract(entry.getea("ABSTRACT", "")).encode(
+                    errors="surrogateescape"
+                )
+            )
 
         for direntry in dirlist:
-            self.wfile.write(self.renderobjinfo(direntry).encode(encoding="cp437"))
+            self.wfile.write(
+                self.renderobjinfo(direntry).encode(errors="surrogateescape")
+            )
             if doabstracts:
                 abstract = self.renderabstract(direntry.getea("ABSTRACT"))
                 if abstract:
-                    self.wfile.write(abstract)
+                    self.wfile.write(abstract.encode(errors="surrogateescape"))
 
         endstr = self.renderdirend(entry)
         if endstr is not None:
-            self.wfile.write(endstr)
+            self.wfile.write(endstr.encode(errors="surrogateescape"))
 
     def renderabstract(self, abstractstring: str) -> str:
         if not abstractstring:

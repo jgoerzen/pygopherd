@@ -18,6 +18,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import cgi
+import io
 import re
 from io import StringIO
 
@@ -129,7 +130,7 @@ class WAPProtocol(HTTPProtocol):
     def renderdirend(self, entry):
         return "</p>\n</card>\n</wml>\n"
 
-    def handlerwrite(self, wfile):
+    def handlerwrite(self, wfile: io.BufferedIOBase):
         global wmlheader
         if not self.needsconversion:
             self.handler.write(wfile)
@@ -137,26 +138,26 @@ class WAPProtocol(HTTPProtocol):
         fakefile = StringIO()
         self.handler.write(fakefile)
         fakefile.seek(0)
-        wfile.write(wmlheader)
-        wfile.write('<card id="index" title="Text File" newcontext="true">\n')
-        wfile.write("<p>\n")
+        wfile.write(wmlheader.encode())
+        wfile.write(b'<card id="index" title="Text File" newcontext="true">\n')
+        wfile.write(b"<p>\n")
         while 1:
             line = fakefile.readline()
             if not len(line):
                 break
             line = line.rstrip()
             if len(line):
-                wfile.write(cgi.escape(line) + "\n")
+                wfile.write(cgi.escape(line).encode(errors="surrogateescape") + b"\n")
             else:
-                wfile.write("</p>\n<p>")
-        wfile.write("</p>\n</card>\n</wml>\n")
+                wfile.write(b"</p>\n<p>")
+        wfile.write(b"</p>\n</card>\n</wml>\n")
 
     def filenotfound(self, msg):
         wfile = self.wfile
-        wfile.write("HTTP/1.0 200 Not Found\r\n")
-        wfile.write("Content-Type: text/vnd.wap.wml\r\n\r\n")
-        wfile.write(wmlheader)
-        wfile.write('<card id="index" title="404 Error" newcontext="true">\n')
-        wfile.write("<p><b>Gopher Error</b></p><p>\n")
-        wfile.write(cgi.escape(msg) + "\n")
-        wfile.write("</p>\n</card>\n</wml>\n")
+        wfile.write(b"HTTP/1.0 200 Not Found\r\n")
+        wfile.write(b"Content-Type: text/vnd.wap.wml\r\n\r\n")
+        wfile.write(wmlheader.encode())
+        wfile.write(b'<card id="index" title="404 Error" newcontext="true">\n')
+        wfile.write(b"<p><b>Gopher Error</b></p><p>\n")
+        wfile.write(cgi.escape(msg).encode(errors="surrogateescape") + b"\n")
+        wfile.write(b"</p>\n</card>\n</wml>\n")
