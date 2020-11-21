@@ -27,7 +27,6 @@ import time
 import typing
 import unittest
 import zipfile
-from io import StringIO
 
 from pygopherd.handlers import base
 
