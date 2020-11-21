@@ -25,11 +25,11 @@ from stat import *
 from pygopherd import gopherentry, handlers
 from pygopherd.handlers import base
 
-cachetime = None
-cachefile = None
-
 
 class DirHandler(base.BaseHandler):
+    cachetime: int
+    cachefile: str
+
     def canhandlerequest(self):
         """We can handle the request if it's for a directory."""
         return self.statresult and S_ISDIR(self.statresult[ST_MODE])
@@ -104,13 +104,12 @@ class DirHandler(base.BaseHandler):
         return self.fileentries
 
     def loadcache(self):
-        global cachetime, cachefile
 
         self.fromcache = 0
-        if cachetime is None:
-            cachetime = self.config.getint("handlers.dir.DirHandler", "cachetime")
-            cachefile = self.config.get("handlers.dir.DirHandler", "cachefile")
-        cachename = self.selector + "/" + cachefile
+        if not hasattr(self, "cachetime"):
+            self.cachetime = self.config.getint("handlers.dir.DirHandler", "cachetime")
+            self.cachefile = self.config.get("handlers.dir.DirHandler", "cachefile")
+        cachename = self.selector + "/" + self.cachefile
         if not self.vfs.iswritable(cachename):
             return 0
 
@@ -119,7 +118,7 @@ class DirHandler(base.BaseHandler):
         except OSError:
             return 0
 
-        if time.time() - statval[stat.ST_MTIME] < cachetime:
+        if time.time() - statval[stat.ST_MTIME] < self.cachetime:
             fp = self.vfs.open(cachename, "rb")
             self.fileentries = pickle.load(fp)
             fp.close()
@@ -128,14 +127,13 @@ class DirHandler(base.BaseHandler):
         return 0
 
     def savecache(self):
-        global cachefile
         if self.fromcache:
             # Don't resave the cache.
             return
-        if not self.vfs.iswritable(self.selector + "/" + cachefile):
+        if not self.vfs.iswritable(self.selector + "/" + self.cachefile):
             return
         try:
-            fp = self.vfs.open(self.selector + "/" + cachefile, "wb")
+            fp = self.vfs.open(self.selector + "/" + self.cachefile, "wb")
             pickle.dump(self.fileentries, fp, 1)
             fp.close()
         except IOError:
