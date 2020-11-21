@@ -70,16 +70,16 @@ class HTMLFileTitleHandler(FileHandler):
         # Start with the entry from the parent.
         entry = FileHandler.getentry(self)
         parser = HTMLTitleParser()
-        file = self.vfs.open(self.getselector(), "rt")
 
-        while not parser.gotcompletetitle:
-            line = file.readline()
-            if not line:
-                break
-            parser.feed(line)
-        parser.close()
+        with self.vfs.open(self.getselector(), "rb") as fp:
+            while not parser.gotcompletetitle:
+                line = fp.readline()
+                if not line:
+                    break
+                # The PY3 HTML parser doesn't handle surrogateescape
+                parser.feed(line.decode(errors="replace"))
+            parser.close()
 
-        file.close()
         # OK, we've parsed the file and exited because of either an EOF
         # or a complete title (or error).  Now, figure out what happened.
 
