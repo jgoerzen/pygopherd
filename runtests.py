@@ -18,8 +18,6 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # END OF COPYRIGHT #
 
-import profile
-import sys
 import unittest
 
 import pygopherd.handlers.ZIP
@@ -28,8 +26,6 @@ import pygopherd.protocols.baseTest
 import pygopherd.protocols.ProtocolMultiplexerTest
 import pygopherd.protocols.rfc1436Test
 from pygopherd import *
-
-# sys.path.insert("-1", "..")
 
 
 def suite():
@@ -52,5 +48,4 @@ def suite():
 
 
 if __name__ == "__main__":
-    profile.run("unittest.main(defaultTest='suite')", "profile.out")
-#    unittest.main(defaultTest='suite')
+    unittest.main(defaultTest="suite")
