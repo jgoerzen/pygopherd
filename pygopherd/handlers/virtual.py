@@ -7,9 +7,7 @@ class Virtual(BaseHandler):
     its children."""
 
     def __init__(self, selector, searchrequest, protocol, config, statresult, vfs=None):
-        BaseHandler.__init__(
-            self, selector, searchrequest, protocol, config, statresult, vfs
-        )
+        super().__init__(selector, searchrequest, protocol, config, statresult, vfs)
 
         # These hold the "real" and the "argument" portion of the selector,
         # respectively.

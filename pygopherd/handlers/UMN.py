@@ -34,7 +34,7 @@ extstrip = None
 
 class LinkEntry(GopherEntry):
     def __init__(self, selector, config):
-        GopherEntry.__init__(self, selector, config)
+        super().__init__(selector, config)
         self.needsmerge = 0
         self.needsabspath = 0
 

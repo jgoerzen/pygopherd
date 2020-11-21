@@ -33,9 +33,12 @@ rootpath = None
 
 
 class VFS_Real:
-    def __init__(self, config: configparser.ConfigParser, chain=None):
+    def __init__(
+        self, config: configparser.ConfigParser, chain: typing.Optional[VFS_Real] = None
+    ):
         """This implementation does not chain."""
         self.config = config
+        self.chain = chain
 
     def iswritable(self, selector: str) -> bool:
         return True

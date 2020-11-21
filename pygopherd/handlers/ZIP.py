@@ -48,7 +48,7 @@ class DbfilenameShelf(MarshalingShelf):
     def __init__(self, filename, flag: typing.Literal["r", "w", "c", "n"] = "c"):
         import dbm
 
-        MarshalingShelf.__init__(self, dbm.open(filename, flag))
+        super().__init__(dbm.open(filename, flag))
 
 
 def shelveopen(filename, flag: typing.Literal["r", "w", "c", "n"] = "c"):
@@ -59,8 +59,7 @@ class VFS_Zip(base.VFS_Real):
     def __init__(
         self, config: configparser.ConfigParser, chain: VFS_Real, zipfilename: str
     ):
-        self.config = config
-        self.chain = chain
+        super().__init__(config, chain)
         self.zipfilename = zipfilename
         self.entrycache = {}
         self.badcache = {}

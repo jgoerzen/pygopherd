@@ -30,7 +30,7 @@ from pygopherd.handlers.file import FileHandler
 ###########################################################################
 class HTMLTitleParser(html.parser.HTMLParser):
     def __init__(self):
-        html.parser.HTMLParser.__init__(self)
+        super().__init__()
         self.titlestr = ""
         self.readingtitle = 0
         self.gotcompletetitle = 0
