@@ -124,9 +124,8 @@ class DirHandler(base.BaseHandler):
             return False
 
         if time.time() - statval[stat.ST_MTIME] < self.cachetime:
-            fp = self.vfs.open(cachename, "rb")
-            self.fileentries = pickle.load(fp)
-            fp.close()
+            with self.vfs.open(cachename, "rb") as fp:
+                self.fileentries = pickle.load(fp)
             self.fromcache = 1
             return True
         return False
@@ -138,8 +137,7 @@ class DirHandler(base.BaseHandler):
         if not self.vfs.iswritable(self.selector + "/" + self.cachefile):
             return
         try:
-            fp = self.vfs.open(self.selector + "/" + self.cachefile, "wb")
-            pickle.dump(self.fileentries, fp, 1)
-            fp.close()
+            with self.vfs.open(self.selector + "/" + self.cachefile, "wb") as fp:
+                pickle.dump(self.fileentries, fp, 1)
         except IOError:
             pass

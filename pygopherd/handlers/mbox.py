@@ -163,9 +163,8 @@ class MBoxFolderHandler(FolderHandler):
         if not (self.statresult and S_ISREG(self.statresult[ST_MODE])):
             return 0
         try:
-            fd = self.vfs.open(self.getselector(), "rb")
-            startline = fd.readline()
-            fd.close()
+            with self.vfs.open(self.getselector(), "rb") as fd:
+                startline = fd.readline()
 
             # From old Python2.7 UnixMailbox
             fromlinepattern = (

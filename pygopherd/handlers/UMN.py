@@ -158,13 +158,13 @@ class UMNDirHandler(DirHandler):
         """Processes a link file.  If capfilepath is set, it should
         be the equivolent of the Path= in a .names file."""
         linkentries = []
-        fd = self.vfs.open(filename, "rt")
-        while 1:
-            nextstep, entry = self.getLinkItem(fd, capfilepath)
-            if entry:
-                linkentries.append(entry)
-            if nextstep == "stop":
-                break
+        with self.vfs.open(filename, "rt") as fd:
+            while 1:
+                nextstep, entry = self.getLinkItem(fd, capfilepath)
+                if entry:
+                    linkentries.append(entry)
+                if nextstep == "stop":
+                    break
         return linkentries
 
     def getLinkItem(self, fd, capfilepath=None):

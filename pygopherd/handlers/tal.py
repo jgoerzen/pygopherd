@@ -76,9 +76,8 @@ class TALLoader:
     def __getattr__(self, key):
         fq = os.path.join(self.path, key)
         if self.vfs.isfile(fq + ".html.tal"):
-            templateFile = self.vfs.open(fq + ".html.tal")
-            compiled = simpleTAL.compileHTMLTemplate(templateFile)
-            templateFile.close()
+            with self.vfs.open(fq + ".html.tal") as template_file:
+                compiled = simpleTAL.compileHTMLTemplate(template_file)
             return compiled
         elif self.vfs.isdir(fq):
             return self.__class__(self.vfs, fq)
@@ -128,20 +127,19 @@ class TALFileHandler(FileHandler):
         return self.entry
 
     def write(self, wfile):
-        rfile = self.vfs.open(self.getselector())
-        context = simpleTALES.Context(allowPythonPath=self.allowpythonpath)
-        context.addGlobal("selector", self.getselector())
-        context.addGlobal("handler", self)
-        context.addGlobal("entry", self.getentry())
-        context.addGlobal("talbasename", self.talbasename)
-        context.addGlobal("allowpythonpath", self.allowpythonpath)
-        context.addGlobal("protocol", self.protocol)
-        context.addGlobal("root", TALLoader(self.vfs, "/"))
-        context.addGlobal("rroot", RecursiveTALLoader(self.vfs, "/"))
-        dirname = os.path.dirname(self.getselector())
-        context.addGlobal("dir", TALLoader(self.vfs, dirname))
-        context.addGlobal("rdir", RecursiveTALLoader(self.vfs, dirname))
+        with self.vfs.open(self.getselector()) as rfile:
+            context = simpleTALES.Context(allowPythonPath=self.allowpythonpath)
+            context.addGlobal("selector", self.getselector())
+            context.addGlobal("handler", self)
+            context.addGlobal("entry", self.getentry())
+            context.addGlobal("talbasename", self.talbasename)
+            context.addGlobal("allowpythonpath", self.allowpythonpath)
+            context.addGlobal("protocol", self.protocol)
+            context.addGlobal("root", TALLoader(self.vfs, "/"))
+            context.addGlobal("rroot", RecursiveTALLoader(self.vfs, "/"))
+            dirname = os.path.dirname(self.getselector())
+            context.addGlobal("dir", TALLoader(self.vfs, dirname))
+            context.addGlobal("rdir", RecursiveTALLoader(self.vfs, dirname))
 
-        template = simpleTAL.compileHTMLTemplate(rfile)
-        rfile.close()
+            template = simpleTAL.compileHTMLTemplate(rfile)
         template.expand(context, wfile)
