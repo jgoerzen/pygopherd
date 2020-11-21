@@ -61,4 +61,4 @@ def getHandler(selector, searchrequest, protocol, config, handlerlist=None, vfs=
         if htry.isrequestforme():
             return htry.gethandler()
 
-    raise GopherExceptions.FileNotFound([selector, "no handler found", protocol])
+    raise GopherExceptions.FileNotFound(selector, "no handler found", protocol)

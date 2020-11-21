@@ -46,16 +46,10 @@ def init(backtraceenabled):
 
 
 class FileNotFound(BaseException):
-    def __init__(self, arg):
-        self.selector = arg
-        self.comments = ""
-        self.protocol = ""
-
-        if type(arg) != bytes:
-            self.selector = arg[0]
-            self.comments = arg[1]
-            if len(arg) > 2 and arg[2]:
-                self.protocol = arg[2]
+    def __init__(self, selector: str, comments: str = "", protocol: str = ""):
+        self.selector = selector
+        self.comments = comments
+        self.protocol = protocol
 
         log(self, self.protocol, None)
 
