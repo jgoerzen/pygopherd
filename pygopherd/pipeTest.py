@@ -13,7 +13,7 @@ class PipeTestCase(unittest.TestCase):
         self.testprog = self.root + "/pygopherd/pipetest.sh"
 
     def testWorkingPipe(self):
-        with tempfile.TemporaryFile() as outputfd:
+        with tempfile.TemporaryFile(mode="w+") as outputfd:
             with open(self.testdata, "r") as inputfd:
                 retval = pipe.pipedata(
                     self.testprog,
