@@ -140,7 +140,7 @@ class GopherEntryTestCase(unittest.TestCase):
         self.assertEqual(entry.getencodedmimetype(), "text/plain")
         self.assertEqual(
             entry.geteadict(),
-            {"ABSTRACT": b"This is the abstract\nfor testfile.txt.gz"},
+            {"ABSTRACT": "This is the abstract\nfor testfile.txt.gz"},
         )
 
     def testpopulate_dir(self):
@@ -166,7 +166,7 @@ class GopherEntryTestCase(unittest.TestCase):
         self.assertEntryMatches(conditions, entry, "testpopulate_dir")
         self.assertEqual(
             entry.geteadict(),
-            {"ABSTRACT": b"This is the abstract for the testdata directory."},
+            {"ABSTRACT": "This is the abstract for the testdata directory."},
         )
 
     def testpopulate_remote(self):
