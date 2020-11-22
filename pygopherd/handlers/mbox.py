@@ -191,7 +191,7 @@ class MBoxMessageHandler(MessageHandler):
         return "/MBOX-MESSAGE/"
 
     def openmailbox(self):
-        fd = self.vfs.open(self.getselector(), "rt")
+        fd = self.vfs.open(self.getselector(), "r")
         # TODO: This is dead code, UnixMailbox is not defined
         return UnixMailbox(fd)
 

@@ -14,7 +14,7 @@ class PipeTestCase(unittest.TestCase):
 
     def testWorkingPipe(self):
         with tempfile.TemporaryFile() as outputfd:
-            with open(self.testdata, "rt") as inputfd:
+            with open(self.testdata, "r") as inputfd:
                 retval = pipe.pipedata(
                     self.testprog,
                     [self.testprog],

@@ -17,7 +17,7 @@ class PYGHandler(Virtual):
             and re.search(r"\.pyg$", self.getselector())
         ):
             return 0
-        self.modfd = self.vfs.open(self.getselector(), "rt")
+        self.modfd = self.vfs.open(self.getselector(), "r")
         self.module = imp.load_module(
             "PYGHandler", self.modfd, self.getfspath(), ("", "", imp.PY_SOURCE)
         )

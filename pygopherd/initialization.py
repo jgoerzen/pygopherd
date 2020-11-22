@@ -210,7 +210,7 @@ def initpidfile(config):
     if config.has_option("pygopherd", "pidfile"):
         pidfile = config.get("pygopherd", "pidfile")
 
-        with open(pidfile, "wt") as fd:
+        with open(pidfile, "w") as fd:
             fd.write("%d\n" % os.getpid())
 
 
