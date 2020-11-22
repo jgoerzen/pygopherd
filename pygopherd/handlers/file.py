@@ -17,11 +17,20 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import re
+import typing
 from stat import *
 
 import pygopherd.pipe
 from pygopherd import gopherentry
 from pygopherd.handlers import base
+
+
+class CompressedGopherEntry(gopherentry.GopherEntry):
+    """
+    Using an abstract class because we attach extra variables to the gopher entry.
+    """
+
+    realencoding: str
 
 
 class FileHandler(base.BaseHandler):
@@ -40,8 +49,8 @@ class FileHandler(base.BaseHandler):
 
 
 class CompressedFileHandler(FileHandler):
-    decompressors = None
-    decompresspatt = None
+    decompressors: typing.Dict[str, str]
+    decompresspatt: str
 
     def canhandlerequest(self):
         self.initdecompressors()
@@ -56,9 +65,10 @@ class CompressedFileHandler(FileHandler):
             and re.search(self.decompresspatt, self.selector)
         )
 
-    def getentry(self):
+    def getentry(self) -> CompressedGopherEntry:
         if not self.entry:
-            self.entry = super().getentry()
+            self.entry = typing.cast(CompressedGopherEntry, super().getentry())
+
             self.entry.realencoding = None
             if (
                 self.entry.getencoding()
@@ -75,8 +85,8 @@ class CompressedFileHandler(FileHandler):
                 self.entry.type = self.entry.guesstype()
         return self.entry
 
-    def initdecompressors(self):
-        if self.decompressors is None:
+    def initdecompressors(self) -> None:
+        if not hasattr(self, "decompressors"):
             self.decompressors = eval(
                 self.config.get("handlers.file.CompressedFileHandler", "decompressors")
             )
