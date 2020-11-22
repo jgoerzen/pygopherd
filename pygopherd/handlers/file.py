@@ -17,8 +17,8 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import re
+import stat
 import typing
-from stat import *
 
 import pygopherd.pipe
 from pygopherd import gopherentry
@@ -36,7 +36,7 @@ class CompressedGopherEntry(gopherentry.GopherEntry):
 class FileHandler(base.BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a file."""
-        return self.statresult and S_ISREG(self.statresult[ST_MODE])
+        return self.statresult and stat.S_ISREG(self.statresult[stat.ST_MODE])
 
     def getentry(self):
         if not self.entry:
