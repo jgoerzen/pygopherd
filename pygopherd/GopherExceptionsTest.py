@@ -28,7 +28,6 @@ from pygopherd.GopherExceptions import FileNotFound
 
 class GopherExceptionsTestCase(unittest.TestCase):
     def setUp(self):
-        self.stringfile = BytesIO()
         self.config = testutil.getconfig()
         self.stringfile = testutil.getstringlogger()
         GopherExceptions.tracebacks = 0
@@ -50,7 +49,7 @@ class GopherExceptionsTestCase(unittest.TestCase):
         handler.handle()
         self.assertEqual(
             self.stringfile.getvalue(),
-            b"10.77.77.77 [GopherProtocol/None] EXCEPTION FileNotFound: '/NONEXISTANT' does not exist (no handler found)\n",
+            "10.77.77.77 [GopherProtocol/None] EXCEPTION FileNotFound: '/NONEXISTANT' does not exist (no handler found)\n",
         )
 
     def testFileNotFound(self):
