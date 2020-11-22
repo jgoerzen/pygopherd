@@ -76,12 +76,26 @@ def gettestinghandler(
             return self.wfile
 
     class HandlerClass(initialization.GopherRequestHandler):
+
+        # Enable buffering (required to make the HandlerClass invoke RequestClass.makefile())
+        rbufsize = -1
+        wbufsize = -1
+
         def __init__(self, request, client_address, server: AbstractServer):
             self.request = request
             self.client_address = client_address
             self.server = server
             self.setup()
             # This does everything in the base class up to handle()
+
+        def handle(self):
+            # Normally finish() gets called in the __init__, but because we are doing this
+            # roundabout method of calling handle() from inside of unit tests, we want to make sure
+            # that the server cleans up after itself.
+            try:
+                super().handle()
+            finally:
+                self.finish()
 
     server = gettestingserver(config)
     rhandler = HandlerClass(RequestClass(rfile, wfile), ("10.77.77.77", "7777"), server)
