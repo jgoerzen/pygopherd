@@ -48,7 +48,6 @@ class GopherExceptionsTestCase(unittest.TestCase):
         wfile = BytesIO()
         handler = testutil.gettestinghandler(rfile, wfile, self.config)
         handler.handle()
-        # handler.handle()
         self.assertEqual(
             self.stringfile.getvalue(),
             b"10.77.77.77 [GopherProtocol/None] EXCEPTION FileNotFound: '/NONEXISTANT' does not exist (no handler found)\n",
