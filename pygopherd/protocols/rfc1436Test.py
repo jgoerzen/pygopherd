@@ -1,8 +1,10 @@
 import re
 import unittest
 from io import BytesIO
+import typing
 
 from pygopherd import testutil
+from pygopherd.handlers import HandlerMultiplexer
 from pygopherd.protocols.rfc1436 import GopherProtocol
 
 
@@ -22,6 +24,23 @@ class RFC1436TestCase(unittest.TestCase):
             self.wfile,
             self.config,
         )
+
+    def inject_handler(self, handler_name: str, index: typing.Optional[int] = None):
+        """
+        Add a handler to the HandlerMultiplexer in the configuration.
+        """
+        handlerlist = self.config.get("handlers.HandlerMultiplexer", "handlers")
+        handlers = [x.strip() for x in handlerlist.strip("[] \n").split(",")]
+        if index is not None:
+            handlers.insert(index, handler_name)
+        else:
+            handlers.append(handler_name)
+
+        handlerlist = "[" + ",".join(handlers) + "]"
+        self.config.set("handlers.HandlerMultiplexer", "handlers", handlerlist)
+
+        # Clear the cache
+        HandlerMultiplexer.handlers = None
 
     def testcanhandlerequest(self):
         assert self.proto.canhandlerequest()
@@ -56,13 +75,8 @@ class RFC1436TestCase(unittest.TestCase):
 
     def testhandle_file_zipped(self):
         self.config.set("handlers.ZIP.ZIPHandler", "enabled", "true")
-        from pygopherd.handlers import HandlerMultiplexer
+        self.inject_handler("ZIP.ZIPHandler", index=0)
 
-        HandlerMultiplexer.handlers = None
-        handlerlist = self.config.get("handlers.HandlerMultiplexer", "handlers")
-        handlerlist = handlerlist.strip()
-        handlerlist = handlerlist[0] + "ZIP.ZIPHandler, " + handlerlist[1:]
-        self.config.set("handlers.HandlerMultiplexer", "handlers", handlerlist)
         self.proto = GopherProtocol(
             "/testdata.zip/pygopherd/ziponly\n",
             self.server,
@@ -76,6 +90,8 @@ class RFC1436TestCase(unittest.TestCase):
         self.config.set("handlers.ZIP.ZIPHandler", "enabled", "false")
 
     def testhandle_dir_abstracts(self):
+        self.inject_handler("file.CompressedFileHandler", index=0)
+
         proto = GopherProtocol(
             "", self.server, self.handler, self.rfile, self.wfile, self.config
         )
