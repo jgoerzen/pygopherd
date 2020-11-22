@@ -61,7 +61,7 @@ class UMNDirHandler(DirHandler):
 
         # Let the parent do the directory walking for us.  Will call
         # prep_initfiles_canaddfile and prep_entriesappend.
-        if DirHandler.prepare(self):
+        if super().prepare():
             # Returns 1 if it didn't load from the cache.
             # Merge and sort.
             self.MergeLinkFiles()
@@ -70,7 +70,7 @@ class UMNDirHandler(DirHandler):
     def prep_initfiles_canaddfile(self, ignorepatt, pattern, file):
         """Override the parent to process dotfiles and keep them out
         of the list."""
-        if DirHandler.prep_initfiles_canaddfile(self, ignorepatt, pattern, file):
+        if super().prep_initfiles_canaddfile(ignorepatt, pattern, file):
             # If the parent says it's OK, then let's see if it's
             # a link file.  If yes, process it and return false.
             if file[0] == ".":
@@ -116,7 +116,7 @@ class UMNDirHandler(DirHandler):
                     self.mergeentries(fileentry, capinfo[0])
         except IOError:  # Ignore no capfile situation
             pass
-        DirHandler.prep_entriesappend(self, file, handler, fileentry)
+        super().prep_entriesappend(file, handler, fileentry)
 
     def MergeLinkFiles(self):
         """Called to merge the files from .Links and .names into the
