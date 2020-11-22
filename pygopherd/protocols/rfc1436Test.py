@@ -120,21 +120,20 @@ class RFC1436TestCase(unittest.TestCase):
         proto.handle()
         actualarr = self.wfile.getvalue().splitlines()
         expectedarr = [
-            b"0README\t/README\tHOSTNAME\t64777\t+",
-            b"1pygopherd\t/pygopherd\tHOSTNAME\t64777\t+",
-            b"9symlinktest\t/symlinktest.zip\tHOSTNAME\t64777\t+",
-            b"9testarchive\t/testarchive.tar\tHOSTNAME\t64777\t+",
-            b"9testarchive.tar.gz\t/testarchive.tar.gz\tHOSTNAME\t64777\t+",
-            b"9testarchive.tgz\t/testarchive.tgz\tHOSTNAME\t64777\t+",
-            b"9testdata\t/testdata.zip\tHOSTNAME\t64777\t+",
-            b"9testdata2\t/testdata2.zip\tHOSTNAME\t64777\t+",
-            b"0testfile\t/testfile.txt\tHOSTNAME\t64777\t+",
-            b"9testfile.txt.gz\t/testfile.txt.gz\tHOSTNAME\t64777\t+",
-            b"9ziptorture\t/ziptorture.zip\tHOSTNAME\t64777\t+",
+            "0README\t/README\tHOSTNAME\t64777\t+",
+            "1pygopherd\t/pygopherd\tHOSTNAME\t64777\t+",
+            "9symlinktest\t/symlinktest.zip\tHOSTNAME\t64777\t+",
+            "9testarchive\t/testarchive.tar\tHOSTNAME\t64777\t+",
+            "9testarchive.tar.gz\t/testarchive.tar.gz\tHOSTNAME\t64777\t+",
+            "9testarchive.tgz\t/testarchive.tgz\tHOSTNAME\t64777\t+",
+            "9testdata\t/testdata.zip\tHOSTNAME\t64777\t+",
+            "9testdata2\t/testdata2.zip\tHOSTNAME\t64777\t+",
+            "0testfile\t/testfile.txt\tHOSTNAME\t64777\t+",
+            "9testfile.txt.gz\t/testfile.txt.gz\tHOSTNAME\t64777\t+",
+            "9ziptorture\t/ziptorture.zip\tHOSTNAME\t64777\t+",
         ]
         expectedarr = [
-            re.sub(b"HOSTNAME", self.server.server_name.encode(encoding="cp437"), x)
-            for x in expectedarr
+            re.sub("HOSTNAME", self.server.server_name, x) for x in expectedarr
         ]
         self.assertEqual(len(actualarr), len(expectedarr))
         for i in range(len(actualarr)):
