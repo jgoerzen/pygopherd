@@ -85,7 +85,7 @@ class RFC1436TestCase(unittest.TestCase):
             self.logfile.getvalue(), "10.77.77.77 [GopherProtocol/UMNDirHandler]: /\n"
         )
         # Try to make this easy on us to fix.
-        actualarr = self.wfile.getvalue().splitlines()
+        actualarr = self.wfile.getvalue().decode().splitlines()
         expectedarr = [
             "iThis is the abstract for the testdata directory.\tfake\t(NULL)\t0",
             "0README\t/README\tHOSTNAME\t64777\t+",

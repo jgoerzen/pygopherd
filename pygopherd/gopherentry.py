@@ -198,9 +198,9 @@ class GopherEntry:
             if blockname in self.ea:
                 continue
             try:
-                rfile = vfs.open(selector + extension, "rb")
+                rfile = vfs.open(selector + extension, "r", errors="surrogateescape")
                 self.setea(
-                    blockname, b"\n".join([x.rstrip() for x in rfile.readlines(20480)])
+                    blockname, "\n".join([x.rstrip() for x in rfile.readlines(20480)])
                 )
             except IOError:
                 pass
@@ -357,15 +357,15 @@ class GopherEntry:
     def setgopherpsupport(self, arg):
         self.gopherpsupport = arg
 
-    def getea(self, name, default=None):
+    def getea(self, name: str, default: Optional[str] = None):
         if name in self.ea:
             return self.ea[name]
         return default
 
-    def geteadict(self):
+    def geteadict(self) -> typing.Dict[str, str]:
         return self.ea
 
-    def setea(self, name, value):
+    def setea(self, name: str, value: str):
         self.ea[name] = value
 
 
