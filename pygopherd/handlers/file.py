@@ -50,7 +50,7 @@ class CompressedFileHandler(FileHandler):
         # overriding the security or isrequestforme functions.
 
         return (
-            FileHandler.canhandlerequest(self)
+            super().canhandlerequest()
             and self.getentry().realencoding
             and self.getentry().realencoding in self.decompressors
             and re.search(self.decompresspatt, self.selector)
@@ -58,7 +58,7 @@ class CompressedFileHandler(FileHandler):
 
     def getentry(self):
         if not self.entry:
-            self.entry = FileHandler.getentry(self)
+            self.entry = super().getentry()
             self.entry.realencoding = None
             if (
                 self.entry.getencoding()
