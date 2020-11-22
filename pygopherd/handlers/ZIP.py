@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 import configparser
+import dbm
 import marshal
 import os.path
 import re
@@ -45,8 +46,6 @@ class MarshalingShelf(shelve.Shelf):
 
 class DbfilenameShelf(MarshalingShelf):
     def __init__(self, filename, flag: typing.Literal["r", "w", "c", "n"] = "c"):
-        import dbm
-
         super().__init__(dbm.open(filename, flag))
 
 
