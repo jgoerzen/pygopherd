@@ -65,7 +65,7 @@ def gettestinghandler(
 
     # Kludge to pass to the handler init.
 
-    class requestClass:
+    class RequestClass:
         def __init__(self, rfile: BytesIO, wfile: BytesIO):
             self.rfile = rfile
             self.wfile = wfile
@@ -75,15 +75,16 @@ def gettestinghandler(
                 return self.rfile
             return self.wfile
 
-    class handlerClass(initialization.GopherRequestHandler):
-        def __init__(self, request, client_address, server):
+    class HandlerClass(initialization.GopherRequestHandler):
+        def __init__(self, request, client_address, server: AbstractServer):
             self.request = request
             self.client_address = client_address
             self.server = server
             self.setup()
+            # This does everything in the base class up to handle()
 
-    s = gettestingserver(config)
-    rhandler = handlerClass(requestClass(rfile, wfile), ("10.77.77.77", "7777"), s)
+    server = gettestingserver(config)
+    rhandler = HandlerClass(RequestClass(rfile, wfile), ("10.77.77.77", "7777"), server)
     return rhandler
 
 
