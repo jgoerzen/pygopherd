@@ -46,7 +46,7 @@ class AbstractServer(socketserver.TCPServer):
     server_port: int
 
 
-def initconffile(conffile: ConfigParser) -> ConfigParser:
+def initconffile(conffile: str) -> ConfigParser:
     if not (os.path.isfile(conffile) and os.access(conffile, os.R_OK)):
         raise Exception(
             "Could NOT access config file %s\nPlease specify config file as a command-line argument\n"
