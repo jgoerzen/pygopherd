@@ -114,7 +114,7 @@ class BaseProtocolTestCase(unittest.TestCase):
     # We cannot test handle_dir here because we don't have enough info.
 
     def testfilenotfound(self):
-        self.proto.filenotfound(b"FOO")
+        self.proto.filenotfound("FOO")
         self.assertEqual(self.wfile.getvalue(), b"3FOO\t\terror.host\t1\r\n")
 
     def testgethandler(self):
