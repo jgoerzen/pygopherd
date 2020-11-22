@@ -44,28 +44,35 @@ class VFS_Real:
         return True
 
     def unlink(self, selector: str) -> None:
-        os.unlink(self.getfspath(selector))
+        filepath = os.fsencode(self.getfspath(selector))
+        os.unlink(filepath)
 
     def stat(self, selector: str) -> os.stat_result:
-        return os.stat(self.getfspath(selector))
+        filepath = os.fsencode(self.getfspath(selector))
+        return os.stat(os.fsencode(filepath))
 
     def isdir(self, selector: str) -> bool:
-        return os.path.isdir(self.getfspath(selector))
+        filepath = os.fsencode(self.getfspath(selector))
+        return os.path.isdir(filepath)
 
     def isfile(self, selector: str) -> bool:
-        return os.path.isfile(self.getfspath(selector))
+        filepath = os.fsencode(self.getfspath(selector))
+        return os.path.isfile(filepath)
 
     def exists(self, selector: str) -> bool:
-        return os.path.exists(self.getfspath(selector))
+        filepath = os.fsencode(self.getfspath(selector))
+        return os.path.exists(filepath)
 
     def open(
         self, selector: str, mode: str, errors: typing.Optional[str] = None
     ) -> typing.IO:
-        return open(self.getfspath(selector), mode, errors=errors)
+        filepath = os.fsencode(self.getfspath(selector))
+        return open(filepath, mode, errors=errors)
 
     def listdir(self, selector: str) -> typing.List[str]:
-        files = os.listdir(self.getfspath(selector))
-        return [file.decode(errors="surrogateescape") for file in files]
+        filepath = os.fsencode(self.getfspath(selector))
+        files = os.listdir(filepath)
+        return [os.fsdecode(filename) for filename in files]
 
     def getrootpath(self) -> str:
         global rootpath
@@ -73,7 +80,7 @@ class VFS_Real:
             rootpath = self.config.get("pygopherd", "root")
         return rootpath
 
-    def getfspath(self, selector: str) -> bytes:
+    def getfspath(self, selector: str) -> str:
         """Gets the filesystem path corresponding to the selector."""
 
         fspath = self.getrootpath() + selector
@@ -81,7 +88,7 @@ class VFS_Real:
         if fspath[-1] == "/":
             fspath = fspath[0:-1]
 
-        return fspath.encode(errors="surrogateescape")
+        return fspath
 
     def copyto(self, name: str, fd: typing.IO[bytes]) -> None:
         with self.open(name, "rb") as rfile:
@@ -161,7 +168,7 @@ class BaseHandler:
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
         return self.entry
 
-    def getfspath(self) -> bytes:
+    def getfspath(self) -> str:
         if not self.fspath:
             self.fspath = self.vfs.getfspath(self.getselector())
         return self.fspath
