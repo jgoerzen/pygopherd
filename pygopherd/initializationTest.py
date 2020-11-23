@@ -70,6 +70,7 @@ class initializationGeneralTestCase(unittest.TestCase):
         self.config.set("pygopherd", "port", "22270")
         s = initialization.getserverobject(self.config)
         assert isinstance(s, socketserver.ForkingTCPServer)
+        s.server_close()
 
     def testinitsecurity(self):
         # FIXME
