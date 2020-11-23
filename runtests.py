@@ -18,6 +18,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # END OF COPYRIGHT #
 
+import tracemalloc
 import unittest
 
 import pygopherd.handlers.ZIP
@@ -48,4 +49,5 @@ def suite():
 
 
 if __name__ == "__main__":
+    tracemalloc.start()
     unittest.main(defaultTest="suite")
