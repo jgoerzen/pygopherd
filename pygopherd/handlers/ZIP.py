@@ -67,6 +67,10 @@ class VFS_Zip(base.VFS_Real):
         self.badcache = {}
         self._initzip()
 
+    def __del__(self):
+        if hasattr(self, "zipfd"):
+            self.zipfd.close()
+
     def _getcachefilename(self) -> str:
         (dir_, file) = os.path.split(self.zipfilename)
         return os.path.join(dir_, ".cache.pygopherd.zip3." + file)
@@ -107,8 +111,8 @@ class VFS_Zip(base.VFS_Real):
             self.dbdircache[key] = value
 
     def _initzip(self) -> None:
-        zipfd = self.chain.open(self.zipfilename, mode="rb")
-        self.zip = zipfile.ZipFile(zipfd)
+        self.zipfd = self.chain.open(self.zipfilename, mode="rb")
+        self.zip = zipfile.ZipFile(self.zipfd)
         if not self._initcache():
             # For reloading an existing one.  Must be called before _cachedir.
             self._cachedir()
