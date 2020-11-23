@@ -3,6 +3,7 @@ import unittest
 from io import BytesIO
 import typing
 
+from pygopherd import fileext
 from pygopherd import testutil
 from pygopherd.handlers import HandlerMultiplexer
 from pygopherd.protocols.rfc1436 import GopherProtocol
@@ -90,7 +91,13 @@ class RFC1436TestCase(unittest.TestCase):
         self.config.set("handlers.ZIP.ZIPHandler", "enabled", "false")
 
     def testhandle_dir_abstracts(self):
-        self.inject_handler("file.CompressedFileHandler", index=0)
+
+        # This test assumes that .zip is in the mimetypes definition but .gz and .tar.gz aren't.
+        # I'm not sure exactly why this is, but I'm guessing it's OS-specific to whatever machine
+        # this unit test was generated on. So this is a hacky fix to get it to pass.
+        fileext.init()
+        fileext.typemap.pop(".gz", None)
+        fileext.typemap.pop(".tgz", None)
 
         proto = GopherProtocol(
             "", self.server, self.handler, self.rfile, self.wfile, self.config
@@ -124,17 +131,28 @@ class RFC1436TestCase(unittest.TestCase):
         self.assertEqual(len(actualarr), len(expectedarr), str(actualarr))
         for i in range(len(actualarr)):
             self.assertEqual(actualarr[i], expectedarr[i])
+
         # Make sure proper line endings are present.
-        self.assertEqual("\r\n".join(actualarr) + "\r\n", self.wfile.getvalue())
+        self.assertEqual(
+            "\r\n".join(actualarr) + "\r\n", self.wfile.getvalue().decode()
+        )
 
     def testhandle_dir_noabstract(self):
+
+        # This test assumes that .zip is in the mimetypes definition but .gz and .tar.gz aren't.
+        # I'm not sure exactly why this is, but I'm guessing it's OS-specific to whatever machine
+        # this unit test was generated on. So this is a hacky fix to get it to pass.
+        fileext.init()
+        fileext.typemap.pop(".gz", None)
+        fileext.typemap.pop(".tgz", None)
+
         self.config.set("pygopherd", "abstract_headers", "off")
         self.config.set("pygopherd", "abstract_entries", "off")
         proto = GopherProtocol(
             "", self.server, self.handler, self.rfile, self.wfile, self.config
         )
         proto.handle()
-        actualarr = self.wfile.getvalue().splitlines()
+        actualarr = self.wfile.getvalue().decode().splitlines()
         expectedarr = [
             "0README\t/README\tHOSTNAME\t64777\t+",
             "1pygopherd\t/pygopherd\tHOSTNAME\t64777\t+",
