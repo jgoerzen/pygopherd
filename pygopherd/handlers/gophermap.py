@@ -67,47 +67,48 @@ class BuckGophermapHandler(base.BaseHandler):
             and self.statresult
             and S_ISREG(self.statresult[ST_MODE])
         ):
-            self.rfile = self.vfs.open(self.getselector(), "rb")
+            selector = self.getselector()
         else:
-            self.rfile = self.vfs.open(self.selectorbase + "/gophermap", "rb")
+            selector = self.selectorbase + "/gophermap"
 
         self.entries = []
 
         selectorbase = self.selectorbase
 
-        while 1:
-            line = self.rfile.readline().decode(errors="surrogateescape")
-            if not line:
-                break
-            if re.search("\t", line):  # gophermap link
-                args = [arg.strip() for arg in line.split("\t")]
+        with self.vfs.open(selector, "rb") as rfile:
+            while 1:
+                line = rfile.readline().decode(errors="surrogateescape")
+                if not line:
+                    break
+                if re.search("\t", line):  # gophermap link
+                    args = [arg.strip() for arg in line.split("\t")]
 
-                if len(args) < 2 or not len(args[1]):
-                    args[1] = args[0][1:]  # Copy display string to selector
+                    if len(args) < 2 or not len(args[1]):
+                        args[1] = args[0][1:]  # Copy display string to selector
 
-                selector = args[1]
-                if selector[0] != "/" and selector[0:4] != "URL:":  # Relative link
-                    selector = selectorbase + "/" + selector
+                    selector = args[1]
+                    if selector[0] != "/" and selector[0:4] != "URL:":  # Relative link
+                        selector = selectorbase + "/" + selector
 
-                entry = gopherentry.GopherEntry(selector, self.config)
-                entry.type = args[0][0]
-                entry.name = args[0][1:]
+                    entry = gopherentry.GopherEntry(selector, self.config)
+                    entry.type = args[0][0]
+                    entry.name = args[0][1:]
 
-                if len(args) >= 3 and len(args[2]):
-                    entry.host = args[2]
+                    if len(args) >= 3 and len(args[2]):
+                        entry.host = args[2]
 
-                if len(args) >= 4 and len(args[3]):
-                    entry.port = int(args[3])
+                    if len(args) >= 4 and len(args[3]):
+                        entry.port = int(args[3])
 
-                if entry.gethost() is None and entry.getport() is None:
-                    # If we're using links on THIS server, try to fill
-                    # it in for gopher+.
-                    if self.vfs.exists(selector):
-                        entry.populatefromvfs(self.vfs, selector)
-                self.entries.append(entry)
-            else:  # Info line
-                line = line.strip()
-                self.entries.append(gopherentry.getinfoentry(line, self.config))
+                    if entry.gethost() is None and entry.getport() is None:
+                        # If we're using links on THIS server, try to fill
+                        # it in for gopher+.
+                        if self.vfs.exists(selector):
+                            entry.populatefromvfs(self.vfs, selector)
+                    self.entries.append(entry)
+                else:  # Info line
+                    line = line.strip()
+                    self.entries.append(gopherentry.getinfoentry(line, self.config))
 
     def isdir(self):
         return 1

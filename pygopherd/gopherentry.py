@@ -198,10 +198,13 @@ class GopherEntry:
             if blockname in self.ea:
                 continue
             try:
-                rfile = vfs.open(selector + extension, "r", errors="surrogateescape")
-                self.setea(
-                    blockname, "\n".join([x.rstrip() for x in rfile.readlines(20480)])
-                )
+                with vfs.open(
+                    selector + extension, "r", errors="surrogateescape"
+                ) as rfile:
+                    self.setea(
+                        blockname,
+                        "\n".join([x.rstrip() for x in rfile.readlines(20480)]),
+                    )
             except IOError:
                 pass
 
