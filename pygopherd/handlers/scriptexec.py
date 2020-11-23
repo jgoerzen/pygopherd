@@ -19,8 +19,8 @@
 
 import os
 from stat import *
+import subprocess
 
-import pygopherd.pipe
 from pygopherd import gopherentry
 from pygopherd.handlers.base import VFS_Real
 from pygopherd.handlers.virtual import Virtual
@@ -66,4 +66,4 @@ class ExecHandler(Virtual):
         if self.selectorargs:
             args.extend(self.selectorags.split(" "))
 
-        pygopherd.pipe.pipedata(self.getfspath(), args, newenv, childstdout=wfile)
+        subprocess.run(args, env=newenv, stdout=wfile, errors="surrogateescape")

@@ -1,8 +1,9 @@
 import os
+import subprocess
 import tempfile
 import unittest
 
-from pygopherd import pipe, testutil
+from pygopherd import testutil
 
 
 class PipeTestCase(unittest.TestCase):
@@ -15,11 +16,11 @@ class PipeTestCase(unittest.TestCase):
     def testWorkingPipe(self):
         with tempfile.TemporaryFile(mode="w+") as outputfd:
             with open(self.testdata, "r") as inputfd:
-                retval = pipe.pipedata(
-                    self.testprog,
+                retval = subprocess.run(
                     [self.testprog],
-                    childstdin=inputfd,
-                    childstdout=outputfd,
+                    stdin=inputfd,
+                    stdout=outputfd,
+                    errors="surrogateescape",
                 )
                 outputfd.seek(0)
 
@@ -28,9 +29,9 @@ class PipeTestCase(unittest.TestCase):
                     "Starting\nGot [Word1]\nGot [Word2]\nGot [Word3]\nEnding\n",
                 )
 
-            self.assertTrue(os.WIFEXITED(retval), "WIFEXITED was not true")
-            self.assertEqual(os.WEXITSTATUS(retval), 0)
-            self.assertEqual(retval, 0)
+            self.assertTrue(os.WIFEXITED(retval.returncode), "WIFEXITED was not true")
+            self.assertEqual(os.WEXITSTATUS(retval.returncode), 0)
+            self.assertEqual(retval.returncode, 0)
 
     def testFailingPipe(self):
         pass

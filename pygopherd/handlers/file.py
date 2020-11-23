@@ -18,9 +18,9 @@
 
 import re
 import stat
+import subprocess
 import typing
 
-import pygopherd.pipe
 from pygopherd import gopherentry
 from pygopherd.handlers import base
 
@@ -96,12 +96,8 @@ class CompressedFileHandler(FileHandler):
 
     def write(self, wfile):
         decompprog = self.decompressors[self.getentry().realencoding]
-        pygopherd.pipe.pipedata_unix(
-            decompprog,
-            [decompprog],
-            childstdin=self.rfile,
-            childstdout=wfile,
-            pathsearch=1,
+        subprocess.run(
+            [decompprog], stdin=self.rfile, stdout=wfile, errors="surrogateescape"
         )
         self.rfile.close()
         self.rfile = None

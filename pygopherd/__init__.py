@@ -27,7 +27,6 @@ __all__ = [
     "loggerTest",
     "fileext",
     "fileextTest",
-    "pipe",
     "pipeTest",
     "initialization",
     "initializationTest",
