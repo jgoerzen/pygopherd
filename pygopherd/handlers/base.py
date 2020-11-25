@@ -108,7 +108,7 @@ class BaseHandler:
         searchrequest: str,
         protocol: BaseGopherProtocol,
         config: configparser.ConfigParser,
-        statresult: os.stat_result,
+        statresult: typing.Optional[os.stat_result],
         vfs: typing.Optional[VFS_Real] = None,
     ):
         """Parameters are:
