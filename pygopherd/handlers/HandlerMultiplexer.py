@@ -26,6 +26,13 @@ handlers = None
 rootpath = None
 
 
+def init_default_handlers(config):
+    global handlers, rootpath
+    if not handlers:
+        handlers = eval(config.get("handlers.HandlerMultiplexer", "handlers"))
+        rootpath = config.get("pygopherd", "root")
+
+
 def getHandler(selector, searchrequest, protocol, config, handlerlist=None, vfs=None):
     """Called without handlerlist specified, uses the default as listed
     in config."""
@@ -36,9 +43,7 @@ def getHandler(selector, searchrequest, protocol, config, handlerlist=None, vfs=
 
         vfs = VFS_Real(config)
 
-    if not handlers:
-        handlers = eval(config.get("handlers.HandlerMultiplexer", "handlers"))
-        rootpath = config.get("pygopherd", "root")
+    init_default_handlers(config)
     if handlerlist is None:
         handlerlist = handlers
 
