@@ -20,8 +20,7 @@
 
 import tracemalloc
 import unittest
-
-import pygopherd.handlers.ZIP
+import pygopherd.handlers
 import pygopherd.protocols
 import pygopherd.protocols.baseTest
 import pygopherd.protocols.ProtocolMultiplexerTest
@@ -41,6 +40,7 @@ def suite():
         pygopherd.protocols.baseTest,
         pygopherd.protocols.rfc1436Test,
         pygopherd.handlers.ZIP,
+        pygopherd.handlers.pyg,
     ]
     suite = unittest.TestSuite()
     for module in tests:

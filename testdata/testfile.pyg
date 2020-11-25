@@ -1,0 +1,20 @@
+from pygopherd.handlers.pyg import PYGBase
+from pygopherd.gopherentry import GopherEntry
+
+
+class PYGMain(PYGBase):
+    def canhandlerequest(self):
+        return True
+
+    def isdir(self):
+        return False
+
+    def getentry(self):
+        entry = GopherEntry(self.selector, self.config)
+        entry.type = "0"
+        entry.mimetype = "text/plain"
+        entry.name = "My custom .pyg handler!"
+        return entry
+
+    def write(self, wfile):
+        wfile.write("hello world!".encode())

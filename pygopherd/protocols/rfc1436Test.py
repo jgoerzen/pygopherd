@@ -120,6 +120,7 @@ class RFC1436TestCase(unittest.TestCase):
             "9testdata\t/testdata.zip\tHOSTNAME\t64777\t+",
             "9testdata2\t/testdata2.zip\tHOSTNAME\t64777\t+",
             "0testfile\t/testfile.txt\tHOSTNAME\t64777\t+",
+            "0testfile.pyg\t/testfile.pyg\tHOSTNAME\t64777\t+",
             "9testfile.txt.gz\t/testfile.txt.gz\tHOSTNAME\t64777\t+",
             "iThis is the abstract\tfake\t(NULL)\t0",
             "ifor testfile.txt.gz\tfake\t(NULL)\t0",
@@ -163,6 +164,7 @@ class RFC1436TestCase(unittest.TestCase):
             "9testdata\t/testdata.zip\tHOSTNAME\t64777\t+",
             "9testdata2\t/testdata2.zip\tHOSTNAME\t64777\t+",
             "0testfile\t/testfile.txt\tHOSTNAME\t64777\t+",
+            "0testfile.pyg\t/testfile.pyg\tHOSTNAME\t64777\t+",
             "9testfile.txt.gz\t/testfile.txt.gz\tHOSTNAME\t64777\t+",
             "9ziptorture\t/ziptorture.zip\tHOSTNAME\t64777\t+",
         ]
