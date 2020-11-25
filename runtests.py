@@ -20,34 +20,11 @@
 
 import tracemalloc
 import unittest
-import pygopherd.handlers
-import pygopherd.protocols
-import pygopherd.protocols.baseTest
-import pygopherd.protocols.ProtocolMultiplexerTest
-import pygopherd.protocols.rfc1436Test
-from pygopherd import *
-
-
-def suite():
-    tests = [
-        initializationTest,
-        GopherExceptionsTest,
-        fileextTest,
-        gopherentryTest,
-        loggerTest,
-        pipeTest,
-        pygopherd.protocols.ProtocolMultiplexerTest,
-        pygopherd.protocols.baseTest,
-        pygopherd.protocols.rfc1436Test,
-        pygopherd.handlers.ZIP,
-        pygopherd.handlers.pyg,
-    ]
-    suite = unittest.TestSuite()
-    for module in tests:
-        suite.addTest(unittest.findTestCases(module))
-    return suite
 
 
 if __name__ == "__main__":
     tracemalloc.start()
-    unittest.main(defaultTest="suite")
+
+    suite = unittest.defaultTestLoader.discover(start_dir="pygopherd/", pattern="*.py")
+    runner = unittest.TextTestRunner(verbosity=2)
+    runner.run(suite)
