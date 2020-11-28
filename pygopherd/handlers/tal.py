@@ -16,37 +16,14 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+import os
+
 try:
     from simpletal import simpleTAL, simpleTALES
 
     talavailable = 1
-except:
+except ImportError:
     talavailable = 0
-
-try:
-    import logging
-
-    haslogging = 1
-except:
-    haslogging = 0
-
-if haslogging:
-    import os
-
-    try:
-        hdlrFilename = os.path.join(os.environ["TEMP"], "mylog.log")
-    except:
-        hdlrFilename = "/tmp/mylog.log"
-    logger = logging.getLogger("simpleTAL.HTMLTemplateCompiler")
-    hdlr = logging.FileHandler(hdlrFilename)
-    formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
-    hdlr.setFormatter(formatter)
-    logger.addHandler(hdlr)
-    logger.setLevel(logging.INFO)
-
-
-import os.path
-import re
 
 from pygopherd import gopherentry
 from pygopherd.handlers.file import FileHandler
