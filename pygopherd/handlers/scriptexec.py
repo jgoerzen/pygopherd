@@ -64,6 +64,6 @@ class ExecHandler(Virtual):
 
         args = [self.getfspath()]
         if self.selectorargs:
-            args.extend(self.selectorags.split(" "))
+            args.extend(self.selectorargs.split(" "))
 
         subprocess.run(args, env=newenv, stdout=wfile, errors="surrogateescape")
