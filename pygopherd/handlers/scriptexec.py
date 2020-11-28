@@ -16,10 +16,11 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
 import os
-from stat import *
+import stat
 import subprocess
+import tempfile
+import unittest
 
 from pygopherd import gopherentry
 from pygopherd.handlers.base import VFS_Real
@@ -32,8 +33,8 @@ class ExecHandler(Virtual):
         return (
             isinstance(self.vfs, VFS_Real)
             and self.statresult
-            and S_ISREG(self.statresult[ST_MODE])
-            and (S_IMODE(self.statresult[ST_MODE]) & S_IXOTH)
+            and stat.S_ISREG(self.statresult[stat.ST_MODE])
+            and (stat.S_IMODE(self.statresult[stat.ST_MODE]) & stat.S_IXOTH)
         )
 
     def getentry(self):
@@ -45,12 +46,7 @@ class ExecHandler(Virtual):
         return entry
 
     def write(self, wfile):
-        # We work on a separate thing to avoid contaminating our own
-        # environment.  Just saying newenv = os.environ would still
-        # do that.
-        newenv = {}
-        for key in list(os.environ.keys()):
-            newenv[key] = os.environ[key]
+        newenv = os.environ.copy()
         newenv["SERVER_NAME"] = self.protocol.server.server_name
         newenv["SERVER_PORT"] = str(self.protocol.server.server_port)
         newenv["REMOTE_ADDR"] = self.protocol.requesthandler.client_address[0]
@@ -67,3 +63,36 @@ class ExecHandler(Virtual):
             args.extend(self.selectorargs.split(" "))
 
         subprocess.run(args, env=newenv, stdout=wfile, errors="surrogateescape")
+
+
+class TestExecHandler(unittest.TestCase):
+    def setUp(self) -> None:
+        from pygopherd import testutil
+
+        self.config = testutil.getconfig()
+        self.vfs = VFS_Real(self.config)
+        # The "hello" will be sent as an additional script argument. Multiple
+        # query arguments can be provided using " " as the separator.
+        self.selector = "/pygopherd/cgitest.sh?hello"
+        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.stat_result = None
+
+    def test_exec_handler(self):
+        handler = ExecHandler(
+            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
+        )
+
+        self.assertTrue(handler.isrequestforme())
+
+        entry = handler.getentry()
+        self.assertEqual(entry.mimetype, "text/plain")
+        self.assertEqual(entry.type, "0")
+        self.assertEqual(entry.name, "cgitest.sh")
+        self.assertEqual(entry.selector, "/pygopherd/cgitest.sh")
+
+        # The test script will print $REQUEST and exit
+        with tempfile.TemporaryFile(mode="w+") as wfile:
+            handler.write(wfile)
+            wfile.seek(0)
+            output = wfile.read()
+            self.assertEqual(output, "hello from /pygopherd/cgitest.sh\n")
