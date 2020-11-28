@@ -22,6 +22,7 @@ import mimetypes
 import re
 import unittest
 
+from pygopherd import testutil
 from pygopherd.handlers.file import FileHandler
 from pygopherd.handlers.base import VFS_Real
 
@@ -96,7 +97,6 @@ class HTMLFileTitleHandler(FileHandler):
 
 class TestHTMLHandler(unittest.TestCase):
     def setUp(self) -> None:
-        from pygopherd import testutil
 
         self.config = testutil.getconfig()
         self.vfs = VFS_Real(self.config)
