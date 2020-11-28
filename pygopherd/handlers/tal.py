@@ -16,17 +16,21 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+import html
+import io
 import os
+import unittest
+
+from pygopherd import gopherentry
+from pygopherd.handlers.base import VFS_Real
+from pygopherd.handlers.file import FileHandler
 
 try:
     from simpletal import simpleTAL, simpleTALES
 
-    talavailable = 1
+    talavailable = True
 except ImportError:
-    talavailable = 0
-
-from pygopherd import gopherentry
-from pygopherd.handlers.file import FileHandler
+    talavailable = False
 
 
 class TALLoader:
@@ -74,20 +78,24 @@ class RecursiveTALLoader(TALLoader):
 
 
 class TALFileHandler(FileHandler):
+
+    talbasename: str
+    allowpythonpath: int
+
     def canhandlerequest(self):
         """We can handle the request if it's for a file ending with .thtml."""
         canhandle = FileHandler.canhandlerequest(self) and self.getselector().endswith(
             ".tal"
         )
         if not canhandle:
-            return 0
+            return False
         self.talbasename = self.getselector()[:-4]
         self.allowpythonpath = 1
         if self.config.has_option("handlers.tal.TALFileHandler", "allowpythonpath"):
             self.allowpythonpath = self.config.getboolean(
                 "handlers.tal.TALFileHandler", "allowpythonpath"
             )
-        return 1
+        return True
 
     def getentry(self):
         if not self.entry:
@@ -104,19 +112,82 @@ class TALFileHandler(FileHandler):
         return self.entry
 
     def write(self, wfile):
-        with self.vfs.open(self.getselector()) as rfile:
-            context = simpleTALES.Context(allowPythonPath=self.allowpythonpath)
-            context.addGlobal("selector", self.getselector())
-            context.addGlobal("handler", self)
-            context.addGlobal("entry", self.getentry())
-            context.addGlobal("talbasename", self.talbasename)
-            context.addGlobal("allowpythonpath", self.allowpythonpath)
-            context.addGlobal("protocol", self.protocol)
-            context.addGlobal("root", TALLoader(self.vfs, "/"))
-            context.addGlobal("rroot", RecursiveTALLoader(self.vfs, "/"))
-            dirname = os.path.dirname(self.getselector())
-            context.addGlobal("dir", TALLoader(self.vfs, dirname))
-            context.addGlobal("rdir", RecursiveTALLoader(self.vfs, dirname))
+        context = simpleTALES.Context(allowPythonPath=self.allowpythonpath)
+        context.addGlobal("selector", self.getselector())
+        context.addGlobal("handler", self)
+        context.addGlobal("entry", self.getentry())
+        context.addGlobal("talbasename", self.talbasename)
+        context.addGlobal("allowpythonpath", self.allowpythonpath)
+        context.addGlobal("protocol", self.protocol)
+        context.addGlobal("root", TALLoader(self.vfs, "/"))
+        context.addGlobal("rroot", RecursiveTALLoader(self.vfs, "/"))
+        dirname = os.path.dirname(self.getselector())
+        context.addGlobal("dir", TALLoader(self.vfs, dirname))
+        context.addGlobal("rdir", RecursiveTALLoader(self.vfs, dirname))
 
+        # SimpleTAL doesn't support reading from binary files
+        with self.vfs.open(self.getselector(), "r", errors="replace") as rfile:
             template = simpleTAL.compileHTMLTemplate(rfile)
         template.expand(context, wfile)
+
+
+TEST_TEMPLATE = """
+<html>
+<head>
+<title>TAL Test</title>
+</head>
+<body>
+My selector is: <b>{selector}</b><br>
+My MIME type is: <b>text/html</b><br>
+Another way of getting that is: <b>text/html</b><br>
+Gopher type is: <b>h</b><br>
+My handler is: <b>{handler}</b><br>
+My protocol is: <b>{protocol}</b><br>
+Python path enabling status: <b>1</b><br>
+My vfs is: <b>{vfs}</b><br>
+Math: <b>4</b>
+</body>
+</html>
+"""
+
+
+class TestTALHandler(unittest.TestCase):
+    def setUp(self) -> None:
+        from pygopherd import testutil, initialization
+
+        self.config = testutil.getconfig()
+        self.vfs = VFS_Real(self.config)
+        self.selector = "/talsample.html.tal"
+        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.stat_result = self.vfs.stat(self.selector)
+
+        # Initialize the custom mimetypes encoding map
+        initialization.initlogger(self.config, "")
+        initialization.initmimetypes(self.config)
+
+    def test_tal_available(self):
+        self.assertTrue(talavailable)
+
+    def test_tal_handler(self):
+        handler = TALFileHandler(
+            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
+        )
+
+        self.assertTrue(handler.canhandlerequest())
+
+        entry = handler.getentry()
+        self.assertEqual(entry.mimetype, "text/html")
+        self.assertEqual(entry.type, "h")
+
+        wfile = io.BytesIO()
+        handler.write(wfile)
+        rendered_data = wfile.getvalue().decode()
+
+        expected_data = TEST_TEMPLATE.format(
+            selector=handler.selector,
+            handler=html.escape(str(handler)),
+            protocol=html.escape(str(self.protocol)),
+            vfs=html.escape(str(self.vfs)),
+        )
+
+        self.assertEqual(rendered_data.strip(), expected_data.strip())
