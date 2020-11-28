@@ -18,7 +18,7 @@ class Virtual(BaseHandler):
         if self.selector.find("?") != -1 or self.selector.find("|") != -1:
             try:
                 i = self.selector.index("?")
-            except:
+            except ValueError:
                 i = self.selector.index("|")
 
             self.selectorreal = self.selector[0:i]
