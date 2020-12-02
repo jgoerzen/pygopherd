@@ -1,0 +1,435 @@
+From da@ski.org Wed Jun  5 02:22:16 2019
+From: David Ascher <da@ski.org>
+To: python-dev@python.org
+Subject: [Python-Dev] Pickling w/ low overhead
+Date: Mon, 02 Aug 1999 16:01:26 -0700
+Message-ID: <Pine.WNT.4.04.9908021408490.155-100000@rigoletto.ski.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7807071734274799233=="
+
+--===============7807071734274799233==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+An issue which has dogged the NumPy project is that there is (to my
+knowledge) no way to pickle very large arrays without creating strings
+which contain all of the data.  This can be a problem given that NumPy
+arrays tend to be very large -- often several megabytes, sometimes much
+bigger.  This slows things down, sometimes a lot, depending on the
+platform. It seems that it should be possible to do something more
+efficient.
+
+Two alternatives come to mind:
+
+ -- define a new pickling protocol which passes a file-like object to the
+    instance and have the instance write itself to that file, being as
+    efficient or inefficient as it cares to.  This protocol is used only
+    if the instance/type defines the appropriate slot.  Alternatively,
+    enrich the semantics of the getstate interaction, so that an object
+    can return partial data and tell the pickling mechanism to come back
+    for more.
+
+ -- make pickling of objects which support the buffer interface use that
+    inteface's notion of segments and use that 'chunk' size to do
+    something more efficient if not necessarily most efficient.  (oh, and
+    make NumPy arrays support the buffer interface =).  This is simple
+    for NumPy arrays since we want to pickle "everything", but may not be
+    what other buffer-supporting objects want. 
+
+Thoughts?  Alternatives?
+
+--david
+
+
+
+--===============7807071734274799233==--
+
+
+From mhammond@skippinet.com.au Wed Jun  5 02:22:16 2019
+From: Mark Hammond <mhammond@skippinet.com.au>
+To: python-dev@python.org
+Subject: [Python-Dev] Buffer interface in abstract.c?
+Date: Tue, 03 Aug 1999 10:41:23 +1000
+Message-ID: <001001bedd48$ea796280$1101a8c0@bobcat>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============6301840427696015601=="
+
+--===============6301840427696015601==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Hi all,
+	Im trying to slowly wean myself over to the buffer interfaces.
+
+My exploration so far indicates that, for most cases, simply replacing
+"PyString_FromStringAndSize" with "PyBuffer_FromMemory" handles the vast
+majority of cases, and is preferred when the data contains arbitary bytes.
+PyArg_ParseTuple("s#", ...) still works correctly as we would hope.
+
+However, performing this explicitly is a pain.  Looking at getargs.c, the
+code to achieve this is a little too convoluted to cut-and-paste each time.
+
+Therefore, I would like to propose these functions to be added to
+abstract.c:
+
+int PyObject_GetBufferSize();
+void *PyObject_GetReadWriteBuffer(); /* or "char *"?  */
+const void *PyObject_GetReadOnlyBuffer();
+
+Although equivalent functions exist for the buffer object, I can't see the
+equivalent abstract implementations - ie, that work with any object
+supporting the protocol.
+
+Im willing to provide a patch if there is agreement a) the general idea is
+good, and b) my specific spelling of the idea is OK (less likely -
+PyBuffer_* seems better, but loses any implication of being abstract?).
+
+Thoughts?
+
+Mark.
+
+
+
+--===============6301840427696015601==--
+
+
+From gstein@lyra.org Wed Jun  5 02:22:16 2019
+From: Greg Stein <gstein@lyra.org>
+To: python-dev@python.org
+Subject: Re: [Python-Dev] Buffer interface in abstract.c?
+Date: Mon, 02 Aug 1999 18:51:43 -0700
+Message-ID: <37A64B2F.3386F0A9@lyra.org>
+In-Reply-To: <001001bedd48$ea796280$1101a8c0@bobcat>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============3766712876154848986=="
+
+--===============3766712876154848986==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Mark Hammond wrote:
+> ...
+> Therefore, I would like to propose these functions to be added to
+> abstract.c:
+> 
+> int PyObject_GetBufferSize();
+> void *PyObject_GetReadWriteBuffer(); /* or "char *"?  */
+> const void *PyObject_GetReadOnlyBuffer();
+> 
+> Although equivalent functions exist for the buffer object, I can't see the
+> equivalent abstract implementations - ie, that work with any object
+> supporting the protocol.
+> 
+> Im willing to provide a patch if there is agreement a) the general idea is
+> good, and b) my specific spelling of the idea is OK (less likely -
+> PyBuffer_* seems better, but loses any implication of being abstract?).
+
+Marc-Andre proposed exactly the same thing back at the end of March (to
+me and Guido). The two of us hashed out some of the stuff and M.A. came
+up with a full patch for the stuff. Guido was relatively non-committal
+at the point one way or another, but said they seemed fine. It appears
+the stuff never made it into source control.
+
+If Marc-Andre can resurface the final proposal/patch, then we'd be set.
+
+Until then: use the bufferprocs :-)
+
+Cheers,
+-g
+
+--
+Greg Stein, http://www.lyra.org/
+
+
+--===============3766712876154848986==--
+
+
+From mal@lemburg.com Wed Jun  5 02:22:16 2019
+From: "M.-A. Lemburg" <mal@lemburg.com>
+To: python-dev@python.org
+Subject: Re: [Python-Dev] Buffer interface in abstract.c?
+Date: Tue, 03 Aug 1999 09:50:33 +0200
+Message-ID: <37A69F49.3575AE85@lemburg.com>
+In-Reply-To: <37A64B2F.3386F0A9@lyra.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============3450783038406365800=="
+
+--===============3450783038406365800==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Greg Stein wrote:
+> 
+> Mark Hammond wrote:
+> > ...
+> > Therefore, I would like to propose these functions to be added to
+> > abstract.c:
+> >
+> > int PyObject_GetBufferSize();
+> > void *PyObject_GetReadWriteBuffer(); /* or "char *"?  */
+> > const void *PyObject_GetReadOnlyBuffer();
+> >
+> > Although equivalent functions exist for the buffer object, I can't see the
+> > equivalent abstract implementations - ie, that work with any object
+> > supporting the protocol.
+> >
+> > Im willing to provide a patch if there is agreement a) the general idea is
+> > good, and b) my specific spelling of the idea is OK (less likely -
+> > PyBuffer_* seems better, but loses any implication of being abstract?).
+> 
+> Marc-Andre proposed exactly the same thing back at the end of March (to
+> me and Guido). The two of us hashed out some of the stuff and M.A. came
+> up with a full patch for the stuff. Guido was relatively non-committal
+> at the point one way or another, but said they seemed fine. It appears
+> the stuff never made it into source control.
+> 
+> If Marc-Andre can resurface the final proposal/patch, then we'd be set.
+
+Below is the code I currently use. I don't really remember if this
+is what Greg and I discussed a while back, but I'm sure he'll
+correct me ;-) Note that you the buffer length is implicitly
+returned by these APIs.
+
+/* Takes an arbitrary object which must support the character (single
+   segment) buffer interface and returns a pointer to a read-only
+   memory location useable as character based input for subsequent
+   processing.
+
+   buffer and buffer_len are only set in case no error
+   occurrs. Otherwise, -1 is returned and an exception set.
+
+*/
+
+static
+int PyObject_AsCharBuffer(PyObject *obj,
+			  const char **buffer,
+			  int *buffer_len)
+{
+    PyBufferProcs *pb = obj->ob_type->tp_as_buffer;
+    const char *pp;
+    int len;
+
+    if ( pb == NULL ||
+	 pb->bf_getcharbuffer == NULL ||
+	 pb->bf_getsegcount == NULL ) {
+	PyErr_SetString(PyExc_TypeError,
+			"expected a character buffer object");
+	goto onError;
+    }
+    if ( (*pb->bf_getsegcount)(obj,NULL) != 1 ) {
+	PyErr_SetString(PyExc_TypeError,
+			"expected a single-segment buffer object");
+	goto onError;
+    }
+    len = (*pb->bf_getcharbuffer)(obj,0,&pp);
+    if (len < 0)
+	goto onError;
+    *buffer = pp;
+    *buffer_len = len;
+    return 0;
+
+ onError:
+    return -1;
+}
+
+/* Same as PyObject_AsCharBuffer() except that this API expects a
+   readable (single segment) buffer interface and returns a pointer
+   to a read-only memory location which can contain arbitrary data.
+
+   buffer and buffer_len are only set in case no error
+   occurrs. Otherwise, -1 is returned and an exception set.
+
+*/
+
+static
+int PyObject_AsReadBuffer(PyObject *obj,
+			  const void **buffer,
+			  int *buffer_len)
+{
+    PyBufferProcs *pb = obj->ob_type->tp_as_buffer;
+    void *pp;
+    int len;
+
+    if ( pb == NULL ||
+	 pb->bf_getreadbuffer == NULL ||
+	 pb->bf_getsegcount == NULL ) {
+	PyErr_SetString(PyExc_TypeError,
+			"expected a readable buffer object");
+	goto onError;
+    }
+    if ( (*pb->bf_getsegcount)(obj,NULL) != 1 ) {
+	PyErr_SetString(PyExc_TypeError,
+			"expected a single-segment buffer object");
+	goto onError;
+    }
+    len = (*pb->bf_getreadbuffer)(obj,0,&pp);
+    if (len < 0)
+	goto onError;
+    *buffer = pp;
+    *buffer_len = len;
+    return 0;
+
+ onError:
+    return -1;
+}
+
+/* Takes an arbitrary object which must support the writeable (single
+   segment) buffer interface and returns a pointer to a writeable
+   memory location in buffer of size buffer_len.
+
+   buffer and buffer_len are only set in case no error
+   occurrs. Otherwise, -1 is returned and an exception set.
+
+*/
+
+static
+int PyObject_AsWriteBuffer(PyObject *obj,
+			   void **buffer,
+			   int *buffer_len)
+{
+    PyBufferProcs *pb = obj->ob_type->tp_as_buffer;
+    void*pp;
+    int len;
+
+    if ( pb == NULL ||
+	 pb->bf_getwritebuffer == NULL ||
+	 pb->bf_getsegcount == NULL ) {
+	PyErr_SetString(PyExc_TypeError,
+			"expected a writeable buffer object");
+	goto onError;
+    }
+    if ( (*pb->bf_getsegcount)(obj,NULL) != 1 ) {
+	PyErr_SetString(PyExc_TypeError,
+			"expected a single-segment buffer object");
+	goto onError;
+    }
+    len = (*pb->bf_getwritebuffer)(obj,0,&pp);
+    if (len < 0)
+	goto onError;
+    *buffer = pp;
+    *buffer_len = len;
+    return 0;
+
+ onError:
+    return -1;
+}
+
+
+-- 
+Marc-Andre Lemburg
+______________________________________________________________________
+Y2000:                                                   150 days left
+Business:                                      http://www.lemburg.com/
+Python Pages:                           http://www.lemburg.com/python/
+
+
+
+
+--===============3450783038406365800==--
+
+
+From mal@lemburg.com Wed Jun  5 02:22:16 2019
+From: "M.-A. Lemburg" <mal@lemburg.com>
+To: python-dev@python.org
+Subject: Re: [Python-Dev] Pickling w/ low overhead
+Date: Tue, 03 Aug 1999 11:11:11 +0200
+Message-ID: <37A6B22F.7A14BA2C@lemburg.com>
+In-Reply-To: <Pine.WNT.4.04.9908021408490.155-100000@rigoletto.ski.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============1771830407250585468=="
+
+--===============1771830407250585468==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+David Ascher wrote:
+> 
+> An issue which has dogged the NumPy project is that there is (to my
+> knowledge) no way to pickle very large arrays without creating strings
+> which contain all of the data.  This can be a problem given that NumPy
+> arrays tend to be very large -- often several megabytes, sometimes much
+> bigger.  This slows things down, sometimes a lot, depending on the
+> platform. It seems that it should be possible to do something more
+> efficient.
+> 
+> Two alternatives come to mind:
+> 
+>  -- define a new pickling protocol which passes a file-like object to the
+>     instance and have the instance write itself to that file, being as
+>     efficient or inefficient as it cares to.  This protocol is used only
+>     if the instance/type defines the appropriate slot.  Alternatively,
+>     enrich the semantics of the getstate interaction, so that an object
+>     can return partial data and tell the pickling mechanism to come back
+>     for more.
+> 
+>  -- make pickling of objects which support the buffer interface use that
+>     inteface's notion of segments and use that 'chunk' size to do
+>     something more efficient if not necessarily most efficient.  (oh, and
+>     make NumPy arrays support the buffer interface =).  This is simple
+>     for NumPy arrays since we want to pickle "everything", but may not be
+>     what other buffer-supporting objects want.
+> 
+> Thoughts?  Alternatives?
+
+Hmm, types can register their own pickling/unpickling functions
+via copy_reg, so they can access the self.write method in pickle.py
+to implement the write to file interface. Don't know how this
+would be done for cPickle.c though.
+
+For instances the situation is different since there is no
+dispatching done on a per-class basis. I guess an optional argument
+could help here.
+
+Perhaps some lazy pickling wrapper would help fix this in general:
+an object which calls back into the to-be-pickled object to
+access the data rather than store the data in a huge string.
+
+Yet another idea would be using memory mapped files instead
+of strings as temporary storage (but this is probably hard to implement
+right and not as portable).
+
+Dunno... just some thoughts.
+
+-- 
+Marc-Andre Lemburg
+______________________________________________________________________
+Y2000:                                                   150 days left
+Business:                                      http://www.lemburg.com/
+Python Pages:                           http://www.lemburg.com/python/
+
+
+
+--===============1771830407250585468==--
+
+
+From jack@oratrix.nl Wed Jun  5 02:22:16 2019
+From: Jack Jansen <jack@oratrix.nl>
+To: python-dev@python.org
+Subject: Re: [Python-Dev] Buffer interface in abstract.c? 
+Date: Tue, 03 Aug 1999 11:53:39 +0200
+Message-ID: <19990803095339.E02CE303120@snelboot.oratrix.nl>
+In-Reply-To: <mal@lemburg.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============6337740323128302028=="
+
+--===============6337740323128302028==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Why not pass the index to the As*Buffer routines as well and make getsegcount 
+available too? Then you could code things like
+  for(i=0; i<PyObject_GetBufferCount(obj); i++) {
+	if ( PyObject_AsCharBuffer(obj, &buf, &count, i) < 0 )
+		return -1;
+	write(fp, buf, count);
+  }
+
+--
+Jack Jansen             | ++++ stop the execution of Mumia Abu-Jamal ++++
+Jack.Jansen(a)oratrix.com | ++++ if you agree copy these lines to your sig ++++
+www.oratrix.nl/~jack    | see http://www.xs4all.nl/~tank/spg-l/sigaction.htm 
+
+
+
+
+--===============6337740323128302028==--
