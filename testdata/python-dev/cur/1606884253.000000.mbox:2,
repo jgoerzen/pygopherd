@@ -1,0 +1,46 @@
+From: David Ascher <da@ski.org>
+To: python-dev@python.org
+Subject: [Python-Dev] Pickling w/ low overhead
+Date: Mon, 02 Aug 1999 16:01:26 -0700
+Message-ID: <Pine.WNT.4.04.9908021408490.155-100000@rigoletto.ski.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7807071734274799233=="
+
+--===============7807071734274799233==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+An issue which has dogged the NumPy project is that there is (to my
+knowledge) no way to pickle very large arrays without creating strings
+which contain all of the data.  This can be a problem given that NumPy
+arrays tend to be very large -- often several megabytes, sometimes much
+bigger.  This slows things down, sometimes a lot, depending on the
+platform. It seems that it should be possible to do something more
+efficient.
+
+Two alternatives come to mind:
+
+ -- define a new pickling protocol which passes a file-like object to the
+    instance and have the instance write itself to that file, being as
+    efficient or inefficient as it cares to.  This protocol is used only
+    if the instance/type defines the appropriate slot.  Alternatively,
+    enrich the semantics of the getstate interaction, so that an object
+    can return partial data and tell the pickling mechanism to come back
+    for more.
+
+ -- make pickling of objects which support the buffer interface use that
+    inteface's notion of segments and use that 'chunk' size to do
+    something more efficient if not necessarily most efficient.  (oh, and
+    make NumPy arrays support the buffer interface =).  This is simple
+    for NumPy arrays since we want to pickle "everything", but may not be
+    what other buffer-supporting objects want. 
+
+Thoughts?  Alternatives?
+
+--david
+
+
+
+--===============7807071734274799233==--
+
+

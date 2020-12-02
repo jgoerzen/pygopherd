@@ -1,0 +1,47 @@
+From: Mark Hammond <mhammond@skippinet.com.au>
+To: python-dev@python.org
+Subject: [Python-Dev] Buffer interface in abstract.c?
+Date: Tue, 03 Aug 1999 10:41:23 +1000
+Message-ID: <001001bedd48$ea796280$1101a8c0@bobcat>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============6301840427696015601=="
+
+--===============6301840427696015601==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Hi all,
+	Im trying to slowly wean myself over to the buffer interfaces.
+
+My exploration so far indicates that, for most cases, simply replacing
+"PyString_FromStringAndSize" with "PyBuffer_FromMemory" handles the vast
+majority of cases, and is preferred when the data contains arbitary bytes.
+PyArg_ParseTuple("s#", ...) still works correctly as we would hope.
+
+However, performing this explicitly is a pain.  Looking at getargs.c, the
+code to achieve this is a little too convoluted to cut-and-paste each time.
+
+Therefore, I would like to propose these functions to be added to
+abstract.c:
+
+int PyObject_GetBufferSize();
+void *PyObject_GetReadWriteBuffer(); /* or "char *"?  */
+const void *PyObject_GetReadOnlyBuffer();
+
+Although equivalent functions exist for the buffer object, I can't see the
+equivalent abstract implementations - ie, that work with any object
+supporting the protocol.
+
+Im willing to provide a patch if there is agreement a) the general idea is
+good, and b) my specific spelling of the idea is OK (less likely -
+PyBuffer_* seems better, but loses any implication of being abstract?).
+
+Thoughts?
+
+Mark.
+
+
+
+--===============6301840427696015601==--
+
+

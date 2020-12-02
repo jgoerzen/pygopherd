@@ -1,0 +1,30 @@
+From: Jack Jansen <jack@oratrix.nl>
+To: python-dev@python.org
+Subject: Re: [Python-Dev] Buffer interface in abstract.c? 
+Date: Tue, 03 Aug 1999 11:53:39 +0200
+Message-ID: <19990803095339.E02CE303120@snelboot.oratrix.nl>
+In-Reply-To: <mal@lemburg.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============6337740323128302028=="
+
+--===============6337740323128302028==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Why not pass the index to the As*Buffer routines as well and make getsegcount 
+available too? Then you could code things like
+  for(i=0; i<PyObject_GetBufferCount(obj); i++) {
+	if ( PyObject_AsCharBuffer(obj, &buf, &count, i) < 0 )
+		return -1;
+	write(fp, buf, count);
+  }
+
+--
+Jack Jansen             | ++++ stop the execution of Mumia Abu-Jamal ++++
+Jack.Jansen(a)oratrix.com | ++++ if you agree copy these lines to your sig ++++
+www.oratrix.nl/~jack    | see http://www.xs4all.nl/~tank/spg-l/sigaction.htm 
+
+
+
+
+--===============6337740323128302028==--

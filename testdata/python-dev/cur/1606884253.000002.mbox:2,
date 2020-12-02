@@ -1,0 +1,50 @@
+From: Greg Stein <gstein@lyra.org>
+To: python-dev@python.org
+Subject: Re: [Python-Dev] Buffer interface in abstract.c?
+Date: Mon, 02 Aug 1999 18:51:43 -0700
+Message-ID: <37A64B2F.3386F0A9@lyra.org>
+In-Reply-To: <001001bedd48$ea796280$1101a8c0@bobcat>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============3766712876154848986=="
+
+--===============3766712876154848986==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Mark Hammond wrote:
+> ...
+> Therefore, I would like to propose these functions to be added to
+> abstract.c:
+> 
+> int PyObject_GetBufferSize();
+> void *PyObject_GetReadWriteBuffer(); /* or "char *"?  */
+> const void *PyObject_GetReadOnlyBuffer();
+> 
+> Although equivalent functions exist for the buffer object, I can't see the
+> equivalent abstract implementations - ie, that work with any object
+> supporting the protocol.
+> 
+> Im willing to provide a patch if there is agreement a) the general idea is
+> good, and b) my specific spelling of the idea is OK (less likely -
+> PyBuffer_* seems better, but loses any implication of being abstract?).
+
+Marc-Andre proposed exactly the same thing back at the end of March (to
+me and Guido). The two of us hashed out some of the stuff and M.A. came
+up with a full patch for the stuff. Guido was relatively non-committal
+at the point one way or another, but said they seemed fine. It appears
+the stuff never made it into source control.
+
+If Marc-Andre can resurface the final proposal/patch, then we'd be set.
+
+Until then: use the bufferprocs :-)
+
+Cheers,
+-g
+
+--
+Greg Stein, http://www.lyra.org/
+
+
+--===============3766712876154848986==--
+
+

@@ -49,6 +49,7 @@ class FolderHandler(Virtual):
 
     def prepare(self):
         self.entries = []
+
         for key, message in self.mbox.iteritems():
             handler = MessageHandler(
                 self.genargsselector(self.getargflag() + str(key)),
@@ -71,7 +72,7 @@ class FolderHandler(Virtual):
 
 class MessageHandler(Virtual):
 
-    msgnum: int
+    message_key: typing.Union[int, str]
     message: Message
 
     def canhandlerequest(self):
@@ -80,10 +81,10 @@ class MessageHandler(Virtual):
         result."""
         if not self.selectorargs:
             return False
-        msgnum = re.search("^" + self.getargflag() + r"(\d+)$", self.selectorargs)
-        if not msgnum:
+        message_key = self.get_message_key()
+        if message_key is None:
             return False
-        self.msgnum = int(msgnum.group(1))
+        self.message_key = message_key
         return True
 
     def getentry(self, message=None):
@@ -112,7 +113,7 @@ class MessageHandler(Virtual):
             return self.message
 
         mbox = self.openmailbox()
-        self.message = mbox.get_message(self.msgnum)
+        self.message = mbox.get(self.message_key)
         return self.message
 
     def prepare(self):
@@ -121,6 +122,9 @@ class MessageHandler(Virtual):
     def write(self, wfile):
         message = self.getmessage()
         wfile.write(message.as_bytes())
+
+    def get_message_key(self) -> typing.Union[int, str]:
+        raise NotImplementedError
 
     def getargflag(self) -> str:
         raise NotImplementedError
@@ -179,8 +183,15 @@ class MBoxMessageHandler(MessageHandler):
     def openmailbox(self):
         return mbox(self.getfspath(), create=False)
 
+    def get_message_key(self):
+        # mbox keys are integers
+        pattern = "^" + self.getargflag() + r"(\d+)$"
+        match = re.search(pattern, self.selectorargs)
+        if match:
+            return int(match.groups()[0])
 
-class TestMBoxFolderHandler(unittest.TestCase):
+
+class TestMBoxHandler(unittest.TestCase):
     def setUp(self) -> None:
         from pygopherd import testutil
 
@@ -203,14 +214,14 @@ class TestMBoxFolderHandler(unittest.TestCase):
         self.assertEqual(entry.mimetype, "application/gopher-menu")
         self.assertEqual(entry.type, "1")
 
-        mbox_entries = handler.getdirlist()
-        self.assertTrue(len(mbox_entries), 6)
-        self.assertEqual(mbox_entries[0].selector, "/python-dev.mbox|/MBOX-MESSAGE/0")
-        self.assertEqual(mbox_entries[0].name, "[Python-Dev] Pickling w/ low overhead")
+        messages = handler.getdirlist()
+        self.assertTrue(len(messages), 6)
+        self.assertEqual(messages[0].selector, "/python-dev.mbox|/MBOX-MESSAGE/0")
+        self.assertEqual(messages[0].name, "[Python-Dev] Pickling w/ low overhead")
 
     def test_mbox_mesage_handler(self):
         """
-        Load the third message from the mailbox.
+        Load the third message from the mbox.
         """
         handler = MBoxMessageHandler(
             "/python-dev.mbox|/MBOX-MESSAGE/2",
@@ -255,7 +266,7 @@ class MaildirFolderHandler(FolderHandler):
 
     def prepare(self):
         self.mbox = Maildir(self.getfspath())
-        FolderHandler.prepare(self)
+        super().prepare()
 
     def getargflag(self):
         return "/MAILDIR-MESSAGE/"
@@ -266,4 +277,75 @@ class MaildirMessageHandler(MessageHandler):
         return "/MAILDIR-MESSAGE/"
 
     def openmailbox(self):
-        return Maildir(self.getfspath())
+        return Maildir(self.getfspath(), create=False)
+
+    def get_message_key(self):
+        # Maildir keys are filenames
+        pattern = "^" + self.getargflag() + r"(.+)$"
+        match = re.search(pattern, self.selectorargs)
+        if match:
+            return match.groups()[0]
+
+
+class TestMaildirHandler(unittest.TestCase):
+    """
+    The maildir test data was generated from a mailbox file using this script:
+
+    http://batleth.sapienti-sat.org/projects/mb2md/
+    """
+
+    def setUp(self) -> None:
+        from pygopherd import testutil
+
+        self.config = testutil.getconfig()
+        self.vfs = VFS_Real(self.config)
+        self.selector = "/python-dev"
+        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.stat_result = self.vfs.stat(self.selector)
+
+    def test_maildir_folder_handler(self):
+        handler = MaildirFolderHandler(
+            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
+        )
+        handler.prepare()
+
+        self.assertTrue(handler.canhandlerequest())
+        self.assertTrue(handler.isdir())
+
+        entry = handler.getentry()
+        self.assertEqual(entry.mimetype, "application/gopher-menu")
+        self.assertEqual(entry.type, "1")
+
+        messages = handler.getdirlist()
+        self.assertTrue(len(messages), 6)
+        self.assertEqual(
+            messages[0].selector, "/python-dev|/MAILDIR-MESSAGE/1606884253.000000.mbox"
+        )
+        self.assertEqual(messages[0].name, "[Python-Dev] Pickling w/ low overhead")
+
+    def test_maildir_mesage_handler(self):
+        """
+        Load the third message from the maildir.
+        """
+        handler = MaildirMessageHandler(
+            "/python-dev|/MAILDIR-MESSAGE/1606884253.000002.mbox",
+            "",
+            self.protocol,
+            self.config,
+            self.stat_result,
+            self.vfs,
+        )
+        handler.prepare()
+
+        self.assertTrue(handler.canhandlerequest())
+        self.assertFalse(handler.isdir())
+
+        entry = handler.getentry()
+        self.assertEqual(entry.mimetype, "text/plain")
+        self.assertEqual(entry.name, "Re: [Python-Dev] Buffer interface in abstract.c?")
+        self.assertEqual(entry.type, "0")
+
+        wfile = io.BytesIO()
+        handler.write(wfile)
+        email_text = wfile.getvalue()
+        assert email_text.startswith(b"From: Greg Stein <gstein@lyra.org>")
