@@ -205,7 +205,7 @@ class BaseHandler:
         if self.isdir():
             raise Exception("Attempt to use write for a directory")
 
-    def getdirlist(self) -> typing.Iterable[GopherEntry]:
+    def getdirlist(self) -> typing.List[GopherEntry]:
         """Returns a list-like object (list, iterator, tuple, generator, etc)
         that contains as its elements the gopherentry objects corresponding
         to each item in the directory.  Valid only if self.isdir() returns

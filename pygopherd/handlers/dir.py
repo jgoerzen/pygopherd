@@ -103,7 +103,7 @@ class DirHandler(base.BaseHandler):
     def isdir(self) -> bool:
         return True
 
-    def getdirlist(self) -> typing.List[gopherentry.GopherEntry]:
+    def getdirlist(self):
         self.savecache()
         return self.fileentries
 
