@@ -21,8 +21,8 @@ import os
 import os.path
 import re
 import typing
+import stat
 from mailbox import Maildir, mbox
-from stat import *
 
 from pygopherd import gopherentry
 from pygopherd.handlers.base import VFS_Real
@@ -160,7 +160,7 @@ class MBoxFolderHandler(FolderHandler):
             return 0
         if self.selectorargs:
             return 0
-        if not (self.statresult and S_ISREG(self.statresult[ST_MODE])):
+        if not (self.statresult and stat.S_ISREG(self.statresult[stat.ST_MODE])):
             return 0
         try:
             with self.vfs.open(self.getselector(), "rb") as fd:
@@ -207,7 +207,7 @@ class MaildirFolderHandler(FolderHandler):
             return 0
         if self.selectorargs:
             return 0
-        if not (self.statresult and S_ISDIR(self.statresult[ST_MODE])):
+        if not (self.statresult and stat.S_ISDIR(self.statresult[stat.ST_MODE])):
             return 0
         return self.vfs.isdir(self.getselector() + "/new") and self.vfs.isdir(
             self.getselector() + "/cur"

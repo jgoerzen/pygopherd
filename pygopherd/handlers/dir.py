@@ -21,7 +21,6 @@ import re
 import stat
 import time
 import typing
-from stat import *
 
 from pygopherd import gopherentry, handlers
 from pygopherd.handlers import base
@@ -33,7 +32,7 @@ class DirHandler(base.BaseHandler):
 
     def canhandlerequest(self) -> bool:
         """We can handle the request if it's for a directory."""
-        return self.statresult and S_ISDIR(self.statresult[ST_MODE])
+        return self.statresult and stat.S_ISDIR(self.statresult[stat.ST_MODE])
 
     def getentry(self) -> gopherentry.GopherEntry:
         if not self.entry:

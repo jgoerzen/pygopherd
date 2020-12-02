@@ -17,7 +17,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import re
-from stat import *
+import stat
 
 from pygopherd import gopherentry
 from pygopherd.handlers import base
@@ -32,11 +32,11 @@ class BuckGophermapHandler(base.BaseHandler):
         the directory has a gophermap file."""
         return self.statresult and (
             (
-                S_ISDIR(self.statresult[ST_MODE])
+                stat.S_ISDIR(self.statresult[stat.ST_MODE])
                 and self.vfs.isfile(self.getselector() + "/gophermap")
             )
             or (
-                S_ISREG(self.statresult[ST_MODE])
+                stat.S_ISREG(self.statresult[stat.ST_MODE])
                 and self.getselector().endswith(".gophermap")
             )
         )
@@ -46,7 +46,7 @@ class BuckGophermapHandler(base.BaseHandler):
             self.entry = gopherentry.GopherEntry(self.selector, self.config)
             if (
                 self.statresult
-                and S_ISREG(self.statresult[ST_MODE])
+                and stat.S_ISREG(self.statresult[stat.ST_MODE])
                 and self.getselector().endswith(".gophermap")
             ):
                 self.entry.populatefromvfs(self.vfs, self.getselector())
@@ -65,7 +65,7 @@ class BuckGophermapHandler(base.BaseHandler):
         if (
             self.getselector().endswith(".gophermap")
             and self.statresult
-            and S_ISREG(self.statresult[ST_MODE])
+            and stat.S_ISREG(self.statresult[stat.ST_MODE])
         ):
             selector = self.getselector()
         else:
