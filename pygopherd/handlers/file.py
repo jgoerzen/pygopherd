@@ -15,14 +15,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
+import io
 import re
+import unittest
 import stat
 import subprocess
 import typing
+import tempfile
 
 from pygopherd import gopherentry
-from pygopherd.handlers import base
+from pygopherd.handlers.base import BaseHandler, VFS_Real
 
 
 class CompressedGopherEntry(gopherentry.GopherEntry):
@@ -33,7 +35,7 @@ class CompressedGopherEntry(gopherentry.GopherEntry):
     realencoding: str
 
 
-class FileHandler(base.BaseHandler):
+class FileHandler(BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's for a file."""
         return self.statresult and stat.S_ISREG(self.statresult[stat.ST_MODE])
@@ -96,8 +98,67 @@ class CompressedFileHandler(FileHandler):
 
     def write(self, wfile):
         decompprog = self.decompressors[self.getentry().realencoding]
-        subprocess.run(
-            [decompprog], stdin=self.rfile, stdout=wfile, errors="surrogateescape"
+        with self.vfs.open(self.getselector(), "rb") as fp:
+            subprocess.run([decompprog], stdin=fp, stdout=wfile)
+
+
+class TestFileHandler(unittest.TestCase):
+    def setUp(self) -> None:
+        from pygopherd import testutil
+
+        self.config = testutil.getconfig()
+        self.vfs = VFS_Real(self.config)
+        self.selector = "/testfile.txt"
+        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.stat_result = self.vfs.stat(self.selector)
+
+    def test_file_handler(self):
+        handler = FileHandler(
+            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
         )
-        self.rfile.close()
-        self.rfile = None
+
+        self.assertTrue(handler.canhandlerequest())
+        self.assertFalse(handler.isdir())
+
+        entry = handler.getentry()
+        self.assertEqual(entry.mimetype, "text/plain")
+        self.assertEqual(entry.type, "0")
+
+        wfile = io.BytesIO()
+        handler.write(wfile)
+        data = wfile.getvalue().decode()
+        self.assertEqual(data, "Test\n")
+
+
+class TestCompressedFileHandler(unittest.TestCase):
+    def setUp(self) -> None:
+        from pygopherd import testutil
+
+        self.config = testutil.getconfig()
+        self.vfs = VFS_Real(self.config)
+        self.selector = "/testfile.txt.gz"
+        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.stat_result = self.vfs.stat(self.selector)
+
+        self.config.set(
+            "handlers.file.CompressedFileHandler", "decompressors", "{'gzip' : 'zcat'}"
+        )
+
+    def test_compressed_file_handler(self):
+        handler = CompressedFileHandler(
+            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
+        )
+
+        self.assertTrue(handler.canhandlerequest())
+        self.assertFalse(handler.isdir())
+
+        entry = handler.getentry()
+        self.assertEqual(entry.mimetype, "text/plain")
+        self.assertEqual(entry.type, "0")
+
+        with tempfile.TemporaryFile("rb") as wfile:
+            handler.write(wfile)
+            wfile.seek(0)
+            data = wfile.read()
+
+        self.assertEqual(data, b"Test\n")
