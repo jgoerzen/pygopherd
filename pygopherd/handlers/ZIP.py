@@ -17,10 +17,12 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from __future__ import annotations
 
+import io
 import configparser
 import dbm
 import marshal
 import os.path
+import codecs
 import re
 import shelve
 import stat
@@ -306,18 +308,30 @@ class VFS_Zip(VFS_Real):
         fspath = self.getfspath(selector)
         return self._isentryincache(fspath)
 
-    def open(self, selector: str, *args, **kwargs):
+    def open(
+        self, selector: str, mode: str = "rb", errors: typing.Optional[str] = None
+    ) -> typing.IO:
+
+        assert mode in ("r", "rb")
+
         fspath = self.getfspath(selector)
         try:
             item = self._getcacheentry(fspath)
         except KeyError:
             raise IOError("Request to open %s, which does not exist" % selector)
+
         if type(item) == dict:
             raise IOError(
                 "Request to open %s, which is a directory (%s)" % (selector, str(item))
             )
 
-        return self.zip.open(item)
+        # zip.open() will only return the file object in bytes mode
+        fp = self.zip.open(item)
+        if mode == "r":
+            # Attempted to read in "text mode", so decode the bytestream
+            fp = codecs.getreader("utf-8")(fp)
+
+        return fp
 
     def listdir(self, selector: str) -> typing.List[str]:
         fspath = self.getfspath(selector)
@@ -387,8 +401,6 @@ class TestVFS_Zip(unittest.TestCase):
         self.assertFalse(self.z.iswritable("/testdata.zip"))
         self.assertFalse(self.z.iswritable("/testdata.zip/README"))
         self.assertFalse(self.z.iswritable("/testdata.zip/pygopherd"))
-        # self.assertTrue(self.z.iswritable('/README'))
-        # self.assertTrue(self.z.iswritable('/.foo'))
 
     def test_getfspath(self):
         self.assertEqual(self.z.getfspath("/testdata.zip/foo"), "foo")
@@ -397,8 +409,6 @@ class TestVFS_Zip(unittest.TestCase):
 
     def test_stat(self):
         self.assertRaises(OSError, self.z.stat, "/testdata.zip/nonexistant")
-        # self.assertRaises(OSError, self.z.stat, '/nonexistant')
-        # self.assertTrue(stat.S_ISREG(self.z.stat('/testfile.txt')[0]))
         self.assertTrue(stat.S_ISDIR(self.z.stat("/testdata.zip")[0]))
         self.assertTrue(stat.S_ISREG(self.z.stat("/testdata.zip/README")[0]))
         self.assertTrue(stat.S_ISDIR(self.z.stat("/testdata.zip/pygopherd")[0]))
@@ -432,7 +442,6 @@ class TestVFS_Zip(unittest.TestCase):
         self.assertTrue(self.z.exists("/testdata.zip/README"))
         self.assertTrue(self.z.exists("/testdata.zip/pygopherd"))
         self.assertTrue(self.z2.exists("/testdata2.zip/pygopherd"))
-        # self.assertFalse(self.z2.exists('/testdata.zip/pygopherd')
 
     def test_symlinkexists(self):
         self.assertTrue(self.zs.exists("/symlinktest.zip/real.txt"))
@@ -490,7 +499,6 @@ class TestVFS_Zip(unittest.TestCase):
         real2txt = b"asdf\n"
 
         # Establish basis for tests is correct.
-
         self.assertEqual(self.zs.open("/symlinktest.zip/real.txt").read(), realtxt)
         self.assertEqual(
             self.zs.open("/symlinktest.zip/subdir2/real2.txt").read(), real2txt
@@ -574,8 +582,12 @@ class TestVFS_Zip(unittest.TestCase):
 
 
 class ZIPHandler(BaseHandler):
+
+    handler: BaseHandler
+
     def canhandlerequest(self):
-        """We can handle the request if it's a ZIP file, in our pattern, etc.
+        """
+        We can handle the request if it's a ZIP file, in our pattern, etc.
         """
 
         if not self.config.getboolean("handlers.ZIP.ZIPHandler", "enabled"):
@@ -586,7 +598,7 @@ class ZIPHandler(BaseHandler):
         basename = self.selector
         appendage = None
 
-        while 1:
+        while True:
 
             if pattern.search(basename) and self.vfs.isfile(basename):
                 # is_zipfile() accepts filenames as bytes, but the type stub is incorrect
@@ -612,10 +624,11 @@ class ZIPHandler(BaseHandler):
             basename = head
 
     def _makehandler(self):
+        from pygopherd.handlers import HandlerMultiplexer
+
         if hasattr(self, "handler"):
             return
         vfs = VFS_Zip(self.config, self.vfs, self.basename)
-        from pygopherd.handlers import HandlerMultiplexer
 
         self.handler = HandlerMultiplexer.getHandler(
             self.getselector(), self.searchrequest, self.protocol, self.config, vfs=vfs
@@ -637,3 +650,58 @@ class ZIPHandler(BaseHandler):
     def getentry(self):
         self._makehandler()
         return self.handler.getentry()
+
+
+class TestZipHandler(unittest.TestCase):
+    def setUp(self) -> None:
+        from pygopherd import testutil
+
+        self.config = testutil.getconfig()
+        self.vfs = VFS_Real(self.config)
+        self.selector = "/testdata.zip"
+        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.stat_result = self.vfs.stat(self.selector)
+
+        self.config.set("handlers.ZIP.ZIPHandler", "enabled", "true")
+
+    def test_zip_handler_directory(self):
+        handler = ZIPHandler(
+            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
+        )
+        self.assertTrue(handler.canhandlerequest())
+
+        handler.prepare()
+        self.assertTrue(handler.isdir())
+
+        entry = handler.getentry()
+        self.assertEqual(entry.selector, "/testdata.zip")
+        self.assertEqual(entry.name, "testdata.zip")
+        self.assertEqual(entry.mimetype, "application/gopher-menu")
+
+        entries = handler.getdirlist()
+        self.assertEqual(len(entries), 7)
+
+        self.assertEqual(entries[0].selector, "/testdata.zip/README")
+        self.assertEqual(entries[0].name, "README")
+        self.assertEqual(entries[0].mimetype, "text/plain")
+
+    def test_zip_handler_file(self):
+        self.selector = "/testdata.zip/README"
+
+        handler = ZIPHandler(
+            self.selector, "", self.protocol, self.config, None, self.vfs
+        )
+        self.assertTrue(handler.canhandlerequest())
+
+        handler.prepare()
+        self.assertFalse(handler.isdir())
+
+        entry = handler.getentry()
+        self.assertEqual(entry.selector, "/testdata.zip/README")
+        self.assertEqual(entry.name, "README")
+        self.assertEqual(entry.mimetype, "text/plain")
+
+        wfile = io.BytesIO()
+        handler.write(wfile)
+        data = wfile.getvalue()
+        assert data.startswith(b"This directory contains data for the unit tests.")
