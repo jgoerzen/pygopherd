@@ -15,15 +15,15 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
+import unittest
 import re
 import stat
 
 from pygopherd import gopherentry
-from pygopherd.handlers import base
+from pygopherd.handlers.base import BaseHandler, VFS_Real
 
 
-class BuckGophermapHandler(base.BaseHandler):
+class BuckGophermapHandler(BaseHandler):
     """Bucktooth selector handler.  Adheres to the specification
     at gopher://gopher.floodgap.com:70/0/buck/dbrowse%3Ffaquse%201"""
 
@@ -76,7 +76,7 @@ class BuckGophermapHandler(base.BaseHandler):
         selectorbase = self.selectorbase
 
         with self.vfs.open(selector, "rb") as rfile:
-            while 1:
+            while True:
                 line = rfile.readline().decode(errors="surrogateescape")
                 if not line:
                     break
@@ -111,7 +111,48 @@ class BuckGophermapHandler(base.BaseHandler):
                     self.entries.append(gopherentry.getinfoentry(line, self.config))
 
     def isdir(self):
-        return 1
+        return True
 
     def getdirlist(self):
         return self.entries
+
+
+class TestBuckGophermapHandler(unittest.TestCase):
+    def setUp(self) -> None:
+        from pygopherd import testutil
+
+        self.config = testutil.getconfig()
+        self.vfs = VFS_Real(self.config)
+        self.selector = "/bucktooth"
+        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.stat_result = self.vfs.stat(self.selector)
+
+    def test_buck_gophermap_handler(self):
+        handler = BuckGophermapHandler(
+            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
+        )
+
+        self.assertTrue(handler.canhandlerequest())
+        self.assertTrue(handler.isdir())
+
+        handler.prepare()
+        entry = handler.getentry()
+        self.assertEqual(entry.mimetype, "application/gopher-menu")
+        self.assertEqual(entry.type, "1")
+
+        entries = handler.getdirlist()
+        self.assertTrue(entries)
+
+        expected = [
+            ("i", "hello world", "fake", "(NULL)", 0),
+            ("1", "filename", "/bucktooth/filename", None, None),
+            ("1", "filename", "/bucktooth/README", None, None),
+            ("1", "filename", "/bucktooth/selector", "hostname", None),
+            ("1", "filename", "/bucktooth/selector", "hostname", 69),
+        ]
+        for i, entry in enumerate(entries):
+            self.assertEqual(entry.type, expected[i][0])
+            self.assertEqual(entry.name, expected[i][1])
+            self.assertEqual(entry.selector, expected[i][2])
+            self.assertEqual(entry.host, expected[i][3])
+            self.assertEqual(entry.port, expected[i][4])
