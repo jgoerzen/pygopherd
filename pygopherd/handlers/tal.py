@@ -15,10 +15,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+from __future__ import annotations
 
 import html
 import io
 import os
+import typing
 import unittest
 
 from pygopherd import gopherentry
@@ -34,30 +36,28 @@ except ImportError:
 
 
 class TALLoader:
-    def __init__(self, vfs, path):
+    def __init__(self, vfs: VFS_Real, path: str):
         self.vfs = vfs
         self.path = path
 
-    def getpath(self):
+    def getpath(self) -> str:
         return self.path
 
-    def getparent(self):
+    def getparent(self) -> TALLoader:
         if self.path == "/":
             return self
         else:
             return self.__class__(self.vfs, os.path.dirname(self.path))
 
-    def getchildrennames(self):
+    def getchildrennames(self) -> typing.List[str]:
         return self.vfs.listdir(self.path)
-
-    # def getchildren(self):
-    #    return [self.__class__(self.vfs, os.path.join(self.path, item)) \
-    #            for item in self.getchildrennames()]
 
     def __getattr__(self, key):
         fq = os.path.join(self.path, key)
         if self.vfs.isfile(fq + ".html.tal"):
-            with self.vfs.open(fq + ".html.tal") as template_file:
+            with self.vfs.open(
+                fq + ".html.tal", "r", errors="replace"
+            ) as template_file:
                 compiled = simpleTAL.compileHTMLTemplate(template_file)
             return compiled
         elif self.vfs.isdir(fq):
