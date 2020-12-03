@@ -1,4 +1,5 @@
 testdata/.cache*
+*.cache*
 __pycache__
 .idea
 conf/local.conf
