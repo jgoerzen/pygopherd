@@ -15,35 +15,53 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+from __future__ import annotations
+
+import configparser
+import typing
 
 from pygopherd import GopherExceptions
+from pygopherd.handlers.base import VFS_Real, BaseHandler
 
 # Running eval() when loading the configuration requires all of the handlers to
 # be in the module namespace
 from pygopherd.handlers import *  # noqa
 
+
+if typing.TYPE_CHECKING:
+    from pygopherd.protocols.base import BaseGopherProtocol
+
+
 handlers = None
 rootpath = None
 
 
-def init_default_handlers(config):
+def init_default_handlers(config: configparser.ConfigParser) -> None:
     global handlers, rootpath
     if not handlers:
         handlers = eval(config.get("handlers.HandlerMultiplexer", "handlers"))
         rootpath = config.get("pygopherd", "root")
 
 
-def getHandler(selector, searchrequest, protocol, config, handlerlist=None, vfs=None):
+def getHandler(
+    selector: str,
+    searchrequest: str,
+    protocol: BaseGopherProtocol,
+    config: configparser.ConfigParser,
+    handlerlist: typing.Optional[typing.List[BaseHandler]] = None,
+    vfs: typing.Optional[VFS_Real] = None,
+):
     """Called without handlerlist specified, uses the default as listed
     in config."""
     global handlers, rootpath
+    init_default_handlers(config)
+
+    typing.cast(handlers, typing.List[BaseHandler])
+    typing.cast(rootpath, str)
 
     if vfs is None:
-        from pygopherd.handlers.base import VFS_Real
-
         vfs = VFS_Real(config)
 
-    init_default_handlers(config)
     if handlerlist is None:
         handlerlist = handlers
 
@@ -66,4 +84,4 @@ def getHandler(selector, searchrequest, protocol, config, handlerlist=None, vfs=
         if htry.isrequestforme():
             return htry.gethandler()
 
-    raise GopherExceptions.FileNotFound(selector, "no handler found", protocol)
+    raise GopherExceptions.FileNotFound(selector, "no handler found", str(protocol))
