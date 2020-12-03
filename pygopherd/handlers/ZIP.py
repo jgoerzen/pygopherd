@@ -29,11 +29,7 @@ import typing
 import unittest
 import zipfile
 
-from pygopherd.handlers import base
-
-
-if typing.TYPE_CHECKING:
-    from pygopherd.handlers.base import VFS_Real
+from pygopherd.handlers.base import VFS_Real, BaseHandler
 
 
 class MarshalingShelf(shelve.Shelf):
@@ -57,7 +53,7 @@ def shelveopen(
     return DbfilenameShelf(filename, flag)
 
 
-class VFS_Zip(base.VFS_Real):
+class VFS_Zip(VFS_Real):
     def __init__(
         self, config: configparser.ConfigParser, chain: VFS_Real, zipfilename: str
     ):
@@ -78,7 +74,7 @@ class VFS_Zip(base.VFS_Real):
     def _initcache(self) -> bool:
         """Returns 1 if a cache was found existing; 0 if not."""
         filename = self._getcachefilename()
-        if isinstance(self.chain, base.VFS_Real) and self.chain.iswritable(filename):
+        if isinstance(self.chain, VFS_Real) and self.chain.iswritable(filename):
             fspath = self.chain.getfspath(filename)
             zipfilemtime = self.chain.stat(self.zipfilename)[stat.ST_MTIME]
             try:
@@ -349,7 +345,7 @@ class TestVFS_Zip(unittest.TestCase):
         self.config = ConfigParser()
         self.config.add_section("pygopherd")
         self.config.set("pygopherd", "root", os.path.abspath("testdata"))
-        self.real = base.VFS_Real(self.config)
+        self.real = VFS_Real(self.config)
         self.z = VFS_Zip(self.config, self.real, "/testdata.zip")
         self.z2 = VFS_Zip(self.config, self.real, "/testdata2.zip")
         self.zs = VFS_Zip(self.config, self.real, "/symlinktest.zip")
@@ -577,7 +573,7 @@ class TestVFS_Zip(unittest.TestCase):
         )
 
 
-class ZIPHandler(base.BaseHandler):
+class ZIPHandler(BaseHandler):
     def canhandlerequest(self):
         """We can handle the request if it's a ZIP file, in our pattern, etc.
         """
