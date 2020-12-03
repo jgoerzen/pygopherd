@@ -361,7 +361,7 @@ class TestVFS_Zip(unittest.TestCase):
         m1.sort()
         m2.sort()
 
-        assert "pygopherd" in m1
+        self.assertIn("pygopherd", m1)
         self.assertEqual(m1, m2)
         self.assertEqual(
             m1,
@@ -388,11 +388,11 @@ class TestVFS_Zip(unittest.TestCase):
         self.assertEqual(m1, ["pipetest.sh", "pipetestdata", "ziponly"])
 
     def test_iswritable(self):
-        assert not self.z.iswritable("/testdata.zip")
-        assert not self.z.iswritable("/testdata.zip/README")
-        assert not self.z.iswritable("/testdata.zip/pygopherd")
-        # assert self.z.iswritable('/README')
-        # assert self.z.iswritable('/.foo')
+        self.assertFalse(self.z.iswritable("/testdata.zip"))
+        self.assertFalse(self.z.iswritable("/testdata.zip/README"))
+        self.assertFalse(self.z.iswritable("/testdata.zip/pygopherd"))
+        # self.assertTrue(self.z.iswritable('/README'))
+        # self.assertTrue(self.z.iswritable('/.foo'))
 
     def test_getfspath(self):
         self.assertEqual(self.z.getfspath("/testdata.zip/foo"), "foo")
@@ -402,42 +402,46 @@ class TestVFS_Zip(unittest.TestCase):
     def test_stat(self):
         self.assertRaises(OSError, self.z.stat, "/testdata.zip/nonexistant")
         # self.assertRaises(OSError, self.z.stat, '/nonexistant')
-        # assert stat.S_ISREG(self.z.stat('/testfile.txt')[0])
-        assert stat.S_ISDIR(self.z.stat("/testdata.zip")[0])
-        assert stat.S_ISREG(self.z.stat("/testdata.zip/README")[0])
-        assert stat.S_ISDIR(self.z.stat("/testdata.zip/pygopherd")[0])
-        assert stat.S_ISDIR(self.z2.stat("/testdata2.zip/pygopherd")[0])
-        assert stat.S_ISREG(self.z.stat("/testdata.zip/pygopherd/pipetest.sh")[0])
-        assert stat.S_ISREG(self.z2.stat("/testdata2.zip/pygopherd/pipetest.sh")[0])
+        # self.assertTrue(stat.S_ISREG(self.z.stat('/testfile.txt')[0]))
+        self.assertTrue(stat.S_ISDIR(self.z.stat("/testdata.zip")[0]))
+        self.assertTrue(stat.S_ISREG(self.z.stat("/testdata.zip/README")[0]))
+        self.assertTrue(stat.S_ISDIR(self.z.stat("/testdata.zip/pygopherd")[0]))
+        self.assertTrue(stat.S_ISDIR(self.z2.stat("/testdata2.zip/pygopherd")[0]))
+        self.assertTrue(
+            stat.S_ISREG(self.z.stat("/testdata.zip/pygopherd/pipetest.sh")[0])
+        )
+        self.assertTrue(
+            stat.S_ISREG(self.z2.stat("/testdata2.zip/pygopherd/pipetest.sh")[0])
+        )
 
     def test_isdir(self):
-        assert not self.z.isdir("/testdata.zip/README")
-        assert not self.z2.isdir("/testdata.zip/README")
-        assert self.z.isdir("/pygopherd")
-        assert self.z.isdir("/testdata.zip/pygopherd")
-        assert self.z2.isdir("/testdata2.zip/pygopherd")
-        assert self.z.isdir("/testdata.zip")
+        self.assertFalse(self.z.isdir("/testdata.zip/README"))
+        self.assertFalse(self.z2.isdir("/testdata.zip/README"))
+        self.assertTrue(self.z.isdir("/pygopherd"))
+        self.assertTrue(self.z.isdir("/testdata.zip/pygopherd"))
+        self.assertTrue(self.z2.isdir("/testdata2.zip/pygopherd"))
+        self.assertTrue(self.z.isdir("/testdata.zip"))
 
     def test_isfile(self):
-        assert self.z.isfile("/testdata.zip/README")
-        assert not self.z.isfile("/testdata.zip")
-        assert not self.z.isfile("/testdata.zip/pygopherd")
-        assert not self.z2.isfile("/testdata2.zip/pygopherd")
-        assert self.z.isfile("/testdata.zip/.abstract")
+        self.assertTrue(self.z.isfile("/testdata.zip/README"))
+        self.assertFalse(self.z.isfile("/testdata.zip"))
+        self.assertFalse(self.z.isfile("/testdata.zip/pygopherd"))
+        self.assertFalse(self.z2.isfile("/testdata2.zip/pygopherd"))
+        self.assertTrue(self.z.isfile("/testdata.zip/.abstract"))
 
     def test_exists(self):
-        assert self.z.exists("/README")
-        assert not self.z.exists("/READMEnonexistant")
-        assert self.z.exists("/testdata.zip")
-        assert self.z.exists("/testdata.zip/README")
-        assert self.z.exists("/testdata.zip/pygopherd")
-        assert self.z2.exists("/testdata2.zip/pygopherd")
-        # assert not self.z2.exists('/testdata.zip/pygopherd')
+        self.assertTrue(self.z.exists("/README"))
+        self.assertFalse(self.z.exists("/READMEnonexistant"))
+        self.assertTrue(self.z.exists("/testdata.zip"))
+        self.assertTrue(self.z.exists("/testdata.zip/README"))
+        self.assertTrue(self.z.exists("/testdata.zip/pygopherd"))
+        self.assertTrue(self.z2.exists("/testdata2.zip/pygopherd"))
+        # self.assertFalse(self.z2.exists('/testdata.zip/pygopherd')
 
     def test_symlinkexists(self):
-        assert self.zs.exists("/symlinktest.zip/real.txt")
-        assert self.zs.exists("/symlinktest.zip/linked.txt")
-        assert self.zs.exists("/symlinktest.zip/subdir/linktosubdir2")
+        self.assertTrue(self.zs.exists("/symlinktest.zip/real.txt"))
+        self.assertTrue(self.zs.exists("/symlinktest.zip/linked.txt"))
+        self.assertTrue(self.zs.exists("/symlinktest.zip/subdir/linktosubdir2"))
 
     def test_symlinkgetfspath(self):
         self.assertEqual(self.zs.getfspath("/symlinktest.zip"), "")
@@ -528,30 +532,32 @@ class TestVFS_Zip(unittest.TestCase):
         )
 
     def test_symlink_isdir(self):
-        assert self.zs.isdir("/symlinktest.zip/subdir")
-        assert self.zs.isdir("/symlinktest.zip/linktosubdir")
-        assert not self.zs.isdir("/symlinktest.zip/linked.txt")
-        assert not self.zs.isdir("/symlinktest.zip/real.txt")
+        self.assertTrue(self.zs.isdir("/symlinktest.zip/subdir"))
+        self.assertTrue(self.zs.isdir("/symlinktest.zip/linktosubdir"))
+        self.assertFalse(self.zs.isdir("/symlinktest.zip/linked.txt"))
+        self.assertFalse(self.zs.isdir("/symlinktest.zip/real.txt"))
 
-        assert self.zs.isdir("/symlinktest.zip/subdir/linktoself")
-        assert self.zs.isdir("/symlinktest.zip/subdir/linktosubdir2")
-        assert self.zs.isdir("/symlinktest.zip/linktosubdir/linktoself/linktosubdir2")
-        assert not self.zs.isdir("/symlinktest.zip/nonexistant")
-        assert not self.zs.isdir("/symlinktest.zip/subdir/linkedrel.txt")
-        assert self.zs.isdir("/symlinktest.zip")
+        self.assertTrue(self.zs.isdir("/symlinktest.zip/subdir/linktoself"))
+        self.assertTrue(self.zs.isdir("/symlinktest.zip/subdir/linktosubdir2"))
+        self.assertTrue(
+            self.zs.isdir("/symlinktest.zip/linktosubdir/linktoself/linktosubdir2")
+        )
+        self.assertFalse(self.zs.isdir("/symlinktest.zip/nonexistant"))
+        self.assertFalse(self.zs.isdir("/symlinktest.zip/subdir/linkedrel.txt"))
+        self.assertTrue(self.zs.isdir("/symlinktest.zip"))
 
     def test_symlink_isfile(self):
-        assert self.zs.isfile("/symlinktest.zip/real.txt")
-        assert not self.zs.isfile("/symlinktest.zip")
-        assert not self.zs.isfile("/symlinktest.zip/subdir")
-        assert not self.zs.isfile("/symlinktest.zip/linktosubdir")
-        assert self.zs.isfile("/symlinktest.zip/linktosubdir/linkedrel.txt")
-        assert self.zs.isfile("/symlinktest.zip/linktosubdir/linked2.txt")
-        assert self.zs.isfile(
-            "/symlinktest.zip/subdir/linktoself/linktosubdir2/real2.txt"
+        self.assertTrue(self.zs.isfile("/symlinktest.zip/real.txt"))
+        self.assertFalse(self.zs.isfile("/symlinktest.zip"))
+        self.assertFalse(self.zs.isfile("/symlinktest.zip/subdir"))
+        self.assertFalse(self.zs.isfile("/symlinktest.zip/linktosubdir"))
+        self.assertTrue(self.zs.isfile("/symlinktest.zip/linktosubdir/linkedrel.txt"))
+        self.assertTrue(self.zs.isfile("/symlinktest.zip/linktosubdir/linked2.txt"))
+        self.assertTrue(
+            self.zs.isfile("/symlinktest.zip/subdir/linktoself/linktosubdir2/real2.txt")
         )
-        assert not self.zs.isfile(
-            "/symlinktest.zip/subdir/linktoself/linktosubdir2/real.txt"
+        self.assertFalse(
+            self.zs.isfile("/symlinktest.zip/subdir/linktoself/linktosubdir2/real.txt")
         )
 
     def test_open(self):
@@ -559,7 +565,7 @@ class TestVFS_Zip(unittest.TestCase):
         self.assertRaises(IOError, self.z2.open, "/testdata2.zip/pygopherd")
         self.assertRaises(IOError, self.z2.open, "/testdata.zip/pygopherd")
 
-        assert self.z.open("/testdata.zip/.abstract")
+        self.assertTrue(self.z.open("/testdata.zip/.abstract"))
 
         self.assertEqual(self.z.open("/testdata.zip/testfile.txt").read(), b"Test\n")
         shouldbe = b"Word1\nWord2\nWord3\n"
