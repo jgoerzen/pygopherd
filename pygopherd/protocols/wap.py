@@ -17,7 +17,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import cgi
+import html
 import io
 import re
 from io import StringIO
@@ -88,9 +88,9 @@ class WAPProtocol(HTTPProtocol):
             else:
                 retstr += '<a href="%s">' % url
         if entry.getname() is not None:
-            thisname = cgi.escape(entry.getname())
+            thisname = html.escape(entry.getname())
         else:
-            thisname = cgi.escape(entry.getselector())
+            thisname = html.escape(entry.getselector())
         retstr += thisname
         if not entry.gettype() in ["i", "7"]:
             retstr += "</a>"
@@ -118,11 +118,11 @@ class WAPProtocol(HTTPProtocol):
         retval = wmlheader
         title = "Gopher"
         if self.entry.getname():
-            title = cgi.escape(self.entry.getname())
-        retval += '<card id="index" title="%s" newcontext="true">' % cgi.escape(title)
+            title = html.escape(self.entry.getname())
+        retval += '<card id="index" title="%s" newcontext="true">' % html.escape(title)
 
         retval += "\n<p>\n"
-        retval += "<b>%s</b><br/>\n" % cgi.escape(title)
+        retval += "<b>%s</b><br/>\n" % html.escape(title)
         return retval
 
     def renderdirend(self, entry):
@@ -144,7 +144,7 @@ class WAPProtocol(HTTPProtocol):
                 break
             line = line.rstrip()
             if len(line):
-                wfile.write(cgi.escape(line).encode(errors="surrogateescape") + b"\n")
+                wfile.write(html.escape(line).encode(errors="surrogateescape") + b"\n")
             else:
                 wfile.write(b"</p>\n<p>")
         wfile.write(b"</p>\n</card>\n</wml>\n")
@@ -156,5 +156,5 @@ class WAPProtocol(HTTPProtocol):
         wfile.write(wmlheader.encode())
         wfile.write(b'<card id="index" title="404 Error" newcontext="true">\n')
         wfile.write(b"<p><b>Gopher Error</b></p><p>\n")
-        wfile.write(cgi.escape(msg).encode(errors="surrogateescape") + b"\n")
+        wfile.write(html.escape(msg).encode(errors="surrogateescape") + b"\n")
         wfile.write(b"</p>\n</card>\n</wml>\n")
