@@ -15,15 +15,17 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
+import configparser
 import functools
-import os
 import os.path
+import typing
+import unittest
 
 import pygopherd.fileext
 from pygopherd.gopherentry import GopherEntry
 from pygopherd.handlers.dir import DirHandler
 from pygopherd.handlers.file import FileHandler
+from pygopherd.handlers.base import BaseHandler, VFS_Real
 
 extstrip = None
 
@@ -34,28 +36,28 @@ extstrip = None
 
 
 class LinkEntry(GopherEntry):
-    def __init__(self, selector, config):
+    def __init__(self, selector: str, config: configparser.ConfigParser):
         super().__init__(selector, config)
-        self.needsmerge = 0
-        self.needsabspath = 0
+        self.needsmerge = False
+        self.needsabspath = False
 
-    def getneedsmerge(self):
+    def getneedsmerge(self) -> bool:
         return self.needsmerge
 
-    def getneedsabspath(self):
+    def getneedsabspath(self) -> bool:
         return self.needsabspath
 
-    def setneedsmerge(self, arg):
+    def setneedsmerge(self, arg: bool) -> None:
         self.needsmerge = arg
 
-    def setneedsabspath(self, arg):
+    def setneedsabspath(self, arg: bool) -> None:
         self.needsabspath = arg
 
 
 class UMNDirHandler(DirHandler):
     """This module strives to be bug-compatible with UMN gopherd."""
 
-    def prepare(self):
+    def prepare(self) -> None:
         """Override parent to do a few more things and override sort order."""
         # Initialize.
         self.linkentries = []
@@ -68,7 +70,7 @@ class UMNDirHandler(DirHandler):
             self.MergeLinkFiles()
             self.fileentries.sort(key=functools.cmp_to_key(self.entrycmp))
 
-    def prep_initfiles_canaddfile(self, ignorepatt, pattern, file):
+    def prep_initfiles_canaddfile(self, ignorepatt, pattern, file) -> bool:
         """Override the parent to process dotfiles and keep them out
         of the list."""
         if super().prep_initfiles_canaddfile(ignorepatt, pattern, file):
@@ -79,14 +81,16 @@ class UMNDirHandler(DirHandler):
                     self.linkentries.extend(
                         self.processLinkFile(self.selectorbase + "/" + file)
                     )
-                    return 0
+                    return False
                 else:
-                    return 0  # A "dot dir" -- ignore.
-            return 1  # Not a dot file -- return true
+                    return False  # A "dot dir" -- ignore.
+            return True  # Not a dot file -- return true
         else:
-            return 0  # Parent returned 0, do the same.
+            return False  # Parent returned 0, do the same.
 
-    def prep_entriesappend(self, file, handler, fileentry):
+    def prep_entriesappend(
+        self, file: str, handler: BaseHandler, fileentry: GopherEntry
+    ) -> None:
         """Overridden to process .cap files and modify extensions.
         This is called by the
         parent's prepare to append an entry to the list.  Here, we check
@@ -119,7 +123,7 @@ class UMNDirHandler(DirHandler):
             pass
         super().prep_entriesappend(file, handler, fileentry)
 
-    def MergeLinkFiles(self):
+    def MergeLinkFiles(self) -> None:
         """Called to merge the files from .Links and .names into the
         objects obtained by walking the directory.  According to UMN code,
         we ONLY merge if the Path starts with ./ or ~/ in the file.  This
@@ -145,7 +149,7 @@ class UMNDirHandler(DirHandler):
             else:
                 self.fileentries.append(linkentry)
 
-    def mergeentries(self, old, new):
+    def mergeentries(self, old: GopherEntry, new: GopherEntry) -> None:
         """Takes the set fields from new and modifies old to have their
         value."""
         for field in ["selector", "type", "name", "host", "port"]:
@@ -155,12 +159,14 @@ class UMNDirHandler(DirHandler):
         for field in list(new.geteadict().keys()):
             old.setea(field, new.getea(field))
 
-    def processLinkFile(self, filename, capfilepath=None):
+    def processLinkFile(
+        self, filename: str, capfilepath: typing.Optional[str] = None
+    ) -> typing.List[LinkEntry]:
         """Processes a link file.  If capfilepath is set, it should
         be the equivolent of the Path= in a .names file."""
         linkentries = []
-        with self.vfs.open(filename, "r") as fd:
-            while 1:
+        with self.vfs.open(filename, "r", errors="surrogateescape") as fd:
+            while True:
                 nextstep, entry = self.getLinkItem(fd, capfilepath)
                 if entry:
                     linkentries.append(entry)
@@ -168,9 +174,11 @@ class UMNDirHandler(DirHandler):
                     break
         return linkentries
 
-    def getLinkItem(self, fd, capfilepath=None):
+    def getLinkItem(
+        self, fd: typing.IO, capfilepath: typing.Optional[str] = None
+    ) -> typing.Tuple[str, typing.Optional[LinkEntry]]:
         """This is an almost exact clone of UMN's GSfromLink function."""
-        entry = LinkEntry(self.entry.selector, self.config)
+        entry = LinkEntry(self.getentry().selector, self.config)
         nextstep = "continue"
 
         done = {"path": 0, "type": 0, "name": 0, "host": 0, "port": 0}
@@ -212,10 +220,10 @@ class UMNDirHandler(DirHandler):
                 if len(line) >= 7 and (line[5:7] == "./" or line[5:7] == "~/"):
                     # Handle ./: make full path.
                     entry.setselector(self.selectorbase + "/" + pathname[2:])
-                    entry.setneedsmerge(1)
+                    entry.setneedsmerge(True)
                 elif len(pathname) and pathname[0] != "/" and pathname[0:4] != "URL:":
                     entry.setselector(pathname)
-                    entry.setneedsabspath(1)
+                    entry.setneedsabspath(True)
                 else:
                     entry.setselector(pathname)
                 done["path"] = 1
@@ -246,7 +254,7 @@ class UMNDirHandler(DirHandler):
                 pass
             else:
                 break
-            ### FIXME: Handle Admin, URL, TTL
+            # FIXME: Handle Admin, URL, TTL
 
         if done["path"]:
             if (
@@ -260,7 +268,7 @@ class UMNDirHandler(DirHandler):
             return nextstep, entry
         return nextstep, None
 
-    def sgn(self, a):
+    def sgn(self, a: int) -> int:
         """Returns -1 if less than 0, 1 if greater than 0, and 0 if
         equal to zero."""
         if a == 0:
@@ -269,7 +277,7 @@ class UMNDirHandler(DirHandler):
             return -1
         return 1
 
-    def entrycmp(self, entry1, entry2):
+    def entrycmp(self, entry1: GopherEntry, entry2: GopherEntry) -> int:
         """This function implements an exact replica of UMN behavior
         GSqsortcmp() behavior."""
         if entry1.name is None:
@@ -298,3 +306,48 @@ class UMNDirHandler(DirHandler):
 # https://docs.python.org/3.0/whatsnew/3.0.html#ordering-comparisons
 def cmp(a, b):
     return (a > b) - (a < b)
+
+
+class TestUMNDirHandler(unittest.TestCase):
+    def setUp(self) -> None:
+        from pygopherd import testutil
+
+        self.config = testutil.getconfig()
+        self.vfs = VFS_Real(self.config)
+        self.selector = "/"
+        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.stat_result = self.vfs.stat(self.selector)
+
+        # Make sure there's no directory cache file from a previous test run
+        cachefile = self.config.get("handlers.dir.DirHandler", "cachefile")
+        try:
+            os.remove(self.vfs.getfspath(self.selector) + "/" + cachefile)
+        except OSError:
+            pass
+
+    def test_dir_handler(self):
+        handler = UMNDirHandler(
+            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
+        )
+
+        self.assertTrue(handler.canhandlerequest())
+        self.assertTrue(handler.isdir())
+
+        handler.prepare()
+        self.assertFalse(handler.fromcache)
+
+        entry = handler.getentry()
+        self.assertEqual(entry.mimetype, "application/gopher-menu")
+        self.assertEqual(entry.type, "1")
+
+        entries = handler.getdirlist()
+        self.assertTrue(entries)
+
+        # First entry should be the special link file
+        self.assertEqual(entries[0].name, "Cheese Ball Recipes")
+        self.assertEqual(entries[0].host, "zippy.micro.umn.edu")
+        self.assertEqual(entries[0].port, 150)
+
+        # Second entry should be the special cap file
+        self.assertEqual(entries[1].name, "New Long Cool Name")
+        self.assertEqual(entries[1].selector, "/zzz.txt")
