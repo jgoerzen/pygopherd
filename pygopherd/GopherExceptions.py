@@ -15,13 +15,26 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+from __future__ import annotations
+
+import typing
 
 from pygopherd import logger
+
+
+if typing.TYPE_CHECKING:
+    from pygopherd.protocols.base import BaseGopherProtocol
+    from pygopherd.handlers.base import BaseHandler
+
 
 tracebacks = 0
 
 
-def log(exception, protocol=None, handler=None):
+def log(
+    exception: Exception,
+    protocol: typing.Optional[BaseGopherProtocol] = None,
+    handler: typing.Optional[BaseHandler] = None,
+):
     """Logs an exception.  It will try to generate a nice-looking string
     based on the arguments passed in."""
     protostr = "None"
@@ -45,8 +58,13 @@ def init(backtraceenabled):
     tracebacks = backtraceenabled
 
 
-class FileNotFound(BaseException):
-    def __init__(self, selector: str, comments: str = "", protocol: str = ""):
+class FileNotFound(Exception):
+    def __init__(
+        self,
+        selector: str,
+        comments: str = "",
+        protocol: typing.Optional[BaseGopherProtocol] = None,
+    ):
         self.selector = selector
         self.comments = comments
         self.protocol = protocol
