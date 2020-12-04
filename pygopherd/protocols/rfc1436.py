@@ -28,8 +28,6 @@ class GopherProtocol(BaseGopherProtocol):
         return 1
 
     def renderobjinfo(self, entry):
-        # print entry.gettype(), entry.getname(), entry.getselector(), \
-        #      entry.gethost(), entry.getport(), entry.getgopherpsupport()
         retval = (
             entry.gettype("0")
             + entry.getname()
