@@ -19,6 +19,7 @@
 
 import binascii
 import cgi
+import html
 import re
 import time
 import urllib.error
@@ -146,9 +147,9 @@ class HTTPProtocol(BaseGopherProtocol):
             retstr += '<A HREF="%s">' % url
         retstr += "<TT>"
         if entry.getname() is not None:
-            retstr += cgi.escape(entry.getname())
+            retstr += html.escape(entry.getname())
         else:
-            retstr += cgi.escape(entry.getselector())
+            retstr += html.escape(entry.getselector())
         retstr += "</TT>"
         if entry.gettype() != "i" and entry.gettype() != "7":
             retstr += "</A>"
@@ -161,7 +162,7 @@ class HTTPProtocol(BaseGopherProtocol):
         if entry.getmimetype():
             subtype = re.search("/.+$", entry.getmimetype())
             if subtype:
-                retstr += cgi.escape(subtype.group()[1:])
+                retstr += html.escape(subtype.group()[1:])
         retstr += "</FONT></TD></TR>\n"
         return retstr
 
@@ -169,7 +170,7 @@ class HTTPProtocol(BaseGopherProtocol):
         retstr = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">'
         retstr += "\n<HTML><HEAD><TITLE>Gopher"
         if self.entry.getname():
-            retstr += ": " + cgi.escape(self.entry.getname())
+            retstr += ": " + html.escape(self.entry.getname())
         retstr += "</TITLE></HEAD><BODY>"
         if self.config.has_option("protocols.http.HTTPProtocol", "pagetopper"):
             retstr += re.sub(
@@ -179,7 +180,7 @@ class HTTPProtocol(BaseGopherProtocol):
             )
         retstr += "<H1>Gopher"
         if self.entry.getname():
-            retstr += ": " + cgi.escape(self.entry.getname())
+            retstr += ": " + html.escape(self.entry.getname())
         retstr += '</H1><TABLE WIDTH="100%" CELLSPACING="1" CELLPADDING="0">'
         return retstr
 
@@ -205,7 +206,7 @@ class HTTPProtocol(BaseGopherProtocol):
         <H1>Selector Not Found</H1>
         <TT>"""
         )
-        self.wfile.write(cgi.escape(msg).encode(errors="surrogateescape"))
+        self.wfile.write(html.escape(msg).encode(errors="surrogateescape"))
         self.wfile.write(b"</TT><HR>Pygopherd</BODY></HTML>\n")
 
     def getimgtag(self, entry):
