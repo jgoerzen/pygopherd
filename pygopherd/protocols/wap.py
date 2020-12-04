@@ -22,7 +22,7 @@ import io
 import re
 from io import StringIO
 
-from .http import HTTPProtocol
+from pygopherd.protocols.http import HTTPProtocol
 
 accesskeys = "1234567890#*"
 wmlheader = """<?xml version="1.0"?>
