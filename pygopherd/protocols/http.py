@@ -16,9 +16,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
+import unittest
+import io
 import binascii
-import cgi
 import html
 import re
 import time
@@ -73,7 +73,7 @@ class HTTPProtocol(BaseGopherProtocol):
         self.selector = self.slashnormalize(self.selector)
         self.formvals = {}
         if len(splitted) >= 2:
-            self.formvals = cgi.parse_qs(splitted[1])
+            self.formvals = urllib.parse.parse_qs(splitted[1])
 
         if "searchrequest" in self.formvals:
             self.searchrequest = self.formvals["searchrequest"][0]
@@ -228,3 +228,91 @@ icons = {
     "generic.gif": "47494638396114001600c20000ffffffccffff99999933333300000000000000000000000021fe4e546869732061727420697320696e20746865207075626c696320646f6d61696e2e204b6576696e204875676865732c206b6576696e68406569742e636f6d2c2053657074656d62657220313939350021f90401000001002c000000001400160000035038babcf1300c40ab9d23be693bcf11d75522b88dd705892831b8f08952446d13f24c09bc804b3a4befc70a027c39e391a8ac2081cd65d2f82c06ab5129b4898d76b94c2f71d02b9b79afc86dcdfe2500003b",
     "blank.gif": "47494638396114001600a10000ffffffccffff00000000000021fe4e546869732061727420697320696e20746865207075626c696320646f6d61696e2e204b6576696e204875676865732c206b6576696e68406569742e636f6d2c2053657074656d62657220313939350021f90401000001002c00000000140016000002138c8fa9cbed0fa39cb4da8bb3debcfb0f864901003b",
 }
+
+
+class TestHTTPProtocol(unittest.TestCase):
+    def setUp(self):
+        from pygopherd import testutil
+
+        self.config = testutil.getconfig()
+        self.logfile = testutil.getstringlogger()
+        self.rfile = io.BytesIO(b"Accept:text/plain\nHost:localhost.com\n\n")
+        self.wfile = io.BytesIO()
+        self.handler = testutil.gettestinghandler(self.rfile, self.wfile, self.config)
+
+    def test_http_handler(self):
+        request = "GET / HTTP/1.1"
+        protocol = HTTPProtocol(
+            request,
+            self.handler.server,
+            self.handler,
+            self.rfile,
+            self.wfile,
+            self.config,
+        )
+
+        self.assertTrue(protocol.canhandlerequest())
+
+        protocol.handle()
+        self.assertEqual(protocol.httpheaders["host"], "localhost.com")
+
+        response = self.wfile.getvalue().decode()
+        self.assertIn("HTTP/1.0 200 OK", response)
+        self.assertIn("Content-Type: text/html", response)
+        self.assertIn('SRC="/PYGOPHERD-HTTPPROTO-ICONS/text.gif"', response)
+
+    def test_http_handler_icon(self):
+        request = "GET /PYGOPHERD-HTTPPROTO-ICONS/text.gif HTTP/1.1"
+        protocol = HTTPProtocol(
+            request,
+            self.handler.server,
+            self.handler,
+            self.rfile,
+            self.wfile,
+            self.config,
+        )
+
+        self.assertTrue(protocol.canhandlerequest())
+
+        protocol.handle()
+        response = self.wfile.getvalue()
+        self.assertIn(b"HTTP/1.0 200 OK", response)
+        self.assertIn(b"Content-Type: image/gif", response)
+        self.assertIn(b"This art is in the public domain", response)
+
+    def test_http_handler_not_found(self):
+        request = "GET /invalid-filename HTTP/1.1"
+        protocol = HTTPProtocol(
+            request,
+            self.handler.server,
+            self.handler,
+            self.rfile,
+            self.wfile,
+            self.config,
+        )
+
+        self.assertTrue(protocol.canhandlerequest())
+
+        protocol.handle()
+        response = self.wfile.getvalue().decode()
+        self.assertIn("HTTP/1.0 404 Not Found", response)
+        self.assertIn("Content-Type: text/html", response)
+        self.assertIn(
+            "&#x27;/invalid-filename&#x27; does not exist (no handler found)", response
+        )
+
+    def test_http_handler_search(self):
+        request = "GET /?searchrequest=foo%20bar HTTP/1.1"
+        protocol = HTTPProtocol(
+            request,
+            self.handler.server,
+            self.handler,
+            self.rfile,
+            self.wfile,
+            self.config,
+        )
+
+        self.assertTrue(protocol.canhandlerequest())
+
+        protocol.handle()
+        self.assertEqual(protocol.searchrequest, "foo bar")
