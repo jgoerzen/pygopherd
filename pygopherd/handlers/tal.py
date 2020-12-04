@@ -153,7 +153,7 @@ Math: <b>4</b>
 
 class TestTALHandler(unittest.TestCase):
     def setUp(self) -> None:
-        from pygopherd import testutil, initialization
+        from pygopherd import initialization, testutil
 
         self.config = testutil.getconfig()
         self.vfs = VFS_Real(self.config)

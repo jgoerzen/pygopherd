@@ -21,12 +21,10 @@ import configparser
 import typing
 
 from pygopherd import GopherExceptions
-from pygopherd.handlers.base import VFS_Real, BaseHandler
-
 # Running eval() when loading the configuration requires all of the handlers to
 # be in the module namespace
 from pygopherd.handlers import *  # noqa
-
+from pygopherd.handlers.base import BaseHandler, VFS_Real
 
 if typing.TYPE_CHECKING:
     from pygopherd.protocols.base import BaseGopherProtocol

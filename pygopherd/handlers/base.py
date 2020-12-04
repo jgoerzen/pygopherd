@@ -18,9 +18,9 @@
 from __future__ import annotations
 
 import configparser
-import typing
 import os
 import os.path
+import typing
 
 from pygopherd import gopherentry
 

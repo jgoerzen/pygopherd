@@ -19,9 +19,9 @@
 import io
 import os.path
 import re
+import stat
 import typing
 import unittest
-import stat
 from mailbox import Maildir, Message, mbox
 
 from pygopherd import gopherentry

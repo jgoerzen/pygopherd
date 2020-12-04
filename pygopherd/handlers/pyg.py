@@ -1,8 +1,8 @@
 import imp
 import io
 import re
-import unittest
 import stat
+import unittest
 
 from pygopherd.handlers.base import VFS_Real
 from pygopherd.handlers.virtual import Virtual

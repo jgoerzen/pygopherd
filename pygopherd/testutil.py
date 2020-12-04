@@ -19,9 +19,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # END OF COPYRIGHT #
 import configparser
-from io import StringIO, BytesIO
 import os
 import typing
+from io import BytesIO, StringIO
 
 from pygopherd import initialization, logger
 from pygopherd.initialization import AbstractServer

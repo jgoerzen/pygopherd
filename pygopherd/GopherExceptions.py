@@ -21,10 +21,9 @@ import typing
 
 from pygopherd import logger
 
-
 if typing.TYPE_CHECKING:
-    from pygopherd.protocols.base import BaseGopherProtocol
     from pygopherd.handlers.base import BaseHandler
+    from pygopherd.protocols.base import BaseGopherProtocol
 
 
 tracebacks = 0

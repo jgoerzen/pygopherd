@@ -23,8 +23,8 @@ import re
 import unittest
 
 from pygopherd import testutil
-from pygopherd.handlers.file import FileHandler
 from pygopherd.handlers.base import VFS_Real
+from pygopherd.handlers.file import FileHandler
 
 
 ###########################################################################

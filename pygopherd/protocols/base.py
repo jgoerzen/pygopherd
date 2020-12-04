@@ -17,16 +17,16 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from __future__ import annotations
 
+import configparser
 import io
 import typing
-import configparser
 
 from pygopherd import GopherExceptions, gopherentry, logger
 
 if typing.TYPE_CHECKING:
-    from pygopherd.initialization import GopherRequestHandler, AbstractServer
-    from pygopherd.handlers.base import BaseHandler
     from pygopherd.gopherentry import GopherEntry
+    from pygopherd.handlers.base import BaseHandler
+    from pygopherd.initialization import AbstractServer, GopherRequestHandler
 
 
 class BaseGopherProtocol:

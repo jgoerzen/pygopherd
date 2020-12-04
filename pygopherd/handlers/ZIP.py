@@ -17,12 +17,12 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from __future__ import annotations
 
-import io
+import codecs
 import configparser
 import dbm
+import io
 import marshal
 import os.path
-import codecs
 import re
 import shelve
 import stat
@@ -31,7 +31,7 @@ import typing
 import unittest
 import zipfile
 
-from pygopherd.handlers.base import VFS_Real, BaseHandler
+from pygopherd.handlers.base import BaseHandler, VFS_Real
 
 
 class MarshalingShelf(shelve.Shelf):

@@ -22,7 +22,6 @@ import io
 import mimetypes
 import os
 import os.path
-
 # Import lots of stuff so it's here before chrooting.
 import socket
 import socketserver

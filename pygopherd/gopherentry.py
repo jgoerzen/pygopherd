@@ -24,10 +24,10 @@ import os.path
 import re
 import stat
 import typing
-from typing import Optional
 import urllib.error
 import urllib.parse
 import urllib.request
+from typing import Optional
 
 mapping = None
 eaexts = None

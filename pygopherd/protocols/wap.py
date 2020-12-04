@@ -18,10 +18,10 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from __future__ import annotations
 
-import typing
 import html
-import re
 import io
+import re
+import typing
 import unittest
 
 from pygopherd.protocols.http import HTTPProtocol

@@ -1,6 +1,6 @@
+import typing
 import unittest
 from io import BytesIO
-import typing
 
 from pygopherd import testutil
 from pygopherd.handlers import HandlerMultiplexer

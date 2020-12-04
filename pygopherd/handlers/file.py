@@ -17,11 +17,11 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 import io
 import re
-import unittest
 import stat
 import subprocess
-import typing
 import tempfile
+import typing
+import unittest
 
 from pygopherd import gopherentry
 from pygopherd.handlers.base import BaseHandler, VFS_Real

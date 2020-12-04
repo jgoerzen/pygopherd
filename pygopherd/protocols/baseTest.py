@@ -3,8 +3,8 @@ from io import BytesIO
 
 import pygopherd.handlers.file
 from pygopherd import testutil
-from pygopherd.protocols.base import BaseGopherProtocol
 from pygopherd.gopherentry import GopherEntry
+from pygopherd.protocols.base import BaseGopherProtocol
 
 
 class BaseProtocolTestCase(unittest.TestCase):

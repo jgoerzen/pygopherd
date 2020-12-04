@@ -23,9 +23,9 @@ import unittest
 
 import pygopherd.fileext
 from pygopherd.gopherentry import GopherEntry
+from pygopherd.handlers.base import BaseHandler, VFS_Real
 from pygopherd.handlers.dir import DirHandler
 from pygopherd.handlers.file import FileHandler
-from pygopherd.handlers.base import BaseHandler, VFS_Real
 
 extstrip = None
 

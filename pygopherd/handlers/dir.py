@@ -15,15 +15,15 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-import unittest
+import os
 import pickle
 import re
 import stat
 import time
-import os
+import unittest
 
 from pygopherd import gopherentry, handlers
-from pygopherd.handlers.base import VFS_Real, BaseHandler
+from pygopherd.handlers.base import BaseHandler, VFS_Real
 
 
 class DirHandler(BaseHandler):
