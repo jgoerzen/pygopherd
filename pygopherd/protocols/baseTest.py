@@ -4,6 +4,7 @@ from io import BytesIO
 import pygopherd.handlers.file
 from pygopherd import testutil
 from pygopherd.protocols.base import BaseGopherProtocol
+from pygopherd.gopherentry import GopherEntry
 
 
 class BaseProtocolTestCase(unittest.TestCase):
@@ -123,16 +124,16 @@ class BaseProtocolTestCase(unittest.TestCase):
         # Make sure caching works.
         assert handler == self.proto.gethandler()
 
-    ## CANNOT TEST: writedir, renderabstract
+    # CANNOT TEST: writedir, renderabstract
 
     def testrenderdirstart(self):
-        assert self.proto.renderdirstart("foo") is None
+        assert self.proto.renderdirstart(GopherEntry("foo", self.config)) is None
 
     def testrenderdirend(self):
-        assert self.proto.renderdirend("foo") is None
+        assert self.proto.renderdirend(GopherEntry("foo", self.config)) is None
 
     def testrenderobjinfo(self):
-        assert self.proto.renderobjinfo("foo") is None
+        assert self.proto.renderobjinfo(GopherEntry("foo", self.config)) is None
 
     def testgroksabstract(self):
         assert not self.proto.groksabstract()
