@@ -107,13 +107,13 @@ class GopherRequestHandler(socketserver.StreamRequestHandler):
         except socket.error as e:
             if not (e[0] in [errno.ECONNRESET, errno.EPIPE]):
                 traceback.print_exc()
-            GopherExceptions.log(sys.exc_info()[1], protohandler, None)
-        except:
+            GopherExceptions.log(e, protohandler, None)
+        except Exception as e:
             if GopherExceptions.tracebacks:
                 # Yes, this may be invalid.  Not much else we can do.
                 # traceback.print_exc(file = self.wfile)
                 traceback.print_exc()
-            GopherExceptions.log(sys.exc_info()[1], protohandler, None)
+            GopherExceptions.log(e, protohandler, None)
 
 
 def getserverobject(config: ConfigParser) -> AbstractServer:
@@ -157,8 +157,8 @@ def getserverobject(config: ConfigParser) -> AbstractServer:
         s = MyServer(
             (interface, config.getint("pygopherd", "port")), GopherRequestHandler
         )
-    except:
-        GopherExceptions.log(sys.exc_info()[1], None, None)
+    except Exception as e:
+        GopherExceptions.log(e, None, None)
         logger.log("Application startup NOT successful!")
         raise
 
@@ -166,7 +166,7 @@ def getserverobject(config: ConfigParser) -> AbstractServer:
     return s
 
 
-def initsecurity(config):
+def initsecurity(config: ConfigParser):
     idsetuid = None
     idsetgid = None
 
@@ -198,7 +198,7 @@ def initsecurity(config):
         logger.log("Switched to uid %d" % idsetuid)
 
 
-def initconditionaldetach(config):
+def initconditionaldetach(config: ConfigParser):
     if config.getboolean("pygopherd", "detach"):
         pid = os.fork()
         if pid:
@@ -206,7 +206,7 @@ def initconditionaldetach(config):
             sys.exit(0)
 
 
-def initpidfile(config):
+def initpidfile(config: ConfigParser):
     if config.has_option("pygopherd", "pidfile"):
         pidfile = config.get("pygopherd", "pidfile")
 
@@ -214,7 +214,7 @@ def initpidfile(config):
             fd.write("%d\n" % os.getpid())
 
 
-def initpgrp(config):
+def initpgrp(config: ConfigParser):
     if "setpgrp" in os.__dict__:
         os.setpgrp()
         pgrp = os.getpgrp()
@@ -225,12 +225,12 @@ def initpgrp(config):
         return None
 
 
-def initsighandlers(config, pgrp):
+def initsighandlers(config: ConfigParser, pgrp):
     sighandlers.setsighuphandler()
     sighandlers.setsigtermhandler(pgrp)
 
 
-def initeverything(conffile):
+def initeverything(conffile: str) -> AbstractServer:
     config = initconffile(conffile)
     initlogger(config, conffile)
     initexceptions(config)
