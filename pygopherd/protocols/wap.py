@@ -16,13 +16,19 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+from __future__ import annotations
 
+import typing
 import html
-import io
 import re
-from io import StringIO
+import io
+import unittest
 
 from pygopherd.protocols.http import HTTPProtocol
+
+if typing.TYPE_CHECKING:
+    from pygopherd.protocols.base import GopherEntry
+
 
 accesskeys = "1234567890#*"
 wmlheader = """<?xml version="1.0"?>
@@ -33,38 +39,37 @@ wmlheader = """<?xml version="1.0"?>
 
 
 class WAPProtocol(HTTPProtocol):
-    # canhandlerequest inherited
-    def canhandlerequest(self):
+    def canhandlerequest(self) -> bool:
         ishttp = HTTPProtocol.canhandlerequest(self)
         if not ishttp:
-            return 0
+            return False
 
         waptop = self.config.get("protocols.wap.WAPProtocol", "waptop")
         self.waptop = waptop
         if self.requestparts[1].startswith(waptop):
             # If it starts with waptop, *guaranteed* to be wap.
             self.requestparts[1] = self.requestparts[1][len(waptop) :]
-            return 1
+            return True
 
         self.headerslurp()
 
         # See if we can auto-detect a WAP browser.
         if "accept" not in self.httpheaders:
-            return 0
+            return False
 
         if not re.search("[, ]text/vnd.wap.wml", self.httpheaders["accept"]):
-            return 0
+            return False
 
         # By now, we know that it lists WML in accept.  Let's try a few
         # more things.
 
         for tryitem in ["x-wap-profile", "x-up-devcap-max-pdu"]:
             if tryitem in self.httpheaders:
-                return 1
+                return True
 
-        return 0
+        return False
 
-    def adjustmimetype(self, mimetype):
+    def adjustmimetype(self, mimetype: typing.Optional[str]) -> str:
         self.needsconversion = 0
         if mimetype is None or mimetype == "text/plain":
             self.needsconversion = 1
@@ -73,7 +78,7 @@ class WAPProtocol(HTTPProtocol):
             return "text/vnd.wap.wml"
         return mimetype
 
-    def getrenderstr(self, entry, url):
+    def getrenderstr(self, entry: GopherEntry, url: str) -> str:
         if url.startswith("/"):
             url = self.waptop + url
         retstr = ""
@@ -112,7 +117,7 @@ class WAPProtocol(HTTPProtocol):
         self.postfieldidx += 1
         return retstr
 
-    def renderdirstart(self, entry):
+    def renderdirstart(self, entry: GopherEntry) -> str:
         self.accesskeyidx = 0
         self.postfieldidx = 0
         retval = wmlheader
@@ -125,21 +130,22 @@ class WAPProtocol(HTTPProtocol):
         retval += "<b>%s</b><br/>\n" % html.escape(title)
         return retval
 
-    def renderdirend(self, entry):
+    def renderdirend(self, entry: GopherEntry) -> str:
         return "</p>\n</card>\n</wml>\n"
 
-    def handlerwrite(self, wfile: io.BufferedIOBase):
+    def handlerwrite(self, wfile: typing.BinaryIO) -> None:
         if not self.needsconversion:
             self.handler.write(wfile)
             return
-        fakefile = StringIO()
+
+        fakefile = io.BytesIO()
         self.handler.write(fakefile)
         fakefile.seek(0)
         wfile.write(wmlheader.encode())
         wfile.write(b'<card id="index" title="Text File" newcontext="true">\n')
         wfile.write(b"<p>\n")
         while 1:
-            line = fakefile.readline()
+            line = fakefile.readline().decode(errors="surrogateescape")
             if not len(line):
                 break
             line = line.rstrip()
@@ -158,3 +164,70 @@ class WAPProtocol(HTTPProtocol):
         wfile.write(b"<p><b>Gopher Error</b></p><p>\n")
         wfile.write(html.escape(msg).encode(errors="surrogateescape") + b"\n")
         wfile.write(b"</p>\n</card>\n</wml>\n")
+
+
+class TestWAPProtocol(unittest.TestCase):
+    def setUp(self):
+        from pygopherd import testutil
+
+        self.config = testutil.getconfig()
+        self.logfile = testutil.getstringlogger()
+        self.rfile = io.BytesIO(b"Accept:text/plain\nHost:localhost.com\n\n")
+        self.wfile = io.BytesIO()
+        self.handler = testutil.gettestinghandler(self.rfile, self.wfile, self.config)
+
+    def test_wap_handler(self):
+        request = "GET /wap HTTP/1.1"
+        protocol = WAPProtocol(
+            request,
+            self.handler.server,
+            self.handler,
+            self.rfile,
+            self.wfile,
+            self.config,
+        )
+
+        self.assertTrue(protocol.canhandlerequest())
+
+        protocol.handle()
+        self.assertEqual(protocol.httpheaders["host"], "localhost.com")
+
+        response = self.wfile.getvalue().decode()
+        self.assertIn("HTTP/1.0 200 OK", response)
+        self.assertIn("Content-Type: text/vnd.wap.wml", response)
+        self.assertIn('href="/wap/README">README</a>', response)
+
+    def test_wap_handler_not_found(self):
+        request = "GET /wap/invalid-filename HTTP/1.1"
+        protocol = WAPProtocol(
+            request,
+            self.handler.server,
+            self.handler,
+            self.rfile,
+            self.wfile,
+            self.config,
+        )
+
+        self.assertTrue(protocol.canhandlerequest())
+
+        protocol.handle()
+        response = self.wfile.getvalue().decode()
+        self.assertIn("HTTP/1.0 200 Not Found", response)
+        self.assertIn("Content-Type: text/vnd.wap.wml", response)
+        self.assertIn('<card id="index" title="404 Error" newcontext="true">', response)
+
+    def test_wap_handler_search(self):
+        request = "GET /wap/?searchrequest=foo%20bar HTTP/1.1"
+        protocol = WAPProtocol(
+            request,
+            self.handler.server,
+            self.handler,
+            self.rfile,
+            self.wfile,
+            self.config,
+        )
+
+        self.assertTrue(protocol.canhandlerequest())
+
+        protocol.handle()
+        self.assertEqual(protocol.searchrequest, "foo bar")
