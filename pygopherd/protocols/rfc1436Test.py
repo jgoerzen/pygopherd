@@ -1,9 +1,7 @@
-import re
 import unittest
 from io import BytesIO
 import typing
 
-from pygopherd import fileext
 from pygopherd import testutil
 from pygopherd.handlers import HandlerMultiplexer
 from pygopherd.protocols.rfc1436 import GopherProtocol
