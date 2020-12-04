@@ -22,7 +22,6 @@ import typing
 import configparser
 
 from pygopherd import GopherExceptions, gopherentry, logger
-from pygopherd.handlers import HandlerMultiplexer
 
 if typing.TYPE_CHECKING:
     from pygopherd.initialization import GopherRequestHandler, AbstractServer
@@ -120,6 +119,8 @@ class BaseGopherProtocol:
 
     def gethandler(self) -> BaseHandler:
         """Gets the handler for this object's selector."""
+        from pygopherd.handlers import HandlerMultiplexer
+
         if not self.handler:
             self.handler = HandlerMultiplexer.getHandler(
                 self.selector, self.searchrequest, self, self.config
