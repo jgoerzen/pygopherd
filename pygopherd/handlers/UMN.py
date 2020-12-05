@@ -349,5 +349,5 @@ class TestUMNDirHandler(unittest.TestCase):
         self.assertEqual(entries[0].port, 150)
 
         # Second entry should be the special cap file
-        self.assertEqual(entries[1].name, "New Long Cool Name")
-        self.assertEqual(entries[1].selector, "/zzz.txt")
+        self.assertEqual(entries[2].name, "New Long Cool Name")
+        self.assertEqual(entries[2].selector, "/zzz.txt")

@@ -319,7 +319,7 @@ class TestGopherPlusProtocol(unittest.TestCase):
         response = self.wfile.getvalue().decode()
 
         self.assertIn("+INFO: 0README\t", response)
-        self.assertIn("+INFO: 0testfile.txt\t", response)
+        self.assertIn("+INFO: 0testfile\t", response)
 
     def test_ask_query(self):
         """
