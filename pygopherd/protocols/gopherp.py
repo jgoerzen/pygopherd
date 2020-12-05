@@ -16,7 +16,10 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+import io
 import time
+import typing
+import unittest
 
 from pygopherd import GopherExceptions
 from pygopherd.protocols.rfc1436 import GopherProtocol
@@ -26,19 +29,22 @@ class GopherPlusProtocol(GopherProtocol):
     """Implementation of Gopher+ protocol.  Will handle Gopher+
     queries ONLY."""
 
+    gopherpstring: str
+    handlemethod: typing.Optional[str]
+
     def canhandlerequest(self):
         """We can handle the request IF:
            * It has more than one parameter in the request list
            * The second parameter is ! or starts with + or $"""
         if len(self.requestlist) < 2:
-            return 0
+            return False
         if len(self.requestlist) == 2:
             self.gopherpstring = self.requestlist[1]
         elif len(self.requestlist) == 3:
             self.gopherpstring = self.requestlist[2]
             self.searchrequest = self.requestlist[1]
         else:
-            return 0  # Too many params.
+            return False  # Too many params.
 
         return (
             self.gopherpstring[0] == "+"
@@ -149,7 +155,7 @@ class GopherPlusProtocol(GopherProtocol):
                 retstr += " " + entry.getlanguage()
             retstr += ":"
             if entry.getsize() is not None:
-                retstr += " <%dk>" % (entry.getsize() / 1024)
+                retstr += " <%dk>" % (entry.getsize() // 1024)
             retstr += "\r\n"
         return retstr
 
@@ -166,7 +172,7 @@ class GopherPlusProtocol(GopherProtocol):
         else:
             return self.getallblocks(entry)
 
-    def filenotfound(self, msg):
+    def filenotfound(self, msg: str) -> None:
         self.wfile.write(b"--2\r\n")
         self.wfile.write(b"1 ")
         self.wfile.write(
@@ -174,8 +180,8 @@ class GopherPlusProtocol(GopherProtocol):
         )
         self.wfile.write(f"\r\n{msg}\r\n".encode(errors="surrogateescape"))
 
-    def groksabstract(self):
-        return 1
+    def groksabstract(self) -> bool:
+        return True
 
 
 class URLGopherPlus(GopherPlusProtocol):
@@ -186,3 +192,136 @@ class URLGopherPlus(GopherPlusProtocol):
         return "+URL: %s\r\n" % entry.geturl(
             self.server.server_name, self.server.server_port
         )
+
+
+class TestGopherPlusProtocol(unittest.TestCase):
+    def setUp(self):
+        from pygopherd import testutil
+
+        self.config = testutil.getconfig()
+        self.logfile = testutil.getstringlogger()
+        self.rfile = io.BytesIO()
+        self.wfile = io.BytesIO()
+        self.handler = testutil.gettestinghandler(self.rfile, self.wfile, self.config)
+
+    def test_get_file(self):
+        request = "/README\t+"
+        protocol = GopherPlusProtocol(
+            request,
+            self.handler.server,
+            self.handler,
+            self.rfile,
+            self.wfile,
+            self.config,
+        )
+
+        self.assertTrue(protocol.canhandlerequest())
+
+        protocol.handle()
+        self.assertEqual(protocol.gopherpstring, "+")
+        self.assertEqual(protocol.handlemethod, "documentonly")
+
+        response = self.wfile.getvalue().decode()
+
+        expected = [
+            "+142",
+            "This directory contains data for the unit tests.",
+            "",
+            "Some tests are dependant upon the precise length of files; those files are",
+            "added with -kb.",
+            "",
+        ]
+        self.assertListEqual(response.splitlines(keepends=False), expected)
+
+        # 142 byte filesize + 6 bytes for the "+142\r\n"
+        self.assertTrue(len(response.encode()), 148)
+
+    def test_file_not_found(self):
+        protocol = GopherPlusProtocol(
+            "/invalid-selector\t+",
+            self.handler.server,
+            self.handler,
+            self.rfile,
+            self.wfile,
+            self.config,
+        )
+
+        self.assertTrue(protocol.canhandlerequest())
+
+        protocol.handle()
+        self.assertEqual(protocol.gopherpstring, "+")
+        self.assertEqual(protocol.handlemethod, "documentonly")
+
+        response = self.wfile.getvalue().decode()
+
+        expected = [
+            "--2",
+            "1 Unconfigured Pygopherd Admin <pygopherd@nowhere.nowhere>",
+            "'/invalid-selector' does not exist (no handler found)",
+        ]
+
+        self.assertListEqual(response.splitlines(keepends=False), expected)
+
+    def test_get_directory(self):
+        protocol = GopherPlusProtocol(
+            "/gopherplus\t+",
+            self.handler.server,
+            self.handler,
+            self.rfile,
+            self.wfile,
+            self.config,
+        )
+
+        self.assertTrue(protocol.canhandlerequest())
+
+        protocol.handle()
+        response = self.wfile.getvalue().decode()
+
+        lines = response.splitlines(keepends=False)
+
+        self.assertEqual(lines[0], "+-2")
+        self.assertEqual(lines[1][-2:], "\t+")
+        self.assertEqual(lines[2][-2:], "\t+")
+
+    def test_get_file_info(self):
+        protocol = GopherPlusProtocol(
+            "/gopherplus/README\t!",
+            self.handler.server,
+            self.handler,
+            self.rfile,
+            self.wfile,
+            self.config,
+        )
+
+        self.assertTrue(protocol.canhandlerequest())
+
+        protocol.handle()
+        response = self.wfile.getvalue().decode()
+
+        self.assertIn("+VIEWS:\r\n text/plain: <0k>", response)
+        self.assertIn("+INFO: 0README\t", response)
+        self.assertIn("+ADMIN:", response)
+        self.assertIn("+3D:\r\n this is a gopher+ info attribute", response)
+
+    def test_get_directory_info(self):
+        protocol = GopherPlusProtocol(
+            "/gopherplus\t$",
+            self.handler.server,
+            self.handler,
+            self.rfile,
+            self.wfile,
+            self.config,
+        )
+
+        self.assertTrue(protocol.canhandlerequest())
+
+        protocol.handle()
+        response = self.wfile.getvalue().decode()
+
+        self.assertIn("+INFO: 0README\t", response)
+        self.assertIn("+INFO: 0testfile.txt\t", response)
+
+    def test_ask_query(self):
+        """
+        Not supported by pygopherd :(
+        """
