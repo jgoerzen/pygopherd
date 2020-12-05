@@ -17,7 +17,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # END OF COPYRIGHT #
-
+import sys
 import tracemalloc
 import unittest
 
@@ -26,4 +26,4 @@ if __name__ == "__main__":
 
     suite = unittest.defaultTestLoader.discover(start_dir="pygopherd/", pattern="*.py")
     runner = unittest.TextTestRunner(verbosity=2)
-    runner.run(suite)
+    sys.exit(not runner.run(suite).wasSuccessful())
