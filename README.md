@@ -1,3 +1,5 @@
+![Test](https://github.com/michael-lazar/pygopherd/workflows/Test/badge.svg)
+
 README for Pygopherd
 ===========================================================================
 
