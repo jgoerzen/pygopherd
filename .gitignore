@@ -3,3 +3,4 @@ testdata/.cache*
 __pycache__
 .idea
 conf/local.conf
+.DS_Store
