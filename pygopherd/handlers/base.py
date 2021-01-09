@@ -49,7 +49,7 @@ class VFS_Real:
 
     def stat(self, selector: str) -> os.stat_result:
         filepath = os.fsencode(self.getfspath(selector))
-        return os.stat(os.fsencode(filepath))
+        return os.stat(filepath)
 
     def isdir(self, selector: str) -> bool:
         filepath = os.fsencode(self.getfspath(selector))
