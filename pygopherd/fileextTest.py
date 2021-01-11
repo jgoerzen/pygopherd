@@ -28,6 +28,7 @@ from pygopherd import fileext, initialization, testutil
 class FileExtTestCase(unittest.TestCase):
     def setUp(self):
         config = testutil.getconfig()
+        initialization.initlogger(config, "TESTING")
         initialization.initmimetypes(config)
 
     def testinit(self):
