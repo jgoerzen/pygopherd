@@ -32,5 +32,4 @@ __all__ = [
     "initialization",
     "initializationTest",
     "testutil",
-    "version",
 ]

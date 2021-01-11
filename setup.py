@@ -23,17 +23,15 @@
 
 from distutils.core import setup
 
-import pygopherd.version
-
 setup(
     name="pygopherd",
-    version=pygopherd.version.versionstr,
-    description=pygopherd.version.description,
-    author=pygopherd.version.author,
-    author_email=pygopherd.version.author_email,
-    url=pygopherd.version.homepage,
+    version="2.0.18",
+    description="Multiprotocol Internet Gopher Information Server",
+    author="Michael Lazar",
+    author_email="lazar.michael22@gmail.com",
+    url="https://www.github.com/michael-lazar/pygopherd",
     packages=["pygopherd", "pygopherd.handlers", "pygopherd.protocols"],
     scripts=["bin/pygopherd"],
     data_files=[("/etc/pygopherd", ["conf/pygopherd.conf", "conf/mime.types"])],
-    license=pygopherd.version.license,
+    license="GPLv2",
 )
