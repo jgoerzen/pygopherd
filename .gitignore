@@ -3,3 +3,4 @@ testdata/.cache*
 __pycache__
 .idea
 .DS_Store
+*.egg-info/
