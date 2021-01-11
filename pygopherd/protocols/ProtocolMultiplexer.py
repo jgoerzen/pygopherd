@@ -1,5 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: find the right protocol to handle a request
+# Copyright (C) 2021 Michael Lazar
 # Copyright (C) 2002 John Goerzen
 # <jgoerzen@complete.org>
 #

@@ -1,6 +1,7 @@
 # Python-based gopher server
 # Module: initialization
 # COPYRIGHT #
+# Copyright (C) 2021 Michael Lazar
 # Copyright (C) 2002 John Goerzen
 #
 #    This program is free software; you can redistribute it and/or modify

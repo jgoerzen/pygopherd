@@ -1,5 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: server entry point
+# Copyright (C) 2021 Michael Lazar
 # Copyright (C) 2002 John Goerzen
 # <jgoerzen@complete.org>
 #
@@ -34,8 +35,8 @@ class GopherPlusProtocol(GopherProtocol):
 
     def canhandlerequest(self):
         """We can handle the request IF:
-           * It has more than one parameter in the request list
-           * The second parameter is ! or starts with + or $"""
+        * It has more than one parameter in the request list
+        * The second parameter is ! or starts with + or $"""
         if len(self.requestlist) < 2:
             return False
         if len(self.requestlist) == 2:

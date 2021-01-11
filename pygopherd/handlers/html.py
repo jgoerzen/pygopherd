@@ -1,5 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: Special handling of HTML files
+# Copyright (C) 2021 Michael Lazar
 # Copyright (C) 2002 John Goerzen
 # <jgoerzen@complete.org>
 #

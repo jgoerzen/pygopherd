@@ -1,5 +1,6 @@
 # pygopherd -- Gopher-based protocol server in Python
 # module: find the right handler for a request
+# Copyright (C) 2021 Michael Lazar
 # Copyright (C) 2002 John Goerzen
 # <jgoerzen@complete.org>
 #
@@ -21,6 +22,7 @@ import configparser
 import typing
 
 from pygopherd import GopherExceptions
+
 # Running eval() when loading the configuration requires all of the handlers to
 # be in the module namespace
 from pygopherd.handlers import *  # noqa

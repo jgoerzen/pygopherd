@@ -3,7 +3,9 @@
 # Python-based gopher server
 # Module: test of Gopher Exceptions
 # COPYRIGHT #
+# Copyright (C) 2021 Michael Lazar
 # Copyright (C) 2002 John Goerzen
+
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

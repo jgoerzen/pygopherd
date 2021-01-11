@@ -3,6 +3,7 @@
 # Python-based gopher server
 # Module: installer
 # COPYRIGHT #
+# Copyright (C) 2021 Michael Lazar
 # Copyright (C) 2002-2019 John Goerzen
 #
 #    This program is free software; you can redistribute it and/or modify
