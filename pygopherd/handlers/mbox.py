@@ -36,6 +36,7 @@ from pygopherd.handlers.virtual import Virtual
 class FolderHandler(Virtual):
 
     mbox: typing.Union[mbox, Maildir]
+    entries: typing.List[gopherentry.GopherEntry]
 
     def getentry(self):
         # Return my own entry.
@@ -50,9 +51,9 @@ class FolderHandler(Virtual):
     def prepare(self):
         self.entries = []
 
-        for key, message in self.mbox.iteritems():
+        for index, message in enumerate(self.mbox, start=1):
             handler = MessageHandler(
-                self.genargsselector(self.getargflag() + str(key)),
+                self.genargsselector(self.getargflag() + str(index)),
                 self.searchrequest,
                 self.protocol,
                 self.config,
@@ -72,7 +73,7 @@ class FolderHandler(Virtual):
 
 class MessageHandler(Virtual):
 
-    message_key: typing.Union[int, str]
+    message_num: int
     message: Message
 
     def canhandlerequest(self):
@@ -81,10 +82,17 @@ class MessageHandler(Virtual):
         result."""
         if not self.selectorargs:
             return False
-        message_key = self.get_message_key()
-        if message_key is None:
+
+        pattern = "^" + self.getargflag() + r"(\d+)$"
+        match = re.search(pattern, self.selectorargs)
+        if match is None:
             return False
-        self.message_key = message_key
+
+        message_num = int(match.groups()[0])
+        if message_num < 1:
+            return False
+
+        self.message_num = message_num
         return True
 
     def getentry(self, message=None):
@@ -108,12 +116,16 @@ class MessageHandler(Virtual):
                 self.entry.setname("<no subject>")
         return self.entry
 
-    def getmessage(self):
+    def getmessage(self) -> Message:
         if hasattr(self, "message"):
             return self.message
 
-        mbox = self.openmailbox()
-        self.message = mbox.get(self.message_key)
+        mailbox = iter(self.openmailbox())
+        message = None
+        for _ in range(self.message_num):
+            message = next(mailbox)
+
+        self.message = message
         return self.message
 
     def prepare(self):
@@ -122,9 +134,6 @@ class MessageHandler(Virtual):
     def write(self, wfile):
         message = self.getmessage()
         wfile.write(message.as_bytes())
-
-    def get_message_key(self) -> typing.Union[int, str]:
-        raise NotImplementedError
 
     def getargflag(self) -> str:
         raise NotImplementedError
@@ -183,13 +192,6 @@ class MBoxMessageHandler(MessageHandler):
     def openmailbox(self):
         return mbox(self.getfspath(), create=False)
 
-    def get_message_key(self):
-        # mbox keys are integers
-        pattern = "^" + self.getargflag() + r"(\d+)$"
-        match = re.search(pattern, self.selectorargs)
-        if match:
-            return int(match.groups()[0])
-
 
 class TestMBoxHandler(unittest.TestCase):
     def setUp(self) -> None:
@@ -216,15 +218,15 @@ class TestMBoxHandler(unittest.TestCase):
 
         messages = handler.getdirlist()
         self.assertTrue(len(messages), 6)
-        self.assertEqual(messages[0].selector, "/python-dev.mbox|/MBOX-MESSAGE/0")
+        self.assertEqual(messages[0].selector, "/python-dev.mbox|/MBOX-MESSAGE/1")
         self.assertEqual(messages[0].name, "[Python-Dev] Pickling w/ low overhead")
 
-    def test_mbox_mesage_handler(self):
+    def test_mbox_message_handler(self):
         """
         Load the third message from the mbox.
         """
         handler = MBoxMessageHandler(
-            "/python-dev.mbox|/MBOX-MESSAGE/2",
+            "/python-dev.mbox|/MBOX-MESSAGE/3",
             "",
             self.protocol,
             self.config,
@@ -279,19 +281,19 @@ class MaildirMessageHandler(MessageHandler):
     def openmailbox(self):
         return Maildir(self.getfspath(), create=False)
 
-    def get_message_key(self):
-        # Maildir keys are filenames
-        pattern = "^" + self.getargflag() + r"(.+)$"
-        match = re.search(pattern, self.selectorargs)
-        if match:
-            return match.groups()[0]
-
 
 class TestMaildirHandler(unittest.TestCase):
     """
     The maildir test data was generated from a mailbox file using this script:
 
     http://batleth.sapienti-sat.org/projects/mb2md/
+
+    Important Note: The python implementation uses os.listdir() under the
+    hood to iterate over the mail files in the directory. The order of
+    files returned is deterministic but is *not* sorted by filename. This
+    means that mail files in the generated gopher directory listing may
+    appear out of order from their "true" ordering in the mail archive.
+    It also makes writing this test a pain in the ass.
     """
 
     def setUp(self) -> None:
@@ -318,17 +320,15 @@ class TestMaildirHandler(unittest.TestCase):
 
         messages = handler.getdirlist()
         self.assertTrue(len(messages), 6)
-        self.assertEqual(
-            messages[0].selector, "/python-dev|/MAILDIR-MESSAGE/1606884253.000000.mbox"
-        )
-        self.assertEqual(messages[0].name, "[Python-Dev] Pickling w/ low overhead")
+        self.assertEqual(messages[0].selector, "/python-dev|/MAILDIR-MESSAGE/1")
+        self.assertIn("[Python-Dev]", messages[0].name)
 
-    def test_maildir_mesage_handler(self):
+    def test_maildir_message_handler(self):
         """
         Load the third message from the maildir.
         """
         handler = MaildirMessageHandler(
-            "/python-dev|/MAILDIR-MESSAGE/1606884253.000002.mbox",
+            "/python-dev|/MAILDIR-MESSAGE/3",
             "",
             self.protocol,
             self.config,
@@ -342,10 +342,9 @@ class TestMaildirHandler(unittest.TestCase):
 
         entry = handler.getentry()
         self.assertEqual(entry.mimetype, "text/plain")
-        self.assertEqual(entry.name, "Re: [Python-Dev] Buffer interface in abstract.c?")
         self.assertEqual(entry.type, "0")
 
         wfile = io.BytesIO()
         handler.write(wfile)
         email_text = wfile.getvalue()
-        assert email_text.startswith(b"From: Greg Stein <gstein@lyra.org>")
+        assert email_text.startswith(b"From:")
