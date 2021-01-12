@@ -1,4 +1,4 @@
-![[Build](https://github.com/michael-lazar/pygopherd/workflows/Test/badge.svg)](https://github.com/michael-lazar/pygopherd/actions)
+[![Build](https://github.com/michael-lazar/pygopherd/workflows/Test/badge.svg)](https://github.com/michael-lazar/pygopherd/actions)
 
 # PyGopherd
 
