@@ -18,16 +18,22 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # END OF COPYRIGHT #
+import argparse
 
-#
+from pygopherd import initialization
 
-import sys
+parser = argparse.ArgumentParser(
+    prog="pygopherd",
+    description="A multiprotocol gopher information server",
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+)
+parser.add_argument(
+    "config",
+    nargs="?",
+    default="/etc/pygopherd/pygopherd.conf",
+    help="pygopherd config",
+)
+args = parser.parse_args()
 
-from pygopherd import *
-
-conffile = "/etc/pygopherd/pygopherd.conf"
-if len(sys.argv) > 1:
-    conffile = sys.argv[1]
-
-s = initialization.initeverything(conffile)
+s = initialization.initeverything(args.config)
 s.serve_forever()
