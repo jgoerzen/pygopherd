@@ -130,6 +130,25 @@ class TestFileHandler(unittest.TestCase):
         data = wfile.getvalue().decode()
         self.assertEqual(data, "Test\n")
 
+    def test_file_handler_non_utf8(self):
+        self.selector = b"/\xAE.txt".decode(errors="surrogateescape")
+
+        handler = FileHandler(
+            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
+        )
+
+        self.assertTrue(handler.canhandlerequest())
+        self.assertFalse(handler.isdir())
+
+        entry = handler.getentry()
+        self.assertEqual(entry.mimetype, "text/plain")
+        self.assertEqual(entry.type, "0")
+
+        wfile = io.BytesIO()
+        handler.write(wfile)
+        data = wfile.getvalue()
+        self.assertEqual(data, b"Hello, \xAE!")
+
 
 class TestCompressedFileHandler(unittest.TestCase):
     def setUp(self) -> None:

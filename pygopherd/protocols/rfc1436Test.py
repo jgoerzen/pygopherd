@@ -98,7 +98,9 @@ class RFC1436TestCase(unittest.TestCase):
             self.logfile.getvalue(), "10.77.77.77 [GopherProtocol/UMNDirHandler]: /\n"
         )
         # Try to make this easy on us to fix.
-        actuallines = self.wfile.getvalue().decode().splitlines()
+        actuallines = (
+            self.wfile.getvalue().decode(errors="surrogateescape").splitlines()
+        )
         expectedlines = [
             "iThis is the abstract for the testdata directory.\tfake\t(NULL)\t0",
             "iThis is the abstract\tfake\t(NULL)\t0",
@@ -110,7 +112,8 @@ class RFC1436TestCase(unittest.TestCase):
 
         # Make sure proper line endings are present.
         self.assertEqual(
-            "\r\n".join(actuallines) + "\r\n", self.wfile.getvalue().decode()
+            "\r\n".join(actuallines) + "\r\n",
+            self.wfile.getvalue().decode(errors="surrogateescape"),
         )
 
     def testhandle_dir_noabstract(self):
@@ -120,7 +123,9 @@ class RFC1436TestCase(unittest.TestCase):
             "", self.server, self.handler, self.rfile, self.wfile, self.config
         )
         proto.handle()
-        actuallines = self.wfile.getvalue().decode().splitlines()
+        actuallines = (
+            self.wfile.getvalue().decode(errors="surrogateescape").splitlines()
+        )
         expectedlines = [
             "iThis is the abstract for the testdata directory.\tfake\t(NULL)\t0",
             "iThis is the abstract\tfake\t(NULL)\t0",

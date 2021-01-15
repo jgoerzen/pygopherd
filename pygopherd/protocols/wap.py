@@ -192,7 +192,7 @@ class TestWAPProtocol(unittest.TestCase):
         protocol.handle()
         self.assertEqual(protocol.httpheaders["host"], "localhost.com")
 
-        response = self.wfile.getvalue().decode()
+        response = self.wfile.getvalue().decode(errors="surrogateescape")
         self.assertIn("HTTP/1.0 200 OK", response)
         self.assertIn("Content-Type: text/vnd.wap.wml", response)
         self.assertIn('href="/wap/README">README</a>', response)

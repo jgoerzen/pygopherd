@@ -342,7 +342,9 @@ class GopherEntry:
             self.gethost(defaulthost),
             self.getport(defaultport),
         )
-        retval += urllib.parse.quote("%s%s" % (self.gettype(), self.getselector()))
+        retval += urllib.parse.quote(
+            "%s%s" % (self.gettype(), self.getselector()), errors="surrogateescape"
+        )
         return retval
 
     def getnum(self, default=None):

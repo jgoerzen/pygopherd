@@ -1,13 +1,15 @@
 import sys
+import codecs
 
 log = None
-logfile = sys.stdout
+# Roundabout way to enable writing surrogate escapes to stdout
+logfile = codecs.getwriter("utf-8")(sys.stdout.buffer, errors="surrogateescape")
 priority = None
 facility = None
 syslogfunc = None
 
 
-def log_file(message):
+def log_file(message: str) -> None:
     logfile.write(message + "\n")
 
 
@@ -16,7 +18,8 @@ def setlogfile(file):
     logfile = file
 
 
-def log_syslog(message):
+def log_syslog(message: str) -> None:
+    # TODO: Test w/ surrogate bytes
     if syslogfunc:
         syslogfunc(priority, message)
 
