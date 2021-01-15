@@ -1,4 +1,5 @@
 testdata/.cache*
+testdata/®.txt
 *.cache*
 __pycache__
 .idea

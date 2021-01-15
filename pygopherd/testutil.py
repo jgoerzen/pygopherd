@@ -28,10 +28,12 @@ from pygopherd import initialization, logger
 from pygopherd.initialization import AbstractServer
 from pygopherd.protocols import ProtocolMultiplexer
 
+TEST_DATA = os.path.join(os.path.dirname(__file__), "..", "testdata")
+
 
 def getconfig() -> configparser.ConfigParser:
     config = initialization.initconffile("conf/pygopherd.conf")
-    config.set("pygopherd", "root", os.path.abspath("./testdata"))
+    config.set("pygopherd", "root", TEST_DATA)
     return config
 
 
@@ -121,3 +123,23 @@ def gettestingprotocol(request: str, config=None):
         handler.wfile,
         config,
     )
+
+
+def supports_non_utf8_filenames() -> bool:
+    """
+    Test non-utf8 filenames only if the host operating system supports them.
+
+    For example, MacOS HFS+ does not and will raise an OSError. These files
+    are also a pain to work with in git which is why I'm creating it on the
+    fly instead of committing it to the git repo.
+    """
+    try:
+        # \xAE is the ® symbol in the ISO 8859-1 charset
+        filename = os.path.join(TEST_DATA.encode(), b"\xAE.txt")
+        print(filename.decode(errors="replace"))
+        with open(filename, "wb") as fp:
+            fp.write(b"Hello, \xAE!")
+    except OSError:
+        return False
+    else:
+        return True

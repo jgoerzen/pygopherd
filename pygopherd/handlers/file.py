@@ -24,7 +24,7 @@ import tempfile
 import typing
 import unittest
 
-from pygopherd import gopherentry
+from pygopherd import gopherentry, testutil
 from pygopherd.handlers.base import BaseHandler, VFS_Real
 
 
@@ -105,7 +105,6 @@ class CompressedFileHandler(FileHandler):
 
 class TestFileHandler(unittest.TestCase):
     def setUp(self) -> None:
-        from pygopherd import testutil
 
         self.config = testutil.getconfig()
         self.vfs = VFS_Real(self.config)
@@ -130,6 +129,10 @@ class TestFileHandler(unittest.TestCase):
         data = wfile.getvalue().decode()
         self.assertEqual(data, "Test\n")
 
+    @unittest.skipUnless(
+        testutil.supports_non_utf8_filenames(),
+        reason="Filesystem does not support non-utf8 filenames.",
+    )
     def test_file_handler_non_utf8(self):
         self.selector = b"/\xAE.txt".decode(errors="surrogateescape")
 
