@@ -16,15 +16,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
 import html.entities
 import html.parser
 import mimetypes
 import re
-import unittest
 
-from pygopherd import testutil
-from pygopherd.handlers.base import VFS_Real
 from pygopherd.handlers.file import FileHandler
 
 
@@ -94,23 +90,3 @@ class HTMLFileTitleHandler(FileHandler):
             title = re.sub(r"[\s]+", " ", parser.titlestr)
             entry.setname(title)
         return entry
-
-
-class TestHTMLHandler(unittest.TestCase):
-    def setUp(self) -> None:
-
-        self.config = testutil.getconfig()
-        self.vfs = VFS_Real(self.config)
-        self.selector = "/testfile.html"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
-        self.stat_result = self.vfs.stat(self.selector)
-
-    def test_pyg_handler(self):
-        handler = HTMLFileTitleHandler(
-            "/testfile.html", "", self.protocol, self.config, self.stat_result, self.vfs
-        )
-
-        self.assertTrue(handler.canhandlerequest())
-
-        entry = handler.getentry()
-        self.assertEqual(entry.name, "<Gopher Rocks>")

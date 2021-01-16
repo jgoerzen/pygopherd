@@ -16,15 +16,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-import os
 import pickle
 import re
 import stat
 import time
-import unittest
 
 from pygopherd import gopherentry, handlers
-from pygopherd.handlers.base import BaseHandler, VFS_Real
+from pygopherd.handlers.base import BaseHandler
 
 
 class DirHandler(BaseHandler):
@@ -143,52 +141,3 @@ class DirHandler(BaseHandler):
                 pickle.dump(self.fileentries, fp, 1)
         except IOError:
             pass
-
-
-class TestDirHandler(unittest.TestCase):
-    def setUp(self) -> None:
-        from pygopherd import testutil
-
-        self.config = testutil.getconfig()
-        self.vfs = VFS_Real(self.config)
-        self.selector = "/"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
-        self.stat_result = self.vfs.stat(self.selector)
-
-        # Make sure there's no directory cache file from a previous test run
-        cachefile = self.config.get("handlers.dir.DirHandler", "cachefile")
-        try:
-            os.remove(self.vfs.getfspath(self.selector) + "/" + cachefile)
-        except OSError:
-            pass
-
-    def test_dir_handler(self):
-        handler = DirHandler(
-            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
-        )
-
-        self.assertTrue(handler.canhandlerequest())
-        self.assertTrue(handler.isdir())
-
-        handler.prepare()
-        self.assertFalse(handler.fromcache)
-
-        entry = handler.getentry()
-        self.assertEqual(entry.mimetype, "application/gopher-menu")
-        self.assertEqual(entry.type, "1")
-
-        entries = handler.getdirlist()
-        self.assertTrue(entries)
-
-        # Create a second handler to test that it will load from the cached
-        # file that the first handler should have created
-        handler = DirHandler(
-            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
-        )
-
-        handler.prepare()
-        self.assertTrue(handler.fromcache)
-
-        cached_entries = handler.getdirlist()
-        for a, b in zip(entries, cached_entries):
-            self.assertEqual(a.selector, b.selector)

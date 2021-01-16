@@ -1,5 +1,5 @@
-import sys
 import codecs
+import sys
 
 log = None
 # Roundabout way to enable writing surrogate escapes to stdout

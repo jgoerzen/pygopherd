@@ -1,8 +1,6 @@
 import imp
-import io
 import re
 import stat
-import unittest
 
 from pygopherd.handlers.base import VFS_Real
 from pygopherd.handlers.virtual import Virtual
@@ -53,29 +51,3 @@ class PYGHandler(Virtual):
 
 class PYGBase(Virtual):
     pass
-
-
-class TestPYGHandler(unittest.TestCase):
-    def setUp(self) -> None:
-        from pygopherd import testutil
-
-        self.config = testutil.getconfig()
-        self.vfs = VFS_Real(self.config)
-        self.selector = "/testfile.pyg"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
-        self.stat_result = self.vfs.stat("/testfile.pyg")
-
-    def test_pyg_handler(self):
-        handler = PYGHandler(
-            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
-        )
-
-        self.assertTrue(handler.canhandlerequest())
-        self.assertFalse(handler.isdir())
-
-        entry = handler.getentry()
-        self.assertEqual(entry.selector, "/testfile.pyg")
-
-        wfile = io.BytesIO()
-        handler.write(wfile)
-        self.assertEqual(wfile.getvalue(), b"hello world!")

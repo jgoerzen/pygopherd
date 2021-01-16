@@ -16,13 +16,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-import io
 import re
-import unittest
 
-from pygopherd import gopherentry, handlers, testutil
-from pygopherd.handlers.base import BaseHandler, VFS_Real
-from pygopherd.handlers.file import FileHandler
+from pygopherd import gopherentry, handlers
+from pygopherd.handlers.base import BaseHandler
 
 
 class HTMLURLHandler(BaseHandler):
@@ -110,62 +107,3 @@ class URLTypeRewriter(BaseHandler):
             self.config,
             handlerlist,
         )
-
-
-class TestHTMLURLHandler(unittest.TestCase):
-    def setUp(self) -> None:
-        self.config = testutil.getconfig()
-        self.vfs = VFS_Real(self.config)
-        self.selector = "URL:http://gopher.quux.org/"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
-        self.stat_result = None
-
-    def test_url_rewriter_handler(self):
-        """
-        The URL rewriter should drop the "/0" at the beginning of the selector
-        and then pass it off to the appropriate handler.
-        """
-        handler = HTMLURLHandler(
-            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
-        )
-
-        self.assertTrue(handler.isrequestforme())
-
-        entry = handler.getentry()
-        self.assertEqual(entry.mimetype, "text/html")
-        self.assertEqual(entry.type, "h")
-
-        wfile = io.BytesIO()
-        handler.write(wfile)
-
-        out = wfile.getvalue()
-        self.assertIn(
-            b'<A HREF="http://gopher.quux.org/">http://gopher.quux.org/</A>', out
-        )
-
-
-class TestURLTypeRewriterHandler(unittest.TestCase):
-    def setUp(self) -> None:
-        self.config = testutil.getconfig()
-        self.vfs = VFS_Real(self.config)
-        self.selector = "/0/README"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
-        self.stat_result = None
-
-    def test_url_rewriter_handler(self):
-        """
-        The URL rewriter should drop the "/0" at the beginning of the selector
-        and then pass it off to the appropriate handler.
-        """
-
-        handler = URLTypeRewriter(
-            self.selector, "", self.protocol, self.config, self.stat_result, self.vfs
-        )
-
-        self.assertTrue(handler.canhandlerequest())
-
-        new_handler = handler.gethandler()
-        self.assertIsInstance(new_handler, FileHandler)
-
-        self.assertEqual(new_handler.selector, "/README")
-        self.assertTrue(new_handler.canhandlerequest())

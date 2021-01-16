@@ -25,6 +25,6 @@ import unittest
 if __name__ == "__main__":
     tracemalloc.start()
 
-    suite = unittest.defaultTestLoader.discover(start_dir="pygopherd/", pattern="*.py")
+    suite = unittest.defaultTestLoader.discover(start_dir="tests/")
     runner = unittest.TextTestRunner(verbosity=2)
     sys.exit(not runner.run(suite).wasSuccessful())
