@@ -134,7 +134,6 @@ def supports_non_utf8_filenames() -> bool:
     try:
         # \xAE is the ® symbol in the ISO 8859-1 charset
         filename = os.path.join(TEST_DATA.encode(), b"\xAE.txt")
-        print(filename.decode(errors="replace"))
         with open(filename, "wb") as fp:
             fp.write(b"Hello, \xAE!")
     except OSError:
