@@ -8,10 +8,6 @@ from pygopherd import gopherentry
 from pygopherd.handlers.base import VFS_Real
 from pygopherd.handlers.virtual import Virtual
 
-###########################################################################
-# Basic mailbox support
-###########################################################################
-
 
 class FolderHandler(Virtual):
 
@@ -122,9 +118,6 @@ class MessageHandler(Virtual):
         raise NotImplementedError
 
 
-###########################################################################
-# Unix MBOX support
-###########################################################################
 class MBoxFolderHandler(FolderHandler):
     def canhandlerequest(self):
         """Figure out if this is a handleable request."""
@@ -171,11 +164,6 @@ class MBoxMessageHandler(MessageHandler):
 
     def openmailbox(self):
         return mbox(self.getfspath(), create=False)
-
-
-###########################################################################
-# Maildir support
-###########################################################################
 
 
 class MaildirFolderHandler(FolderHandler):

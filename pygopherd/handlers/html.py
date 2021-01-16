@@ -6,10 +6,6 @@ import re
 from pygopherd.handlers.file import FileHandler
 
 
-###########################################################################
-# HTML File Handler
-# Sets the name of a file if it's HTML.
-###########################################################################
 class HTMLTitleParser(html.parser.HTMLParser):
     def __init__(self):
         super().__init__()

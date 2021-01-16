@@ -11,11 +11,6 @@ from pygopherd.handlers.file import FileHandler
 
 extstrip = None
 
-###########################################################################
-# UMN Directory handler
-# Handles .Links, .names, and .cap/* files
-###########################################################################
-
 
 class LinkEntry(GopherEntry):
     def __init__(self, selector: str, config: configparser.ConfigParser):
