@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 # Python-based gopher server
 # Module: test utilities
 # COPYRIGHT #
