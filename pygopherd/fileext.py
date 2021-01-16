@@ -1,7 +1,8 @@
 import functools
 import mimetypes
+import typing
 
-typemap = {}
+typemap: typing.Dict[str, typing.List[str]] = {}
 
 
 def extcmp(x, y):

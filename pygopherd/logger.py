@@ -1,12 +1,14 @@
 import codecs
 import sys
+import typing
 
-log = None
+log: typing.Callable[[str], None]
+syslogfunc: typing.Callable[[int, str], None]
+priority: int
+facility: int
+
 # Roundabout way to enable writing surrogate escapes to stdout
 logfile = codecs.getwriter("utf-8")(sys.stdout.buffer, errors="surrogateescape")
-priority = None
-facility = None
-syslogfunc = None
 
 
 def log_file(message: str) -> None:
@@ -20,11 +22,10 @@ def setlogfile(file):
 
 def log_syslog(message: str) -> None:
     # TODO: Test w/ surrogate bytes
-    if syslogfunc:
-        syslogfunc(priority, message)
+    syslogfunc(priority, message)
 
 
-def log_none(message):
+def log_none(message: str):
     pass
 
 
