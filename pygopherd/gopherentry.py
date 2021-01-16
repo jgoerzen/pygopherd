@@ -24,6 +24,23 @@ class GopherEntry:
     """The entry object for Gopher.  It holds information about each
     Gopher object."""
 
+    fspath: typing.Optional[str]
+    type: typing.Optional[str]
+    name: typing.Optional[str]
+    host: typing.Optional[str]
+    port: typing.Optional[int]
+    mimetype: typing.Optional[str]
+    encodedmimetype: typing.Optional[str]
+    size: typing.Optional[int]
+    encoding: typing.Optional[str]
+    populated: int
+    language: typing.Optional[str]
+    ctime: typing.Optional[int]
+    mtime: typing.Optional[int]
+    num: int
+    gopherpsupport: int
+    ea: typing.Dict[str, str]
+
     def __init__(self, selector: str, config: configparser.ConfigParser):
         """Initialize object based on a selector and config."""
         self.selector = selector  # Gopher path to file
@@ -212,9 +229,6 @@ class GopherEntry:
             return default
         return self.fspath
 
-    def setfspath(self, arg: str) -> None:
-        self.fspath = arg
-
     def gettype(self, default: Optional[str] = None) -> Optional[str]:
         if self.type is None:
             return default
@@ -257,9 +271,6 @@ class GopherEntry:
             return default
         return self.encodedmimetype
 
-    def setencodedmimetype(self, arg: str) -> None:
-        self.encodedmimetype = arg
-
     def setmimetype(self, arg: str) -> None:
         self.mimetype = arg
 
@@ -268,48 +279,25 @@ class GopherEntry:
             return default
         return self.size
 
-    def setsize(self, arg: int) -> None:
-        self.size = arg
-
     def getencoding(self, default: Optional[str] = None) -> Optional[str]:
         if self.encoding is None:
             return default
         return self.encoding
-
-    def setencoding(self, arg: str) -> None:
-        self.encoding = arg
 
     def getlanguage(self, default: Optional[str] = None) -> Optional[str]:
         if self.language is None:
             return default
         return self.language
 
-    def setlanguage(self, arg: str) -> None:
-        self.language = arg
-
-    def getctime(self, default=None):
+    def getctime(self, default: Optional[int] = None) -> Optional[int]:
         if self.ctime is None:
             return default
         return self.ctime
 
-    def setctime(self, arg):
-        self.ctime = arg
-
-    def getmtime(self, default=None):
+    def getmtime(self, default: Optional[int] = None) -> Optional[int]:
         if self.mtime is None:
             return default
         return self.mtime
-
-    def setmtime(self, arg):
-        self.mtime = arg
-
-    def getpopulated(self, default=None):
-        if self.populated is not None:
-            return self.populated
-        return default
-
-    def setpopulated(self, arg):
-        self.populated = arg
 
     def geturl(self, defaulthost: str = "MISSINGHOST", defaultport: int = 70) -> str:
         """If this selector is a URL: one, then we just return the rest of
