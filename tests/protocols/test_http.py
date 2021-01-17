@@ -58,7 +58,7 @@ class TestHTTPProtocol(unittest.TestCase):
         # Non-UTF8 files should show up in the listing. I don't know how
         # browsers are supposed to render these, but chrome seems to figure
         # it out as a ® symbol.
-        self.assertIn('<TD>&nbsp;<A HREF="/%AE.txt"><TT>\udcae.txt', response)
+        self.assertIn('<TD>&nbsp;<A HREF="/%AE.txt"><TT>\udcae', response)
 
     def test_http_handler_icon(self):
         request = "GET /PYGOPHERD-HTTPPROTO-ICONS/text.gif HTTP/1.1"
