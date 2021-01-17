@@ -8,7 +8,7 @@ import unittest
 
 from pygopherd import testutil
 from pygopherd.handlers.base import VFS_Real
-from pygopherd.handlers.ZIP import VFS_Zip, ZIPHandler
+from pygopherd.handlers.ZIP import VFSZip, ZIPHandler
 
 
 class TestVFSZip(unittest.TestCase):
@@ -17,21 +17,34 @@ class TestVFSZip(unittest.TestCase):
         self.config.add_section("pygopherd")
         self.config.set("pygopherd", "root", os.path.abspath("testdata"))
         self.real = VFS_Real(self.config)
-        self.z = VFS_Zip(self.config, self.real, "/testdata.zip")
-        self.z2 = VFS_Zip(self.config, self.real, "/testdata2.zip")
-        self.zs = VFS_Zip(self.config, self.real, "/symlinktest.zip")
+        self.z = VFSZip(self.config, self.real, "/testdata.zip")
+        self.z2 = VFSZip(self.config, self.real, "/testdata2.zip")
+        self.zs = VFSZip(self.config, self.real, "/symlinktest.zip")
 
     def test_listdir(self):
         m1 = self.z.listdir("/testdata.zip")
         m2 = self.z2.listdir("/testdata2.zip")
 
         m1.sort()
-        m2.sort()
-
-        self.assertIn("pygopherd", m1)
-        self.assertEqual(m1, m2)
         self.assertEqual(
             m1,
+            [
+                ".abstract",
+                "README",
+                "pygopherd",
+                "testarchive.tar",
+                "testarchive.tar.gz",
+                "testarchive.tgz",
+                "testfile.txt",
+                "testfile.txt.gz",
+                "testfile.txt.gz.abstract",
+                "\udcae.txt",
+            ],
+        )
+
+        m2.sort()
+        self.assertEqual(
+            m2,
             [
                 ".abstract",
                 "README",
@@ -237,6 +250,37 @@ class TestVFSZip(unittest.TestCase):
             self.z2.open("/testdata2.zip/pygopherd/pipetestdata").read(), shouldbe
         )
 
+    def test_populate_cache(self):
+        self.z.populate_cache()
+        cache_data = self.z.dircache
+
+        # Files should have string values
+        self.assertIsInstance(cache_data[cache_data["0"]["testfile.txt"]], str)
+
+        # Directories should have dict values
+        self.assertIsInstance(cache_data[cache_data["0"]["pygopherd"]], dict)
+
+    def test_save_cache(self):
+        cache_filename = self.z.get_cache_filename()
+        cache_fspath = self.z.chain.getfspath(cache_filename)
+        try:
+            os.remove(cache_fspath)
+        except OSError:
+            pass
+        self.assertFalse(os.path.exists(cache_fspath))
+
+        self.z.populate_cache()
+        self.assertTrue(self.z.save_cache())
+        self.assertTrue(os.path.exists(cache_fspath))
+
+    def test_not_found_non_utf8(self):
+        self.assertFalse(self.z.exists("/testdata.zip/pygopherd/\udcae.txt"))
+
+    def test_open_non_utf8(self):
+        self.assertEqual(
+            self.z.open("/testdata.zip/\udcae.txt").read(), b"Hello, \xAE!"
+        )
+
 
 class TestZipHandler(unittest.TestCase):
     def setUp(self):
@@ -263,7 +307,7 @@ class TestZipHandler(unittest.TestCase):
         self.assertEqual(entry.mimetype, "application/gopher-menu")
 
         entries = handler.getdirlist()
-        self.assertEqual(len(entries), 7)
+        self.assertEqual(len(entries), 8)
 
         self.assertEqual(entries[0].selector, "/testdata.zip/README")
         self.assertEqual(entries[0].name, "README")

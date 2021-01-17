@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import codecs
 import configparser
-import dbm
-import marshal
 import os.path
 import re
 import shelve
@@ -15,90 +13,79 @@ import zipfile
 from pygopherd.handlers.base import BaseHandler, VFS_Real
 
 
-class MarshalingShelf(shelve.Shelf):
-    dict: typing.Dict[bytes, typing.Any]
-
-    def __getitem__(self, key: str):
-        return marshal.loads(self.dict[key])
-
-    def __setitem__(self, key: str, value):
-        self.dict[key] = marshal.dumps(value)
+CacheData = typing.Mapping[str, typing.Any]
 
 
-class DbfilenameShelf(MarshalingShelf):
-    def __init__(self, filename: str, flag: typing.Literal["r", "w", "c", "n"] = "c"):
-        # We can only pass in a string, see https://bugs.python.org/issue38864
-        db = dbm.open(filename, flag)
-        super().__init__(db)
+class VFSZip(VFS_Real):
 
+    # See docstring in populate_cache() for details
+    dircache: CacheData
 
-def shelveopen(
-    filename: str, flag: typing.Literal["r", "w", "c", "n"] = "c"
-) -> DbfilenameShelf:
-    return DbfilenameShelf(filename, flag)
+    # Contains filenames that were not found in the zipfile, to prevent extra
+    # lookups if the same invalid path is repeatedly requested.
+    invalid_paths: typing.Set[str]
 
+    # For efficient lookup of the inode for a file without needing to
+    # recursively traverse the dircache for each path segment.
+    #     entrycache[directory_name][filename] = inode for that file
+    entrycache: typing.Dict[str, typing.Dict[str, str]]
 
-class VFS_Zip(VFS_Real):
     def __init__(
         self, config: configparser.ConfigParser, chain: VFS_Real, zipfilename: str
     ):
         super().__init__(config, chain)
         self.zipfilename = zipfilename
+        self.zipfd = self.chain.open(self.zipfilename, mode="rb")
+        self.zip = zipfile.ZipFile(self.zipfd)
+
+        self.invalid_paths = set()
         self.entrycache = {}
-        self.badcache = {}
-        self._initzip()
+        self.init_cache()
 
     def __del__(self):
         if hasattr(self, "zipfd"):
             self.zipfd.close()
 
-    def _getcachefilename(self) -> str:
+    def get_cache_filename(self) -> str:
         (dir_, file) = os.path.split(self.zipfilename)
         return os.path.join(dir_, ".cache.pygopherd.zip3." + file)
 
-    def _initcache(self) -> bool:
-        """Returns 1 if a cache was found existing; 0 if not."""
-        filename = self._getcachefilename()
-        if isinstance(self.chain, VFS_Real) and self.chain.iswritable(filename):
-            fspath = self.chain.getfspath(filename)
-            zipfilemtime = self.chain.stat(self.zipfilename)[stat.ST_MTIME]
-            try:
-                cachemtime = self.chain.stat(filename)[stat.ST_MTIME]
-            except OSError:
-                self._createcache(fspath)
-                return False
-
-            if zipfilemtime > cachemtime:
-                self._createcache(fspath)
-                return False
-
-            try:
-                self.dircache = shelveopen(fspath, "r")
-            except Exception:
-                self._createcache(fspath)
-                return False
-
+    def save_cache(self) -> bool:
+        cache_filename = self.get_cache_filename()
+        cache_fspath = self.chain.getfspath(cache_filename)
+        try:
+            with shelve.open(cache_fspath, "n") as db:
+                for (key, value) in self.dircache.items():
+                    db[key] = value
+        except OSError:
+            return False
+        else:
             return True
 
-    def _createcache(self, fspath: str) -> None:
-        self.dircache = {}
-        self.dbdircache = shelveopen(fspath, "n")
-
-    def _savecache(self) -> None:
-        if not hasattr(self, "dbdircache"):
-            # createcache was somehow unsuccessful
+    def init_cache(self) -> None:
+        cache_filename = self.get_cache_filename()
+        zipfile_mtime = self.chain.stat(self.zipfilename)[stat.ST_MTIME]
+        try:
+            cache_mtime = self.chain.stat(cache_filename)[stat.ST_MTIME]
+        except OSError:
+            # Couldn't stat the cache, attempt to rebuild it
+            self.populate_cache()
+            self.save_cache()
             return
-        for (key, value) in self.dircache.items():
-            self.dbdircache[key] = value
 
-    def _initzip(self) -> None:
-        self.zipfd = self.chain.open(self.zipfilename, mode="rb")
-        self.zip = zipfile.ZipFile(self.zipfd)
-        if not self._initcache():
-            # For reloading an existing one.  Must be called before _cachedir.
-            self._cachedir()
-            self._savecache()
-            self.dbdircache.close()  # Flush it out
+        if zipfile_mtime > cache_mtime:
+            # The zipfile has been modified since the cache was generated,
+            # rebuild the cache.
+            self.populate_cache()
+            self.save_cache()
+            return
+
+        cache_fspath = self.chain.getfspath(cache_filename)
+        try:
+            self.dircache = shelve.open(cache_fspath, "r")
+        except Exception:
+            self.populate_cache()
+            self.save_cache()
 
     def _isentryincache(self, fspath: str) -> bool:
         try:
@@ -118,7 +105,7 @@ class VFS_Zip(VFS_Real):
         (dir_, file) = os.path.split(fspath)
         if dir_ in self.entrycache:
             return self.entrycache[dir_][file]
-        elif dir_ in self.badcache:
+        elif dir_ in self.invalid_paths:
             raise KeyError("Call for %s: directory %s non-existant" % (fspath, dir_))
 
         workingdir = ""
@@ -135,11 +122,35 @@ class VFS_Zip(VFS_Real):
                 # Now, inode holds the inode number.
                 inode = directory[item]
             except KeyError:
-                self.badcache[workingdir] = 1
+                self.invalid_paths.add(workingdir)
                 raise KeyError("Call for %s: Couldn't find %s" % (fspath, item))
         return inode
 
-    def _cachedir(self) -> None:
+    def populate_cache(self):
+        """
+        Build a dictionary that will be used to represent the zipfile structure.
+
+        - Keys are inodes (string integers, like "0", "1", ...)
+        - Values can be either strings or dicts
+          - If the value is a string, it points to the filename in the zipfile.
+          - If the value is a dict, it's a recursive cache for that directory.
+
+        The "0" inode is always the root directory. To lookup a path, split it
+        into segments and traverse the cache one segment at a time.
+
+        E.g.
+
+        /
+        /hello.txt
+        /some_directory/goodbye.txt
+
+        {
+            '0': {'hello.txt': '1', 'some_directory': '2'},
+            '1': 'hello.txt',
+            '2': {'goodbye.txt': '3'},
+            '3': '/some_directory/goodbye.txt'
+        }
+        """
         symlinkinodes = []
         nextinode = 1
         self.dircache = {"0": {}}
@@ -159,7 +170,7 @@ class VFS_Zip(VFS_Real):
                     nextinode += 1
                 dirlevel = self.dircache[dirlevel[level]]
 
-            if len(filename):
+            if filename:
                 if self._islinkinfo(info):
                     symlinkinodes.append(
                         {
@@ -190,13 +201,8 @@ class VFS_Zip(VFS_Real):
                     newsymlinkinodes.append(item)
             symlinkinodes = newsymlinkinodes
 
-    def _islinkattr(self, attr) -> bool:
-        return stat.S_ISLNK(attr >> 16)
-
-    def _islinkinfo(self, info) -> bool:
-        if type(info) == dict:
-            return False
-        return self._islinkattr(info.external_attr)
+    def _islinkinfo(self, info: zipfile.ZipInfo) -> bool:
+        return stat.S_ISLNK(info.external_attr >> 16)
 
     def _readlinkfspath(self, fspath: str) -> str:
         return self.zip.read(fspath).decode(errors="surrogateescape")
@@ -208,7 +214,7 @@ class VFS_Zip(VFS_Real):
         return False
 
     def unlink(self, selector: str):
-        raise NotImplementedError("VFS_ZIP cannot unlink files.")
+        raise NotImplementedError("VFSZip cannot unlink files.")
 
     def _getfspathfinal(self, selector: str) -> str:
         # Strip off the filename part.
@@ -223,9 +229,6 @@ class VFS_Zip(VFS_Real):
         return selector
 
     def getfspath(self, selector: str) -> str:
-        # We can skip the initial part -- it just contains the start of
-        # the path.
-
         return self._getfspathfinal(selector)
 
     def stat(self, selector: str):
@@ -382,7 +385,7 @@ class ZIPHandler(BaseHandler):
 
         if hasattr(self, "handler"):
             return
-        vfs = VFS_Zip(self.config, self.vfs, self.basename)
+        vfs = VFSZip(self.config, self.vfs, self.basename)
 
         self.handler = HandlerMultiplexer.getHandler(
             self.getselector(), self.searchrequest, self.protocol, self.config, vfs=vfs
