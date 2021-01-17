@@ -85,6 +85,9 @@ class VFS_Real:
 class BaseHandler:
     """Skeleton handler -- includes commonly-used routines."""
 
+    entry: typing.Optional[GopherEntry]
+    fspath: typing.Optional[str]
+
     def __init__(
         self,
         selector: str,

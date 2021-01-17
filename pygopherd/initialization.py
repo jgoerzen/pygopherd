@@ -30,6 +30,7 @@ import socketserver
 import struct
 import sys
 import traceback
+import typing
 from configparser import ConfigParser
 
 import pygopherd.fileext
@@ -64,11 +65,11 @@ def initlogger(config: ConfigParser, conffile: str) -> None:
     logger.log("Pygopherd starting, using configuration file %s" % conffile)
 
 
-def initexceptions(config: ConfigParser):
+def initexceptions(config: ConfigParser) -> None:
     GopherExceptions.init(config.getboolean("pygopherd", "tracebacks"))
 
 
-def initmimetypes(config: ConfigParser):
+def initmimetypes(config: ConfigParser) -> None:
     mimetypesfiles = config.get("pygopherd", "mimetypes").split(":")
     mimetypesfiles = [
         x for x in mimetypesfiles if os.path.isfile(x) and os.access(x, os.R_OK)
@@ -93,11 +94,11 @@ def initmimetypes(config: ConfigParser):
 
 class GopherRequestHandler(socketserver.StreamRequestHandler):
 
-    rfile: io.BufferedIOBase
-    wfile: io.BufferedIOBase
+    rfile: io.BytesIO
+    wfile: io.BytesIO
     server: AbstractServer
 
-    def handle(self):
+    def handle(self) -> None:
         request = self.rfile.readline().decode(errors="surrogateescape")
 
         protohandler = ProtocolMultiplexer.getProtocol(
@@ -105,8 +106,8 @@ class GopherRequestHandler(socketserver.StreamRequestHandler):
         )
         try:
             protohandler.handle()
-        except socket.error as e:
-            if not (e[0] in [errno.ECONNRESET, errno.EPIPE]):
+        except IOError as e:
+            if not (e.errno in [errno.ECONNRESET, errno.EPIPE]):
                 traceback.print_exc()
             GopherExceptions.log(e, protohandler, None)
         except Exception as e:
@@ -125,7 +126,7 @@ def getserverobject(config: ConfigParser) -> AbstractServer:
     class MyServer(servertype):
         allow_reuse_address = 1
 
-        def server_bind(self):
+        def server_bind(self) -> None:
             """Override server_bind to store server name."""
             servertype.server_bind(self)
 
@@ -167,7 +168,7 @@ def getserverobject(config: ConfigParser) -> AbstractServer:
     return s
 
 
-def initsecurity(config: ConfigParser):
+def initsecurity(config: ConfigParser) -> None:
     idsetuid = None
     idsetgid = None
 
@@ -199,7 +200,7 @@ def initsecurity(config: ConfigParser):
         logger.log("Switched to uid %d" % idsetuid)
 
 
-def initconditionaldetach(config: ConfigParser):
+def initconditionaldetach(config: ConfigParser) -> None:
     if config.getboolean("pygopherd", "detach"):
         pid = os.fork()
         if pid:
@@ -207,7 +208,7 @@ def initconditionaldetach(config: ConfigParser):
             sys.exit(0)
 
 
-def initpidfile(config: ConfigParser):
+def initpidfile(config: ConfigParser) -> None:
     if config.has_option("pygopherd", "pidfile"):
         pidfile = config.get("pygopherd", "pidfile")
 
@@ -215,7 +216,7 @@ def initpidfile(config: ConfigParser):
             fd.write("%d\n" % os.getpid())
 
 
-def initpgrp(config: ConfigParser):
+def initpgrp(config: ConfigParser) -> typing.Optional[int]:
     if "setpgrp" in os.__dict__:
         os.setpgrp()
         pgrp = os.getpgrp()
@@ -226,7 +227,7 @@ def initpgrp(config: ConfigParser):
         return None
 
 
-def initsighandlers(config: ConfigParser, pgrp):
+def initsighandlers(config: ConfigParser, pgrp: int) -> None:
     sighandlers.setsighuphandler()
     sighandlers.setsigtermhandler(pgrp)
 

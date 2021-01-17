@@ -308,12 +308,12 @@ class GopherEntry:
             else:
                 return self.selector[4:]
 
-        retval = "gopher://%s:%d/" % (
+        retval = "gopher://{}:{}/".format(
             self.gethost(defaulthost),
             self.getport(defaultport),
         )
         retval += urllib.parse.quote(
-            "%s%s" % (self.gettype(), self.getselector()), errors="surrogateescape"
+            "{}{}".format(self.gettype(), self.getselector()), errors="surrogateescape"
         )
         return retval
 
