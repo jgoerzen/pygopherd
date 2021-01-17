@@ -93,7 +93,7 @@ class BaseGopherProtocol:
             self.filenotfound(str(e))
         except IOError as e:
             GopherExceptions.log(e, self, None)
-            self.filenotfound(e[1])
+            self.filenotfound(e.strerror)
 
     def filenotfound(self, msg: str):
         self.wfile.write(

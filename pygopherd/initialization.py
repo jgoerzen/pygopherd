@@ -123,7 +123,7 @@ def getserverobject(config: ConfigParser) -> AbstractServer:
 
     servertype = eval("socketserver." + config.get("pygopherd", "servertype"))
 
-    class MyServer(servertype):
+    class MyServer(servertype):  # type: ignore
         allow_reuse_address = 1
 
         def server_bind(self) -> None:
@@ -216,20 +216,18 @@ def initpidfile(config: ConfigParser) -> None:
             fd.write("%d\n" % os.getpid())
 
 
-def initpgrp(config: ConfigParser) -> typing.Optional[int]:
+def initpgrp(config: ConfigParser) -> None:
     if "setpgrp" in os.__dict__:
         os.setpgrp()
         pgrp = os.getpgrp()
         logger.log("Process group is %d" % pgrp)
-        return pgrp
     else:
         logger.log("setpgrp() unavailable; not initializing process group")
-        return None
 
 
-def initsighandlers(config: ConfigParser, pgrp: int) -> None:
+def initsighandlers(config: ConfigParser) -> None:
     sighandlers.setsighuphandler()
-    sighandlers.setsigtermhandler(pgrp)
+    sighandlers.setsigtermhandler()
 
 
 def initeverything(conffile: str) -> AbstractServer:
@@ -240,8 +238,8 @@ def initeverything(conffile: str) -> AbstractServer:
     s = getserverobject(config)
     initconditionaldetach(config)
     initpidfile(config)
-    pgrp = initpgrp(config)
-    initsighandlers(config, pgrp)
+    initpgrp(config)
+    initsighandlers(config)
     initsecurity(config)
 
     logger.log("Running.  Root is '%s'" % config.get("pygopherd", "root"))

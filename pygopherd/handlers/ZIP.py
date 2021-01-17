@@ -16,6 +16,8 @@ from pygopherd.handlers.base import BaseHandler, VFS_Real
 
 
 class MarshalingShelf(shelve.Shelf):
+    dict: typing.Dict[bytes, typing.Any]
+
     def __getitem__(self, key: str):
         return marshal.loads(self.dict[key])
 

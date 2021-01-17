@@ -2,6 +2,7 @@ import pickle
 import re
 import stat
 import time
+import typing
 
 from pygopherd import gopherentry, handlers
 from pygopherd.handlers.base import BaseHandler
@@ -12,6 +13,9 @@ class DirHandler(BaseHandler):
     cachefile: str
     cachename: str
     fromcache: bool
+    files: typing.List[str]
+    fileentries: typing.List[gopherentry.GopherEntry]
+    selectorbase: str
 
     def canhandlerequest(self) -> bool:
         """We can handle the request if it's for a directory."""
@@ -41,7 +45,6 @@ class DirHandler(BaseHandler):
 
     def prep_entries(self) -> None:
         """Generate entries from the list."""
-
         self.fileentries = []
         for file in self.files:
             # We look up the appropriate handler for this object, and ask

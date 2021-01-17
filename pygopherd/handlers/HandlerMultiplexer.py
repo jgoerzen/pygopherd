@@ -13,9 +13,8 @@ from pygopherd.handlers.base import BaseHandler, VFS_Real
 if typing.TYPE_CHECKING:
     from pygopherd.protocols.base import BaseGopherProtocol
 
-
-handlers = None
-rootpath = None
+handlers: typing.Optional[typing.List[BaseHandler]] = None
+rootpath: typing.Optional[str] = None
 
 
 def init_default_handlers(config: configparser.ConfigParser) -> None:
@@ -38,14 +37,14 @@ def getHandler(
     global handlers, rootpath
     init_default_handlers(config)
 
-    typing.cast(handlers, typing.List[BaseHandler])
-    typing.cast(rootpath, str)
-
     if vfs is None:
         vfs = VFS_Real(config)
 
     if handlerlist is None:
         handlerlist = handlers
+
+    typing.cast(handlers, typing.List[BaseHandler])
+    typing.cast(rootpath, str)
 
     # SECURITY: assert that our absolute path is within the absolute
     # path of the site root.

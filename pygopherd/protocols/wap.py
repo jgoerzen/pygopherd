@@ -73,8 +73,9 @@ class WAPProtocol(HTTPProtocol):
                 self.accesskeyidx += 1
             else:
                 retstr += '<a href="%s">' % url
-        if entry.getname() is not None:
-            thisname = html.escape(entry.getname())
+        entry_name = entry.getname()
+        if entry_name is not None:
+            thisname = html.escape(entry_name)
         else:
             thisname = html.escape(entry.getselector())
         retstr += thisname

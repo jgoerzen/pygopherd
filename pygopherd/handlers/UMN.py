@@ -34,6 +34,8 @@ class LinkEntry(GopherEntry):
 class UMNDirHandler(DirHandler):
     """This module strives to be bug-compatible with UMN gopherd."""
 
+    linkentries: typing.List[LinkEntry]
+
     def prepare(self) -> None:
         """Override parent to do a few more things and override sort order."""
         # Initialize.

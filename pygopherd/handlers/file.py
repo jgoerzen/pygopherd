@@ -33,6 +33,7 @@ class FileHandler(BaseHandler):
 class CompressedFileHandler(FileHandler):
     decompressors: typing.Dict[str, str]
     decompresspatt: str
+    entry: typing.Optional[CompressedGopherEntry]
 
     def canhandlerequest(self):
         self.initdecompressors()
