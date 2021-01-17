@@ -290,27 +290,6 @@ class GopherEntryTestCase(unittest.TestCase):
                 % (mimetype, entry.guesstype(), type_),
             )
 
-    def test_gets_sets(self):
-        """Tests a bunch of gets that operate on values that are None
-        to start with, and take a default."""
-
-        entry = GopherEntry("/NONEXISTANT", self.config)
-        # Initialize the rest of them to None.
-        entry.selector = None
-        entry.config = None
-        entry.populated = None
-        entry.num = None
-        entry.gopherpsupport = None
-
-        for field in fields:
-            getfunc = getattr(entry, "get" + field)
-            setfunc = getattr(entry, "set" + field)
-            self.assertEqual(getfunc(), None)
-            self.assertEqual(getfunc("DEFAULT" + field), "DEFAULT" + field)
-            setfunc("NewValue" + field)
-            self.assertEqual(getfunc(), "NewValue" + field)
-            self.assertEqual(getfunc("DEFAULT"), "NewValue" + field)
-
     def testgeturl(self):
         expected = {
             "/URL:http://www.complete.org/%20/": "http://www.complete.org/%20/",
