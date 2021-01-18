@@ -13,7 +13,7 @@ import zipfile
 from pygopherd.handlers.base import BaseHandler, VFS_Real
 
 
-CacheData = typing.Mapping[str, typing.Any]
+CacheData = typing.Dict[str, typing.Any]
 
 
 class VFSZip(VFS_Real):
@@ -156,7 +156,32 @@ class VFSZip(VFS_Real):
         self.dircache = {"0": {}}
 
         for info in self.zip.infolist():
-            (dir_, filename) = os.path.split(info.filename)
+            # Python 3 will automatically decode zip filenames assuming the
+            # charset is either UTF-8 (if the flag bit 11 is set) or otherwise
+            # cp437. This is *technically* valid from the zip spec but it's
+            # debatable given that zip(1) doesn't follow this on POSIX and just
+            # treats filenames as bytes without an associated encoding. So we
+            # reverse python's attempt by transcoding from cp437 back to an
+            # encoding that contains surrogate escapes. This allows the original
+            # bytes from the zip filenames to be preserved without any mojibake
+            # caused by assuming the encoding.
+            #
+            # Note that this "fix" only changes the filename that PyGopherd will
+            # display to clients. The python Zipfile object still keeps track of
+            # the filename as either cp437 or utf-8, so that's what you need to
+            # use when calling self.zip.read(filename) and related methods. This
+            # is why we still store the original info.filename as the value
+            # inside of the dircache.
+            #
+            # https://bugs.python.org/issue38861
+
+            filename = info.filename
+            if info.flag_bits & 0x800:
+                filename = filename.encode("utf-8").decode(errors="surrogateescape")
+            else:
+                filename = filename.encode("cp437").decode(errors="surrogateescape")
+
+            (dir_, filename_) = os.path.split(filename)
             if dir_ == "/":
                 dir_ = ""
 
@@ -170,19 +195,19 @@ class VFSZip(VFS_Real):
                     nextinode += 1
                 dirlevel = self.dircache[dirlevel[level]]
 
-            if filename:
+            if filename_:
                 if self._islinkinfo(info):
                     symlinkinodes.append(
                         {
                             "dirlevel": dirlevel,
-                            "filename": filename,
+                            "filename": filename_,
                             "pathname": info.filename,
                             "dest": self._readlinkfspath(info.filename),
                         }
                     )
                 else:
-                    dirlevel[filename] = str(nextinode)
-                    self.dircache[str(nextinode)] = info.filename  # used to be location
+                    dirlevel[filename_] = str(nextinode)
+                    self.dircache[str(nextinode)] = info.filename
                     nextinode += 1
 
         lastsymlinklen = 0
@@ -234,13 +259,13 @@ class VFSZip(VFS_Real):
     def stat(self, selector: str):
         fspath = self.getfspath(selector)
         try:
-            zi = self._getcacheentry(fspath)
+            inode_data = self._getcacheentry(fspath)
         except KeyError:
             raise OSError(
                 "Entry %s does not exist in %s" % (selector, self.zipfilename)
             )
 
-        if type(zi) == dict:
+        if isinstance(inode_data, dict):
             # It's a directory.
             return (
                 16877,  # mode
@@ -255,7 +280,7 @@ class VFSZip(VFS_Real):
                 0,
             )  # change time
 
-        zi = self.zip.getinfo(fspath)
+        zi = self.zip.getinfo(inode_data)
 
         zt = zi.date_time
         modtime = time.mktime(zt + (0, 0, -1))
@@ -315,7 +340,7 @@ class VFSZip(VFS_Real):
         fp = self.zip.open(item)
         if mode == "r":
             # Attempted to read in "text mode", so decode the bytestream
-            fp = codecs.getreader("utf-8")(fp)
+            fp = codecs.getreader("utf-8")(fp, errors=errors)
 
         return fp
 
