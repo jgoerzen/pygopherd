@@ -5,6 +5,7 @@ import io
 import typing
 
 from pygopherd import GopherExceptions, gopherentry, logger
+from pygopherd.handlers import HandlerMultiplexer
 
 if typing.TYPE_CHECKING:
     from pygopherd.gopherentry import GopherEntry
@@ -102,8 +103,6 @@ class BaseGopherProtocol:
 
     def gethandler(self) -> BaseHandler:
         """Gets the handler for this object's selector."""
-        from pygopherd.handlers import HandlerMultiplexer
-
         if not self.handler:
             self.handler = HandlerMultiplexer.getHandler(
                 self.selector, self.searchrequest, self, self.config
