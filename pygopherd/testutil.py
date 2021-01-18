@@ -21,7 +21,11 @@ def getstringlogger():
     config.set("logger", "logmethod", "file")
     logger.init(config)
     stringfile = StringIO()
-    logger.setlogfile(stringfile)
+
+    def log(message: str) -> None:
+        stringfile.write(message + "\n")
+
+    logger.log = log
     return stringfile
 
 
