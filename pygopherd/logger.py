@@ -13,7 +13,16 @@ def log_file(message: str) -> None:
 
 
 def log_syslog(message: str) -> None:
-    # TODO: Test w/ surrogate bytes
+    # Python's syslog forces UTF-8 and doesn't allow surrogate escapes.
+    # Even though RFC 5424 clearly states the syslog encoding is optional.
+    #
+    # > The character set used in MSG SHOULD be UNICODE, encoded using UTF-8
+    # > as specified in [RFC3629].  If the syslog application cannot encode
+    # > the MSG in Unicode, it MAY use any other encoding.
+    #
+    # Come on python
+    message_bytes = message.encode(errors="surrogateescape")
+    message = message_bytes.decode("utf-8", errors="backslashreplace")
     syslogfunc(priority, message)
 
 
