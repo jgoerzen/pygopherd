@@ -7,6 +7,17 @@ Notes for updating an existing PyGopherd server deployment to run on python 3.
 Install PyGopherd v3.0+ from [michael-lazar/pygopherd](https://github.com/michael-lazar/pygopherd)
 or another dependable source.
 
+## Cached Files
+
+PyGopherd will create cache files that start with ``.cache.pygopherd.*`` in
+your gopher root directory. These files are used to index directories and zip
+files for faster loading. Before launching the new server, clear out any
+existing PyGopherd cache files from your system.
+
+```
+find /var/gopher -type f -name '.cache.pygopherd.*' -delete
+```
+
 ## /etc/pygopherd/pygopherd.conf
 
 Because the PyGopherd config file format uses evaluated python code, you will
