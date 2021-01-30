@@ -5,7 +5,7 @@ from io import BytesIO, StringIO
 
 from pygopherd import initialization, logger
 from pygopherd.protocols import ProtocolMultiplexer
-from pygopherd.server import BaseServer
+from pygopherd.server import BaseServer, GopherRequestHandler
 
 TEST_DATA = os.path.join(os.path.dirname(__file__), "..", "testdata")
 
@@ -43,7 +43,7 @@ def gettestinghandler(
     rfile: BytesIO,
     wfile: BytesIO,
     config: typing.Optional[configparser.ConfigParser] = None,
-) -> initialization.GopherRequestHandler:
+) -> GopherRequestHandler:
     """Creates a testing handler with input from rfile.  Fills in
     other stuff with fake values."""
 
@@ -61,7 +61,7 @@ def gettestinghandler(
                 return self.rfile
             return self.wfile
 
-    class HandlerClass(initialization.GopherRequestHandler):
+    class HandlerClass(GopherRequestHandler):
 
         # Enable buffering (required to make the HandlerClass invoke RequestClass.makefile())
         rbufsize = -1

@@ -10,8 +10,7 @@ from pygopherd.handlers import HandlerMultiplexer
 if typing.TYPE_CHECKING:
     from pygopherd.gopherentry import GopherEntry
     from pygopherd.handlers.base import BaseHandler
-    from pygopherd.initialization import GopherRequestHandler
-    from pygopherd.server import BaseServer
+    from pygopherd.server import BaseServer, GopherRequestHandler
 
 
 class BaseGopherProtocol:

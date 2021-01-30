@@ -1,20 +1,16 @@
-import errno
-import io
 import mimetypes
 import os
 import os.path
 import typing
 
 # Import lots of stuff so it's here before chrooting.
-import socketserver
 import sys
-import traceback
 from configparser import ConfigParser
 
 import pygopherd.fileext
 import pygopherd.server
 from pygopherd import GopherExceptions, logger, sighandlers
-from pygopherd.protocols import ProtocolMultiplexer
+from pygopherd.server import GopherRequestHandler
 
 
 def init_config(filename: str) -> ConfigParser:
@@ -57,32 +53,6 @@ def init_mimetypes(config: ConfigParser) -> None:
     # Set up the inverse mapping file.
 
     pygopherd.fileext.init()
-
-
-class GopherRequestHandler(socketserver.StreamRequestHandler):
-
-    rfile: io.BytesIO
-    wfile: io.BytesIO
-    server: pygopherd.server.BaseServer
-
-    def handle(self) -> None:
-        request = self.rfile.readline().decode(errors="surrogateescape")
-
-        protohandler = ProtocolMultiplexer.getProtocol(
-            request, self.server, self, self.rfile, self.wfile, self.server.config
-        )
-        try:
-            protohandler.handle()
-        except IOError as e:
-            if not (e.errno in [errno.ECONNRESET, errno.EPIPE]):
-                traceback.print_exc()
-            GopherExceptions.log(e, protohandler, None)
-        except Exception as e:
-            if GopherExceptions.tracebacks:
-                # Yes, this may be invalid.  Not much else we can do.
-                # traceback.print_exc(file = self.wfile)
-                traceback.print_exc()
-            GopherExceptions.log(e, protohandler, None)
 
 
 def get_server(config: ConfigParser) -> pygopherd.server.BaseServer:
