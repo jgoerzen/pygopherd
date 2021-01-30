@@ -5,6 +5,7 @@ from io import BytesIO, StringIO
 
 from pygopherd import initialization, logger
 from pygopherd.protocols import ProtocolMultiplexer
+from pygopherd.protocols.base import BaseGopherProtocol
 from pygopherd.server import BaseServer, GopherRequestHandler
 
 TEST_DATA = os.path.join(os.path.dirname(__file__), "..", "testdata")
@@ -16,17 +17,17 @@ def get_config() -> configparser.ConfigParser:
     return config
 
 
-def get_string_logger():
+def get_string_logger() -> StringIO:
     config = get_config()
     config.set("logger", "logmethod", "file")
     logger.init(config)
-    stringfile = StringIO()
+    fp = StringIO()
 
     def log(message: str) -> None:
-        stringfile.write(message + "\n")
+        fp.write(message + "\n")
 
     logger.log = log
-    return stringfile
+    return fp
 
 
 def get_testing_server(
@@ -88,7 +89,7 @@ def get_testing_handler(
     return rhandler
 
 
-def get_testing_protocol(request: str, config=None):
+def get_testing_protocol(request: str, config=None) -> BaseGopherProtocol:
     config = config or get_config()
 
     rfile = BytesIO(request.encode(errors="surrogateescape"))
