@@ -10,7 +10,8 @@ from pygopherd.handlers import HandlerMultiplexer
 if typing.TYPE_CHECKING:
     from pygopherd.gopherentry import GopherEntry
     from pygopherd.handlers.base import BaseHandler
-    from pygopherd.initialization import AbstractServer, GopherRequestHandler
+    from pygopherd.initialization import GopherRequestHandler
+    from pygopherd.server import BaseServer
 
 
 class BaseGopherProtocol:
@@ -19,7 +20,7 @@ class BaseGopherProtocol:
     def __init__(
         self,
         request: str,
-        server: AbstractServer,
+        server: BaseServer,
         requesthandler: GopherRequestHandler,
         rfile: io.BufferedIOBase,
         wfile: io.BufferedIOBase,

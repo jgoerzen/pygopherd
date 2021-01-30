@@ -12,7 +12,6 @@ import zipfile
 
 from pygopherd.handlers.base import BaseHandler, VFS_Real
 
-
 CacheData = typing.Dict[str, typing.Any]
 
 

@@ -15,4 +15,5 @@ __all__ = [
     "initialization",
     "initializationTest",
     "testutil",
+    "server",
 ]

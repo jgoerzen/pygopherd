@@ -23,29 +23,18 @@ import io
 import mimetypes
 import os
 import os.path
+import typing
 
 # Import lots of stuff so it's here before chrooting.
-import socket
 import socketserver
-import struct
 import sys
 import traceback
-import typing
 from configparser import ConfigParser
 
 import pygopherd.fileext
+import pygopherd.server
 from pygopherd import GopherExceptions, logger, sighandlers
 from pygopherd.protocols import ProtocolMultiplexer
-
-
-class AbstractServer(socketserver.TCPServer):
-    """
-    We dynamically attach a few extra variables to the base TCP server.
-    """
-
-    config: ConfigParser
-    server_name: str
-    server_port: int
 
 
 def initconffile(conffile: str) -> ConfigParser:
@@ -96,7 +85,7 @@ class GopherRequestHandler(socketserver.StreamRequestHandler):
 
     rfile: io.BytesIO
     wfile: io.BytesIO
-    server: AbstractServer
+    server: pygopherd.server.BaseServer
 
     def handle(self) -> None:
         request = self.rfile.readline().decode(errors="surrogateescape")
@@ -118,54 +107,35 @@ class GopherRequestHandler(socketserver.StreamRequestHandler):
             GopherExceptions.log(e, protohandler, None)
 
 
-def getserverobject(config: ConfigParser) -> AbstractServer:
+def getserverobject(config: ConfigParser) -> pygopherd.server.BaseServer:
     # Pick up the server type from the config.
+    server_class: typing.Type[pygopherd.server.BaseServer]
 
-    servertype = eval("socketserver." + config.get("pygopherd", "servertype"))
-
-    class MyServer(servertype):  # type: ignore
-        allow_reuse_address = 1
-
-        def server_bind(self) -> None:
-            """Override server_bind to store server name."""
-            servertype.server_bind(self)
-
-            # Set a timeout.
-            if config.has_option("pygopherd", "timeout"):
-                mytimeout = struct.pack(
-                    "ll", int(config.get("pygopherd", "timeout")), 0
-                )
-                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, mytimeout)
-                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, mytimeout)
-                # self.socket.settimeout(int(config.get('pygopherd', 'timeout')))
-            host, port = self.socket.getsockname()
-            if config.has_option("pygopherd", "servername"):
-                self.server_name = config.get("pygopherd", "servername")
-            else:
-                self.server_name = socket.getfqdn(host)
-            if config.has_option("pygopherd", "advertisedport"):
-                self.server_port = config.getint("pygopherd", "advertisedport")
-            else:
-                self.server_port = port
+    server_type = config.get("pygopherd", "servertype")
+    if server_type == "ForkingTCPServer":
+        server_class = pygopherd.server.ForkingTCPServer
+    elif server_type == "ThreadingTCPServer":
+        server_class = pygopherd.server.ThreadingTCPServer
+    else:
+        raise RuntimeError(f"Invalid servertype option: {server_type}")
 
     # Instantiate a server.  Has to be done before the security so we can
     # get a privileged port if necessary.
-
     interface = ""
     if config.has_option("pygopherd", "interface"):
         interface = config.get("pygopherd", "interface")
 
+    port = config.getint("pygopherd", "port")
+    address = (interface, port)
+
     try:
-        s = MyServer(
-            (interface, config.getint("pygopherd", "port")), GopherRequestHandler
-        )
+        server = server_class(config, address, GopherRequestHandler)
     except Exception as e:
         GopherExceptions.log(e, None, None)
         logger.log("Application startup NOT successful!")
         raise
 
-    s.config = config
-    return s
+    return server
 
 
 def initsecurity(config: ConfigParser) -> None:
@@ -230,7 +200,7 @@ def initsighandlers(config: ConfigParser) -> None:
     sighandlers.setsigtermhandler()
 
 
-def initeverything(conffile: str) -> AbstractServer:
+def initeverything(conffile: str) -> pygopherd.server.BaseServer:
     config = initconffile(conffile)
     initlogger(config, conffile)
     initexceptions(config)

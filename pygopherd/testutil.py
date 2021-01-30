@@ -4,8 +4,8 @@ import typing
 from io import BytesIO, StringIO
 
 from pygopherd import initialization, logger
-from pygopherd.initialization import AbstractServer
 from pygopherd.protocols import ProtocolMultiplexer
+from pygopherd.server import BaseServer
 
 TEST_DATA = os.path.join(os.path.dirname(__file__), "..", "testdata")
 
@@ -31,7 +31,7 @@ def getstringlogger():
 
 def gettestingserver(
     config: typing.Optional[configparser.ConfigParser] = None,
-) -> AbstractServer:
+) -> BaseServer:
     config = config or getconfig()
     config.set("pygopherd", "port", "64777")
     s = initialization.getserverobject(config)
@@ -67,7 +67,7 @@ def gettestinghandler(
         rbufsize = -1
         wbufsize = -1
 
-        def __init__(self, request, client_address, server: AbstractServer):
+        def __init__(self, request, client_address, server: BaseServer):
             self.request = request
             self.client_address = client_address
             self.server = server
