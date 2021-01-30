@@ -13,5 +13,3 @@ __all__ = [
     "scriptexec",
     "tal",
 ]
-# import base, dir, file, gophermap, UMN, html, mbox, virtual, pyg
-# import scriptexec, url
