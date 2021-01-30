@@ -6,7 +6,7 @@ import unittest
 from pygopherd import fileext, initialization
 
 
-class initializationConfigTestCase(unittest.TestCase):
+class InitializationConfigTestCase(unittest.TestCase):
     def test_init_config(self):
         self.assertRaises(Exception, initialization.init_config, "/foo")
         # Load the standard config file.  It should be OK at least.
@@ -25,7 +25,7 @@ class initializationConfigTestCase(unittest.TestCase):
         ), "Tracebacks should be enabled."
 
 
-class initializationGeneralTestCase(unittest.TestCase):
+class InitializationGeneralTestCase(unittest.TestCase):
     def setUp(self):
         self.config = initialization.init_config("conf/pygopherd.conf")
 
