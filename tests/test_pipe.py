@@ -8,7 +8,7 @@ from pygopherd import testutil
 
 class PipeTestCase(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
+        self.config = testutil.get_config()
         self.root = self.config.get("pygopherd", "root")
         self.testdata = self.root + "/pygopherd/pipetestdata"
         self.testprog = self.root + "/pygopherd/pipetest.sh"

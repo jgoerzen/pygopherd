@@ -9,10 +9,10 @@ from pygopherd.handlers.file import CompressedFileHandler, FileHandler
 
 class TestFileHandler(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
+        self.config = testutil.get_config()
         self.vfs = VFS_Real(self.config)
         self.selector = "/testfile.txt"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.protocol = testutil.get_testing_protocol(self.selector, config=self.config)
         self.stat_result = self.vfs.stat(self.selector)
 
     def test_file_handler(self):
@@ -58,10 +58,10 @@ class TestFileHandler(unittest.TestCase):
 
 class TestCompressedFileHandler(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
+        self.config = testutil.get_config()
         self.vfs = VFS_Real(self.config)
         self.selector = "/testfile.txt.gz"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.protocol = testutil.get_testing_protocol(self.selector, config=self.config)
         self.stat_result = self.vfs.stat(self.selector)
 
         self.config.set(

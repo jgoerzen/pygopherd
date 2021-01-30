@@ -9,8 +9,8 @@ from pygopherd.GopherExceptions import FileNotFound
 
 class GopherExceptionsTestCase(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
-        self.stringfile = testutil.getstringlogger()
+        self.config = testutil.get_config()
+        self.stringfile = testutil.get_string_logger()
         GopherExceptions.tracebacks = 0
 
     def testlog_basic(self):
@@ -26,7 +26,7 @@ class GopherExceptionsTestCase(unittest.TestCase):
     def testlog_proto_ip(self):
         rfile = BytesIO(b"/NONEXISTANT\n")
         wfile = BytesIO()
-        handler = testutil.gettestinghandler(rfile, wfile, self.config)
+        handler = testutil.get_testing_handler(rfile, wfile, self.config)
         handler.handle()
         self.assertEqual(
             self.stringfile.getvalue(),

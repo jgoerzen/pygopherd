@@ -13,10 +13,10 @@ from pygopherd.handlers.mbox import (
 
 class TestMBoxHandler(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
+        self.config = testutil.get_config()
         self.vfs = VFS_Real(self.config)
         self.selector = "/python-dev.mbox"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.protocol = testutil.get_testing_protocol(self.selector, config=self.config)
         self.stat_result = self.vfs.stat(self.selector)
 
     def test_mbox_folder_handler(self):
@@ -80,10 +80,10 @@ class TestMaildirHandler(unittest.TestCase):
     """
 
     def setUp(self):
-        self.config = testutil.getconfig()
+        self.config = testutil.get_config()
         self.vfs = VFS_Real(self.config)
         self.selector = "/python-dev"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.protocol = testutil.get_testing_protocol(self.selector, config=self.config)
         self.stat_result = self.vfs.stat(self.selector)
 
     def test_maildir_folder_handler(self):

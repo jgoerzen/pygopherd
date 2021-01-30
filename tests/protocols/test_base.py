@@ -9,12 +9,12 @@ from pygopherd.protocols.base import BaseGopherProtocol
 
 class BaseProtocolTestCase(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
+        self.config = testutil.get_config()
         self.rfile = BytesIO(b"/testfile.txt\n")
         self.wfile = BytesIO()
-        self.logfile = testutil.getstringlogger()
+        self.logfile = testutil.get_string_logger()
         self.logstr = "10.77.77.77 [BaseGopherProtocol/FileHandler]: /testfile.txt\n"
-        self.handler = testutil.gettestinghandler(self.rfile, self.wfile, self.config)
+        self.handler = testutil.get_testing_handler(self.rfile, self.wfile, self.config)
         self.server = self.handler.server
         self.proto = BaseGopherProtocol(
             "/testfile.txt\n",

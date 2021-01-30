@@ -10,14 +10,14 @@ from pygopherd.server import BaseServer, GopherRequestHandler
 TEST_DATA = os.path.join(os.path.dirname(__file__), "..", "testdata")
 
 
-def getconfig() -> configparser.ConfigParser:
+def get_config() -> configparser.ConfigParser:
     config = initialization.init_config("conf/pygopherd.conf")
     config.set("pygopherd", "root", TEST_DATA)
     return config
 
 
-def getstringlogger():
-    config = getconfig()
+def get_string_logger():
+    config = get_config()
     config.set("logger", "logmethod", "file")
     logger.init(config)
     stringfile = StringIO()
@@ -29,17 +29,17 @@ def getstringlogger():
     return stringfile
 
 
-def gettestingserver(
+def get_testing_server(
     config: typing.Optional[configparser.ConfigParser] = None,
 ) -> BaseServer:
-    config = config or getconfig()
+    config = config or get_config()
     config.set("pygopherd", "port", "64777")
     s = initialization.get_server(config)
     s.server_close()
     return s
 
 
-def gettestinghandler(
+def get_testing_handler(
     rfile: BytesIO,
     wfile: BytesIO,
     config: typing.Optional[configparser.ConfigParser] = None,
@@ -47,7 +47,7 @@ def gettestinghandler(
     """Creates a testing handler with input from rfile.  Fills in
     other stuff with fake values."""
 
-    config = config or getconfig()
+    config = config or get_config()
 
     # Kludge to pass to the handler init.
 
@@ -83,19 +83,19 @@ def gettestinghandler(
             finally:
                 self.finish()
 
-    server = gettestingserver(config)
+    server = get_testing_server(config)
     rhandler = HandlerClass(RequestClass(rfile, wfile), ("10.77.77.77", "7777"), server)
     return rhandler
 
 
-def gettestingprotocol(request: str, config=None):
-    config = config or getconfig()
+def get_testing_protocol(request: str, config=None):
+    config = config or get_config()
 
     rfile = BytesIO(request.encode(errors="surrogateescape"))
-    # Pass fake rfile, wfile to gettestinghandler -- they'll be closed before
+    # Pass fake rfile, wfile to get_testing_handler -- they'll be closed before
     # we can get the info, and some protocols need to read more from them.
 
-    handler = gettestinghandler(BytesIO(), BytesIO(), config)
+    handler = get_testing_handler(BytesIO(), BytesIO(), config)
     # Now override.
     handler.rfile = rfile
     return ProtocolMultiplexer.getProtocol(

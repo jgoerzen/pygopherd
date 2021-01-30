@@ -7,11 +7,11 @@ from pygopherd.protocols.http import HTTPProtocol
 
 class TestHTTPProtocol(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
-        self.logfile = testutil.getstringlogger()
+        self.config = testutil.get_config()
+        self.logfile = testutil.get_string_logger()
         self.rfile = io.BytesIO(b"Accept:text/plain\nHost:localhost.com\n\n")
         self.wfile = io.BytesIO()
-        self.handler = testutil.gettestinghandler(self.rfile, self.wfile, self.config)
+        self.handler = testutil.get_testing_handler(self.rfile, self.wfile, self.config)
 
     def test_http_handler(self):
         request = "GET / HTTP/1.1"

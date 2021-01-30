@@ -29,7 +29,7 @@ fields = [
 
 class GopherEntryTestCase(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
+        self.config = testutil.get_config()
         self.root = self.config.get("pygopherd", "root")
 
     def assertEntryMatches(self, conditions, entry, testname):

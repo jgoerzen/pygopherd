@@ -284,10 +284,10 @@ class TestVFSZip(unittest.TestCase):
 
 class TestZipHandler(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
+        self.config = testutil.get_config()
         self.vfs = VFS_Real(self.config)
         self.selector = "/testdata.zip"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.protocol = testutil.get_testing_protocol(self.selector, config=self.config)
         self.stat_result = self.vfs.stat(self.selector)
 
         self.config.set("handlers.ZIP.ZIPHandler", "enabled", "true")

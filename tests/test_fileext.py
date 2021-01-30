@@ -6,7 +6,7 @@ from pygopherd import fileext, initialization, testutil
 
 class FileExtTestCase(unittest.TestCase):
     def setUp(self):
-        config = testutil.getconfig()
+        config = testutil.get_config()
         initialization.init_logger(config, "TESTING")
         initialization.init_mimetypes(config)
 

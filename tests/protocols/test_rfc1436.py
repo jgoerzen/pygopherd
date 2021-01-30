@@ -9,11 +9,11 @@ from pygopherd.protocols.rfc1436 import GopherProtocol
 
 class RFC1436TestCase(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
+        self.config = testutil.get_config()
         self.rfile = BytesIO(b"/testfile.txt\n")
         self.wfile = BytesIO()
-        self.logfile = testutil.getstringlogger()
-        self.handler = testutil.gettestinghandler(self.rfile, self.wfile, self.config)
+        self.logfile = testutil.get_string_logger()
+        self.handler = testutil.get_testing_handler(self.rfile, self.wfile, self.config)
         self.server = self.handler.server
         self.proto = GopherProtocol(
             "/testfile.txt\n",

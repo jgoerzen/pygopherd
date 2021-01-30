@@ -8,12 +8,12 @@ from pygopherd.handlers.scriptexec import ExecHandler
 
 class TestExecHandler(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
+        self.config = testutil.get_config()
         self.vfs = VFS_Real(self.config)
         # The "hello" will be sent as an additional script argument. Multiple
         # query arguments can be provided using " " as the separator.
         self.selector = "/pygopherd/cgitest.sh?hello"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.protocol = testutil.get_testing_protocol(self.selector, config=self.config)
         self.stat_result = None
 
     def test_exec_handler(self):

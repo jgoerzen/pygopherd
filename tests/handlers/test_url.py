@@ -9,10 +9,10 @@ from pygopherd.handlers.url import HTMLURLHandler, URLTypeRewriter
 
 class TestHTMLURLHandler(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
+        self.config = testutil.get_config()
         self.vfs = VFS_Real(self.config)
         self.selector = "URL:http://gopher.quux.org/"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.protocol = testutil.get_testing_protocol(self.selector, config=self.config)
         self.stat_result = None
 
     def test_url_rewriter_handler(self):
@@ -41,10 +41,10 @@ class TestHTMLURLHandler(unittest.TestCase):
 
 class TestURLTypeRewriterHandler(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
+        self.config = testutil.get_config()
         self.vfs = VFS_Real(self.config)
         self.selector = "/0/README"
-        self.protocol = testutil.gettestingprotocol(self.selector, config=self.config)
+        self.protocol = testutil.get_testing_protocol(self.selector, config=self.config)
         self.stat_result = None
 
     def test_url_rewriter_handler(self):

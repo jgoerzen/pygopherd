@@ -7,11 +7,11 @@ from pygopherd.protocols.gopherp import GopherPlusProtocol
 
 class TestGopherPlusProtocol(unittest.TestCase):
     def setUp(self):
-        self.config = testutil.getconfig()
-        self.logfile = testutil.getstringlogger()
+        self.config = testutil.get_config()
+        self.logfile = testutil.get_string_logger()
         self.rfile = io.BytesIO()
         self.wfile = io.BytesIO()
-        self.handler = testutil.gettestinghandler(self.rfile, self.wfile, self.config)
+        self.handler = testutil.get_testing_handler(self.rfile, self.wfile, self.config)
 
     def test_get_file(self):
         request = "/README\t+"
