@@ -188,9 +188,13 @@ def initpidfile(config: ConfigParser) -> None:
 
 def initpgrp(config: ConfigParser) -> None:
     if "setpgrp" in os.__dict__:
-        os.setpgrp()
-        pgrp = os.getpgrp()
-        logger.log("Process group is %d" % pgrp)
+        try:
+            os.setpgrp()
+            pgrp = os.getpgrp()
+        except OSError as e:
+            logger.log(f"setpgrp() failed with {e}")
+        else:
+            logger.log(f"Process group is {pgrp}")
     else:
         logger.log("setpgrp() unavailable; not initializing process group")
 
