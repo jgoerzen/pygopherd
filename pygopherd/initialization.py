@@ -17,44 +17,42 @@ from pygopherd import GopherExceptions, logger, sighandlers
 from pygopherd.protocols import ProtocolMultiplexer
 
 
-def initconffile(conffile: str) -> ConfigParser:
-    if not (os.path.isfile(conffile) and os.access(conffile, os.R_OK)):
+def init_config(filename: str) -> ConfigParser:
+    if not (os.path.isfile(filename) and os.access(filename, os.R_OK)):
         raise Exception(
-            "Could NOT access config file %s\nPlease specify config file as a command-line argument\n"
-            % conffile
+            f"Could NOT access config file {filename}\n"
+            f"Please specify config file as a command-line argument\n"
         )
 
     config = ConfigParser()
-    config.read(conffile)
+    config.read(filename)
     return config
 
 
-def initlogger(config: ConfigParser, conffile: str) -> None:
+def init_logger(config: ConfigParser, filename: str) -> None:
     logger.init(config)
-    logger.log("Pygopherd starting, using configuration file %s" % conffile)
+    logger.log(f"Pygopherd starting, using configuration file {filename}")
 
 
-def initexceptions(config: ConfigParser) -> None:
+def init_exceptions(config: ConfigParser) -> None:
     GopherExceptions.init(config.getboolean("pygopherd", "tracebacks"))
 
 
-def initmimetypes(config: ConfigParser) -> None:
-    mimetypesfiles = config.get("pygopherd", "mimetypes").split(":")
-    mimetypesfiles = [
-        x for x in mimetypesfiles if os.path.isfile(x) and os.access(x, os.R_OK)
-    ]
-
-    if not mimetypesfiles:
+def init_mimetypes(config: ConfigParser) -> None:
+    files = config.get("pygopherd", "mimetypes").split(":")
+    files = [x for x in files if os.path.isfile(x) and os.access(x, os.R_OK)]
+    if not files:
         errmsg = "Could not find any mimetypes files; check mimetypes option in config."
         logger.log(errmsg)
         raise Exception(errmsg)
 
-    configencoding = eval(config.get("pygopherd", "encoding"))
+    encoding = eval(config.get("pygopherd", "encoding"))
     mimetypes.encodings_map.clear()
-    for key, value in configencoding:
+    for key, value in encoding:
         mimetypes.encodings_map[key] = value
-    mimetypes.init(mimetypesfiles)
-    logger.log("mimetypes initialized with files: " + str(mimetypesfiles))
+
+    mimetypes.init(files)
+    logger.log(f"mimetypes initialized with files: {files}")
 
     # Set up the inverse mapping file.
 
@@ -87,7 +85,7 @@ class GopherRequestHandler(socketserver.StreamRequestHandler):
             GopherExceptions.log(e, protohandler, None)
 
 
-def getserverobject(config: ConfigParser) -> pygopherd.server.BaseServer:
+def get_server(config: ConfigParser) -> pygopherd.server.BaseServer:
     # Pick up the server type from the config.
     server_class: typing.Type[pygopherd.server.BaseServer]
 
@@ -118,39 +116,40 @@ def getserverobject(config: ConfigParser) -> pygopherd.server.BaseServer:
     return server
 
 
-def initsecurity(config: ConfigParser) -> None:
-    idsetuid = None
-    idsetgid = None
+def init_security(config: ConfigParser) -> None:
+    uid = None
+    gid = None
 
     if config.has_option("pygopherd", "setuid"):
         import pwd
 
-        idsetuid = pwd.getpwnam(config.get("pygopherd", "setuid"))[2]
+        uid = pwd.getpwnam(config.get("pygopherd", "setuid"))[2]
 
     if config.has_option("pygopherd", "setgid"):
         import grp
 
-        idsetgid = grp.getgrnam(config.get("pygopherd", "setgid"))[2]
+        gid = grp.getgrnam(config.get("pygopherd", "setgid"))[2]
 
     if config.getboolean("pygopherd", "usechroot"):
-        os.chroot(config.get("pygopherd", "root"))
-        logger.log("Chrooted to " + config.get("pygopherd", "root"))
+        chroot_user = config.get("pygopherd", "root")
+        os.chroot(chroot_user)
+        logger.log(f"Chrooted to {chroot_user}")
         config.set("pygopherd", "root", "/")
 
-    if idsetuid is not None or idsetgid is not None:
+    if uid is not None or gid is not None:
         os.setgroups(())
         logger.log("Supplemental group list cleared.")
 
-    if idsetgid is not None:
-        os.setregid(idsetgid, idsetgid)
-        logger.log("Switched to group %d" % idsetgid)
+    if gid is not None:
+        os.setregid(gid, gid)
+        logger.log(f"Switched to group {gid}")
 
-    if idsetuid is not None:
-        os.setreuid(idsetuid, idsetuid)
-        logger.log("Switched to uid %d" % idsetuid)
+    if uid is not None:
+        os.setreuid(uid, uid)
+        logger.log(f"Switched to uid {uid}")
 
 
-def initconditionaldetach(config: ConfigParser) -> None:
+def init_conditional_detach(config: ConfigParser) -> None:
     if config.getboolean("pygopherd", "detach"):
         pid = os.fork()
         if pid:
@@ -158,7 +157,7 @@ def initconditionaldetach(config: ConfigParser) -> None:
             sys.exit(0)
 
 
-def initpidfile(config: ConfigParser) -> None:
+def init_pidfile(config: ConfigParser) -> None:
     if config.has_option("pygopherd", "pidfile"):
         pidfile = config.get("pygopherd", "pidfile")
 
@@ -166,35 +165,36 @@ def initpidfile(config: ConfigParser) -> None:
             fd.write("%d\n" % os.getpid())
 
 
-def initpgrp(config: ConfigParser) -> None:
-    if "setpgrp" in os.__dict__:
-        try:
-            os.setpgrp()
-            pgrp = os.getpgrp()
-        except OSError as e:
-            logger.log(f"setpgrp() failed with {e}")
-        else:
-            logger.log(f"Process group is {pgrp}")
-    else:
+def init_process_group(config: ConfigParser) -> None:
+    try:
+        os.setpgrp()
+        process_group = os.getpgrp()
+    except OSError as e:
+        logger.log(f"setpgrp() failed with {e}")
+    except AttributeError:
         logger.log("setpgrp() unavailable; not initializing process group")
+    else:
+        logger.log(f"Process group is {process_group}")
 
 
-def initsighandlers(config: ConfigParser) -> None:
+def init_signal_handlers() -> None:
     sighandlers.setsighuphandler()
     sighandlers.setsigtermhandler()
 
 
-def initeverything(conffile: str) -> pygopherd.server.BaseServer:
-    config = initconffile(conffile)
-    initlogger(config, conffile)
-    initexceptions(config)
-    initmimetypes(config)
-    s = getserverobject(config)
-    initconditionaldetach(config)
-    initpidfile(config)
-    initpgrp(config)
-    initsighandlers(config)
-    initsecurity(config)
+def initialize(filename: str) -> pygopherd.server.BaseServer:
+    config = init_config(filename)
 
-    logger.log("Running.  Root is '%s'" % config.get("pygopherd", "root"))
-    return s
+    init_logger(config, filename)
+    init_exceptions(config)
+    init_mimetypes(config)
+    server = get_server(config)
+    init_conditional_detach(config)
+    init_pidfile(config)
+    init_process_group(config)
+    init_signal_handlers()
+    init_security(config)
+
+    root = config.get("pygopherd", "root")
+    logger.log(f"Running.  Root is '{root}'")
+    return server

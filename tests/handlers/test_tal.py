@@ -37,8 +37,8 @@ class TestTALHandler(unittest.TestCase):
         self.stat_result = self.vfs.stat(self.selector)
 
         # Initialize the custom mimetypes encoding map
-        initialization.initlogger(self.config, "")
-        initialization.initmimetypes(self.config)
+        initialization.init_logger(self.config, "")
+        initialization.init_mimetypes(self.config)
 
     def test_tal_available(self):
         self.assertTrue(talavailable)

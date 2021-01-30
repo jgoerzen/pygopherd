@@ -11,7 +11,7 @@ TEST_DATA = os.path.join(os.path.dirname(__file__), "..", "testdata")
 
 
 def getconfig() -> configparser.ConfigParser:
-    config = initialization.initconffile("conf/pygopherd.conf")
+    config = initialization.init_config("conf/pygopherd.conf")
     config.set("pygopherd", "root", TEST_DATA)
     return config
 
@@ -34,7 +34,7 @@ def gettestingserver(
 ) -> BaseServer:
     config = config or getconfig()
     config.set("pygopherd", "port", "64777")
-    s = initialization.getserverobject(config)
+    s = initialization.get_server(config)
     s.server_close()
     return s
 
