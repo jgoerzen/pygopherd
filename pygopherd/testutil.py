@@ -40,6 +40,40 @@ def get_testing_server(
     return s
 
 
+class MockRequest:
+    def __init__(self, rfile: BytesIO, wfile: BytesIO):
+        self.rfile = rfile
+        self.wfile = wfile
+
+    def makefile(self, mode: str, bufsize) -> BytesIO:
+        if mode[0] == "r":
+            return self.rfile
+        return self.wfile
+
+
+class MockRequestHandler(GopherRequestHandler):
+
+    # Enable buffering (required to make the HandlerClass invoke RequestClass.makefile())
+    rbufsize = -1
+    wbufsize = -1
+
+    def __init__(self, request, client_address, server: BaseServer):
+        self.request = request
+        self.client_address = client_address
+        self.server = server
+        self.setup()
+        # This does everything in the base class up to handle()
+
+    def handle(self):
+        # Normally finish() gets called in the __init__, but because we are doing this
+        # roundabout method of calling handle() from inside of unit tests, we want to make sure
+        # that the server cleans up after itself.
+        try:
+            super().handle()
+        finally:
+            self.finish()
+
+
 def get_testing_handler(
     rfile: BytesIO,
     wfile: BytesIO,
@@ -49,44 +83,10 @@ def get_testing_handler(
     other stuff with fake values."""
 
     config = config or get_config()
-
-    # Kludge to pass to the handler init.
-
-    class RequestClass:
-        def __init__(self, rfile: BytesIO, wfile: BytesIO):
-            self.rfile = rfile
-            self.wfile = wfile
-
-        def makefile(self, mode: str, bufsize):
-            if mode[0] == "r":
-                return self.rfile
-            return self.wfile
-
-    class HandlerClass(GopherRequestHandler):
-
-        # Enable buffering (required to make the HandlerClass invoke RequestClass.makefile())
-        rbufsize = -1
-        wbufsize = -1
-
-        def __init__(self, request, client_address, server: BaseServer):
-            self.request = request
-            self.client_address = client_address
-            self.server = server
-            self.setup()
-            # This does everything in the base class up to handle()
-
-        def handle(self):
-            # Normally finish() gets called in the __init__, but because we are doing this
-            # roundabout method of calling handle() from inside of unit tests, we want to make sure
-            # that the server cleans up after itself.
-            try:
-                super().handle()
-            finally:
-                self.finish()
-
     server = get_testing_server(config)
-    rhandler = HandlerClass(RequestClass(rfile, wfile), ("10.77.77.77", "7777"), server)
-    return rhandler
+    request = MockRequest(rfile, wfile)
+    request_handler = MockRequestHandler(request, ("10.77.77.77", "7777"), server)
+    return request_handler
 
 
 def get_testing_protocol(request: str, config=None) -> BaseGopherProtocol:
