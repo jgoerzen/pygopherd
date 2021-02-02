@@ -5,9 +5,12 @@ class GopherProtocol(BaseGopherProtocol):
     """Implementation of basic protocol.  Will handle every query."""
 
     def canhandlerequest(self):
+        if self.secure != self.check_tls():
+            return False
+
         if len(self.requestlist) > 1:
             self.searchrequest = self.requestlist[1]
-        return 1
+        return True
 
     def renderobjinfo(self, entry):
         retval = (
@@ -24,3 +27,7 @@ class GopherProtocol(BaseGopherProtocol):
             return retval + "\t+\r\n"
         else:
             return retval + "\r\n"
+
+
+class SecureGopherProtocol(GopherProtocol):
+    secure = True

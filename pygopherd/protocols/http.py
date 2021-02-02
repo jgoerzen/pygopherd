@@ -12,6 +12,9 @@ from pygopherd.protocols.base import BaseGopherProtocol
 
 class HTTPProtocol(BaseGopherProtocol):
     def canhandlerequest(self):
+        if self.secure != self.check_tls():
+            return False
+
         self.requestparts = [arg.strip() for arg in self.request.split(" ")]
         return (
             len(self.requestparts) == 3
@@ -192,6 +195,10 @@ class HTTPProtocol(BaseGopherProtocol):
         return '<IMG ALT=" * " SRC="%s" WIDTH="20" HEIGHT="22" BORDER="0">' % (
             "/PYGOPHERD-HTTPPROTO-ICONS/" + name
         )
+
+
+class HTTPSProtocol(HTTPProtocol):
+    secure = True
 
 
 icons = {

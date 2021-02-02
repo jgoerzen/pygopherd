@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import configparser
 import io
+import ssl
 import typing
 
 from pygopherd import GopherExceptions, gopherentry, logger
@@ -15,6 +16,8 @@ if typing.TYPE_CHECKING:
 
 class BaseGopherProtocol:
     """Skeleton protocol -- includes commonly-used routines."""
+
+    secure = False
 
     def __init__(
         self,
@@ -172,3 +175,9 @@ class BaseGopherProtocol:
         """Returns true if this protocol understands abstracts natively;
         false otherwise."""
         return False
+
+    def check_tls(self) -> bool:
+        """
+        Returns true if the connection was established over TLS.
+        """
+        return isinstance(self.requesthandler.request, ssl.SSLSocket)

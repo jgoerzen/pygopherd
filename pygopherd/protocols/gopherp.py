@@ -16,6 +16,9 @@ class GopherPlusProtocol(GopherProtocol):
         """We can handle the request IF:
         * It has more than one parameter in the request list
         * The second parameter is ! or starts with + or $"""
+        if self.secure != self.check_tls():
+            return False
+
         if len(self.requestlist) < 2:
             return False
         if len(self.requestlist) == 2:
@@ -162,6 +165,10 @@ class GopherPlusProtocol(GopherProtocol):
 
     def groksabstract(self) -> bool:
         return True
+
+
+class SecureGopherPlusProtocol(GopherPlusProtocol):
+    secure = True
 
 
 class URLGopherPlus(GopherPlusProtocol):
