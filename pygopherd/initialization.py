@@ -2,6 +2,7 @@ import mimetypes
 import os
 import os.path
 import typing
+import ssl
 
 # Import lots of stuff so it's here before chrooting.
 import sys
@@ -55,7 +56,10 @@ def init_mimetypes(config: ConfigParser) -> None:
     pygopherd.fileext.init()
 
 
-def get_server(config: ConfigParser) -> pygopherd.server.BaseServer:
+def get_server(
+    config: ConfigParser, context: typing.Optional[ssl.SSLContext] = None
+) -> pygopherd.server.BaseServer:
+
     # Pick up the server type from the config.
     server_class: typing.Type[pygopherd.server.BaseServer]
 
@@ -77,7 +81,7 @@ def get_server(config: ConfigParser) -> pygopherd.server.BaseServer:
     address = (interface, port)
 
     try:
-        server = server_class(config, address, GopherRequestHandler)
+        server = server_class(config, address, GopherRequestHandler, context=context)
     except Exception as e:
         GopherExceptions.log(e, None, None)
         logger.log("Application startup NOT successful!")
@@ -152,13 +156,26 @@ def init_signal_handlers() -> None:
     sighandlers.setsigtermhandler()
 
 
+def init_ssl_context(config: ConfigParser) -> typing.Optional[ssl.SSLContext]:
+    if config.has_option("pygopherd", "enable_tls"):
+        if config.getboolean("pygopherd", "enable_tls"):
+            certfile = config.get("pygopherd", "tls_certfile")
+            keyfile = config.get("pygopherd", "tls_keyfile")
+
+            context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+            context.load_cert_chain(certfile, keyfile)
+            return context
+
+
 def initialize(filename: str) -> pygopherd.server.BaseServer:
     config = init_config(filename)
 
     init_logger(config, filename)
     init_exceptions(config)
     init_mimetypes(config)
-    server = get_server(config)
+    context = init_ssl_context(config)
+
+    server = get_server(config, context=context)
     init_conditional_detach(config)
     init_pidfile(config)
     init_process_group(config)
