@@ -507,6 +507,7 @@ text/css					css
 text/directory
 text/english
 text/enriched
+text/gemini                 gmi gemini
 text/html					htm html xhtml
 text/mathml					mml
 text/parityfec

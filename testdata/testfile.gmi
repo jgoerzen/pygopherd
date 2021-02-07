@@ -1,0 +1,4 @@
+Hello world!
+
+=> / root directory
+=> gemini://mozz.us
