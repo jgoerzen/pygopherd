@@ -19,6 +19,8 @@ class BaseGopherProtocol:
 
     secure = False
 
+    entry: GopherEntry
+
     def __init__(
         self,
         request: str,
