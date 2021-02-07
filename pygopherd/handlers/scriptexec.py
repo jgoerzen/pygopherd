@@ -42,4 +42,10 @@ class ExecHandler(Virtual):
         if self.selectorargs:
             args.extend(self.selectorargs.split(" "))
 
-        subprocess.run(args, env=newenv, stdout=wfile, errors="surrogateescape")
+        if not self.protocol.check_tls():
+            subprocess.run(args, env=newenv, stdout=wfile)
+        else:
+            # We can't pass the file handler because it's wrapped in a TLS context.
+            # So grab the output from the CGI script and send it directly.
+            resp = subprocess.run(args, env=newenv, capture_output=True)
+            wfile.write(resp.stdout)
