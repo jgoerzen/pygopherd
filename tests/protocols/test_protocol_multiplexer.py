@@ -1,30 +1,38 @@
 import unittest
 
-import pygopherd.protocols
-from pygopherd import testutil
+from pygopherd.protocols import rfc1436, gopherp, http, wap, gemini
+from pygopherd.testutil import get_testing_protocol
 
 
 class ProtocolMultiplexerTestCase(unittest.TestCase):
-    def setUp(self):
-        self.config = testutil.get_config()
+    def test_gopher(self):
+        proto = get_testing_protocol("/gopher0-request.txt\n")
+        self.assertIsInstance(proto, rfc1436.GopherProtocol)
 
-    # Just a bunch of test cases for each different protocol -- make
-    # sure we find the right one.
+    def test_secure_gopher(self):
+        proto = get_testing_protocol("/gopher0-request.txt\n", use_tls=True)
+        self.assertIsInstance(proto, rfc1436.SecureGopherProtocol)
 
-    def testGoToGopher(self):
-        assert isinstance(
-            testutil.get_testing_protocol("/gopher0-request.txt\n"),
-            pygopherd.protocols.rfc1436.GopherProtocol,
-        )
+    def test_gopher_plus(self):
+        proto = get_testing_protocol("/gopher+-request.txt\t+\n")
+        self.assertIsInstance(proto, gopherp.GopherPlusProtocol)
 
-    def testGoToHTTP(self):
-        assert isinstance(
-            testutil.get_testing_protocol("GET /http-request.txt HTTP/1.0\n\n"),
-            pygopherd.protocols.http.HTTPProtocol,
-        )
+    def test_secure_gopher_plus(self):
+        proto = get_testing_protocol("/gopher+-request.txt\t+\n", use_tls=True)
+        self.assertIsInstance(proto, gopherp.SecureGopherPlusProtocol)
 
-    def testGoToGopherPlus(self):
-        assert isinstance(
-            testutil.get_testing_protocol("/gopher+-request.txt\t+\n"),
-            pygopherd.protocols.gopherp.GopherPlusProtocol,
-        )
+    def test_http(self):
+        proto = get_testing_protocol("GET /http-request.txt HTTP/1.0\n\n")
+        self.assertIsInstance(proto, http.HTTPProtocol)
+
+    def test_https(self):
+        proto = get_testing_protocol("GET /http-request.txt HTTP/1.0\n\n", use_tls=True)
+        self.assertIsInstance(proto, http.HTTPSProtocol)
+
+    def test_wap(self):
+        proto = get_testing_protocol("GET /wap/http-request.txt HTTP/1.0\n\n")
+        self.assertIsInstance(proto, wap.WAPProtocol)
+
+    def test_gemini(self):
+        proto = get_testing_protocol("gemini://example.com\n\n", use_tls=True)
+        self.assertIsInstance(proto, gemini.GeminiProtocol)
