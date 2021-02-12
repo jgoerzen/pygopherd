@@ -1,5 +1,7 @@
 import configparser
 import os
+import socket
+import ssl
 import typing
 from io import BytesIO, StringIO
 
@@ -40,15 +42,19 @@ def get_testing_server(
     return s
 
 
-class MockRequest:
+class MockRequest(socket.SocketType):
     def __init__(self, rfile: BytesIO, wfile: BytesIO):
         self.rfile = rfile
         self.wfile = wfile
 
-    def makefile(self, mode: str, bufsize) -> BytesIO:
+    def makefile(self, mode: str, *_) -> BytesIO:
         if mode[0] == "r":
             return self.rfile
         return self.wfile
+
+
+class MockSSLRequest(MockRequest, ssl.SSLSocket):
+    pass
 
 
 class MockRequestHandler(GopherRequestHandler):
@@ -57,7 +63,12 @@ class MockRequestHandler(GopherRequestHandler):
     rbufsize = -1
     wbufsize = -1
 
-    def __init__(self, request, client_address, server: BaseServer):
+    def __init__(  # noqa
+        self,
+        request: MockRequest,
+        client_address,
+        server: BaseServer,
+    ):
         self.request = request
         self.client_address = client_address
         self.server = server
@@ -65,9 +76,9 @@ class MockRequestHandler(GopherRequestHandler):
         # This does everything in the base class up to handle()
 
     def handle(self):
-        # Normally finish() gets called in the __init__, but because we are doing this
-        # roundabout method of calling handle() from inside of unit tests, we want to make sure
-        # that the server cleans up after itself.
+        # Normally finish() gets called in the __init__, but because we are
+        # doing this roundabout method of calling handle() from inside of unit
+        # tests, we want to make sure that the server cleans up after itself.
         try:
             super().handle()
         finally:
@@ -78,25 +89,34 @@ def get_testing_handler(
     rfile: BytesIO,
     wfile: BytesIO,
     config: typing.Optional[configparser.ConfigParser] = None,
+    use_tls: bool = False,
 ) -> GopherRequestHandler:
     """Creates a testing handler with input from rfile.  Fills in
     other stuff with fake values."""
 
     config = config or get_config()
     server = get_testing_server(config)
-    request = MockRequest(rfile, wfile)
-    request_handler = MockRequestHandler(request, ("10.77.77.77", "7777"), server)
-    return request_handler
+    if use_tls:
+        request = MockSSLRequest(rfile, wfile)
+    else:
+        request = MockRequest(rfile, wfile)
+    address = ("10.77.77.77", "7777")
+    return MockRequestHandler(request, address, server)
 
 
-def get_testing_protocol(request: str, config=None) -> BaseGopherProtocol:
+def get_testing_protocol(
+    request: str,
+    config: typing.Optional[configparser.ConfigParser] = None,
+    use_tls: bool = False,
+) -> BaseGopherProtocol:
+
     config = config or get_config()
 
     rfile = BytesIO(request.encode(errors="surrogateescape"))
     # Pass fake rfile, wfile to get_testing_handler -- they'll be closed before
     # we can get the info, and some protocols need to read more from them.
 
-    handler = get_testing_handler(BytesIO(), BytesIO(), config)
+    handler = get_testing_handler(BytesIO(), BytesIO(), config, use_tls=use_tls)
     # Now override.
     handler.rfile = rfile
     return ProtocolMultiplexer.getProtocol(
