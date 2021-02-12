@@ -1,13 +1,13 @@
 import os
-import typing
-import unittest
 import socket
 import socketserver
-import threading
 import ssl
+import threading
+import typing
+import unittest
 
 from pygopherd import testutil
-from pygopherd.server import BaseServer, ThreadingTCPServer, ForkingTCPServer
+from pygopherd.server import BaseServer, ForkingTCPServer, ThreadingTCPServer
 
 crt_file = os.path.join(testutil.TEST_DATA, "demo.crt")
 key_file = os.path.join(testutil.TEST_DATA, "demo.key")

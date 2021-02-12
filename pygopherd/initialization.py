@@ -1,11 +1,11 @@
 import mimetypes
 import os
 import os.path
-import typing
 import ssl
 
 # Import lots of stuff so it's here before chrooting.
 import sys
+import typing
 from configparser import ConfigParser
 
 import pygopherd.fileext

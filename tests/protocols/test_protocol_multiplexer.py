@@ -1,6 +1,6 @@
 import unittest
 
-from pygopherd.protocols import rfc1436, gopherp, http, wap, gemini
+from pygopherd.protocols import gemini, gopherp, http, rfc1436, wap
 from pygopherd.testutil import get_testing_protocol
 
 

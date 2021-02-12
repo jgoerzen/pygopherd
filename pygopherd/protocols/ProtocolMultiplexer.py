@@ -1,7 +1,7 @@
 # Running eval() when loading the configuration requires all of the protocols to
 # be in the module namespace
-from pygopherd.protocols.base import BaseGopherProtocol
 from pygopherd.protocols import *  # noqa
+from pygopherd.protocols.base import BaseGopherProtocol
 
 
 def getProtocol(
