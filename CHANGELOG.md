@@ -7,9 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Support for establishing TLS connections by checking the first byte of the
+  request for a TLS handshake. This allows for both plaintext and encrypted
+  communication to be made over the same port. A TLS section has been added to
+  the default pygopherd configuration file.
+- Several protocols which take advantage of the new TLS connections.
+    - rfc1436.SecureGopherProtocol (gopher + TLS).
+    - gopherp.SecureGopherPlusProtocol (gopher plus + TLS).
+    - http.HTTPSProtocol (http + TLS).
+    - gemini.GeminiProtocol (https://gemini.circumlunar.space/).
+
 ### Changed
 
-- Gracefully handle OS errors when calling setpgrp()
+- Gracefully handle OS errors when calling setpgrp().
+- Refactored the socket server classes and added additional test cases.
 
 ## v3.0.0b1 (2020-01-18)
 
