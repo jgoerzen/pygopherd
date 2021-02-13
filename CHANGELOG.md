@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## v3.0.0b2 (2020-02-12)
+
 ### Added
 
 - Support for establishing TLS connections by checking the first byte of the
@@ -18,10 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - gopherp.SecureGopherPlusProtocol (gopher plus + TLS).
     - http.HTTPSProtocol (http + TLS).
     - gemini.GeminiProtocol (https://gemini.circumlunar.space/).
+- Display server version with ``pygopherd --version``.
 
 ### Changed
 
-- Gracefully handle OS errors when calling setpgrp().
+- Gracefully handle OS errors when calling ``setpgrp()``.
 - Refactored the socket server classes and added additional test cases.
 
 ## v3.0.0b1 (2020-01-18)

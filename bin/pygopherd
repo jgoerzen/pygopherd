@@ -20,7 +20,7 @@
 # END OF COPYRIGHT #
 import argparse
 
-from pygopherd import initialization
+from pygopherd import initialization, __version__
 
 parser = argparse.ArgumentParser(
     prog="pygopherd",
@@ -33,6 +33,10 @@ parser.add_argument(
     default="/etc/pygopherd/pygopherd.conf",
     help="pygopherd config",
 )
+parser.add_argument(
+    "-V", "--version", action="version", version="pygopherd " + __version__
+)
+
 args = parser.parse_args()
 
 s = initialization.initialize(args.config)

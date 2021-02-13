@@ -1,4 +1,4 @@
-__version__ = "3.0.0.b1"
+__version__ = "3.0.0.b2"
 
 __all__ = [
     "handlers",
