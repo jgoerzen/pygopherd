@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- A new handler to support the spartan:// protocol (https://portal.mozz.us/gemini/spartan.mozz.us/).
+
 ## v3.0.0b2 (2020-02-12)
 
 ### Added

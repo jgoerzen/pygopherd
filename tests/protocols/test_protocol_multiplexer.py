@@ -1,6 +1,6 @@
 import unittest
 
-from pygopherd.protocols import gemini, gopherp, http, rfc1436, wap
+from pygopherd.protocols import gemini, gopherp, http, rfc1436, spartan, wap
 from pygopherd.testutil import get_testing_protocol
 
 
@@ -34,5 +34,9 @@ class ProtocolMultiplexerTestCase(unittest.TestCase):
         self.assertIsInstance(proto, wap.WAPProtocol)
 
     def test_gemini(self):
-        proto = get_testing_protocol("gemini://example.com\n\n", use_tls=True)
+        proto = get_testing_protocol("gemini://example.com\n", use_tls=True)
         self.assertIsInstance(proto, gemini.GeminiProtocol)
+
+    def test_spartan(self):
+        proto = get_testing_protocol("localhost / 0\n")
+        self.assertIsInstance(proto, spartan.SpartanProtocol)
