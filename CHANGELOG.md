@@ -14,7 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Fix unhandled OS errors when the server is unable to access a file.
-
+- HTTP Link to "find gopher browsers" changed to Wikipedia, which
+  contains a more complete and up-to-date list.
+  
 ## v3.0.0b2 (2020-02-12)
 
 ### Added
