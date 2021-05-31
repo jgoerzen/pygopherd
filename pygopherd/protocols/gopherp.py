@@ -66,7 +66,7 @@ class GopherPlusProtocol(GopherProtocol):
             self.filenotfound(str(e))
         except IOError as e:
             GopherExceptions.log(e, self, None)
-            self.filenotfound(e[1])
+            self.filenotfound(e.args[1])
 
     def getsupportedblocknames(self, entry):
         # Return the always-supported values PLUS any extra ones for

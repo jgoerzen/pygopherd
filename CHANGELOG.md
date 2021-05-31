@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - A new handler to support the spartan:// protocol (https://portal.mozz.us/gemini/spartan.mozz.us/).
 
+### Changed
+
+- Fix unhandled OS errors when the server is unable to access a file.
+
 ## v3.0.0b2 (2020-02-12)
 
 ### Added

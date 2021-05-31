@@ -49,7 +49,7 @@ class GeminiProtocol(BaseGopherProtocol):
             return
         except IOError as e:
             GopherExceptions.log(e, self, None)
-            self.write_status(51, e[1])
+            self.write_status(51, e.args[1])
             return
 
         if handler.isdir():

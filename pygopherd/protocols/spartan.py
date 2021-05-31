@@ -51,7 +51,7 @@ class SpartanProtocol(BaseGopherProtocol):
             return
         except IOError as e:
             GopherExceptions.log(e, self, None)
-            self.write_status(5, e[1])
+            self.write_status(5, e.args[1])
             return
 
         if handler.isdir():

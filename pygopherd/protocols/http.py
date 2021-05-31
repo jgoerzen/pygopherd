@@ -94,7 +94,7 @@ class HTTPProtocol(BaseGopherProtocol):
             self.filenotfound(str(e))
         except IOError as e:
             GopherExceptions.log(e, self, None)
-            self.filenotfound(e[1])
+            self.filenotfound(e.args[1])
 
     def handlerwrite(self, wfile):
         self.handler.write(wfile)
