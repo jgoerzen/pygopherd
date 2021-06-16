@@ -2,6 +2,7 @@ import os.path
 import re
 import stat
 import typing
+from email.header import Header
 from mailbox import Maildir, Message, mbox
 
 from pygopherd import gopherentry
@@ -84,6 +85,9 @@ class MessageHandler(Virtual):
             self.entry.setgopherpsupport(0)
 
             subject = message.get("Subject", "<no subject>")
+            if isinstance(subject, Header):
+                subject = str(subject)
+
             # Sanitize, esp. for continuations.
             subject = re.sub(r"\s+", " ", subject)
             if subject:

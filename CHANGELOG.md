@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Fix unhandled OS errors when the server is unable to access a file.
+- Fixed unhandled OS errors when the server is unable to access a file.
+- Fixed error in the mailbox handler when a message subject contains invalid bytes.
 - HTTP Link to "find gopher browsers" changed to Wikipedia, which
   contains a more complete and up-to-date list.
   
