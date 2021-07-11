@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed HTTP link for "find gopher browsers" to Wikipedia, which
   contains a more complete and up-to-date list.
 - Fixed "Numb=" parameter not being respected for real files in .names listings.
+- Disabled directory caching for the local pygopherd configuration.
 
 ## v3.0.0b2 (2020-02-12)
 
