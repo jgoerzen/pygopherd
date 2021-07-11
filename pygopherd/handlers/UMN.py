@@ -131,8 +131,8 @@ class UMNDirHandler(DirHandler):
     def mergeentries(self, old: GopherEntry, new: GopherEntry) -> None:
         """Takes the set fields from new and modifies old to have their
         value."""
-        for field in ["selector", "type", "name", "host", "port"]:
-            if getattr(new, field):
+        for field in ["selector", "type", "name", "host", "port", "num"]:
+            if getattr(new, field) is not None:
                 setattr(old, field, getattr(new, field))
 
         for field in list(new.geteadict().keys()):
