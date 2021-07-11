@@ -113,9 +113,6 @@ class GeminiProtocol(BaseGopherProtocol):
         else:
             return f"=> {url} {description}\n"
 
-    def renderdirstart(self, entry):
-        return f"# Gopher: {entry.selector}\n\n"
-
     def renderdirend(self, entry):
         if self.config.has_option("protocols.gemini.GeminiProtocol", "footer"):
             text = self.config.get("protocols.gemini.GeminiProtocol", "footer")

@@ -98,9 +98,6 @@ class SpartanProtocol(BaseGopherProtocol):
         else:
             return f"=> {url} {description}\n"
 
-    def renderdirstart(self, entry):
-        return f"# Gopher: {entry.selector}\n\n"
-
     def renderdirend(self, entry):
         if self.config.has_option("protocols.gemini.SpartanProtocol", "footer"):
             text = self.config.get("protocols.gemini.SpartanProtocol", "footer")

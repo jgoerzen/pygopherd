@@ -15,10 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed unhandled OS errors when the server is unable to access a file.
 - Fixed error in the mailbox handler when a message subject contains invalid bytes.
-- Changed HTTP link for "find gopher browsers" to Wikipedia, which
+- Changed the HTTP link for "find gopher browsers" to Wikipedia, which
   contains a more complete and up-to-date list.
 - Fixed "Numb=" parameter not being respected for real files in .names listings.
 - Disabled directory caching for the local pygopherd configuration.
+- Removed the directory heading from the top of gemini:// pages.
 
 ## v3.0.0b2 (2020-02-12)
 
