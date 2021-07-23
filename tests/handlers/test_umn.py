@@ -39,11 +39,11 @@ class TestUMNDirHandler(unittest.TestCase):
         entries = handler.getdirlist()
         self.assertTrue(entries)
 
-        # First entry should be the special link file
-        self.assertEqual(entries[0].name, "Cheese Ball Recipes")
-        self.assertEqual(entries[0].host, "zippy.micro.umn.edu")
-        self.assertEqual(entries[0].port, 150)
+        # First entry should be the special cap file
+        self.assertEqual(entries[0].name, "New Long Cool Name")
+        self.assertEqual(entries[0].selector, "/zzz.txt")
 
-        # Second entry should be the special cap file
-        self.assertEqual(entries[2].name, "New Long Cool Name")
-        self.assertEqual(entries[2].selector, "/zzz.txt")
+        # Second entry should be the special link file
+        self.assertEqual(entries[1].name, "Cheese Ball Recipes")
+        self.assertEqual(entries[1].host, "zippy.micro.umn.edu")
+        self.assertEqual(entries[1].port, 150)
