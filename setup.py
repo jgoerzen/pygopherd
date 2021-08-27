@@ -11,7 +11,8 @@ setuptools.setup(
     url="https://www.github.com/michael-lazar/pygopherd",
     packages=["pygopherd", "pygopherd.handlers", "pygopherd.protocols"],
     scripts=["bin/pygopherd"],
-    data_files=[("/etc/pygopherd", ["conf/pygopherd.conf", "conf/mime.types"])],
+    # Commenting out to prevent overwriting system files when upgrading package
+    # data_files=[("/etc/pygopherd", ["conf/pygopherd.conf", "conf/mime.types"])],
     test_suite="pygopherd",
     license="GPLv2",
 )
