@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed "Numb=" parameter not being respected for real files in .names listings.
 - Disabled directory caching for the local pygopherd configuration.
 - Removed the directory heading from the top of gemini:// pages.
+- Fixed error when serving directories with trailing slashes in gemini and spartan.
 
 ## v3.0.0b2 (2020-02-12)
 

@@ -35,6 +35,7 @@ class GeminiProtocol(BaseGopherProtocol):
             return
 
         self.selector = urllib.parse.unquote(selector, errors="surrogateescape")
+        self.selector = self.slashnormalize(self.selector)
         self.searchrequest = urllib.parse.unquote(
             searchrequest, errors="surrogateescape"
         )

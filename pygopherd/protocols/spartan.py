@@ -35,6 +35,7 @@ class SpartanProtocol(BaseGopherProtocol):
         host, path, content_length = self.request.strip().split(" ")
 
         self.selector = urllib.parse.unquote(path, errors="surrogateescape")
+        self.selector = self.slashnormalize(self.selector)
 
         content_length = int(content_length)
         if content_length:
