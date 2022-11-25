@@ -1,0 +1,23 @@
+[Unit]
+Description=Pygopherd Server
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=gopher
+Group=gopher
+ProtectHome=true
+ProtectSystem=strict
+NoNewPrivileges=true
+RuntimeDirectory=pygopherd
+ReadWritePaths=/var/run/pygopherd /run/pygopherd /var/gopher
+SyslogIdentifier=pygopherd
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_SYS_CHROOT
+AmbientCapabilities=CAP_NET_BIND_SERVICE CAP_SYS_CHROOT
+ExecStart=/usr/sbin/pygopherd
+Restart=always
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target
+
