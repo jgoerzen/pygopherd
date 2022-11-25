@@ -7,8 +7,6 @@
 <book id="pygopherd">
   <bookinfo>
     <title>PyGopherd Manual</>
-    <pubdate>$Date$</>
-    <edition>$Rev$</>
   </bookinfo>
 
   &maindoc;

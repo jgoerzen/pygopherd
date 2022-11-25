@@ -202,7 +202,7 @@
   <sect1 id="installation.debian">
     <title>Debian System-Wide Installation</title>
     <para>
-      If you are tracking Debian unstable, you may install
+      You may install
       &PyGopherd; by simply running this command as root:
     </para>
     
@@ -210,21 +210,13 @@
       <command>apt-get install pygopherd</command>
     </para>
     
-    <para>
-      If you are not tracking Debian unstable, download the .deb
-      package from the &PyGopherd; website and then run
-      <command>dpkg -i</command> to install the downloaded
-      package.  Then, skip to the configuration section below.
-      You will use <command>/etc/init.d/pygopherd start</command>
-      to start the program.
-    </para>
   </sect1>
 
   <sect1 id="installation.other">
     <title>Other System-Wide Installation</title>
     <para>
       Download the tar.gz version of the package from the website.  Make
-      sure you have Python 2.2 or above installed; if not, download and
+      sure you have Python 3.7 or above installed; if not, download and
       install it from <ulink
 	url="http://www.python.org/"></ulink>.  Then run these
       commands:
@@ -233,14 +225,9 @@
     <programlisting>
       <command>tar -zxvf pygopherd-x.y.z.tar.gz</command>
       <command>cd pygopherd-x.y.z</command>
-      <command>python2.2 setup.py</command>
+      <command>python3 setup.py</command>
     </programlisting>
     
-    <para>
-      Some systems will use <command>python</command> or
-      <command>python2.3</command> in place of
-      <command>python2.2</command>.
-    </para>
     <para>
       Next, proceed to configuration.  Make sure that the
       <filename>/etc/pygopherd/pygopherd.conf</filename> file
@@ -276,12 +263,6 @@
     <itemizedlist>
       <listitem><para>Set <property>usechroot = no</property></para>
       </listitem>
-      
-      <listitem><para>Comment out (add a # sign to the start of
-	  the line) the <property>pidfile</property>,
-	  <property>setuid</property>, and
-	  <property>setgid</property> lines.</para>
-	  </listitem>
       
       <listitem><para>Set <property>root</property> to something appropriate.</para>
       </listitem>
